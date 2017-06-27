@@ -5,10 +5,11 @@ module.exports = {
   context: path.resolve(__dirname, './src'),
   entry: {
     app: './app.js',
+    app2: './app2.js'
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
   },
   devServer: {
   	contentBase: path.join(__dirname, "dist"),
