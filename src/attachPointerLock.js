@@ -15,9 +15,7 @@ button.style.fontStyle = 'normal';
 button.style.textAlign = 'center';
 button.style.zIndex = '999';
 
-var started = false;
-
-export default (pointerLockControls, callback) => {
+export default (pointerLockControls, ) => {
   function handlePointerLockChange(e) {
     pointerLockControls.enabled =
       !!(
@@ -28,11 +26,6 @@ export default (pointerLockControls, callback) => {
 
     if (!pointerLockControls.enabled) {
       button.style.display = 'inline';
-    }
-
-    if (!started) {
-      callback && callback();
-      started = true;    
     }
   }
 

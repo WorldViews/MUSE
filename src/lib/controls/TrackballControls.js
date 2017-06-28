@@ -296,7 +296,6 @@ var TrackballControls = function ( object, domElement ) {
 	};
 
 	this.update = function () {
-	    debugger;
 		_eye.subVectors( _this.object.position, _this.target );
 
 		if ( ! _this.noRotate ) {
