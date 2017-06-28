@@ -7,8 +7,7 @@ import Earth from './lib/EARTH';
 import Stars from './lib/Stars';
 
 import attachPointerLock from './attachPointerLock';
-import loadMTL from './loadMTL';
-import loadOBJ from './loadOBJ';
+import loadCollada from './loadCollada';
 import loadVideo from './loadVideo';
 import loadVR from './loadVR';
 
@@ -16,9 +15,10 @@ import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
 
 let Y_AXIS = new THREE.Vector3(0, 1, 0);
 let NINETY = Math.PI / 2;
-let MTL_PATH = 'models/derrick.mtl';
-let OBJ_PATH = 'models/derrick.obj';
+let DAE_PATH = 'models/PlayDomeSkp.dae';
 let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
+
+let {degToRad} = THREE.Math;
 
 var canvas3d = document.getElementById('canvas3d');
 canvas3d.height = window.innerHeight;
@@ -256,65 +256,64 @@ function render(vrDisplay) {
   starsGroup.rotation.y += 0.0001;
 }
 
-loadMTL(MTL_PATH).then(materials => {
-  loadOBJ(OBJ_PATH, materials).then(object3d => {
-    console.log('MTL & OBJ loaded');
+loadCollada(
+  DAE_PATH,
+  {
+    position: [0, 0, 0],
+    rotation: [0, degToRad(90), 0],
+    scale: [0.025, 0.025, 0.025]
+  }
+).then((collada) => {
+  scene.add(collada.scene);
+  
+  console.log('Loading video...');
 
-    scene.add(object3d);
-    object3d.position.y = 0;
-    
-    let arbitrarySphere = object3d.getObjectByName("sphere");
-    arbitrarySphere.visible = false;
+  loadVideo(VIDEO_PATH).then(({imageSource, videoMaterial}) => {
+    console.log('Creating video geometry...');
 
-    console.log('Loading video...');
+    let geometry = new THREE.SphereGeometry(
+      R,
+      40,
+      40,
+      TH_LEN, 
+      TH_MIN,
+      PH_LEN,
+      PH_MIN
+    );
+    let screenObject = new THREE.Mesh(geometry, videoMaterial);
 
-    loadVideo(VIDEO_PATH).then(({imageSource, videoMaterial}) => {
-      console.log('Creating video geometry...');
+    screenObject.scale.x = -1;
+    screenObject.scale.x *= 8.6;
+    screenObject.scale.y *= 8.6;
+    screenObject.scale.z *= 8.6;
+    screenObject.position.y = 0;
+    screenObject.name = "movieScreen";
 
-      let geometry = new THREE.SphereGeometry(
-        R,
-        40,
-        40,
-        TH_LEN, 
-        TH_MIN,
-        PH_LEN,
-        PH_MIN
-      );
-      let screenObject = new THREE.Mesh(geometry, videoMaterial);
+    let screenParent = new THREE.Object3D();
+    screenParent.add(screenObject);
+    screenParent.rotation.z = 0;
 
-      screenObject.scale.x = -1;
-      screenObject.scale.x *= 8.6;
-      screenObject.scale.y *= 8.6;
-      screenObject.scale.z *= 8.6;
-      screenObject.position.y = 0;
-      screenObject.name = "movieScreen";
+    scene.add(screenParent);
 
-      let screenParent = new THREE.Object3D();
-      screenParent.add(screenObject);
-      screenParent.rotation.z = 0;
+    loadVR(renderer.domElement).then(({button, display}) => {
+      document.body.appendChild(button);
+      let autoplayPromise = imageSource.play();
 
-      scene.add(screenParent);
-
-      loadVR(renderer.domElement).then(({button, display}) => {
-        document.body.appendChild(button);
-        let autoplayPromise = imageSource.play();
-
-        // Finally start animation loop
-        render = render.bind(null, display);
+      // Finally start animation loop
+      render = render.bind(null, display);
+      animate();
+    }).catch(error => {
+      // If VR is not available, do not worry about binding the VRDisplay.
+      // Only use PointerLock if VR is not available, do not use both.
+      if (!error.isVRAvailable) {
+        attachPointerLock(plControls);
         animate();
-      }).catch(error => {
-        // If VR is not available, do not worry about binding the VRDisplay.
-        // Only use PointerLock if VR is not available, do not use both.
-        if (!error.isVRAvailable) {
-          attachPointerLock(plControls);
-          animate();
-        }
-        else {
-          console.log(error);
-        }
-      })
-    });
-  }).catch(handleError);
+      }
+      else {
+        console.log(error);
+      }
+    })
+  });
 }).catch(handleError);
 
 function handleError(error) {
