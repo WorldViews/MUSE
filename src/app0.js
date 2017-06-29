@@ -1,9 +1,14 @@
 import * as THREE from 'three';
 import TrackballControls from './lib/controls/TrackballControls';
+import OrbitControls from './lib/controls/OrbitControls';
 import Earth from './lib/EARTH';
 import Stars from './lib/Stars';
 
-import loadCollada from './loadCollada';
+//import loadCollada from './loadCollada';
+import loadModels from './loadModels';
+import loadVideo from './loadVideo';
+
+let {degToRad} = THREE.Math;
 
 import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
 
@@ -13,8 +18,14 @@ let DAE_PATH = 'models/PlayDomeSkp.dae';
 let MTL_PATH = 'models/derrick.mtl';
 let OBJ_PATH = 'models/derrick.obj';
 let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
-
-let {degToRad} = THREE.Math;
+let SPECS = [{
+    path: DAE_PATH,
+    position: [0, 0, 0],
+    //rotation: [0, degToRad(90), 0],
+    rotation: [0, degToRad(0), 0],
+    //scale: [0.025, 0.025, 0.025]
+    scale: [0.03, 0.03, 0.03]
+}];
 
 let canvas3d = document.getElementById('canvas3d');
 canvas3d.height = window.innerHeight;
@@ -58,7 +69,13 @@ scene.add(starsGroup);
 let stars = new Stars(starsGroup, 2500, {name: 'Stars'});
 starsGroup.position.set(0, 0, 0);
 
+/*
 let controls = new TrackballControls(camera);
+camera.position.z = 1;
+controls.addEventListener('change', render);
+controls.keys = [65, 83, 68];
+*/
+let controls = new OrbitControls(camera);
 camera.position.z = 1;
 controls.addEventListener('change', render);
 controls.keys = [65, 83, 68];
@@ -87,14 +104,45 @@ function render(vrDisplay) {
   renderer.render(scene, camera);
 }
 
-loadCollada(
-  DAE_PATH,
-  {
-    position: [0, 0, 0],
-    rotation: [0, degToRad(90), 0],
-    scale: [0.025, 0.025, 0.025]
-  }
-).then((collada) => {
-  scene.add(collada.scene);
-  animate();
-});
+
+function loadScreen()
+{
+  console.log('Loading screen...');
+  var spec = {x: 5.5, y: 2.5, z: -0.1, width: 6.5, height: 4.0};
+  loadVideo(VIDEO_PATH).then(({imageSource, videoMaterial}) => {
+    console.log('Creating video geometry...');
+
+    let geometry = new THREE.SphereGeometry(
+      R,
+      40,
+      40,
+      TH_LEN, 
+      TH_MIN,
+      PH_LEN,
+      PH_MIN
+    );
+    let screenObject = new THREE.Mesh(geometry, videoMaterial);
+
+    screenObject.scale.x = -1;
+    screenObject.scale.x *= 8.6;
+    screenObject.scale.y *= 8.6;
+    screenObject.scale.z *= 8.6;
+    screenObject.position.y = 0;
+    screenObject.name = "movieScreen";
+
+    let screenParent = new THREE.Object3D();
+    screenParent.add(screenObject);
+    screenParent.rotation.z = 0;
+
+    scene.add(screenParent);
+  });
+}
+
+function start()
+{
+    loadModels(SPECS, scene);
+    loadScreen();
+    animate();
+}
+
+window.start = start;
