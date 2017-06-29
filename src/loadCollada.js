@@ -2,7 +2,14 @@ import {Animation, SkinnedMesh} from 'three';
 
 import ColladaLoader from './lib/loaders/ColladaLoader';
 
-export default (path, transforms) => {
+function scaleVec(s)
+{
+    if (typeof s == "number")
+	return [s,s,s];
+    return s;
+}
+
+export default (path, opts) => {
   return new Promise((resolve, reject) => {
     let loader = new ColladaLoader();
     loader.options.convertUpAxis = true;
@@ -19,18 +26,20 @@ export default (path, transforms) => {
           }
         });
 
-        if (Array.isArray(transforms.position)) {
-          scene.position.fromArray(transforms.position);
+        if (Array.isArray(opts.position)) {
+          scene.position.fromArray(opts.position);
         }
 
         // Rotation array must be in radians!
-        if (Array.isArray(transforms.rotation)) {
-          scene.rotation.fromArray(transforms.rotation);
+        if (Array.isArray(opts.rotation)) {
+          scene.rotation.fromArray(opts.rotation);
         }
 
-        if (Array.isArray(transforms.scale)) {
-          scene.scale.fromArray(transforms.scale)
-        }
+        //if (Array.isArray(opts.scale)) {
+        //  scene.scale.fromArray(opts.scale)
+        //}
+	if (opts.scale)
+	  scene.scale.fromArray(scaleVec(opts.scale));
 
         scene.updateMatrix();
 
