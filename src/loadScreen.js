@@ -29,6 +29,8 @@ function loadScreen(path, scene)
 	Math.degToRad(PH_MIN)
     );
 */
+    // note that the theta and phi arguments are reversed
+    // from what is described in THREE.SphereGeometry documenation.
     let geometry = new THREE.SphereGeometry(
       spec.R,
       40,

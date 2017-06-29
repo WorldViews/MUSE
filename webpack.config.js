@@ -5,6 +5,7 @@ module.exports = {
   context: path.resolve(__dirname, './src'),
   entry: {
     app: './app.js',
+    nohApp: './nohApp.js',
     app0: './app0.js',
     app2: './app2.js'
   },
