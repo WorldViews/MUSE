@@ -1,25 +1,42 @@
 
 import loadVideo from './loadVideo'
 import * as THREE from 'three';
+import {Math} from 'three';
 
-import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
+//import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
+import {screen1} from './const/screen';
+
+var spec = screen1;
+console.log("spec: "+spec);
 
 function loadScreen(path, scene)
 {
   console.log('Loading screen... video: '+path);
-  var spec = {x: 5.5, y: 2.5, z: -0.1, width: 6.5, height: 4.0};
+    console.log("spec: "+JSON.stringify(spec));
+  //var spec = {x: 5.5, y: 2.5, z: -0.1, width: 6.5, height: 4.0};
   //loadVideo(VIDEO_PATH).then(({imageSource, videoMaterial}) => {
   loadVideo(path).then(({imageSource, videoMaterial}) => {
     console.log('Creating video geometry...');
 
+/*
     let geometry = new THREE.SphereGeometry(
       R,
       40,
       40,
-      TH_LEN, 
-      TH_MIN,
-      PH_LEN,
-      PH_MIN
+	Math.degToRad(TH_LEN), 
+	Math.degToRad(TH_MIN),
+	Math.degToRad(PH_LEN),
+	Math.degToRad(PH_MIN)
+    );
+*/
+    let geometry = new THREE.SphereGeometry(
+      spec.R,
+      40,
+      40,
+      Math.degToRad(spec.TH_MIN),
+      Math.degToRad(spec.TH_LEN),
+      Math.degToRad(spec.PH_MIN),
+      Math.degToRad(spec.PH_LEN)
     );
     let screenObject = new THREE.Mesh(geometry, videoMaterial);
 
