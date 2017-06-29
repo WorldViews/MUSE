@@ -2,9 +2,11 @@ import * as THREE from 'three';
 
 import TrackballControls from './lib/controls/TrackballControls';
 import OrbitControls from './lib/controls/OrbitControls';
+import CMP_Controls from './lib/controls/CMP_Controls';
 
 //mport Earth from './lib/EARTH';
-import Planet from './lib/Planet';
+//import Planet from './lib/Planet';
+import {addPlanet} from './lib/Planet';
 import Stars from './lib/Stars';
 
 import loadModels from './loadModels';
@@ -51,6 +53,7 @@ starsGroup.position.set(0, 0, 0);
 
 //let controls = new TrackballControls(camera);
 let controls = new OrbitControls(camera);
+//let controls = new CMP_Controls(camera);
 camera.position.z = 1;
 controls.addEventListener('change', render);
 controls.keys = [65, 83, 68];
@@ -77,18 +80,6 @@ function animate() {
 
 function render(vrDisplay) {
   renderer.render(scene, camera);
-}
-
-function addPlanet(scene, name, radius, x, y, z, tex)
-{
-    var group = new THREE.Group();
-    scene.add(group);
-    var opts = {'name': name, 'texture': tex};
-    var planet = new Planet(group, radius, opts);
-    planet.group.position.x = x;
-    planet.group.position.y = y;
-    planet.group.position.z = z;
-    return planet;
 }
 
 function start()
