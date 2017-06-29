@@ -19,6 +19,7 @@ EARTH.latLonToVector3 = function(lat, lon, radius, height) {
 //EARTH.Earth = function(group, radius, opts)
 EARTH.Planet = function(group, radius, opts)
 {
+    console.log("EARTH.Planet this: "+this);
     radius = radius || 200;
     var inst = this;
     
@@ -90,5 +91,22 @@ EARTH.Planet = function(group, radius, opts)
 };
 
 //EARTH.Earth = EARTH.Planet;
+function addPlanet(scene, name, radius, x, y, z, tex)
+{
+    console.log(">>> addPlanet "+name);
+    var group = new THREE.Group();
+    scene.add(group);
+    var opts = {'name': name, 'texture': tex};
+    var planet = new EARTH.Planet(group, radius, opts);
+    planet.group.position.x = x;
+    planet.group.position.y = y;
+    planet.group.position.z = z;
+    return planet;
+}
 
-export default EARTH.Planet;
+//export {addPlanet};
+//export {addPlanet, Planet: EARTH.Planet};
+//export {Planet: EARTH.Planet, addPlanet};
+//export default EARTH.Planet;
+let Planet = EARTH.Planet;
+export {Planet, addPlanet};
