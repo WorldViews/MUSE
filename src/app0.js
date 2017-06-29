@@ -15,8 +15,6 @@ import setupLights from './setupLights';
 
 let {degToRad} = THREE.Math;
 
-import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
-
 let Y_AXIS = new THREE.Vector3(0, 1, 0);
 
 let MTL_PATH = 'models/derrick.mtl';
@@ -30,7 +28,8 @@ let MODEL_SPECS = [{
     //rotation: [0, degToRad(90), 0],
     rotation: [0, degToRad(0), 0],
     //scale: [0.025, 0.025, 0.025]
-    scale: [0.03, 0.03, 0.03]
+    //scale: [0.03, 0.03, 0.03]
+    scale: 0.025
 }];
 
 let canvas3d = document.getElementById('canvas3d');
