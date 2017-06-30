@@ -6,10 +6,14 @@ import VREffect from './lib/effects/VREffect';
 import Earth from './lib/EARTH';
 import Stars from './lib/Stars';
 
+import {addPlanet} from './lib/Planet';
 import attachPointerLock from './attachPointerLock';
 import loadCollada from './loadCollada';
+import loadModels from './loadModels';
+import loadScreen from './loadScreen';
 import loadVideo from './loadVideo';
 import loadVR from './loadVR';
+import setupLights from './setupLights';
 
 import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
 
@@ -19,6 +23,13 @@ let DAE_PATH = 'models/PlayDomeSkp.dae';
 let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 
 let {degToRad} = THREE.Math;
+
+let MODEL_SPECS = [{
+    path: 'models/PlayDomeSkp.dae',
+    position: [0, 0, 0],
+    rotation: [0, degToRad(0), 0],
+    scale: 0.025
+}];
 
 var canvas3d = document.getElementById('canvas3d');
 canvas3d.height = window.innerHeight;
@@ -31,37 +42,6 @@ renderer.autoClear = false;
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, canvas3d.width / canvas3d.height, 1, 4000);
-
-var sphere = new THREE.SphereGeometry( 0.5, 16, 8 );
-
-var color1 = 0xffaaaa;
-var light1 = new THREE.PointLight(color1, 2, 50);
-light1.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color1 } ) ) );
-light1.position.y = 30;
-light1.position.x = -10;
-light1.position.z = -10;
-scene.add(light1);
-
-var color2 = 0xaaffaa;
-var light2 = new THREE.PointLight(color2, 2, 50);
-light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color2 } ) ) );
-light2.position.y = 30;
-light2.position.x = -10;
-light2.position.z = 5;
-scene.add(light2);
-
-var color3 = 0xaaaaff;
-var light3 = new THREE.PointLight(color3, 2, 50);
-light3.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color3 } ) ) );
-light3.position.y = 30;
-light3.position.x = -10;
-light3.position.z = -5;
-scene.add(light3);
-
-var earthGroup = new THREE.Group();
-var earth = new Earth(earthGroup, 1, {name: 'Full'});
-scene.add(earthGroup);
-earthGroup.position.set(0, 2, 0);
 
 var starsGroup = new THREE.Group();
 scene.add(starsGroup);
@@ -252,53 +232,20 @@ function render(vrDisplay) {
     effect.submitFrame();    
   }
 
-  earthGroup.rotation.y += 0.01;
   starsGroup.rotation.y += 0.0001;
 }
 
-loadCollada(
-  DAE_PATH,
-  {
-    position: [0, 0, 0],
-    rotation: [0, degToRad(90), 0],
-    scale: [0.025, 0.025, 0.025]
-  }
-).then((collada) => {
-  scene.add(collada.scene);
-  
-  console.log('Loading video...');
+function handleError(error) {
+  console.log(error);
+}
 
-  loadVideo(VIDEO_PATH).then(({imageSource, videoMaterial}) => {
-    console.log('Creating video geometry...');
-
-    let geometry = new THREE.SphereGeometry(
-      R,
-      40,
-      40,
-      TH_LEN, 
-      TH_MIN,
-      PH_LEN,
-      PH_MIN
-    );
-    let screenObject = new THREE.Mesh(geometry, videoMaterial);
-
-    screenObject.scale.x = -1;
-    screenObject.scale.x *= 8.6;
-    screenObject.scale.y *= 8.6;
-    screenObject.scale.z *= 8.6;
-    screenObject.position.y = 0;
-    screenObject.name = "movieScreen";
-
-    let screenParent = new THREE.Object3D();
-    screenParent.add(screenObject);
-    screenParent.rotation.z = 0;
-
-    scene.add(screenParent);
-
+function start()
+{
+    loadModels(MODEL_SPECS, scene);
+    loadScreen(VIDEO_PATH, scene);
+    
     loadVR(renderer.domElement).then(({button, display}) => {
       document.body.appendChild(button);
-      let autoplayPromise = imageSource.play();
-
       // Finally start animation loop
       render = render.bind(null, display);
       animate();
@@ -312,11 +259,14 @@ loadCollada(
       else {
         console.log(error);
       }
-    })
-  });
-}).catch(handleError);
-
-function handleError(error) {
-  console.log(error);
+    });
+  
+    console.log("****** adding planets ******");
+    var earth = addPlanet(scene, 'Earth',   1000, -2000, 0, 0);
+    var mars = addPlanet(scene, 'Mars',    200,   2000, 0, 2000,  './textures/Mars_4k.jpg');
+    var jupiter = addPlanet(scene, 'Jupiter', 300,   1500, 0, -1500, './textures/Jupiter_Map.jpg');
+    var nepture = addPlanet(scene, 'Nepture', 100,  -1000, 0, -1000, './textures/Neptune.jpg');
+    setupLights(scene);
 }
 
+window.start = start;
