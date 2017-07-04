@@ -13,6 +13,7 @@ import loadModels from './loadModels';
 import loadScreen from './loadScreen';
 import loadVideo from './loadVideo';
 import loadVR from './loadVR';
+import CMPDataViz from './lib/CMPDataViz';
 import setupLights from './setupLights';
 
 import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
@@ -30,6 +31,9 @@ let MODEL_SPECS = [{
     rotation: [0, degToRad(0), 0],
     scale: 0.025
 }];
+
+// climate music project
+var CMP;
 
 var canvas3d = document.getElementById('canvas3d');
 canvas3d.height = window.innerHeight;
@@ -52,7 +56,7 @@ var vrControls = new VRControls(camera);
 vrControls.shouldUpdatePosition = false;
 // vrControls.standing = true;
 
-// Allow the PointerLockControls to create the body, 
+// Allow the PointerLockControls to create the body,
 // even if we do not use the controls for movement.
 var plControls = new PointerLockControls(camera);
 var body = plControls.getObject();
@@ -88,6 +92,7 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 
   effect.setSize( window.innerWidth, window.innerHeight );
+  CMP.resize(window.innerWidth, window.innerHeight);
 });
 
 // TESTING HUD
@@ -129,7 +134,7 @@ function animate() {
     plControls.getDirection(direction);
   }
   else {
-    camera.getWorldDirection(direction);    
+    camera.getWorldDirection(direction);
   }
 
   // Do not allow gamepad controls when pointerlock controls are enabled.
@@ -150,7 +155,7 @@ function animate() {
         body.translateX(-0.01 * direction.x);
         body.translateZ(-0.01 * direction.z);
       }
-      
+
       if (axisX > 0.5) {
         // TODO: refactor into function
         let right = direction.clone().applyAxisAngle(Y_AXIS, -NINETY);
@@ -174,7 +179,7 @@ function animate() {
         body.translateZ(0.1 * direction.z);
       }
       else {
-        body.translateZ(-0.1);        
+        body.translateZ(-0.1);
       }
     }
     if (keyCode == 65) { // Move left incrementally with A
@@ -182,7 +187,7 @@ function animate() {
       if (!plControls.enabled) {
         let left = direction.clone().applyAxisAngle(Y_AXIS, NINETY);
         body.translateX(0.1 * left.x);
-        body.translateZ(0.1 * left.z);  
+        body.translateZ(0.1 * left.z);
       }
       else {
         body.translateX(-0.1);
@@ -193,7 +198,7 @@ function animate() {
         // PointerLockControls do not move the camera.
         let right = direction.clone().applyAxisAngle(Y_AXIS, -NINETY);
         body.translateX(0.1 * right.x);
-        body.translateZ(0.1 * right.z);  
+        body.translateZ(0.1 * right.z);
       }
       else {
         body.translateX(0.1);
@@ -203,7 +208,7 @@ function animate() {
       // PointerLockControls do not move the camera.
       if (!plControls.enabled) {
         body.translateX(-0.1 * direction.x);
-        body.translateZ(-0.1 * direction.z);        
+        body.translateZ(-0.1 * direction.z);
       }
       else {
         body.translateZ(0.1);
@@ -211,7 +216,7 @@ function animate() {
     }
   });
 
-
+  CMP.update();
   vrControls.update();
 
   render();
@@ -229,7 +234,7 @@ function render(vrDisplay) {
 
   // Do this manually
   if (vrDisplay && vrDisplay.isPresenting) {
-    effect.submitFrame();    
+    effect.submitFrame();
   }
 
   starsGroup.rotation.y += 0.0001;
@@ -243,7 +248,9 @@ function start()
 {
     loadModels(MODEL_SPECS, scene);
     loadScreen(VIDEO_PATH, scene);
-    
+    CMP = new CMPDataViz(renderer, scene, camera);
+    CMP.resize(window.innerWidth, window.innerHeight);
+
     loadVR(renderer.domElement).then(({button, display}) => {
       document.body.appendChild(button);
       // Finally start animation loop
@@ -260,7 +267,7 @@ function start()
         console.log(error);
       }
     });
-  
+
     console.log("****** adding planets ******");
     var earth = addPlanet(scene, 'Earth',   1000, -2000, 0, 0);
     var mars = addPlanet(scene, 'Mars',    200,   2000, 0, 2000,  './textures/Mars_4k.jpg');
