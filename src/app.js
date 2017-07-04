@@ -8,6 +8,7 @@ import Stars from './lib/Stars';
 
 import {addPlanet} from './lib/Planet';
 import attachPointerLock from './attachPointerLock';
+import loadChart from './loadChart';
 import loadCollada from './loadCollada';
 import loadModels from './loadModels';
 import loadScreen from './loadScreen';
@@ -219,24 +220,29 @@ function animate() {
   effect.requestAnimationFrame(animate);
 }
 
+let mathboxContext;
+
 function render(vrDisplay) {
   // renderer.clear(); // help
+  
+  if (mathboxContext) {
+    mathboxContext.frame();
+  }
 
   effect.render(scene, camera);
 
   // Is this right?
   effect.render(sceneHUD, cameraHUD);
 
+  // renderer.render()
+
   // Do this manually
   if (vrDisplay && vrDisplay.isPresenting) {
     effect.submitFrame();    
   }
 
+  // earthGroup.rotation.y += 0.01;
   starsGroup.rotation.y += 0.0001;
-}
-
-function handleError(error) {
-  console.log(error);
 }
 
 function start()
@@ -244,6 +250,10 @@ function start()
     loadModels(MODEL_SPECS, scene);
     loadScreen(VIDEO_PATH, scene);
     
+    loadChart(renderer, scene, camera).then(({context}) => {
+      mathboxContext = context;
+    });
+
     loadVR(renderer.domElement).then(({button, display}) => {
       document.body.appendChild(button);
       // Finally start animation loop
