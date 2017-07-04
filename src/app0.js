@@ -3,9 +3,8 @@ import * as THREE from 'three';
 import TrackballControls from './lib/controls/TrackballControls';
 import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
+import initGame from './initGame';
 
-//mport Earth from './lib/EARTH';
-//import Planet from './lib/Planet';
 import {addPlanet} from './lib/Planet';
 import Stars from './lib/Stars';
 
@@ -14,11 +13,6 @@ import loadScreen from './loadScreen';
 import setupLights from './setupLights';
 
 let {degToRad} = THREE.Math;
-
-let Y_AXIS = new THREE.Vector3(0, 1, 0);
-
-let MTL_PATH = 'models/derrick.mtl';
-let OBJ_PATH = 'models/derrick.obj';
 
 let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 let VIDEO2_PATH = 'http://dvr4.paldeploy.com/video/Sakura/WashingtonDCCherryBlossomFestival360.mp4';
@@ -33,54 +27,14 @@ let MODEL_SPECS = [{
     scale: 0.025
 }];
 
-let canvas3d = document.getElementById('canvas3d');
-canvas3d.height = window.innerHeight;
-canvas3d.width = window.innerWidth;
-
-let renderer = new THREE.WebGLRenderer({ canvas: canvas3d, antialias: true });
-renderer.setSize(canvas3d.width, canvas3d.height);
-renderer.setPixelRatio(window.devicePixelRatio);
-
-let scene = new THREE.Scene();
-let camera = new THREE.PerspectiveCamera(75, canvas3d.width / canvas3d.height, 1, 4000);
-scene.add(camera);
-
+let game = initGame();
+let scene = game.scene;
 let starsGroup = new THREE.Group();
 scene.add(starsGroup);
 //addLights(scene);
 let stars = new Stars(starsGroup, 2500, {name: 'Stars'});
 starsGroup.position.set(0, 0, 0);
 
-//let controls = new TrackballControls(camera);
-let controls = new OrbitControls(camera);
-//let controls = new CMP_Controls(camera);
-camera.position.z = 1;
-controls.addEventListener('change', render);
-controls.keys = [65, 83, 68];
-
-camera.lookAt(new THREE.Vector3());
-
-window.camera = camera;
-window.scene = scene;
-window.controls = controls;
-
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-});
-
-
-function animate() {
-  // Do not allow gamepad controls when pointerlock controls are enabled.
-  controls.update();
-  render();
-
-  window.requestAnimationFrame(animate);
-}
-
-function render(vrDisplay) {
-  renderer.render(scene, camera);
-}
 
 let screen2 = {
     radius: 1.0,
@@ -92,9 +46,9 @@ let screen2 = {
 };
 
 let screen3 = {
-    radius: 1.5,
-    phiStart: 0,
-    phiLength: 90,
+    radius: 0.5,
+//    phiStart: 0,
+//    phiLength: 90,
     position: [3,3,0]
 };
 
@@ -102,10 +56,10 @@ function start()
 {
     loadModels(MODEL_SPECS, scene);
     loadScreen(VIDEO_PATH, scene);
-    loadScreen(VIDEO_PATH, scene, screen2);
+    //loadScreen(VIDEO_PATH, scene, screen2);
     loadScreen(VIDEO2_PATH, scene, screen3);
     console.log("****** adding planets ******");
-    var vEarth =   addPlanet(scene, 'Earth',   1.2, 0, 2, 0);
+    var vEarth =  addPlanet(scene, 'Earth',   1.2, 0, 2, 0);
     var earth =   addPlanet(scene, 'Earth',   1000, -2000, 0, 0);
     var mars =    addPlanet(scene, 'Mars',    200,   2000, 0, 2000,  './textures/Mars_4k.jpg');
     var jupiter = addPlanet(scene, 'Jupiter', 300,   1500, 0, -1500, './textures/Jupiter_Map.jpg');
@@ -113,7 +67,7 @@ function start()
     var SF = {lat: 37.4, lon: -122};
     vEarth.addMarker(SF.lat, SF.lon)
     setupLights(scene);
-    animate();
+    game.animate();
 }
 
 window.start = start;
