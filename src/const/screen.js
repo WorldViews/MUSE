@@ -11,10 +11,10 @@ export let PH_LEN = Math.degToRad(49);
 // moved the degToRad into the function reading this
 // to improve readability of the spec.
 export let screen1 = {
-    R: 1.0,
-    PH_MIN: 32,
-    PH_LEN: 49,
-    TH_MIN: 110,
-    TH_LEN: 140
+    radius: 8.6,
+    phiStart: 32,
+    phiLength: 49,
+    thetaStart: 110,
+    thetaLength: 140
 };
 

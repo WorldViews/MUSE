@@ -21,6 +21,7 @@ let MTL_PATH = 'models/derrick.mtl';
 let OBJ_PATH = 'models/derrick.obj';
 
 let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
+let VIDEO2_PATH = 'http://dvr4.paldeploy.com/video/Sakura/WashingtonDCCherryBlossomFestival360.mp4';
 
 let MODEL_SPECS = [{
     path: 'models/PlayDomeSkp.dae',
@@ -81,15 +82,36 @@ function render(vrDisplay) {
   renderer.render(scene, camera);
 }
 
+let screen2 = {
+    radius: 1.0,
+    phiStart: 10,
+    phiLength: 80,
+    thetaStart: 40,
+    thetaLength: 160,
+    position: [0,3,0]
+};
+
+let screen3 = {
+    radius: 1.5,
+    phiStart: 0,
+    phiLength: 90,
+    position: [3,3,0]
+};
+
 function start()
 {
     loadModels(MODEL_SPECS, scene);
     loadScreen(VIDEO_PATH, scene);
+    loadScreen(VIDEO_PATH, scene, screen2);
+    loadScreen(VIDEO2_PATH, scene, screen3);
     console.log("****** adding planets ******");
+    var vEarth =   addPlanet(scene, 'Earth',   1.2, 0, 2, 0);
     var earth =   addPlanet(scene, 'Earth',   1000, -2000, 0, 0);
     var mars =    addPlanet(scene, 'Mars',    200,   2000, 0, 2000,  './textures/Mars_4k.jpg');
     var jupiter = addPlanet(scene, 'Jupiter', 300,   1500, 0, -1500, './textures/Jupiter_Map.jpg');
     var nepture = addPlanet(scene, 'Nepture', 100,  -1000, 0, -1000, './textures/Neptune.jpg');
+    var SF = {lat: 37.4, lon: -122};
+    vEarth.addMarker(SF.lat, SF.lon)
     setupLights(scene);
     animate();
 }
