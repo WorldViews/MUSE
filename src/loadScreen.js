@@ -6,55 +6,54 @@ import {Math} from 'three';
 //import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
 import {screen1} from './const/screen';
 
-var spec = screen1;
-console.log("spec: "+spec);
+//var spec = screen1;
+//console.log("spec: "+spec);
 
-function loadScreen(path, scene)
+function toRad(v)
 {
-  console.log('Loading screen... video: '+path);
+    return v ? Math.degToRad(v) : v;
+}
+
+function loadScreen(path, scene, spec)
+{
+    spec = spec || screen1;
+    console.log('Loading screen... video: '+path);
     console.log("spec: "+JSON.stringify(spec));
-  //var spec = {x: 5.5, y: 2.5, z: -0.1, width: 6.5, height: 4.0};
-  //loadVideo(VIDEO_PATH).then(({imageSource, videoMaterial}) => {
-  loadVideo(path).then(({imageSource, videoMaterial}) => {
-    console.log('Creating video geometry...');
+    //var spec = {x: 5.5, y: 2.5, z: -0.1, width: 6.5, height: 4.0};
+    //loadVideo(VIDEO_PATH).then(({imageSource, videoMaterial}) => {
+    loadVideo(path).then(({imageSource, videoMaterial}) => {
+	console.log('Creating video geometry...');
 
-/*
-    let geometry = new THREE.SphereGeometry(
-      R,
-      40,
-      40,
-	Math.degToRad(TH_LEN), 
-	Math.degToRad(TH_MIN),
-	Math.degToRad(PH_LEN),
-	Math.degToRad(PH_MIN)
-    );
-*/
-    // note that the theta and phi arguments are reversed
-    // from what is described in THREE.SphereGeometry documenation.
-    let geometry = new THREE.SphereGeometry(
-      spec.R,
-      40,
-      40,
-      Math.degToRad(spec.TH_MIN),
-      Math.degToRad(spec.TH_LEN),
-      Math.degToRad(spec.PH_MIN),
-      Math.degToRad(spec.PH_LEN)
-    );
-    let screenObject = new THREE.Mesh(geometry, videoMaterial);
+	// note that the theta and phi arguments are reversed
+	// from what is described in THREE.SphereGeometry documenation.
+	let geometry = new THREE.SphereGeometry(
+	    spec.radius,
+	    40,
+	    40,
+	    toRad(spec.thetaStart),
+	    toRad(spec.thetaLength),
+	    toRad(spec.phiStart),
+	    toRad(spec.phiLength)
+	);
+	let screenObject = new THREE.Mesh(geometry, videoMaterial);
+	
+	var s = 1.0;
+	if (spec.scale)
+	    s = spec.scale;
+	screenObject.scale.x = -1*s;
+	screenObject.scale.y = s;
+	screenObject.scale.z = s;
+	screenObject.position.y = 0;
+	if (spec.position)
+	    screenObject.position.fromArray(spec.position);
+	screenObject.name = "movieScreen";
 
-    screenObject.scale.x = -1;
-    screenObject.scale.x *= 8.6;
-    screenObject.scale.y *= 8.6;
-    screenObject.scale.z *= 8.6;
-    screenObject.position.y = 0;
-    screenObject.name = "movieScreen";
+	let screenParent = new THREE.Object3D();
+	screenParent.add(screenObject);
+	screenParent.rotation.z = 0;
 
-    let screenParent = new THREE.Object3D();
-    screenParent.add(screenObject);
-    screenParent.rotation.z = 0;
-
-    scene.add(screenParent);
-  });
+	scene.add(screenParent);
+    });
 }
 
 export default loadScreen;
