@@ -56,7 +56,7 @@ function initGame(domElementId)
     window.scene = scene;
     window.controls = controls;
     var game = {
-	camera, scene, controls, renderer, animate
+	camera, scene, controls, renderer, animate, models: {}
     }
     return game;
 }
