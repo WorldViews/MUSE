@@ -11,13 +11,15 @@ import Stars from './lib/Stars';
 import loadModels from './loadModels';
 import loadScreen from './loadScreen';
 import setupLights from './setupLights';
-
+import TWEEN from 'tween';
+import {interpolate} from 'd3-interpolate';
 let {degToRad} = THREE.Math;
 
 let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 let VIDEO2_PATH = 'http://dvr4.paldeploy.com/video/Sakura/WashingtonDCCherryBlossomFestival360.mp4';
 
 let MODEL_SPECS = [{
+    name: 'platform',
     path: 'models/PlayDomeSkp.dae',
     position: [0, 0, 0],
     //rotation: [0, degToRad(90), 0],
@@ -27,7 +29,7 @@ let MODEL_SPECS = [{
     scale: 0.025
 }];
 
-let game = initGame();
+window.game = initGame();
 let scene = game.scene;
 let starsGroup = new THREE.Group();
 scene.add(starsGroup);
@@ -54,7 +56,7 @@ let screen3 = {
 
 function start()
 {
-    loadModels(MODEL_SPECS, scene);
+    loadModels(MODEL_SPECS, scene, game);
     loadScreen(VIDEO_PATH, scene);
     //loadScreen(VIDEO_PATH, scene, screen2);
     loadScreen(VIDEO2_PATH, scene, screen3);
@@ -71,3 +73,50 @@ function start()
 }
 
 window.start = start;
+window.attach = THREE.SceneUtils.attach;
+window.detach = THREE.SceneUtils.detach;
+
+window.reparent = function(obj, parent)
+{
+    parent.updateMatrixWorld();
+    attach(obj, game.scene, parent);
+}
+
+
+window.moveIntoShip = function()
+{
+    var ship = game.models.platform.scene;
+    attach(game.camera, game.scene, ship);
+}
+
+/*
+function vec(a) {
+    var v = new THREE.Vector3(a[0],a[1],a[2]);
+    console.log("v: "+JSON.stringify(v));
+    return v;
+}
+console.log("====================================");
+window.nkt = new THREE.NumberKeyframeTrack("nkt",
+					   [0, 5, 6, 20],
+					   [0, 2.0, 5.3, 15.0]);
+console.log("====================================");
+window.vcs = [[0,0,0],
+	      [10,5,5],
+	      [15,7,8],
+	      [20,6,0]].map(vec);
+window.vkt = new THREE.VectorKeyframeTrack("vkt",
+					  [0, 5, 6, 20],
+					   vcs);
+*/
+window.coords = { x: 0, y: 0 };
+window.tween = new TWEEN.Tween(coords)
+        .to({ x: 100, y: 100 }, 30000)
+	.onUpdate(function() {
+		console.log(this.x, this.y);
+	});
+
+window.TWEEN = TWEEN;
+window.i2 = interpolate(10,20);
+window.iv2 = interpolate([0,0,0], [5,1,2]);
+window.io = interpolate({'pos': [0,0,0], 'color': 'red'}, {pos: [5,3,1], color: 'green'});
+var xx=25;
