@@ -48,9 +48,15 @@ class MyGame extends Game()
 }
 */
 
+var playerControl = {}
+playerControl.setPlayTime = function(t)
+{
+    console.log(">>>> noticeTime "+t);
+}
+
 //window.game = new MyGame();
-setupHtmlControls();
 window.game = new Game();
+setupHtmlControls(playerControl);
 //game.addCMPControls();
 game.addOrbitControls();
 let scene = game.scene;
@@ -112,9 +118,14 @@ function start()
     var SF = {lat: 37.4, lon: -122};
     vEarth.addMarker(SF.lat, SF.lon)
     loadModels(MODEL_SPECS, scene, game);
+/*
     loadScreen(VIDEO_PATH, game.scene, screen1);
     loadScreen(VIDEO_PATH, game.scene, labelsScreen);
     loadScreen(VIDEO2_PATH, game.scene, screen3);
+*/
+    loadScreen(VIDEO_PATH, game, screen1);
+    loadScreen(VIDEO_PATH, game, labelsScreen);
+    loadScreen(VIDEO2_PATH, game, screen3);
     setupLights(scene);
     game.animate();
 }
