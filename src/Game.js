@@ -62,7 +62,7 @@ class Game
 
     addControls()
     {
-	addOrbitControls();
+	this.addOrbitControls();
     }
     
     addOrbitControls()
@@ -117,18 +117,13 @@ let prevTime = 0;
 
 function error(str) { alert(str); }
 
-function animate() {
+function animate(msTime) {
     if (!game) {
 	error("No game");
     }
-  // Do not allow gamepad controls when pointerlock controls are enabled.
-    var t = getClockTime();
-    var deltaTime = (t - prevTime);
-    prevTime = t;
-    //console.log("dt: "+deltaTime);
     if (game.controls)
-	game.controls.update(deltaTime);
-    game.updateHandlers.forEach(h => h(deltaTime));
+	game.controls.update(msTime);
+    game.updateHandlers.forEach(h => h(msTime));
     render();
     window.requestAnimationFrame(animate);
 }
