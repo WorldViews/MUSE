@@ -1,8 +1,11 @@
 import * as THREE from 'three';
 import CMPDataViz from './lib/CMPDataViz';
 import Earth from './lib/EARTH';
+import BodyAnimationController from './controllers/BodyAnimationController';
 import NavigationController from './controllers/NavigationController';
 import StarsController from './controllers/StarsController';
+
+import {Easing, Tween} from 'tween.js';
 
 import {addPlanet} from './lib/Planet';
 import attachPointerLock from './attachPointerLock';
@@ -21,10 +24,10 @@ let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 let {degToRad} = THREE.Math;
 
 let MODEL_SPECS = [{
-    path: 'models/PlayDomeSkp.dae',
-    position: [0, 0, 0],
-    rotation: [0, degToRad(0), 0],
-    scale: 0.025
+  path: 'models/PlayDomeSkp.dae',
+  position: [0, 0, 0],
+  rotation: [0, degToRad(0), 0],
+  scale: 0.025
 }];
 
 let {camera, renderer, scene} = createScene();
@@ -36,6 +39,7 @@ let body = plControls.getObject();
 body.position.set(2, 2, 2);
 scene.add(body);
 
+let bodyAnimationController = new BodyAnimationController(body);
 let navigationController = new NavigationController(body, camera, plControls);
 let starsController = new StarsController(scene, [0, 0, 0]);
 let CMP = new CMPDataViz(renderer, scene, camera);
@@ -48,7 +52,8 @@ window.addEventListener('resize', () => {
   CMP.resize(window.innerWidth, window.innerHeight);
 });
 
-function animate() {
+function animate(time) {
+  bodyAnimationController.update(time);
   CMP.update();
   navigationController.update();
   starsController.update();
@@ -68,34 +73,46 @@ function render(vrDisplay) {
   }
 }
 
+function initAnimations() {
+    body.position.set(500, 250, 200);
+    // TODO: figure out algo for looking
+    // plControls.lookAt(new THREE.Vector3(0, 0, 0));
+
+    let anim = new Tween(body.position)
+        .to({x: 2, y: 2, z: 2}, 10000)
+        .easing(Easing.Quadratic.In);
+
+    bodyAnimationController.enqueue(anim);
+}
+
 function start() {
-    loadModels(MODEL_SPECS, scene);
-    loadScreen(VIDEO_PATH, scene);
-    CMP.resize(window.innerWidth, window.innerHeight);
+  loadModels(MODEL_SPECS, scene).then(() => initAnimations());
+  loadScreen(VIDEO_PATH, scene);
+  CMP.resize(window.innerWidth, window.innerHeight);
 
-    loadVR(renderer.domElement).then(({button, display}) => {
-      document.body.appendChild(button);
-      // Finally start animation loop
-      render = render.bind(null, display);
-      animate();
-    }).catch(error => {
-      // If VR is not available, do not worry about binding the VRDisplay.
-      // Only use PointerLock if VR is not available, do not use both.
-      if (!error.isVRAvailable) {
-        attachPointerLock(plControls);
-        animate();
-      }
-      else {
-        console.log(error);
-      }
-    });
+  loadVR(renderer.domElement).then(({button, display}) => {
+    document.body.appendChild(button);
+    // Finally start animation loop
+    render = render.bind(null, display);
+    animate(0);
+  }).catch(error => {
+    // If VR is not available, do not worry about binding the VRDisplay.
+    // Only use PointerLock if VR is not available, do not use both.
+    if (!error.isVRAvailable) {
+      attachPointerLock(plControls);
+      animate(0);
+    } else {
+      console.log(error);
+    }
+  });
 
-    console.log("****** adding planets ******");
-    let earth = addPlanet(scene, 'Earth',   1000, -2000, 0, 0);
-    let mars = addPlanet(scene, 'Mars',    200,   2000, 0, 2000,  './textures/Mars_4k.jpg');
-    let jupiter = addPlanet(scene, 'Jupiter', 300,   1500, 0, -1500, './textures/Jupiter_Map.jpg');
-    let nepture = addPlanet(scene, 'Nepture', 100,  -1000, 0, -1000, './textures/Neptune.jpg');
-    setupLights(scene);
+  console.log("****** adding planets ******");
+  let earth = addPlanet(scene, 'Earth', 1000, -2000, 0, 0);
+  let mars = addPlanet(scene, 'Mars', 200, 2000, 0, 2000, './textures/Mars_4k.jpg');
+  let jupiter = addPlanet(scene, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
+  let nepture = addPlanet(scene, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
+  setupLights(scene);
 }
 
 window.start = start;
+window.BODY = body;

@@ -61,8 +61,16 @@ function PointerLockControls( camera ) {
 			return v;
 
 		};
-
 	}();
+
+	this.lookAt = (vector) => {
+		let direction = new THREE.Object3D();
+		direction.position.copy(yawObject.position);
+		direction.lookAt(vector);
+
+		pitchObject.rotation.x = direction.rotation.x;
+		yawObject.rotation.y = direction.rotation.y;
+	};
 
 };
 
