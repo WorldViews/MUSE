@@ -15,7 +15,7 @@ import loadModels from './loadModels';
 import loadScreen from './loadScreen';
 import CMPDataViz from './lib/CMPDataViz';
 import setupLights from './setupLights';
-//import {animTest, Anim} from './animTest';
+import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
 
 //import TWEEN from 'tween';
