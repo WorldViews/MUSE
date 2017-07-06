@@ -123,6 +123,8 @@ class  CMPData {
 
 }
 
+// Warning: do not mutate camera.position
+// Mutating camera.position will break PointlockControls.
 export default class CMPDataVis {
 
     constructor(renderer, scene, camera) {
@@ -140,7 +142,6 @@ export default class CMPDataVis {
         window.renderer = renderer;
         window.THREE = THREE;
 
-        camera.position.set(-3.5, .4, 1.3);
 
 
         // this.loadDataViz().then((data) => {
