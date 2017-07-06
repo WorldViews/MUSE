@@ -15,7 +15,7 @@ import loadModels from './loadModels';
 import loadScreen from './loadScreen';
 import CMPDataViz from './lib/CMPDataViz';
 import setupLights from './setupLights';
-import {animTest, Anim} from './animTest';
+// import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
 
 //import TWEEN from 'tween';
@@ -103,7 +103,7 @@ function start()
     console.log("animTest: ... ");
     //animTest();
     //deleteMe();
-    window.Anim = Anim;
+    // window.Anim = Anim;
     CMP = new CMPDataViz(game.renderer, game.scene, game.camera);
     CMP.resize(window.innerWidth, window.innerHeight);
     game.CMP = CMP;

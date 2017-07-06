@@ -33,14 +33,14 @@ class NavigationController {
   }
 
   update() {
-    if (this.plControls.enabled) {
+    if (this.plControls && this.plControls.enabled) {
       this.plControls.getDirection(this.direction);
     } else {
       camera.getWorldDirection(this.direction);
     }
 
     // Do not allow gamepad controls when pointerlock controls are enabled.
-    if (navigator.getGamepads && !this.plControls.enabled) {
+    if (navigator.getGamepads && this.plControls && !this.plControls.enabled) {
       let gamepadList = navigator.getGamepads();
       let gamepad = gamepadList[0];
 
