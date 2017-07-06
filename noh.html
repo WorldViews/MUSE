@@ -69,30 +69,11 @@
     <script src="src/legacy/jquery-ui.js"></script>
     <script src="dist/nohApp.bundle.js"></script>
     <script>
-var n = 0;
 
-function tourSliderChanged(e, ui)
-{
-    console.log("**** tourSliderChanged ****");
-    var v = ui.value;
-    var t = v*100;
-    console.log("v: "+v+"   t: "+t);
-    //imageSrc.setPlayTime(t);
-    //e.preventDefault();// doesn't help...
-}
+var n = 0;
 
 start();
 
-$(document).ready(function() {
-    console.log("**** setting up slider ****");
-    $("#timeLine").slider({
-	    slide: tourSliderChanged,
-		min: 0, max: 1, step: 0.001
-    });
-    $("#playStop").click(function() {
-        console.log("click");
-    });
-});
     </script>
   </body>
 </html>
