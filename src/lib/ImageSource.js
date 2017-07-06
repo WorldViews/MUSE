@@ -6,6 +6,9 @@ import * as THREE from 'three';
  * @class
  * @constructor
  */
+
+function getClockTime() { return new Date().getTime()/1000.0; }
+
 function ImageSource(options) {
     this.options = options;
 
