@@ -3,9 +3,8 @@ import * as THREE from 'three';
 import TrackballControls from './lib/controls/TrackballControls';
 import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
-//import initGame from './initGame';
 import {Game} from './Game';
-//import {MyGame} from './MyGame';
+import {PlayerControl} from './PlayerControl';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
@@ -39,23 +38,8 @@ let MODEL_SPECS = [{
     scale: 0.025
 }];
 
-/*
-class MyGame extends Game()
-{
-    constructor(elemId) {
-	super(elemId);
-    }
-}
-*/
-
-var playerControl = {}
-playerControl.setPlayTime = function(t)
-{
-    console.log(">>>> noticeTime "+t);
-}
-
-//window.game = new MyGame();
 window.game = new Game();
+var playerControl = new PlayerControl(game);
 setupHtmlControls(playerControl);
 //game.addCMPControls();
 game.addOrbitControls();
@@ -66,6 +50,7 @@ let stars = new Stars(starsGroup, 2500, {name: 'Stars'});
 starsGroup.position.set(0, 0, 0);
 
 let screen1 = {
+    name: "mainScreen",
     radius: 8.8,
     phiStart: 32,
     phiLength: 49,
@@ -74,6 +59,7 @@ let screen1 = {
 };
 
 var labelsScreen = {
+    name: "labelsScreen",
     radius: 8.6,
     phiStart: 32,
     phiLength: 49,
@@ -91,6 +77,7 @@ let screen2 = {
 };
 
 let screen3 = {
+    name: "bubbleScreen1",
     radius: 0.5,
 //    phiStart: 0,
 //    phiLength: 90,
