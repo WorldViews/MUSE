@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import TrackballControls from './lib/controls/TrackballControls';
 import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
-import initGame from './initGame';
+//import initGame from './initGame';
+import {Game} from './Game';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
@@ -13,6 +14,7 @@ import loadModels from './loadModels';
 import loadScreen from './loadScreen';
 import CMPDataViz from './lib/CMPDataViz';
 import setupLights from './setupLights';
+import {animTest, Anim} from './animTest';
 
 //import TWEEN from 'tween';
 //import {interpolate} from 'd3-interpolate';
@@ -35,11 +37,22 @@ let MODEL_SPECS = [{
     scale: 0.025
 }];
 
-window.game = initGame();
+/*
+class MyGame extends Game()
+{
+    constructor(elemId) {
+	super(elemId);
+    }
+}
+*/
+
+//window.game = new MyGame();
+window.game = new Game();
+//game.addCMPControls();
+game.addOrbitControls();
 let scene = game.scene;
 let starsGroup = new THREE.Group();
 scene.add(starsGroup);
-//addLights(scene);
 let stars = new Stars(starsGroup, 2500, {name: 'Stars'});
 starsGroup.position.set(0, 0, 0);
 
@@ -63,9 +76,14 @@ let screen3 = {
 
 function start()
 {
+    console.log("animTest: ... ");
+    //animTest();
+    //deleteMe();
+    window.Anim = Anim;
     CMP = new CMPDataViz(game.renderer, game.scene, game.camera);
     CMP.resize(window.innerWidth, window.innerHeight);
     game.CMP = CMP;
+    game.registerUpdateHandler(() => game.CMP.update());
     loadChart(renderer, scene, camera).then(({context}) => {
       mathboxContext = context;
       game.mathboxContext = context;
@@ -75,7 +93,7 @@ function start()
     var vEarth =  addPlanet(scene, 'Earth',   1.2, 0, 2, 0);
     var SF = {lat: 37.4, lon: -122};
     vEarth.addMarker(SF.lat, SF.lon)
-    console.log("****** adding planets ******");
+    loadModels(MODEL_SPECS, scene, game);
     setupLights(scene);
     game.animate();
 }
@@ -96,6 +114,7 @@ window.moveIntoShip = function()
     var ship = game.models.platform.scene;
     attach(game.camera, game.scene, ship);
 }
+
 
 /*
 function vec(a) {
