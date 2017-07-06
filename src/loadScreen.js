@@ -58,6 +58,8 @@ function loadScreen(path, game, spec)
 	screenObj.imageSource = imageSource;
 	screenObj.ready = true;
     });
+    if (spec.name)
+	game.screens[spec.name] = screenObj;
     return screenObj;
 }
 
