@@ -14,8 +14,10 @@ function toRad(v)
     return v ? Math.degToRad(v) : v;
 }
 
-function loadScreen(path, scene, spec)
+function loadScreen(path, game, spec)
 {
+    var screenObj = {ready: false};
+    var scene = game.scene;
     spec = spec || screen1;
     console.log('Loading screen... video: '+path);
     console.log("spec: "+JSON.stringify(spec));
@@ -53,7 +55,10 @@ function loadScreen(path, scene, spec)
 	screenParent.rotation.z = 0;
 
 	scene.add(screenParent);
+	screenObj.imageSource = imageSource;
+	screenObj.ready = true;
     });
+    return screenObj;
 }
 
-export default loadScreen;
+export {loadScreen};

@@ -12,7 +12,7 @@ import Stars from './lib/Stars';
 
 import loadChart from './loadChart';
 import loadModels from './loadModels';
-import loadScreen from './loadScreen';
+import {loadScreen} from './loadScreen';
 import CMPDataViz from './lib/CMPDataViz';
 import setupLights from './setupLights';
 // import {animTest, Anim} from './animTest';
@@ -117,7 +117,7 @@ function start()
     var vEarth =  addPlanet(scene, 'Earth',   1.2, 0, 2, 0);
     var SF = {lat: 37.4, lon: -122};
     vEarth.addMarker(SF.lat, SF.lon)
-    loadModels(MODEL_SPECS, scene, game);
+    loadModels(MODEL_SPECS, game);
 /*
     loadScreen(VIDEO_PATH, game.scene, screen1);
     loadScreen(VIDEO_PATH, game.scene, labelsScreen);

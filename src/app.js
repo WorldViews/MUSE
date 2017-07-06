@@ -15,7 +15,7 @@ import createControls from './createControls';
 import createScene from './createScene';
 import loadCollada from './loadCollada';
 import loadModels from './loadModels';
-import loadScreen from './loadScreen';
+import {loadScreen} from './loadScreen';
 import loadVideo from './loadVideo';
 import loadVR from './loadVR';
 import setupLights from './setupLights';
@@ -84,8 +84,8 @@ function initAnimations() {
 }
 
 function start() {
-  loadModels(MODEL_SPECS, game.scene);//.then(() => initAnimations());
-  loadScreen(VIDEO_PATH, game.scene);
+  loadModels(MODEL_SPECS, game);//.then(() => initAnimations());
+  loadScreen(VIDEO_PATH, game);
 
   console.log("****** adding planets ******");
   let earth = addPlanet(game.scene, 'Earth', 1000, -2000, 0, 0);
