@@ -6,9 +6,10 @@ import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
 
 import loadModels from './loadModels';
-import loadScreen from './loadScreen';
+import {loadScreen} from './loadScreen';
 import setupLights from './setupLights';
-import initGame from './initGame';
+import {Game} from './Game';
+import {setupHtmlControls} from './htmlControls';
 
 let {degToRad} = THREE.Math;
 
@@ -27,15 +28,18 @@ let MODEL_SPECS = [{
     scale: 0.025
 }];
 
-var game = initGame();
+var game = new Game();
+game.addControls();
 window.game = game;
+setupHtmlControls();
+//window.scene = scene;
 
 function start()
 {
-    loadModels(MODEL_SPECS, scene);
-    loadScreen(VIDEO_PATH, scene);
+    loadModels(MODEL_SPECS, game);
+    loadScreen(VIDEO_PATH, game);
     console.log("****** adding planets ******");
-    setupLights(scene);
+    setupLights(game.scene);
     game.animate();
 }
 
