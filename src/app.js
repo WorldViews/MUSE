@@ -32,10 +32,6 @@ let MODEL_SPECS = [{
   scale: 0.025
 }];
 
-// TODO: migrate and delete unused
-// let {camera, renderer, scene} = createScene();
-// let {plControls, vrControls, vrEffect} = createControls(renderer, scene, camera);
-
 let game = new VRGame();
 window.game = game;
 
@@ -48,28 +44,6 @@ game.registerController(bodyAnimationController);
 game.registerController(navigationController);
 game.registerController(starsController);
 game.registerController(cmpController);
-
-
-function animate(time) {
-  bodyAnimationController.update(time);
-  CMP.update();
-  navigationController.update();
-  starsController.update();
-  vrControls.update();
-
-  render();
-
-  vrEffect.requestAnimationFrame(animate);
-}
-
-function render(vrDisplay) {
-  vrEffect.render(scene, camera);
-
-  // Do this manually to support multiple scenes.
-  if (vrDisplay && vrDisplay.isPresenting) {
-    vrEffect.submitFrame();
-  }
-}
 
 function initAnimations() {
     body.position.set(500, 250, 200);
@@ -93,6 +67,8 @@ function start() {
   let jupiter = addPlanet(game.scene, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
   let nepture = addPlanet(game.scene, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
   setupLights(game.scene);
+
+  game.body.position.set(2, 2, 2);
 
   game.animate(0);
 }

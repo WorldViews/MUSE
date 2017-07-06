@@ -30,6 +30,15 @@ class Game {
     window.addEventListener('resize', this.handleResize);
 
     this.models = {};
+
+    this.setupRAF();
+  }
+
+  setupRAF() {
+    this.requestAnimate = window.requestAnimationFrame.bind(
+      window,
+      this.animate.bind(this)
+    );
   }
 
   createRenderer(domElementId) {
@@ -115,7 +124,8 @@ class Game {
     this.updateHandlers.forEach(h => h(msTime));
     this.render();
 
-    window.requestAnimationFrame(this.animate.bind(this));
+    // Do NOT provide params.
+    this.requestAnimate();
   }
 
   render() {
