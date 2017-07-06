@@ -5,6 +5,7 @@ import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
 //import initGame from './initGame';
 import {Game} from './Game';
+//import {MyGame} from './MyGame';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
@@ -15,6 +16,7 @@ import loadScreen from './loadScreen';
 import CMPDataViz from './lib/CMPDataViz';
 import setupLights from './setupLights';
 import {animTest, Anim} from './animTest';
+import {setupHtmlControls} from './htmlControls';
 
 //import TWEEN from 'tween';
 //import {interpolate} from 'd3-interpolate';
@@ -47,6 +49,7 @@ class MyGame extends Game()
 */
 
 //window.game = new MyGame();
+setupHtmlControls();
 window.game = new Game();
 //game.addCMPControls();
 game.addOrbitControls();
@@ -56,6 +59,21 @@ scene.add(starsGroup);
 let stars = new Stars(starsGroup, 2500, {name: 'Stars'});
 starsGroup.position.set(0, 0, 0);
 
+let screen1 = {
+    radius: 8.8,
+    phiStart: 32,
+    phiLength: 49,
+    thetaStart: 110,
+    thetaLength: 140
+};
+
+var labelsScreen = {
+    radius: 8.6,
+    phiStart: 32,
+    phiLength: 49,
+    thetaStart: -90,
+    thetaLength: 60
+}
 
 let screen2 = {
     radius: 1.0,
@@ -94,6 +112,9 @@ function start()
     var SF = {lat: 37.4, lon: -122};
     vEarth.addMarker(SF.lat, SF.lon)
     loadModels(MODEL_SPECS, scene, game);
+    loadScreen(VIDEO_PATH, game.scene, screen1);
+    loadScreen(VIDEO_PATH, game.scene, labelsScreen);
+    loadScreen(VIDEO2_PATH, game.scene, screen3);
     setupLights(scene);
     game.animate();
 }
