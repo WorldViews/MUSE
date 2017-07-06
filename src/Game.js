@@ -29,6 +29,7 @@ class Game {
 
     window.addEventListener('resize', this.handleResize);
 
+    this.screens = {};
     this.models = {};
 
     this.setupRAF();

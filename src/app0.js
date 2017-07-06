@@ -3,9 +3,8 @@ import * as THREE from 'three';
 import TrackballControls from './lib/controls/TrackballControls';
 import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
-//import initGame from './initGame';
 import {Game} from './Game';
-//import {MyGame} from './MyGame';
+import {PlayerControl} from './PlayerControl';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
@@ -15,7 +14,7 @@ import loadModels from './loadModels';
 import {loadScreen} from './loadScreen';
 import CMPDataViz from './lib/CMPDataViz';
 import setupLights from './setupLights';
-// import {animTest, Anim} from './animTest';
+import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
 
 //import TWEEN from 'tween';
@@ -39,33 +38,20 @@ let MODEL_SPECS = [{
     scale: 0.025
 }];
 
-/*
-class MyGame extends Game()
-{
-    constructor(elemId) {
-	super(elemId);
-    }
-}
-*/
-
-var playerControl = {}
-playerControl.setPlayTime = function(t)
-{
-    console.log(">>>> noticeTime "+t);
-}
-
-//window.game = new MyGame();
 window.game = new Game();
+var playerControl = new PlayerControl(game);
 setupHtmlControls(playerControl);
 //game.addCMPControls();
 game.addOrbitControls();
 let scene = game.scene;
+game.gss = new GSS.SpreadSheet();
 let starsGroup = new THREE.Group();
 scene.add(starsGroup);
 let stars = new Stars(starsGroup, 2500, {name: 'Stars'});
 starsGroup.position.set(0, 0, 0);
 
 let screen1 = {
+    name: "mainScreen",
     radius: 8.8,
     phiStart: 32,
     phiLength: 49,
@@ -74,6 +60,7 @@ let screen1 = {
 };
 
 var labelsScreen = {
+    name: "labelsScreen",
     radius: 8.6,
     phiStart: 32,
     phiLength: 49,
@@ -91,6 +78,7 @@ let screen2 = {
 };
 
 let screen3 = {
+    name: "bubbleScreen1",
     radius: 0.5,
 //    phiStart: 0,
 //    phiLength: 90,
@@ -103,7 +91,7 @@ function start()
     console.log("animTest: ... ");
     //animTest();
     //deleteMe();
-    // window.Anim = Anim;
+    window.Anim = Anim;
     CMP = new CMPDataViz(game.renderer, game.scene, game.camera);
     CMP.resize(window.innerWidth, window.innerHeight);
     game.CMP = CMP;
@@ -148,36 +136,3 @@ window.moveIntoShip = function()
 }
 
 
-/*
-function vec(a) {
-    var v = new THREE.Vector3(a[0],a[1],a[2]);
-    console.log("v: "+JSON.stringify(v));
-    return v;
-}
-console.log("====================================");
-window.nkt = new THREE.NumberKeyframeTrack("nkt",
-					   [0, 5, 6, 20],
-					   [0, 2.0, 5.3, 15.0]);
-console.log("====================================");
-window.vcs = [[0,0,0],
-	      [10,5,5],
-	      [15,7,8],
-	      [20,6,0]].map(vec);
-window.vkt = new THREE.VectorKeyframeTrack("vkt",
-					  [0, 5, 6, 20],
-					   vcs);
-*/
-/*
-window.coords = { x: 0, y: 0 };
-window.tween = new TWEEN.Tween(coords)
-        .to({ x: 100, y: 100 }, 30000)
-	.onUpdate(function() {
-		console.log(this.x, this.y);
-	});
-
-window.TWEEN = TWEEN;
-window.i2 = interpolate(10,20);
-window.iv2 = interpolate([0,0,0], [5,1,2]);
-window.io = interpolate({'pos': [0,0,0], 'color': 'red'}, {pos: [5,3,1], color: 'green'});
-var xx=25;
-*/

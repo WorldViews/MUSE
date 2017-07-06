@@ -8,6 +8,8 @@ so the generic things stay in the GSS.SpreadSheet, and specific things are in an
 */
 var GSS = {};
 
+function report(str) { console.log(str); }
+
 GSS.SSURL = "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json";
 
 
@@ -70,9 +72,9 @@ GSS.SpreadSheet.getJSON = function(url, handler)
 GSS.SpreadSheet.prototype.load = function()
 {
     var inst = this;
-    report("GSS.SpreadSheet.load "+SSURL);
+    report("GSS.SpreadSheet.load "+GSS.SSURL);
     //GSS.SpreadSheet.getJSON(SSURL, function(data) {
-    $.getJSON(SSURL, function(data) {
+    $.getJSON(GSS.SSURL, function(data) {
         //report("GOT JSON: "+data);
 	inst.handleData(data);
 	//inst.dump();
