@@ -7,6 +7,7 @@ import CMP_Controls from './lib/controls/CMP_Controls';
 let scene = null;
 let camera = null;
 let renderer = null;
+let game = null;
 
 function initGame(domElementId)
 {
@@ -47,18 +48,33 @@ function initGame(domElementId)
 
     camera.lookAt(new THREE.Vector3());
 
+    window.addEventListener('resize', handleResize);
+/*
     window.addEventListener('resize', () => {
 	console.log("*** resizing");
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
     });
+*/
     window.camera = camera;
     window.scene = scene;
     window.controls = controls;
-    var game = {
+    //var game = {
+    game = {
 	camera, scene, controls, renderer, animate, models: {}
     }
     return game;
+}
+
+function handleResize(e)
+{
+    console.log("*** resizing");
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    if (game && game.CMP) {
+	console.log("*** resizing CMP");
+	game.CMP.resize(window.innerWidth, window.innerHeight);
+    }
 }
 
 function getClockTime()
@@ -82,6 +98,10 @@ function animate() {
 
 function render(vrDisplay) {
   renderer.render(scene, camera);
+    if (game && game.mathboxContext) {
+	//console.log("calling game.mathboxContext.frame()");
+	game.CMP.update();
+    }
 }
 
 export default initGame;

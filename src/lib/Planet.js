@@ -104,9 +104,17 @@ function addPlanet(scene, name, radius, x, y, z, tex)
     return planet;
 }
 
+function addPlanets(scene)
+{
+    var earth =   addPlanet(scene, 'Earth',   1000, -2000, 0, 0);
+    var mars =    addPlanet(scene, 'Mars',    200,   2000, 0, 2000,  './textures/Mars_4k.jpg');
+    var jupiter = addPlanet(scene, 'Jupiter', 300,   1500, 0, -1500, './textures/Jupiter_Map.jpg');
+    var nepture = addPlanet(scene, 'Nepture', 100,  -1000, 0, -1000, './textures/Neptune.jpg');
+}
+
 //export {addPlanet};
 //export {addPlanet, Planet: EARTH.Planet};
 //export {Planet: EARTH.Planet, addPlanet};
 //export default EARTH.Planet;
 let Planet = EARTH.Planet;
-export {Planet, addPlanet};
+export {Planet, addPlanet, addPlanets};

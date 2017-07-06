@@ -11,6 +11,7 @@ function setupLights(scene)
     light1.position.y = 30;
     light1.position.x = -10;
     light1.position.z = -10;
+    light1.name = "light1";
     scene.add(light1);
 
     let color2 = 0xaaffaa;
@@ -19,6 +20,7 @@ function setupLights(scene)
     light2.position.y = 30;
     light2.position.x = -10;
     light2.position.z = 5;
+    light2.name = "light2";
     scene.add(light2);
 
     let color3 = 0xaaaaff;
@@ -27,6 +29,7 @@ function setupLights(scene)
     light3.position.y = 30;
     light3.position.x = -10;
     light3.position.z = -5;
+    light3.name = "light3";
     scene.add(light3);
 }
 
