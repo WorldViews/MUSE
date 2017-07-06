@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import CMPDataViz from './lib/CMPDataViz';
 import Earth from './lib/EARTH';
+import VRGame from './VRGame';
+
 import BodyAnimationController from './controllers/BodyAnimationController';
 import NavigationController from './controllers/NavigationController';
 import StarsController from './controllers/StarsController';
@@ -30,27 +32,23 @@ let MODEL_SPECS = [{
   scale: 0.025
 }];
 
-let {camera, renderer, scene} = createScene();
-let {plControls, vrControls, vrEffect} = createControls(renderer, scene, camera);
+// TODO: migrate and delete unused
+// let {camera, renderer, scene} = createScene();
+// let {plControls, vrControls, vrEffect} = createControls(renderer, scene, camera);
 
-// The body is always create by the PointerLockContorls;
-// regardless of whether it is the primary use of movement control.
-let body = plControls.getObject();
-body.position.set(2, 2, 2);
-scene.add(body);
+let game = new VRGame();
+window.game = game;
 
-let bodyAnimationController = new BodyAnimationController(body);
-let navigationController = new NavigationController(body, camera, plControls);
-let starsController = new StarsController(scene, [0, 0, 0]);
-let CMP = new CMPDataViz(renderer, scene, camera);
+let bodyAnimationController = new BodyAnimationController(game.body);
+let navigationController = new NavigationController(game.body, game.camera, game.plControls);
+let starsController = new StarsController(game.scene, [0, 0, 0]);
+let cmpController = new CMPDataViz(game.renderer.getUnderlyingRenderer(), game.scene, game.camera);
 
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+game.registerController(bodyAnimationController);
+game.registerController(navigationController);
+game.registerController(starsController);
+game.registerController(cmpController);
 
-  vrEffect.setSize(window.innerWidth, window.innerHeight);
-  CMP.resize(window.innerWidth, window.innerHeight);
-});
 
 function animate(time) {
   bodyAnimationController.update(time);
@@ -86,33 +84,17 @@ function initAnimations() {
 }
 
 function start() {
-  loadModels(MODEL_SPECS, scene).then(() => initAnimations());
-  loadScreen(VIDEO_PATH, scene);
-  CMP.resize(window.innerWidth, window.innerHeight);
-
-  loadVR(renderer.domElement).then(({button, display}) => {
-    document.body.appendChild(button);
-    // Finally start animation loop
-    render = render.bind(null, display);
-    animate(0);
-  }).catch(error => {
-    // If VR is not available, do not worry about binding the VRDisplay.
-    // Only use PointerLock if VR is not available, do not use both.
-    if (!error.isVRAvailable) {
-      attachPointerLock(plControls);
-      animate(0);
-    } else {
-      console.log(error);
-    }
-  });
+  loadModels(MODEL_SPECS, game.scene);//.then(() => initAnimations());
+  loadScreen(VIDEO_PATH, game.scene);
 
   console.log("****** adding planets ******");
-  let earth = addPlanet(scene, 'Earth', 1000, -2000, 0, 0);
-  let mars = addPlanet(scene, 'Mars', 200, 2000, 0, 2000, './textures/Mars_4k.jpg');
-  let jupiter = addPlanet(scene, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
-  let nepture = addPlanet(scene, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
-  setupLights(scene);
+  let earth = addPlanet(game.scene, 'Earth', 1000, -2000, 0, 0);
+  let mars = addPlanet(game.scene, 'Mars', 200, 2000, 0, 2000, './textures/Mars_4k.jpg');
+  let jupiter = addPlanet(game.scene, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
+  let nepture = addPlanet(game.scene, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
+  setupLights(game.scene);
+
+  game.animate(0);
 }
 
 window.start = start;
-window.BODY = body;

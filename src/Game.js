@@ -1,139 +1,126 @@
-
 import * as THREE from 'three';
-import {Math} from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
 
-// for now, keep these available at this level so that some
-// functions can remain as functions rather than methods.
-let game = null;
-let scene = null;
-let camera = null;
-let renderer = null;
-let controls = null;
+class Game {
 
-class Game
-{
-    constructor(domElementId) {
-	this.updateHandlers = [];
-	this.init(domElementId);
-    }
+  constructor(domElementId) {
+    this.updateHandlers = [];
+    this.init(domElementId);
+  }
 
-    init(domElementId)
-    {
-	console.log("init: "+domElementId);
-	if (domElementId) {
-	    console.log("Getting canvas from "+domElementId)
-	    let canvas3d = document.getElementById('canvas3d');
-	    canvas3d.height = window.innerHeight;
-	    canvas3d.width = window.innerWidth;
-	    renderer = new THREE.WebGLRenderer({ canvas: canvas3d,
-						 antialias: true });
-	    renderer.setSize(canvas3d.width, canvas3d.height);
-	    camera = new THREE.PerspectiveCamera(75,
-						 canvas3d.width/canvas3d.height,
-						 1, 30000);
-	}
-	else {
-	    renderer = new THREE.WebGLRenderer({ antialias: true });
-	    renderer.setPixelRatio(window.devicePixelRatio);
-	    renderer.setSize( window.innerWidth, window.innerHeight );
-	    var container = document.createElement( 'div' );
-	    container.appendChild( renderer.domElement );
-	    document.body.appendChild( container );
-	    camera = new THREE.PerspectiveCamera(75,
-						 window.innerWidth/window.innerHeight,
-						 1, 30000);
-	}
-	//renderer.setClearColor( 0x000020 ); //NOFOG
-	scene = new THREE.Scene();
-	scene.add(camera);
-
-	//this.addControls();
-
-	window.addEventListener('resize', handleResize);
-	this.camera = camera;
-	this.scene = scene;
-	this.renderer = renderer;
-	this.models = {};
-	this.animate = animate;
-	game = this;
-    }
-
-    addControls()
-    {
-	this.addOrbitControls();
-    }
+  init(domElementId) {
+    console.log("init: " + domElementId);
     
-    addOrbitControls()
-    {
-	controls = new OrbitControls(camera, renderer.domElement);
-	camera.position.z = 1;
-	controls.addEventListener('change', render);
-	controls.keys = [65, 83, 68];
-	camera.lookAt(new THREE.Vector3());
-	this.controls = controls;
+    this.domElementId = domElementId;
+    this.renderer = this.createRenderer(domElementId);
+    
+    let size = this.renderer.getSize();
+    this.camera = new THREE.PerspectiveCamera(
+    	75,
+        size.width / size.height,
+        1,
+        30000
+    );
+
+    //renderer.setClearColor( 0x000020 ); //NOFOG
+    this.scene = new THREE.Scene();
+    this.scene.add(this.camera);
+
+    window.addEventListener('resize', this.handleResize);
+
+    this.models = {};
+  }
+
+  createRenderer(domElementId) {
+    var renderer;
+
+    if (domElementId) {
+      let canvas3d = document.getElementById('canvas3d');
+      canvas3d.height = window.innerHeight;
+      canvas3d.width = window.innerWidth;
+
+      renderer = new THREE.WebGLRenderer({
+        canvas: canvas3d,
+        antialias: true
+      });
+      renderer.setSize(canvas3d.width, canvas3d.height);
+
+    } else {
+      renderer = new THREE.WebGLRenderer({
+        antialias: true
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      let container = document.createElement('div');
+      container.appendChild(renderer.domElement);
+      document.body.appendChild(container);
     }
 
-    addCMPControls()
-    {
-	controls = new CMP_Controls(camera);
-	controls.addEventListener('change', render);
-	controls.keys = [65, 83, 68];
-	camera.lookAt(new THREE.Vector3());
-	this.controls = controls;
+    return renderer;
+  }
+
+  addControls() {
+    this.addOrbitControls();
+  }
+
+  addOrbitControls() {
+    this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.orbitControls.addEventListener('change', this.render.bind(this));
+    this.orbitControls.keys = [65, 83, 68];
+    this.camera.lookAt(new THREE.Vector3());
+    this.camera.position.z = 1;
+  }
+
+  addCMPControls() {
+    this.cmpControls = new CMP_Controls(this.camera);
+    this.cmpControls.addEventListener('change', this.render.bind(this));
+    this.cmpControls.keys = [65, 83, 68];
+    this.camera.lookAt(new THREE.Vector3());
+  }
+
+  registerController(controller) {
+  	if (typeof controller === 'object' && controller.update) {
+  		this.updateHandlers.push(controller.update.bind(controller));
+  	} else {
+  		throw 'Unsupported controller provided to `registerController`';
+  	}
+  }
+
+  registerUpdateHandler(handlerOrObject) {
+  	if (typeof handlerOrObject === 'function') {
+	    this.updateHandlers.push(handlerOrObject);
+  	} else {
+  		throw 'Unsupported handler provided to `registerUpdateHandler`';
+  	}
+  }
+
+  handleResize(e) {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+    if (this.CMP) {
+      CMP.resize(window.innerWidth, window.innerHeight);
+    }
+  }
+
+  animate(msTime) {
+    if (game.controls) {
+      this.controls.update(msTime);
     }
 
-    registerUpdateHandler(handler)
-    {
-	this.updateHandlers.push(handler);
-    }
+    this.updateHandlers.forEach(h => h(msTime));
+    this.render();
 
-    /* For now, lets not have these be methods, but traditional functions.
-       They can still be overridden.  We can discuss this...
-    */
-    // handleResize(e) {}
-    // animate() {};
-    // render() {};
+    window.requestAnimationFrame(this.animate.bind(this));
+  }
+
+  render() {
+    this.renderer.render(this.scene, this.camera);
+  }
 }
 
-function handleResize(e)
-{
-    console.log("*** resizing");
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    if (game && game.CMP) {
-	console.log("*** resizing CMP");
-	game.CMP.resize(window.innerWidth, window.innerHeight);
-    }
-}
-
-function getClockTime()
-{
-    return new Date().getTime()/1000.0;
-}
-
-let prevTime = 0;
-
-function error(str) { alert(str); }
-
-function animate(msTime) {
-    if (!game) {
-	error("No game");
-    }
-    if (game.controls)
-	game.controls.update(msTime);
-    game.updateHandlers.forEach(h => h(msTime));
-    render();
-    window.requestAnimationFrame(animate);
-}
-
-function render(vrDisplay) {
-    if (!game) {
-	error("No game");
-    }
-    renderer.render(scene, camera);
-}
-
-//export default initGame;
 export {Game};

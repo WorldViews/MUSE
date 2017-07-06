@@ -51,8 +51,6 @@ let VREffect = function ( renderer, onError ) {
 
 	}
 
-	//
-
 	this.isPresenting = false;
 
 	var scope = this;
@@ -60,6 +58,10 @@ let VREffect = function ( renderer, onError ) {
 	var rendererSize = renderer.getSize();
 	var rendererUpdateStyle = false;
 	var rendererPixelRatio = renderer.getPixelRatio();
+
+	this.getUnderlyingRenderer = function() {
+		return renderer;
+	};
 
 	this.getVRDisplay = function () {
 
@@ -98,6 +100,10 @@ let VREffect = function ( renderer, onError ) {
 
 		}
 
+	};
+
+	this.getSize = function() {
+		return renderer.getSize();
 	};
 
 	// VR presentation
