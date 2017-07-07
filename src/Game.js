@@ -80,14 +80,16 @@ class Game {
     this.orbitControls.addEventListener('change', this.render.bind(this));
     this.orbitControls.keys = [65, 83, 68];
     this.camera.lookAt(new THREE.Vector3());
-    this.camera.position.z = 1;
+      this.camera.position.z = 1;
+      this.controls = this.orbitControls;
   }
 
   addCMPControls() {
     this.cmpControls = new CMP_Controls(this.camera);
-    this.cmpControls.addEventListener('change', this.render.bind(this));
+    //this.cmpControls.addEventListener('change', this.render.bind(this));
     this.cmpControls.keys = [65, 83, 68];
     this.camera.lookAt(new THREE.Vector3());
+      this.controls = this.cmpControls;
   }
 
   registerController(controller) {
