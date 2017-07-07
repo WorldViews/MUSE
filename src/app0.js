@@ -96,25 +96,22 @@ function start()
     //animTest();
     //deleteMe();
     window.Anim = Anim;
-    CMP = new CMPDataViz(game.renderer, game.scene, game.camera);
+    CMP = new CMPDataViz(game.renderer, game.scene, game.camera, {position: [0,3,1.5]});
+//								  scale:[1.5,3,5]});
     CMP.resize(window.innerWidth, window.innerHeight);
     game.CMP = CMP;
     game.registerUpdateHandler(() => game.CMP.update());
+/*
     loadChart(renderer, scene, camera).then(({context}) => {
       mathboxContext = context;
       game.mathboxContext = context;
     });
-
+*/
     addPlanets(scene);
     var vEarth =  addPlanet(scene, 'Earth',   1.2, 0, 2, 0);
     var SF = {lat: 37.4, lon: -122};
     vEarth.addMarker(SF.lat, SF.lon)
     loadModels(MODEL_SPECS, game);
-/*
-    loadScreen(VIDEO_PATH, game.scene, screen1);
-    loadScreen(VIDEO_PATH, game.scene, labelsScreen);
-    loadScreen(VIDEO2_PATH, game.scene, screen3);
-*/
     loadScreen(VIDEO_PATH, game, screen1);
     loadScreen(VIDEO_PATH, game, labelsScreen);
     loadScreen(VIDEO2_PATH, game, screen3);
