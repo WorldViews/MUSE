@@ -1,3 +1,6 @@
+
+import {sprintf} from "sprintf-js";
+
 /*
 function getVideoOpacity(t)
 {
@@ -33,22 +36,20 @@ class PlayerControl
 	if (game.gss) {
 	    var year = GSS.timeToYear(t);
 	    console.log("year: "+year);
-	    $("#timeText").html(t);
+	    var tStr = sprintf("%8.1f", t);
+	    this.game.events.dispatchEvent({type: 'valueChange',
+					    message: {'name': 'timeText', 'value': tStr}});
+	    var yearStr = "";
 	    if (year) {
-		$("#yearText").html(Math.floor(year));
 		var va = game.gss.getFieldByYear(year, "videofade");
-                var nar = game.gss.getFieldByYear(year, "narrative");
+                var nar = game.gss.getFieldByYear(year, "narrative") || "";
 		console.log("va: "+va+"  narrative: "+nar);
-		if (nar) {
-		    $("#narrativeText").html(nar);
-		}
-		else {
-		    $("#narrativeText").html("");
-		}
+		yearStr = Math.floor(year);
+		this.game.events.dispatchEvent({type: 'valueChange',
+						message: {'name': 'narrativeText', 'value': nar}});
 	    }
-	    else {
-		$("#yearText").html("");
-	    }
+	    this.game.events.dispatchEvent({type: 'valueChange',
+					    message: {'name': 'yearText', 'value': yearStr}});
 	}
     }
 }

@@ -40,7 +40,11 @@ let MODEL_SPECS = [{
 
 window.game = new Game();
 var playerControl = new PlayerControl(game);
-setupHtmlControls(playerControl);
+setupHtmlControls(game, playerControl);
+game.events.addEventListener('valueChange', msg => {
+    console.log("valueChange: "+JSON.stringify(msg));
+});
+
 //game.addCMPControls();
 game.addOrbitControls();
 let scene = game.scene;
