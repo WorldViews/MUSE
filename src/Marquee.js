@@ -10,30 +10,37 @@ class Marquee extends THREE.Mesh {
 		super();
 		this.type = 'Marquee';
 
-		this._width = 512//window.innerWidth;
-		this._height = 512//window.innerHeight;
+		this._width = window.innerWidth;
+		this._height = window.innerHeight;
 
 		this._canvas = document.createElement('canvas');
 		this._canvas.width = this._width;
 		this._canvas.height = this._height;
 		this._context = this._canvas.getContext('2d');
 
-		this._context.font = 'Normal 40px Arial';
+		this._context.font = 'Normal 120px Arial';
 		this._context.textAlign = 'center';
-		this._context.fillStyle = 'rgba(245,245,245,0.75)';
-		this._context.fillText('TESTING...', this._width / 2, this._height / 2);
+		this._context.fillStyle = 'white';
+		this._context.fillText('MARQUEE TESTING...', this._width / 2, this._height / 2);
 		
 		this._texture = new THREE.Texture(this._canvas);
 		this._texture.needsUpdate = true;
-		this.material = new THREE.MeshBasicMaterial({map: this._texture, side: THREE.BackSide});
+		this._texture.wrapS = THREE.RepeatWrapping;
+		this._texture.repeat.x = -1;
+
+		this.material = new THREE.MeshBasicMaterial({
+			map: this._texture,
+			side: THREE.BackSide,
+			transparent: true,
+		});
 		this.geometry = new THREE.SphereGeometry(
 		    marqueeSpec.radius,
 		    40,
 		    40,
-		    degToRad(marqueeSpec.thetaStart),
-		    degToRad(marqueeSpec.thetaLength),
 		    degToRad(marqueeSpec.phiStart),
-		    degToRad(marqueeSpec.phiLength)
+		    degToRad(marqueeSpec.phiLength),
+		    degToRad(marqueeSpec.thetaStart),
+		    degToRad(marqueeSpec.thetaLength)
 		);
 	}
 

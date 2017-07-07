@@ -21,9 +21,9 @@ export let screen1 = {
 
 export let marquee = {
     name: "marquee",
-    radius: 8.6,
-    phiStart: 32,
-    phiLength: 49,
-    thetaStart: 110,
-    thetaLength: 140
+    radius: 7,
+    phiStart: -25,
+    phiLength: 50,
+    thetaStart: 65,
+    thetaLength: 20,
 };
