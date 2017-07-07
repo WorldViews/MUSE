@@ -4,6 +4,7 @@ import DataLoader from '../lib/cmp/DataLoader'
 import state from '../lib/cmp/State';
 
 import TWEEN from '@tweenjs/tween.js';
+import MathBox from 'mathbox';
 
 const chartScale=[1.5,1,1.5];
 const chartRange={

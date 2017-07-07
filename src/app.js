@@ -8,7 +8,7 @@ import NavigationController from './controllers/NavigationController';
 import StarsController from './controllers/StarsController';
 import CMPController from './controllers/CMPController';
 
-import {Easing, Tween} from 'tween.js';
+import {Easing, Tween} from '@tweenjs/tween.js';
 
 import {addPlanet} from './lib/Planet';
 import loadCollada from './loadCollada';

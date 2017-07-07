@@ -9,7 +9,6 @@ import {PlayerControl} from './PlayerControl';
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
 
-import loadChart from './loadChart';
 import loadModels from './loadModels';
 import {loadScreen} from './loadScreen';
 import CMPController from './controllers/CMPController';

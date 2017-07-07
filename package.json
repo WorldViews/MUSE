@@ -24,13 +24,13 @@
     "script-loader": "^0.7.0",
     "sprintf-js": "^1.1.1",
     "three": "^0.85.2",
-    "tween": "^0.9.0",
-    "tween.js": "^16.6.0",
     "webpack": "^2.6.1",
+    "webpack-bundle-analyzer": "^2.8.2",
     "webpack-dev-server": "^2.4.5"
   },
   "scripts": {
     "build": "webpack",
+    "build:analyze": "webpack --env=analyze",
     "watch": "webpack --progress --watch",
     "start": "http-server"
   },
