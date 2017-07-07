@@ -36,7 +36,8 @@ let navigationController = new NavigationController(game.body, game.camera, game
 let starsController = new StarsController(game.scene, [0, 0, 0]);
 let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
   position: [0, 3, 1.5],
-  scale: [3, 2, 3]
+  rotation: [0, 0, 0],
+  scale: [1.5, 1, 1.5]
 });
 
 game.registerController(bodyAnimationController);

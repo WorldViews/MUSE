@@ -27,7 +27,7 @@ class Game {
     this.scene = new THREE.Scene();
     this.scene.add(this.camera);
 
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener('resize', this.handleResize.bind(this));
 
     this.screens = {};
     this.models = {};
