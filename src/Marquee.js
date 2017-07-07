@@ -42,6 +42,10 @@ class Marquee extends THREE.Mesh {
 		    degToRad(marqueeSpec.thetaStart),
 		    degToRad(marqueeSpec.thetaLength)
 		);
+
+		// Because this mesh has a transparent background, 
+		// it must render after other objects for blending to happen properly.
+		this.renderOrder = 1;
 	}
 
 	updateText(text) {
