@@ -38,7 +38,7 @@ class NavigationController {
     if (usingPLControls && this.plControls.enabled) {
       this.plControls.getDirection(this.direction);
     } else {
-      camera.getWorldDirection(this.direction);
+      this.camera.getWorldDirection(this.direction);
     }
 
     // Do not allow gamepad controls when pointerlock controls are enabled.

@@ -20,9 +20,9 @@ module.exports = {
   	contentBase: path.join(__dirname, "dist"),
   	port: 8080
   },
-  externals: {
-    three: 'THREE'
-  },
+  externals: [
+    { three: 'THREE' }
+  ],
   module: {
     rules: [
       {
@@ -46,7 +46,7 @@ module.exports = {
       // {output}/file.txt
       { from: '../node_modules/three/build/three.min.js',
         to: 'three.min.js' },
-      { from: '../node_modules/mathbox/build/mathbox-bundle.min.js',
+      { from: '../node_modules/mathbox/build/mathbox-bundle.js',
         to: 'mathbox-bundle.min.js' }
     ])
   ]

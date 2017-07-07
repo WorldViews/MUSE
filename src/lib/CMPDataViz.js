@@ -1,45 +1,17 @@
 import Papa from 'papaparse';
+import Sands from './cmp/Sands';
+import Chart from './cmp/Chart';
+import TWEEN from '@tweenjs/tween.js';
+import state from './cmp/State';
 
-const numData = 451;
-var Year = 0;
-
-var paramsDefault = {
-    labelSize: 60,
-    gridLineWidth: 5,
-    chartGridLineWidth: 3,
-    envelopeLineWidth: 3,
-    refLineWidth: 3,
-    co2LineWidth: 20,
-    tempLineWidth: 60,
-    balanceLineWidth: 30,
-    hideLegend: false,
-    showPanel: true,
-    showGraphics: true,
-    showVideo: false,
-
-    colors: {
-        x: '#FF4136',
-        y: '#2ECC40',
-        z: '#0074D9',
-        bg: '#303025',
-        // bg: '#FFFFFF'
-    },
-
-    capturer: {
-        name: 'climate-trend',
-        width: 3840,
-        height: 2160,
-        framerate: 30,
-        format: 'png',
-        timeLimit: 1200,
-        startTime: 0,
-        autoSaveTime: 60,
-        display: true,
-        reset: true
-    }
+const chartScale=[1.5,1,1.5];
+const chartRange={
+    x:[1850, 2300],
+    y:[12, 24],
+    z:[-5, 5]
 }
 
-class  CMPData {
+class CMPDataLoader {
 
     load() {
         let dataFiles = ['./data/rcp8p5.csv', './data/rcp2p6.csv'];
@@ -51,11 +23,10 @@ class  CMPData {
             .then(data => {
                 console.log("done data loading")
                 var data = {
-                    'rcp8p5': self.processData(data[0], numData),
-                    'rcp2p6': self.processData(data[1], numData),
-                    'active': self.processData(data[0], numData)
+                    'rcp8p5': self.processData(data[0], state.numData),
+                    'rcp2p6': self.processData(data[1], state.numData),
+                    'active': self.processData(data[0], state.numData)
                 }
-                window._data = data
                 return data
             })
             .then(data => {
@@ -63,6 +34,7 @@ class  CMPData {
                 for(var i = 0; i < numPasses; i++) {
                     data = self.smoothEnergyBalance(data);
                 }
+                self.data = data;
                 return data
             });
     }
@@ -88,6 +60,9 @@ class  CMPData {
         var promise = new Promise((resolve, reject) => {
             Papa.parse(file, {
                 download: true,
+                header: true,
+                skipEmptyLines: true,
+                dynamicTyping: true,
                 error: (err) => {
                     reject(err);
                 },
@@ -123,47 +98,36 @@ class  CMPData {
 
 }
 
-// Warning: do not mutate camera.position
-// Mutating camera.position will break PointlockControls.
+
 export default class CMPDataVis {
 
-    constructor(renderer, scene, camera) {
+    constructor(renderer, scene, camera, options) {
+        options = options || {};
+        this.position = options.position || [0, 0, 0];
+        this.rotation = options.rotation || [0, 0, 0];
+
         let self = this;
         this.context = new MathBox.Context(renderer, scene, camera);
         this.context.init();
+        this.resize(renderer.domElement.width, renderer.domElement.height);
 
-        this.data = new CMPData();
-        this.data.load().then((data) => {
-            self.drawMathbox(data);
+        this.loader = new CMPDataLoader();
+        this.loader.load().then((data) => {
+            self._drawMathbox(data);
         });
-
-        window.camera = camera;
-        window.scene = scene;
-        window.renderer = renderer;
-        window.THREE = THREE;
-
-
-
-        // this.loadDataViz().then((data) => {
-        //     self.drawMathbox(data);
-        // });
     }
 
-    drawMathbox(datas) {
-        const chartScale=[1.5,1,1.5];
-        const chartRange={
-            x:[1850, 2300],
-            y:[12, 24],
-            z:[-5, 5]
-        }
-
+    _drawMathbox(datas) {
         let data = datas.active;
         let mathbox = this.context.api;
 
         // Mathbox view
+        var view = this.view;
         var view = mathbox.cartesian({
             range: [chartRange.x, chartRange.y, chartRange.z],
             scale: chartScale,
+            position: this.position,
+            rotation: this.rotation
         });
 
         var origin = {
@@ -173,19 +137,53 @@ export default class CMPDataVis {
         };
         // var origin = {x:0, y:0, z:0};
 
-        this.drawGrid(view, origin);
+        this._drawGrid(view, origin);
+        this._drawCharts(data, view, origin);
+
+        if(!state.hideLegend){
+            // Draw year label
+            view.array({
+                id: 'label-year',
+                data: [[
+                    0.0 * chartRange.x[0] + 1.0 * chartRange.x[1],
+                    1.3 * chartRange.y[1] + (-0.3) * chartRange.y[0],
+                    chartRange.z[0]
+                ]],
+                channels: 3, // necessary
+                live: true,
+            }).text({
+                id: 'label-year-text',
+            data: ['Year'],
+            }).label({
+            color: 0xffffff,
+            background: state.colors.bg,
+            size: 36*3,
+            depth: 1
+            });
+
+            var labelYearText = mathbox.select("#label-year-text")
+        }
+
+        this.update();
+    }
+
+    _drawCharts(data, view, origin) {
+
+        let mathbox = this.context.api;
+        var charts = {}
+        this.charts = charts;
 
         // color gradient for temperature curve
         view.interval({
             id:'tempratureColor',
-            width: numData,
+            width: state.numData,
             channels: 4,
             items: 1,
             live: true,
             expr: (emit, x, i, t)=>{
                 var min = 13
                 var max = 23
-                var val = _data.active.temperature[i]
+                var val = data.temperature[i]
 
                 var r0 = 1 - (val-min) / (max-min) // Green percentage
                 var r1 = 1 - r0
@@ -196,30 +194,127 @@ export default class CMPDataVis {
                 var g = r0*c0[1]+r1*c1[1]
                 var b = r0*c0[2]+r1*c1[2]
                 var a = 1.0-Math.pow(Math.sin(t*3), 16) + r0 + 0.2
-                if (x > Year) a *= 0.0
+                if (x > state.Year) a *= 0.0
                 emit(r, g, b, a) // make it blink alarm at high temperature
             }
         })
 
-        // color gradient for co2 curve
+        // line alpha for co2 and balance curve
+        // controlling part of line this is visible to creating years marching forward effect
         view.interval({
-            id:'co2Color',
-            width: numData,
+            id:'lineAlpha',
+            width: state.numData,
             channels: 4,
             items: 1,
             live: true,
             expr: (emit, x, i, t)=>{
-                var a = x > Year ? 0.0 : 1.0
+                var a = x > state.Year ? 0.0 : 1.0
                 emit(1, 1, 1, a) // make it blink alarm at high temperature
             }
         })
+
+        charts['temperature'] = new Chart(mathbox, {
+            position: this.position,
+            view: view,
+            data: this.loader.data,
+            x : data.year,
+            y : data['temperature'],
+            z_offset : -10,
+            id : 'temperature',
+            xRange : chartRange.x,
+            yRange : [12, 24],
+            zRange : chartRange.z,
+            scale : chartScale,
+            // color : 0xffcc44,
+            color : 0xffffff,
+            dotColor : 0x44bbff,
+                colors : '#tempratureColor',
+                //labelSize : labelSize,
+                lineWidth : state.tempLineWidth,
+            labelFunc: (year, val)=>{
+                //return [''+year+': '+val+'\u2103 increase']
+                //var str = val+'\u2103 increase';
+                var str = val+'\u2103';
+                // $("#tempVal").html(""+val+"&deg;C");
+                return [str]
+            }
+        })
+
+        charts['balance'] = new Chart(mathbox, {
+            position: this.position,
+            view: view,
+            data: this.loader.data,
+            x : data.year,
+            y : data['balance'],
+            z_offset : -5,
+            id : 'balance',
+            xRange : chartRange.x,
+            yRange : [-1, 8],
+            zRange : chartRange.z,
+            scale : chartScale,
+            //color : 0x00ffff,
+            color : 0x02ff7f,
+            colors : '#lineAlpha',
+                //labelSize : labelSize,
+                lineWidth: state.balanceLineWidth,
+            labelFunc: (year, val)=>{
+                //return [''+year+': '+val+' energy balance']
+                //str = val + 'balance';
+                var str = ''+val;
+                // $("#energyVal").html(str);
+                return [str];
+            }
+        })
+
+        charts['co2'] = new Chart(mathbox, {
+            position: this.position,
+            view: view,
+            data: this.loader.data,
+            x : data.year,
+            y : data['co2'],
+            z_offset : 0,
+            id : 'co2',
+            xRange : chartRange.x,
+            yRange : [0, 2200],
+            zRange : chartRange.z,
+            scale : chartScale,
+            color : 0xaf8f30,
+            colors : '#lineAlpha',
+                lineWidth : state.co2LineWidth,
+                //labelSize : labelSize,
+            labelFunc: (year, val)=>{
+                //return [''+year+': '+val+'PPM increase']
+                //var str = val+'PPM increase';
+                var str = val+'PPM';
+                // $("#co2Val").html(str);
+                return [str];
+            }
+        })
+
+        // draw sands
+	    this.sands = new Sands(mathbox, {
+			x : data.year,
+			y : data['temperature'],
+			z_offset : -10,
+			id : 'sands',
+            position: this.position,
+			xRange : chartRange.x,
+			yRange : [12, 24],
+			zRrange : chartRange.z,
+			scale : chartScale,
+			// color : 0xffcc44,
+			color : 0xffffff,
+			colors : '#tempratureColor'
+	    })
     }
 
-    drawGrid(view, origin) {
-        const lineWidth = 1
-        const alpha = 0.3
+    _drawGrid(view, origin) {
+        const lineWidth = state.gridLineWidth;
+        const alpha = 0.3;
 
-        view.transform({
+        view
+        //.transform({ position: this.position })
+        .transform({
             position:[0, origin.y, origin.z]
         })
         .grid({
@@ -228,10 +323,12 @@ export default class CMPDataVis {
             divideY: 5,
             niceX: false,
             niceY: false,
-            width: lineWidth
+            width: lineWidth,
         });
 
-        view.transform({
+        view
+        //.transform({ position: this.position })
+        .transform({
             position:[2300, 0, origin.z]
         })
         .grid({
@@ -240,99 +337,23 @@ export default class CMPDataVis {
             divideY: 4,
             niceX: false,
             niceY: false,
-            width: lineWidth
+            width: lineWidth,
         });
+
+        this.startHistory();
     }
 
-    drawAxis(view, origin) {
-        var xticks = 6
-
-        // X axis
-        view.transform({
-            position:[0, origin.y, origin.z]
-        })
-        .axis({
-            axis: "x", // year
-            end: true,
-            width: 6,
-            depth: 1,
-            color: new THREE.Color(params.colors.x),
-            opacity: 1.0,
-        })
-
-        view.scale({
-            divide: 5,
-            nice: false,
-            origin: [1850, 12, 0, 0],
-            axis: "x"
-        })
-        .ticks({
-            classes: ['foo', 'bar'],
-            width: 20
-        })
-        .text({
-            live: false,
-            data: interpolate(chartRange.x[0], chartRange.x[1], 6)
-        })
-        .label({
-            color: 0xaaaaaa,
-            background: params.colors.bg,
-            size: 36,
-            snap: false,
-            depth: 1
-            // offset: [1,1]
-        })
-
-        // Y axis
-        view.transform({
-            position:[origin.x, 0, origin.z]
-        })
-        .axis({
-            axis: "y",
-            end: true,
-            width: 3,
-            depth: 1,
-            color: new THREE.Color(params.colors.y),
-            opacity: .5,
-        })
-
-        // Z axis
-        view.transform({
-            position: [origin.x, origin.y, ]
-        })
-        .axis({
-            axis: "z",
-            end: true,
-            width: 3,
-            depth: 1,
-            color: new THREE.Color(params.colors.z),
-            opacity: .5,
-        });
-
-        // XyZ labela
-        view.array({
-            id: "colors",
-            live: false,
-            data: [new THREE.Color(params.colors.x), new THREE.Color(params.colors.y), new THREE.Color(params.colors.z)].map(function (color){
-                return [color.r, color.g, color.b, 1];
-            }),
-        });
-
-        view.array({
-            data: [[2350,origin.y,origin.z], [1850,25,0], [1850,12,10]],
-            channels: 3, // necessary
-            live: false,
-        }).text({
-            data: ["year", "y", "z"],
-        }).label({
-            color: 0xaaaaaa,
-            background: params.colors.bg,
-            size: 48,
-            depth: 1
-        });
-    }
 
     update() {
+		TWEEN.update();
+        if (this.charts) {
+            let data = this.loader.data.active;
+            let charts = this.charts;
+            Object.keys(charts).forEach(id => {
+                charts[id].update(data[id])
+            });
+            this.sands.update(data['temperature']);
+        }
         this.context.frame();
     }
 
@@ -340,5 +361,45 @@ export default class CMPDataVis {
         this.context.resize({
             viewWidth: w, viewHeight: h
         });
+    }
+
+    startHistory() {
+        var startYear = 1850
+        var year_per_minute = state.yearPerMinute || 25 // * 12 // 25=>18min
+        var endYear = 2300
+
+        function yearsToSec(year, year_per_minute) {
+            var sec_per_year = 60/year_per_minute
+            return (year-startYear) * sec_per_year
+        }
+
+        this.playHistory(yearsToSec(endYear, year_per_minute), startYear, endYear)
+    }
+
+    playHistory(_duration, _from, _to) {
+        this.stopHistory()
+        var duration = _duration || 120 // 2min
+        var param = {y: _from}
+        this.historyT1 = new TWEEN.Tween(param)
+            .to({y:_to}, duration*1000)
+            .onUpdate(()=>{
+                state.SandYear = Math.round(param.y)
+            })
+            .start()
+
+        var param1 = {y: _from}
+        setTimeout(()=>{
+            this.historyT2 = new TWEEN.Tween(param1)
+                .to({y:_to}, duration*1000)
+                .onUpdate(()=>{
+                    state.Year = Math.round(param1.y)
+                })
+                .start()
+        }, 4000)
+    }
+
+    stopHistory() {
+        TWEEN.remove(this.historyT1)
+        TWEEN.remove(this.historyT2)
     }
 }
