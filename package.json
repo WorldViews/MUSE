@@ -21,6 +21,7 @@
     "papaparse": "^4.3.3",
     "request": "^2.81.0",
     "script-loader": "^0.7.0",
+    "sprintf-js": "^1.1.1",
     "three": "^0.85.2",
     "tween": "^0.9.0",
     "tween.js": "^16.6.0",
