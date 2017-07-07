@@ -33,6 +33,7 @@ class PlayerControl
 	if (game.gss) {
 	    var year = GSS.timeToYear(t);
 	    console.log("year: "+year);
+	    $("#timeText").html(t);
 	    if (year) {
 		$("#yearText").html(Math.floor(year));
 		var va = game.gss.getFieldByYear(year, "videofade");
