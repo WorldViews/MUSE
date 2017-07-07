@@ -18,6 +18,7 @@ export default class CMPController {
         options = options || {};
         this.position = options.position || [0, 0, 0];
         this.rotation = options.rotation || [0, 0, 0];
+        this.scale = options.scale || chartScale;
 
         let self = this;
         this.context = new MathBox.Context(renderer, scene, camera);
