@@ -34,9 +34,19 @@ class PlayerControl
 	    var year = GSS.timeToYear(t);
 	    console.log("year: "+year);
 	    if (year) {
+		$("#yearText").html(Math.floor(year));
 		var va = game.gss.getFieldByYear(year, "videofade");
                 var nar = game.gss.getFieldByYear(year, "narrative");
 		console.log("va: "+va+"  narrative: "+nar);
+		if (nar) {
+		    $("#narrativeText").html(nar);
+		}
+		else {
+		    $("#narrativeText").html("");
+		}
+	    }
+	    else {
+		$("#yearText").html("");
 	    }
 	}
     }
