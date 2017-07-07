@@ -31,7 +31,7 @@ class Game {
 
     this.screens = {};
     this.models = {};
-
+    this.events = new THREE.EventDispatcher();
     this.setupRAF();
   }
 
