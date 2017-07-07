@@ -29,6 +29,8 @@ export default class CMPController {
         this.loader.load().then((data) => {
             self._drawMathbox(data);
         });
+
+        this.currRot = [0, 0, 0];
     }
 
     _drawMathbox(datas) {
@@ -43,6 +45,8 @@ export default class CMPController {
             position: this.position,
             rotation: this.rotation
         });
+
+        this.gridView = view;
 
         var origin = {
             x: chartRange.x[0],
@@ -133,7 +137,7 @@ export default class CMPController {
             data: this.loader.data,
             x : data.year,
             y : data['temperature'],
-            z_offset : -10,
+            z_offset : -5,
             id : 'temperature',
             xRange : chartRange.x,
             yRange : [12, 24],
@@ -160,7 +164,7 @@ export default class CMPController {
             data: this.loader.data,
             x : data.year,
             y : data['balance'],
-            z_offset : -5,
+            z_offset : 0,
             id : 'balance',
             xRange : chartRange.x,
             yRange : [-1, 8],
@@ -186,7 +190,7 @@ export default class CMPController {
             data: this.loader.data,
             x : data.year,
             y : data['co2'],
-            z_offset : 0,
+            z_offset : 5,
             id : 'co2',
             xRange : chartRange.x,
             yRange : [0, 2200],
@@ -227,9 +231,8 @@ export default class CMPController {
         const alpha = 0.3;
 
         view
-        //.transform({ position: this.position })
         .transform({
-            position:[0, origin.y, origin.z]
+            position:[0, origin.y, 0]
         })
         .grid({
             axes: "zx",
@@ -241,9 +244,8 @@ export default class CMPController {
         });
 
         view
-        //.transform({ position: this.position })
         .transform({
-            position:[2300, 0, origin.z]
+            position:[2300, 0, 0]
         })
         .grid({
             axes: "yz",
@@ -258,7 +260,7 @@ export default class CMPController {
     }
 
 
-    update() {
+    update(t) {
 		TWEEN.update();
         if (this.charts) {
             let data = this.loader.data.active;
@@ -268,6 +270,18 @@ export default class CMPController {
             });
             this.sands.update(data['temperature']);
         }
+
+        // animate the graph
+        this.currRot[1] += Math.PI*2/3600;
+        if (this.currRot[1] > Math.PI*2) {
+            this.currRot[1] -= Math.PI*2;
+        }
+        this.rotation = this.currRot;
+
+        if (this.dirty) {
+            this._updateMatrix();
+        }
+
         this.context.frame();
     }
 
@@ -316,4 +330,49 @@ export default class CMPController {
         TWEEN.remove(this.historyT1)
         TWEEN.remove(this.historyT2)
     }
+
+    // array x,y,z [0, 0, 0]
+    set position(pos) {
+        // Some validation etc.
+        this._position = pos;
+        this.dirty = true;
+    }
+
+    get position() {
+        return this._position || [0, 0, 0];
+    }
+
+    // array x,y,z [0, 0, 0]
+    set rotation(pos) {
+        // Some validation etc.
+        this._rotation = pos;
+        this.dirty = true;
+    }
+
+    get rotation() {
+        return this._rotation || [0, 0, 0];
+    }
+
+    // array x,y,z [0, 0, 0]
+    set scale(pos) {
+        // Some validation etc.
+        this._scale = pos;
+        this.dirty = true;
+    }
+
+    get scale() {
+        return this._scale || [1, 1, 1];
+    }
+
+    _updateMatrix() {
+        if (this.context) {
+            let mathbox = this.context.api;
+            mathbox.
+                select('cartesian')
+                .set('rotation', this._rotation)
+                .set('position', this._position)
+                .set('scale', this._scale);
+        }
+    }
+
 }

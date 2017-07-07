@@ -88,7 +88,7 @@ class NavigationController {
       if (keyCode == 65) { // Move left incrementally with A
         if (usingPLControls && this.plControls.enabled) {
           // PointerLockControls do not move the camera.
-          this.body.translateX(-0.1);          
+          this.body.translateX(-0.1);
         } else {
           let left = this.direction.clone().applyAxisAngle(Y_AXIS, NINETY);
           this.body.translateX(0.1 * left.x);
@@ -99,7 +99,7 @@ class NavigationController {
       if (keyCode == 68) { // Move right incrementally with D
         if (usingPLControls && this.plControls.enabled) {
           // PointerLockControls do not move the camera.
-          this.body.translateX(0.1);          
+          this.body.translateX(0.1);
         } else {
           let right = this.direction.clone().applyAxisAngle(Y_AXIS, -NINETY);
           this.body.translateX(0.1 * right.x);
@@ -110,10 +110,24 @@ class NavigationController {
       if (keyCode == 83) { // Move left incrementally with S
         if (usingPLControls && this.plControls.enabled) {
           // PointerLockControls do not move the camera.
-          this.body.translateZ(0.1);          
+          this.body.translateZ(0.1);
         } else {
           this.body.translateX(-0.1 * this.direction.x);
           this.body.translateZ(-0.1 * this.direction.z);
+        }
+      }
+
+      if (keyCode == 69) { // Move up incrementally with e
+        if (usingPLControls && this.plControls.enabled) {
+          // PointerLockControls do not move the camera.
+          this.body.translateY(0.1);
+        }
+      }
+
+      if (keyCode == 67) { // Move down incrementally with c
+        if (usingPLControls && this.plControls.enabled) {
+          // PointerLockControls do not move the camera.
+          this.body.translateY(-0.1);
         }
       }
     });

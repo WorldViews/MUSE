@@ -11,10 +11,10 @@ class Game {
 
   init(domElementId) {
     console.log("init: " + domElementId);
-    
+
     this.domElementId = domElementId;
     this.renderer = this.createRenderer(domElementId);
-    
+
     let size = this.renderer.getSize();
     this.camera = new THREE.PerspectiveCamera(
     	75,
@@ -32,6 +32,7 @@ class Game {
     this.screens = {};
     this.models = {};
     this.events = new THREE.EventDispatcher();
+    this.controllers = {};
     this.setupRAF();
   }
 
@@ -92,12 +93,14 @@ class Game {
       this.controls = this.cmpControls;
   }
 
-  registerController(controller) {
+  registerController(name, controller) {
   	if (typeof controller === 'object' && controller.update) {
   		this.updateHandlers.push(controller.update.bind(controller));
   	} else {
   		throw 'Unsupported controller provided to `registerController`';
   	}
+
+    this.controllers[name] = controller;
   }
 
   registerUpdateHandler(handlerOrObject) {

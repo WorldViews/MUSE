@@ -35,15 +35,15 @@ let bodyAnimationController = new BodyAnimationController(game.body);
 let navigationController = new NavigationController(game.body, game.camera, game.plControls);
 let starsController = new StarsController(game.scene, [0, 0, 0]);
 let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
-  position: [0, 3, 1.5],
+  position: [0, 3, 0],
   rotation: [0, 0, 0],
   scale: [1.5, 1, 1.5]
 });
 
-game.registerController(bodyAnimationController);
-game.registerController(navigationController);
-game.registerController(starsController);
-game.registerController(cmpController);
+game.registerController('body', bodyAnimationController);
+game.registerController('navigation', navigationController);
+game.registerController('stars', starsController);
+game.registerController('cmp', cmpController);
 
 let marquee = new Marquee();
 game.scene.add(marquee);

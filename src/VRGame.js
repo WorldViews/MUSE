@@ -58,7 +58,7 @@ class VRGame extends Game {
 	addVRControls() {
 		this.vrControls = new VRControls(this.camera);
 		this.vrControls.shouldUpdatePosition = false;
-		this.registerController(this.vrControls);
+		this.registerController('vr', this.vrControls);
 	}
 
 	addPointlockControls() {

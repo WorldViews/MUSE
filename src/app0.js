@@ -97,7 +97,7 @@ function start()
     //deleteMe();
     window.Anim = Anim;
     CMP = new CMPController(game.renderer, game.scene, game.camera, {
-        position: [0, 3, 1.5]
+        position: [0, 3, 0]
     });
     CMP.resize(window.innerWidth, window.innerHeight);
     game.CMP = CMP;
