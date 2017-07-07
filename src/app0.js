@@ -12,7 +12,7 @@ import Stars from './lib/Stars';
 import loadChart from './loadChart';
 import loadModels from './loadModels';
 import {loadScreen} from './loadScreen';
-import CMPDataViz from './lib/CMPDataViz';
+import CMPController from './controllers/CMPController';
 import setupLights from './setupLights';
 import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
@@ -96,8 +96,9 @@ function start()
     //animTest();
     //deleteMe();
     window.Anim = Anim;
-    CMP = new CMPDataViz(game.renderer, game.scene, game.camera, {position: [0,3,1.5]});
-//								  scale:[1.5,3,5]});
+    CMP = new CMPController(game.renderer, game.scene, game.camera, {
+        position: [0, 3, 1.5]
+    });
     CMP.resize(window.innerWidth, window.innerHeight);
     game.CMP = CMP;
     game.registerUpdateHandler(() => game.CMP.update());
