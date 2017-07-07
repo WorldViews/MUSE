@@ -12,6 +12,12 @@ const chartRange={
     z:[-5, 5]
 }
 
+const startYear = 1850
+const endYear = 2300
+const yearPerMinute = () => state.yearPerMinute || 25 // * 12 // 25=>18min
+const secPerYear = () => 60/yearPerMinute();
+
+
 export default class CMPController {
 
     constructor(renderer, scene, camera, options) {
@@ -291,17 +297,15 @@ export default class CMPController {
         });
     }
 
+    // seek val 0 -> 1 : years 1850 -> 2300
+    seek(val) {
+        var start = startYear + parseInt(val*(endYear - startYear));
+        var dur = (endYear - start)*(secPerYear());
+        this.playHistory(dur, start, endYear)
+    }
+
     startHistory() {
-        var startYear = 1850
-        var year_per_minute = state.yearPerMinute || 25 // * 12 // 25=>18min
-        var endYear = 2300
-
-        function yearsToSec(year, year_per_minute) {
-            var sec_per_year = 60/year_per_minute
-            return (year-startYear) * sec_per_year
-        }
-
-        this.playHistory(yearsToSec(endYear, year_per_minute), startYear, endYear)
+        this.seek(0);
     }
 
     playHistory(_duration, _from, _to) {
