@@ -301,7 +301,7 @@ export default class CMPController {
     seek(val) {
         var start = startYear + parseInt(val*(endYear - startYear));
         var dur = (endYear - start)*(secPerYear());
-        this.playHistory(dur, start, endYear)
+        this._playHistory(dur, start, endYear)
     }
 
     play() {
