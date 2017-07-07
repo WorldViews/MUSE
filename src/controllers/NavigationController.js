@@ -33,14 +33,16 @@ class NavigationController {
   }
 
   update() {
-    if (this.plControls && this.plControls.enabled) {
+    let usingPLControls = !!this.plControls;
+
+    if (usingPLControls && this.plControls.enabled) {
       this.plControls.getDirection(this.direction);
     } else {
       camera.getWorldDirection(this.direction);
     }
 
     // Do not allow gamepad controls when pointerlock controls are enabled.
-    if (navigator.getGamepads && this.plControls && !this.plControls.enabled) {
+    if (navigator.getGamepads && (!usingPLControls || !this.plControls.enabled)) {
       let gamepadList = navigator.getGamepads();
       let gamepad = gamepadList[0];
 
@@ -72,45 +74,46 @@ class NavigationController {
     }
 
     this.keys.forEach((keyCode) => {
+
       if (keyCode == 87) { // Move forward incrementally with W
-        // PointerLockControls do not move the camera.
-        if (!this.plControls.enabled) {
+        if (usingPLControls && this.plControls.enabled) {
+          // PointerLockControls do not move the camera.
+          this.body.translateZ(-0.1);
+        } else {
           this.body.translateX(0.1 * this.direction.x);
           this.body.translateZ(0.1 * this.direction.z);
-        } else {
-          this.body.translateZ(-0.1);
         }
       }
 
       if (keyCode == 65) { // Move left incrementally with A
-        // PointerLockControls do not move the camera.
-        if (!this.plControls.enabled) {
+        if (usingPLControls && this.plControls.enabled) {
+          // PointerLockControls do not move the camera.
+          this.body.translateX(-0.1);          
+        } else {
           let left = this.direction.clone().applyAxisAngle(Y_AXIS, NINETY);
           this.body.translateX(0.1 * left.x);
           this.body.translateZ(0.1 * left.z);
-        } else {
-          this.body.translateX(-0.1);
         }
       }
 
       if (keyCode == 68) { // Move right incrementally with D
-        if (!this.plControls.enabled) {
+        if (usingPLControls && this.plControls.enabled) {
           // PointerLockControls do not move the camera.
+          this.body.translateX(0.1);          
+        } else {
           let right = this.direction.clone().applyAxisAngle(Y_AXIS, -NINETY);
           this.body.translateX(0.1 * right.x);
           this.body.translateZ(0.1 * right.z);
-        } else {
-          this.body.translateX(0.1);
         }
       }
 
       if (keyCode == 83) { // Move left incrementally with S
-        // PointerLockControls do not move the camera.
-        if (!this.plControls.enabled) {
+        if (usingPLControls && this.plControls.enabled) {
+          // PointerLockControls do not move the camera.
+          this.body.translateZ(0.1);          
+        } else {
           this.body.translateX(-0.1 * this.direction.x);
           this.body.translateZ(-0.1 * this.direction.z);
-        } else {
-          this.body.translateZ(0.1);
         }
       }
     });

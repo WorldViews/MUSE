@@ -1,6 +1,7 @@
 import {Game} from './Game';
 import * as THREE from 'three';
 import PointerLockControls from './lib/controls/PointerLockControls';
+import VRControls from './lib/controls/VRControls';
 import VREffect from './lib/effects/VREffect';
 import WebVR from './lib/vr/WebVR';
 
@@ -28,10 +29,22 @@ class VRGame extends Game {
 
 		if (WebVR.isAvailable())  {
 			WebVR.getVRDisplay((display) => {
-				let button = WebVR.getButton(display, this.renderer.domElement);
+				let {domElement} = this.renderer.getUnderlyingRenderer();
+				let button = WebVR.getButton(display, domElement);
+				document.body.appendChild(button);
 				this.vrDisplay = display;
 			});	
 		}
+	}
+
+	/**
+	 * Override requestAnimationFrame implemenation.
+	 */
+	setupRAF() {
+		this.requestAnimate = this.renderer.requestAnimationFrame.bind(
+			this.renderer,
+			this.animate.bind(this)
+		);
 	}
 
 	addControls() {
@@ -43,8 +56,9 @@ class VRGame extends Game {
 	}
 
 	addVRControls() {
-		this.vrControls = new VRControls(camera);
+		this.vrControls = new VRControls(this.camera);
 		this.vrControls.shouldUpdatePosition = false;
+		this.registerController(this.vrControls);
 	}
 
 	addPointlockControls() {
