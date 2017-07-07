@@ -172,7 +172,8 @@ var CMP_Controls = function ( object, domElement )
     };
 
     this.update = function( delta ) {
-	//console.log("FPC update....");
+	console.log("FPC update....");
+	delta = 0.01;
 	if ( this.enabled === false ) return;
 
 	if ( this.heightSpeed ) {
@@ -227,7 +228,6 @@ var CMP_Controls = function ( object, domElement )
 	targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
 	targetPosition.y = position.y + 100 * Math.cos( this.phi );
 	targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
-
 	this.object.lookAt( targetPosition );
 
     };
