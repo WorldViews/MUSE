@@ -1,3 +1,4 @@
+
 import * as THREE from 'three';
 
 import TrackballControls from './lib/controls/TrackballControls';
@@ -15,6 +16,8 @@ import CMPController from './controllers/CMPController';
 import setupLights from './setupLights';
 import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
+
+import {screen1,labelsScreen,screen2,screen3} from './const/screen';
 
 //import TWEEN from 'tween';
 //import {interpolate} from 'd3-interpolate';
@@ -52,42 +55,6 @@ let starsGroup = new THREE.Group();
 scene.add(starsGroup);
 let stars = new Stars(starsGroup, 2500, {name: 'Stars'});
 starsGroup.position.set(0, 0, 0);
-
-let screen1 = {
-    name: "mainScreen",
-    radius: 8.8,
-    phiStart: 32,
-    phiLength: 49,
-    thetaStart: 110,
-    thetaLength: 140
-};
-
-var labelsScreen = {
-    name: "labelsScreen",
-    radius: 8.6,
-    phiStart: 32,
-    phiLength: 49,
-    thetaStart: -90,
-    thetaLength: 60
-}
-
-let screen2 = {
-    radius: 1.0,
-    phiStart: 10,
-    phiLength: 80,
-    thetaStart: 40,
-    thetaLength: 160,
-    position: [0,3,0]
-};
-
-let screen3 = {
-    name: "bubbleScreen1",
-    radius: 0.5,
-//    phiStart: 0,
-//    phiLength: 90,
-    position: [3,3,0]
-};
-
 
 function start()
 {
