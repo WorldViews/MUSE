@@ -32,7 +32,7 @@ let MODEL_SPECS = [{
   scale: 0.025
 }];
 
-let game = new VRGame();
+let game = new VRGame('canvas3d');
 window.game = game;
 
 let bodyAnimationController = new BodyAnimationController(game.body);

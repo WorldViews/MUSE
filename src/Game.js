@@ -46,7 +46,7 @@ class Game {
     var renderer;
 
     if (domElementId) {
-      let canvas3d = document.getElementById('canvas3d');
+      let canvas3d = document.getElementById(domElementId);
       canvas3d.height = window.innerHeight;
       canvas3d.width = window.innerWidth;
 

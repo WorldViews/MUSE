@@ -69,8 +69,8 @@ class VRGame extends Game {
 	/**
 	 * Overrides `this.renderer`.
 	 */
-	createRenderer() {
-		let renderer = super.createRenderer();
+	createRenderer(domElementId) {
+		let renderer = super.createRenderer(domElementId);
 		let vrEffect = new VREffect(renderer);
 		vrEffect.autoSubmitFrame = false;
 
