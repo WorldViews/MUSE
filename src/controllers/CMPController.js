@@ -39,7 +39,7 @@ export default class CMPController {
         var view = this.view;
         var view = mathbox.cartesian({
             range: [chartRange.x, chartRange.y, chartRange.z],
-            scale: chartScale,
+            scale: this.scale,
             position: this.position,
             rotation: this.rotation
         });
@@ -138,7 +138,7 @@ export default class CMPController {
             xRange : chartRange.x,
             yRange : [12, 24],
             zRange : chartRange.z,
-            scale : chartScale,
+            scale : this.scale,
             // color : 0xffcc44,
             color : 0xffffff,
             dotColor : 0x44bbff,
@@ -165,7 +165,7 @@ export default class CMPController {
             xRange : chartRange.x,
             yRange : [-1, 8],
             zRange : chartRange.z,
-            scale : chartScale,
+            scale : this.scale,
             //color : 0x00ffff,
             color : 0x02ff7f,
             colors : '#lineAlpha',
@@ -191,7 +191,7 @@ export default class CMPController {
             xRange : chartRange.x,
             yRange : [0, 2200],
             zRange : chartRange.z,
-            scale : chartScale,
+            scale : this.scale,
             color : 0xaf8f30,
             colors : '#lineAlpha',
                 lineWidth : state.co2LineWidth,
@@ -215,7 +215,7 @@ export default class CMPController {
 			xRange : chartRange.x,
 			yRange : [12, 24],
 			zRrange : chartRange.z,
-			scale : chartScale,
+			scale : this.scale,
 			// color : 0xffcc44,
 			color : 0xffffff,
 			colors : '#tempratureColor'
