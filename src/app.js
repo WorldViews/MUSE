@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import CMPDataViz from './lib/CMPDataViz';
 import Earth from './lib/EARTH';
 import Marquee from './Marquee';
 import VRGame from './VRGame';
@@ -7,6 +6,7 @@ import VRGame from './VRGame';
 import BodyAnimationController from './controllers/BodyAnimationController';
 import NavigationController from './controllers/NavigationController';
 import StarsController from './controllers/StarsController';
+import CMPController from './controllers/CMPController';
 
 import {Easing, Tween} from 'tween.js';
 
@@ -34,7 +34,7 @@ window.game = game;
 let bodyAnimationController = new BodyAnimationController(game.body);
 let navigationController = new NavigationController(game.body, game.camera, game.plControls);
 let starsController = new StarsController(game.scene, [0, 0, 0]);
-let cmpController = new CMPDataViz(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
+let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
   position: [0, 3, 1.5]
 });
 
