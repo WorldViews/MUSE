@@ -262,7 +262,7 @@ export default class CMPController {
             width: lineWidth,
         });
 
-        this.startHistory();
+        this.play();
     }
 
 
@@ -304,12 +304,16 @@ export default class CMPController {
         this.playHistory(dur, start, endYear)
     }
 
-    startHistory() {
+    play() {
         this.seek(0);
     }
 
-    playHistory(_duration, _from, _to) {
-        this.stopHistory()
+    stop() {
+        this._stopHistory();
+    }
+
+    _playHistory(_duration, _from, _to) {
+        this._stopHistory()
         var duration = _duration || 120 // 2min
         var param = {y: _from}
         this.historyT1 = new TWEEN.Tween(param)
@@ -330,7 +334,7 @@ export default class CMPController {
         }, 4000)
     }
 
-    stopHistory() {
+    _stopHistory() {
         TWEEN.remove(this.historyT1)
         TWEEN.remove(this.historyT2)
     }
