@@ -44,7 +44,8 @@ game.registerController(starsController);
 game.registerController(cmpController);
 
 let marquee = new Marquee();
-scene.add(marquee);
+game.scene.add(marquee);
+window.marquee = marquee;
 
 function initAnimations() {
     body.position.set(500, 250, 200);
