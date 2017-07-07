@@ -51,6 +51,15 @@ class PlayerControl
 	    this.game.events.dispatchEvent({type: 'valueChange',
 					    message: {'name': 'yearText', 'value': yearStr}});
 	}
+	var cmp = game.CMP || game.controllers['cmp'];
+	if (cmp) {
+	    var nt = 0;
+	    if (t > 10*60) {
+		nt = t / (32*60.0);
+	    }
+	    if (nt > 1) nt = 1;
+	    cmp.seek(nt);
+	}
     }
 }
 
