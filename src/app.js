@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import CMPDataViz from './lib/CMPDataViz';
 import Earth from './lib/EARTH';
+import Marquee from './Marquee';
 import VRGame from './VRGame';
 
 import BodyAnimationController from './controllers/BodyAnimationController';
@@ -10,14 +11,9 @@ import StarsController from './controllers/StarsController';
 import {Easing, Tween} from 'tween.js';
 
 import {addPlanet} from './lib/Planet';
-import attachPointerLock from './attachPointerLock';
-import createControls from './createControls';
-import createScene from './createScene';
 import loadCollada from './loadCollada';
 import loadModels from './loadModels';
 import {loadScreen} from './loadScreen';
-import loadVideo from './loadVideo';
-import loadVR from './loadVR';
 import setupLights from './setupLights';
 
 let DAE_PATH = 'models/PlayDomeSkp.dae';
@@ -45,6 +41,12 @@ game.registerController(navigationController);
 game.registerController(starsController);
 game.registerController(cmpController);
 
+let marqueeGroup = new THREE.Group();
+scene.add(marqueeGroup);
+let marquee = new Marquee();
+marqueeGroup.add(marquee);
+marqueeGroup.position.y = 3;
+
 function initAnimations() {
     body.position.set(500, 250, 200);
     // TODO: figure out algo for looking
@@ -58,7 +60,7 @@ function initAnimations() {
 }
 
 function start() {
-  loadModels(MODEL_SPECS, game);//.then(() => initAnimations());
+  loadModels(MODEL_SPECS, game);
   loadScreen(VIDEO_PATH, game);
 
   console.log("****** adding planets ******");
@@ -66,6 +68,7 @@ function start() {
   let mars = addPlanet(game.scene, 'Mars', 200, 2000, 0, 2000, './textures/Mars_4k.jpg');
   let jupiter = addPlanet(game.scene, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
   let nepture = addPlanet(game.scene, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
+  
   setupLights(game.scene);
 
   game.body.position.set(2, 2, 2);

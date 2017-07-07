@@ -19,3 +19,11 @@ export let screen1 = {
     thetaLength: 140
 };
 
+export let marquee = {
+    name: "marquee",
+    radius: 8.6,
+    phiStart: 32,
+    phiLength: 49,
+    thetaStart: 110,
+    thetaLength: 140
+};
