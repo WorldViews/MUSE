@@ -12,6 +12,12 @@ const chartRange={
     z:[-5, 5]
 }
 
+const startYear = 1850
+const endYear = 2300
+const yearPerMinute = () => state.yearPerMinute || 25 // * 12 // 25=>18min
+const secPerYear = () => 60/yearPerMinute();
+
+
 export default class CMPController {
 
     constructor(renderer, scene, camera, options) {
@@ -256,7 +262,7 @@ export default class CMPController {
             width: lineWidth,
         });
 
-        this.startHistory();
+        this.play();
     }
 
 
@@ -291,21 +297,23 @@ export default class CMPController {
         });
     }
 
-    startHistory() {
-        var startYear = 1850
-        var year_per_minute = state.yearPerMinute || 25 // * 12 // 25=>18min
-        var endYear = 2300
-
-        function yearsToSec(year, year_per_minute) {
-            var sec_per_year = 60/year_per_minute
-            return (year-startYear) * sec_per_year
-        }
-
-        this.playHistory(yearsToSec(endYear, year_per_minute), startYear, endYear)
+    // seek val 0 -> 1 : years 1850 -> 2300
+    seek(val) {
+        var start = startYear + parseInt(val*(endYear - startYear));
+        var dur = (endYear - start)*(secPerYear());
+        this._playHistory(dur, start, endYear)
     }
 
-    playHistory(_duration, _from, _to) {
-        this.stopHistory()
+    play() {
+        this.seek(0);
+    }
+
+    stop() {
+        this._stopHistory();
+    }
+
+    _playHistory(_duration, _from, _to) {
+        this._stopHistory()
         var duration = _duration || 120 // 2min
         var param = {y: _from}
         this.historyT1 = new TWEEN.Tween(param)
@@ -326,7 +334,7 @@ export default class CMPController {
         }, 4000)
     }
 
-    stopHistory() {
+    _stopHistory() {
         TWEEN.remove(this.historyT1)
         TWEEN.remove(this.historyT2)
     }

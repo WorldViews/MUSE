@@ -101,7 +101,8 @@ function start()
     });
     CMP.resize(window.innerWidth, window.innerHeight);
     game.CMP = CMP;
-    game.registerUpdateHandler(() => game.CMP.update());
+    game.registerController('cmp', game.CMP);
+    //    game.registerUpdateHandler(() => game.CMP.update());
 /*
     loadChart(renderer, scene, camera).then(({context}) => {
       mathboxContext = context;
