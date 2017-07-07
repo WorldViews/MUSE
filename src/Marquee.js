@@ -35,13 +35,12 @@ class Marquee extends THREE.Mesh {
 		    degToRad(marqueeSpec.phiStart),
 		    degToRad(marqueeSpec.phiLength)
 		);
-		this.uvNeedsUpdate = true;
-		// this.scale.z = -1;
 	}
 
 	updateText(text) {
-		this.context.clearRect(this.width, this.height);
-		this.context.fillText(text, this.width / 2, this.height / 2);
+		this._context.clearRect(0, 0, this._width, this._height);
+		this._context.fillText(text, this._width / 2, this._height / 2);
+		this._texture.needsUpdate = true;
 	}
 }
 

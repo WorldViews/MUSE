@@ -41,11 +41,8 @@ game.registerController(navigationController);
 game.registerController(starsController);
 game.registerController(cmpController);
 
-let marqueeGroup = new THREE.Group();
-scene.add(marqueeGroup);
 let marquee = new Marquee();
-marqueeGroup.add(marquee);
-marqueeGroup.position.y = 3;
+scene.add(marquee);
 
 function initAnimations() {
     body.position.set(500, 250, 200);
