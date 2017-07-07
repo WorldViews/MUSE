@@ -1,2 +1,0 @@
-import mathbox from 'mathbox';
-
