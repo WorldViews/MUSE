@@ -91,7 +91,22 @@ EARTH.Planet = function(group, radius, opts)
 };
 
 //EARTH.Earth = EARTH.Planet;
-function addPlanet(scene, name, radius, x, y, z, tex)
+function addPlanet(game, name, radius, x, y, z, tex)
+{
+    console.log(">>> addPlanet "+name);
+    var scene = game.scene;
+    var group = new THREE.Group();
+    game.models[name] = group;
+    scene.add(group);
+    var opts = {'name': name, 'texture': tex};
+    var planet = new EARTH.Planet(group, radius, opts);
+    planet.group.position.x = x;
+    planet.group.position.y = y;
+    planet.group.position.z = z;
+    return planet;
+}
+
+function addPlanetOld(scene, name, radius, x, y, z, tex)
 {
     console.log(">>> addPlanet "+name);
     var group = new THREE.Group();
@@ -104,12 +119,12 @@ function addPlanet(scene, name, radius, x, y, z, tex)
     return planet;
 }
 
-function addPlanets(scene)
+function addPlanets(game)
 {
-    var earth =   addPlanet(scene, 'Earth',   1000, -2000, 0, 0);
-    var mars =    addPlanet(scene, 'Mars',    200,   2000, 0, 2000,  './textures/Mars_4k.jpg');
-    var jupiter = addPlanet(scene, 'Jupiter', 300,   1500, 0, -1500, './textures/Jupiter_Map.jpg');
-    var nepture = addPlanet(scene, 'Nepture', 100,  -1000, 0, -1000, './textures/Neptune.jpg');
+    var earth =   addPlanet(game, 'Earth',   1000, -2000, 0, 0);
+    var mars =    addPlanet(game, 'Mars',    200,   2000, 0, 2000,  './textures/Mars_4k.jpg');
+    var jupiter = addPlanet(game, 'Jupiter', 300,   1500, 0, -1500, './textures/Jupiter_Map.jpg');
+    var nepture = addPlanet(game, 'Nepture', 100,  -1000, 0, -1000, './textures/Neptune.jpg');
 }
 
 //export {addPlanet};

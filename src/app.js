@@ -66,10 +66,10 @@ function start() {
   loadScreen(VIDEO_PATH, game);
 
   console.log("****** adding planets ******");
-  let earth = addPlanet(game.scene, 'Earth', 1000, -2000, 0, 0);
-  let mars = addPlanet(game.scene, 'Mars', 200, 2000, 0, 2000, './textures/Mars_4k.jpg');
-  let jupiter = addPlanet(game.scene, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
-  let nepture = addPlanet(game.scene, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
+  let earth = addPlanet(game, 'Earth', 1000, -2000, 0, 0);
+  let mars = addPlanet(game, 'Mars', 200, 2000, 0, 2000, './textures/Mars_4k.jpg');
+  let jupiter = addPlanet(game, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
+  let nepture = addPlanet(game, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
   
   setupLights(game.scene);
 

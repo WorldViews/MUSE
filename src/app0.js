@@ -9,7 +9,7 @@ import {PlayerControl} from './PlayerControl';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
-
+import {loadBVH} from './loadBVH';
 import loadModels from './loadModels';
 import {loadScreen} from './loadScreen';
 import CMPController from './controllers/CMPController';
@@ -19,8 +19,6 @@ import {setupHtmlControls} from './htmlControls';
 
 import {screen1,labelsScreen,screen2,screen3} from './const/screen';
 
-//import TWEEN from 'tween';
-//import {interpolate} from 'd3-interpolate';
 let {degToRad} = THREE.Math;
 
 let mathboxContext;
@@ -35,8 +33,6 @@ let MODEL_SPECS = [{
     position: [0, 0, 0],
     //rotation: [0, degToRad(90), 0],
     rotation: [0, degToRad(0), 0],
-    //scale: [0.025, 0.025, 0.025]
-    //scale: [0.03, 0.03, 0.03]
     scale: 0.025
 }];
 
@@ -47,7 +43,6 @@ game.events.addEventListener('valueChange', msg => {
     console.log("valueChange: "+JSON.stringify(msg));
 });
 
-//game.addCMPControls();
 game.addOrbitControls();
 let scene = game.scene;
 game.gss = new GSS.SpreadSheet();
@@ -56,27 +51,20 @@ scene.add(starsGroup);
 let stars = new Stars(starsGroup, 2500, {name: 'Stars'});
 starsGroup.position.set(0, 0, 0);
 
+//let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
+let cmpController = new CMPController(game.renderer, game.scene, game.camera, {
+  position: [0, 3, 0],
+  rotation: [0, 0, 0],
+  scale: [1.5, 1, 1.5]
+});
+game.registerController('cmp', cmpController);
+
 function start()
 {
     console.log("animTest: ... ");
-    //animTest();
-    //deleteMe();
     window.Anim = Anim;
-    CMP = new CMPController(game.renderer, game.scene, game.camera, {
-        position: [0, 3, 0]
-    });
-    CMP.resize(window.innerWidth, window.innerHeight);
-    game.CMP = CMP;
-    game.registerController('cmp', game.CMP);
-    //    game.registerUpdateHandler(() => game.CMP.update());
-/*
-    loadChart(renderer, scene, camera).then(({context}) => {
-      mathboxContext = context;
-      game.mathboxContext = context;
-    });
-*/
-    addPlanets(scene);
-    var vEarth =  addPlanet(scene, 'Earth',   1.2, 0, 2, 0);
+    addPlanets(game);
+    var vEarth =  addPlanet(game, 'vEarth',   1.2, 0, 2, 0);
     var SF = {lat: 37.4, lon: -122};
     vEarth.addMarker(SF.lat, SF.lon)
     loadModels(MODEL_SPECS, game);
