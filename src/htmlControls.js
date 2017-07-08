@@ -1,7 +1,7 @@
 
 var duration = 32*60;
 
-var items = ["vEarth", "dancer", "cmp", "portal"];
+var items = ["vEarth", "dancer", "cmp", "portal", "bmw"];
 
 function handleCenterScene(e, game)
 {
