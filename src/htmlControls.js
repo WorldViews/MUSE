@@ -1,6 +1,32 @@
 
 var duration = 32*60;
 
+var items = ["vEarth", "dancer", "dataViz", "portal"];
+
+function handleCenterScene(e, game)
+{
+    var option = $("#centerScene").val();
+    console.log("Click: "+option);
+    items.forEach(item=> {
+	var obj = game.models[item];
+	console.log("item: "+item+"  obj: "+obj);
+	if (obj) {
+	    obj.visible = (item == option);
+	    return;
+	}
+	else {
+	    console.log("No such object as "+item);
+	}
+	var c = game.controllers[item];
+	if (c) {
+	    c.setVisible(item == option);
+	}
+	else {
+	    console.log("No such controller as "+obj);
+	}
+    });
+}
+
 function tourSliderChanged(e, ui, playerControl)
 {
     console.log("**** tourSliderChanged ****");
@@ -33,6 +59,7 @@ function setupHtmlControls(game, playerControl) {
 	$("#playStop").click(function() {
             console.log("click");
 	});
+	$("#centerScene").change(e => handleCenterScene(e,game));
     });
 }
 
