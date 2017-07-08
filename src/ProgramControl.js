@@ -1,26 +1,15 @@
+/*
+This is base class for object that controls various media and animations
+associated with a program or performance.
 
+Long term plan is that this, or a subclass, can read from spreadsheets or
+JSON specs that fully define a performance.
+
+It displays things like which displays are visible, what is presented on
+the displays, which objects are on stage, etc.
+*/
 import {sprintf} from "sprintf-js";
 
-/*
-function getVideoOpacity(t)
-{
-    if (!CMPVR.gss)
-	return 0;
-    var y = timeToYear(t);
-    var va = CMPVR.gss.getFieldByYear(y, "videofade");
-    //report("getVideoOpacity "+t+" va: "+va);
-    va = getFloat(va, 1.0);
-    return va;
-}
-
-function getNarrative(t)
-{
-    if (!CMPVR.gss)
-	return "";
-    var y = timeToYear(t);
-    return CMPVR.gss.getFieldByYear(y, "narrative");
-}
-*/
 
 class ProgramControl
 {
@@ -55,39 +44,11 @@ class ProgramControl
 	    var player = this.players[name];
 	    player.playTime = t;
 	}
+
 	//TODO: Move these into registered players
 	Object.values(this.game.screens).forEach(scr => {
 	    scr.imageSource.setPlayTime(t);
 	});
-
-	//TODO: Move this into registered players
-	if (game.gss) {
-	    var year = GSS.timeToYear(t);
-	    console.log("year: "+year);
-	    var tStr = sprintf("%8.1f", t);
-	    this.game.events.dispatchEvent({type: 'valueChange',
-					    message: {'name': 'timeText', 'value': tStr}});
-	    var yearStr = "";
-	    if (year) {
-		var va = game.gss.getFieldByYear(year, "videofade");
-                var nar = game.gss.getFieldByYear(year, "narrative") || "";
-		console.log("va: "+va+"  narrative: "+nar);
-		yearStr = Math.floor(year);
-		this.game.events.dispatchEvent({type: 'valueChange',
-						message: {'name': 'narrativeText', 'value': nar}});
-	    }
-	    this.game.events.dispatchEvent({type: 'valueChange',
-					    message: {'name': 'yearText', 'value': yearStr}});
-	}
-	var cmp = game.CMP || game.controllers['cmp'];
-	if (cmp) {
-	    var nt = 0;
-	    if (t > 10*60) {
-		nt = t / (32*60.0);
-	    }
-	    if (nt > 1) nt = 1;
-	    cmp.seek(nt);
-	}
     }
 }
 
