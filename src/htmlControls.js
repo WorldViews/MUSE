@@ -16,7 +16,7 @@ function handleCenterScene(e, game)
 	}
 	var c = game.controllers[item];
 	if (c) {
-	    c.setVisible(item == option);
+	    c.visible = (item == option);
 	}
 	else {
 	    console.log("No such model or controller as "+item);
