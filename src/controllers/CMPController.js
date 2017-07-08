@@ -384,8 +384,8 @@ export default class CMPController {
         }
     }
 
-    setVisibile(vis)
+    setVisible(vis)
     {
-	console.log("MathBox setVisible: "+vis);
+	console.log("MathBox set visible: "+vis);
     }
 }
