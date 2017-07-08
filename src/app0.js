@@ -4,7 +4,7 @@ import * as THREE from 'three';
 //import OrbitControls from './lib/controls/OrbitControls';
 //import CMP_Controls from './lib/controls/CMP_Controls';
 import {Game} from './Game';
-import {ProgramControl} from './ProgramControl';
+import {CMPProgram} from './CMPProgram';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
@@ -20,23 +20,34 @@ import {screen1,labelsScreen,screen2,screen3} from './const/screen';
 
 let {degToRad} = THREE.Math;
 
-let mathboxContext;
-let CMP;
-
 let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 let VIDEO2_PATH = 'http://dvr4.paldeploy.com/video/Sakura/WashingtonDCCherryBlossomFestival360.mp4';
 
-let MODEL_SPECS = [{
-    name: 'platform',
-    path: 'models/PlayDomeSkp.dae',
-    position: [0, 0, 0],
-    //rotation: [0, degToRad(90), 0],
-    rotation: [0, degToRad(0), 0],
-    scale: 0.025
-}];
+let MODEL_SPECS = [
+    {
+	name: 'platform',
+	path: 'models/PlayDomeSkp.dae',
+	position: [0, 0, 0],
+	//rotation: [0, degToRad(90), 0],
+	rotation: [0, degToRad(0), 0],
+	scale: 0.025
+    }
+    /*
+    {
+	name: 'bmw',
+	path: 'models/bmw/model.dae',
+	position: [0, 0, 0],
+	//rotation: [0, degToRad(90), 0],
+	rotation: [0, degToRad(0), 0],
+	scale: 0.025,
+	visible: false
+    }
+*/
+];
 
 window.game = new Game();
-var programControl = new ProgramControl(game);
+//var programControl = new ProgramControl(game);
+var programControl = new CMPProgram(game);
 setupHtmlControls(game, programControl);
 game.events.addEventListener('valueChange', msg => {
     console.log("valueChange: "+JSON.stringify(msg));
