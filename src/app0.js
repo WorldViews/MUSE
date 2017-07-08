@@ -1,15 +1,14 @@
 
 import * as THREE from 'three';
 
-import TrackballControls from './lib/controls/TrackballControls';
-import OrbitControls from './lib/controls/OrbitControls';
-import CMP_Controls from './lib/controls/CMP_Controls';
+//import OrbitControls from './lib/controls/OrbitControls';
+//import CMP_Controls from './lib/controls/CMP_Controls';
 import {Game} from './Game';
 import {PlayerControl} from './PlayerControl';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
-import {loadBVH} from './loadBVH';
+import {DanceController} from './controllers/DanceController';
 import loadModels from './loadModels';
 import {loadScreen} from './loadScreen';
 import CMPController from './controllers/CMPController';
@@ -36,8 +35,6 @@ let MODEL_SPECS = [{
     scale: 0.025
 }];
 
-let BVH_PATH = './models/bvh/MasterLiuPerformanceChar00.bvh';
-
 window.game = new Game();
 var playerControl = new PlayerControl(game);
 setupHtmlControls(game, playerControl);
@@ -61,7 +58,12 @@ let cmpController = new CMPController(game.renderer, game.scene, game.camera, {
 });
 game.registerController('cmp', cmpController);
 
-loadBVH(game, 'dancer', BVH_PATH);
+var dancer = new DanceController(game);
+game.registerController('dancer', dancer);
+playerControl.registerPlayer(dancer);
+
+//var dc2 = new DanceController(game, {name: 'dancer2', position: [0,4,0], scale: 0.12});
+//game.registerController('dancer2', dc2);
 
 function start()
 {

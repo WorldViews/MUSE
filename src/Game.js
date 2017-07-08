@@ -33,7 +33,8 @@ class Game {
     this.models = {};
     this.events = new THREE.EventDispatcher();
     this.controllers = {};
-    this.setupRAF();
+      this.setupRAF();
+      this.playerControl = null; // for now this is a singleton
   }
 
   setupRAF() {
@@ -93,15 +94,17 @@ class Game {
       this.controls = this.cmpControls;
   }
 
-  registerController(name, controller) {
+    // Isn't this more complicated than it needs to be?
+    // we have a list and map, and functions or objects.
+    registerController(name, controller) {
   	if (typeof controller === 'object' && controller.update) {
   		this.updateHandlers.push(controller.update.bind(controller));
   	} else {
   		throw 'Unsupported controller provided to `registerController`';
   	}
 
-    this.controllers[name] = controller;
-  }
+	this.controllers[name] = controller;
+    }
 
   registerUpdateHandler(handlerOrObject) {
   	if (typeof handlerOrObject === 'function') {
@@ -111,6 +114,8 @@ class Game {
   	}
   }
 
+    // Player functionality
+    
   handleResize(e) {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
