@@ -4,7 +4,7 @@ import * as THREE from 'three';
 //import OrbitControls from './lib/controls/OrbitControls';
 //import CMP_Controls from './lib/controls/CMP_Controls';
 import {Game} from './Game';
-import {PlayerControl} from './PlayerControl';
+import {ProgramControl} from './ProgramControl';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
@@ -36,8 +36,8 @@ let MODEL_SPECS = [{
 }];
 
 window.game = new Game();
-var playerControl = new PlayerControl(game);
-setupHtmlControls(game, playerControl);
+var programControl = new ProgramControl(game);
+setupHtmlControls(game, programControl);
 game.events.addEventListener('valueChange', msg => {
     console.log("valueChange: "+JSON.stringify(msg));
 });
@@ -60,7 +60,7 @@ game.registerController('cmp', cmpController);
 
 var dancer = new DanceController(game);
 game.registerController('dancer', dancer);
-playerControl.registerPlayer(dancer);
+programControl.registerPlayer(dancer);
 
 //var dc2 = new DanceController(game, {name: 'dancer2', position: [0,4,0], scale: 0.12});
 //game.registerController('dancer2', dc2);

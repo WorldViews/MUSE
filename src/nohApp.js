@@ -10,7 +10,7 @@ import {loadScreen} from './loadScreen';
 import setupLights from './setupLights';
 import {Game} from './Game';
 import {setupHtmlControls} from './htmlControls';
-import {PlayerControl} from './PlayerControl';
+import {ProgramControl} from './ProgramControl';
 
 let {degToRad} = THREE.Math;
 
@@ -32,7 +32,7 @@ let MODEL_SPECS = [{
 var game = new Game();
 game.addControls();
 window.game = game;
-var playerControl = new PlayerControl(game);
+var programControl = new ProgramControl(game);
 setupHtmlControls(playerControl);
 //window.scene = scene;
 

@@ -22,11 +22,11 @@ function getNarrative(t)
 }
 */
 
-class PlayerControl
+class ProgramControl
 {
     constructor(game) {
 	this.game = game;
-	game.playerControl = this;
+	game.programControl = this;
 	this.players = {};
     }
 
@@ -91,4 +91,4 @@ class PlayerControl
     }
 }
 
-export {PlayerControl};
+export {ProgramControl};

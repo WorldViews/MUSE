@@ -34,7 +34,7 @@ class Game {
     this.events = new THREE.EventDispatcher();
     this.controllers = {};
       this.setupRAF();
-      this.playerControl = null; // for now this is a singleton
+      this.programControl = null; // for now this is a singleton
   }
 
   setupRAF() {
@@ -114,7 +114,6 @@ class Game {
   	}
   }
 
-    // Player functionality
     
   handleResize(e) {
     this.camera.aspect = window.innerWidth / window.innerHeight;
