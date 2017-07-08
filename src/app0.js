@@ -36,6 +36,8 @@ let MODEL_SPECS = [{
     scale: 0.025
 }];
 
+let BVH_PATH = './models/bvh/MasterLiuPerformanceChar00.bvh';
+
 window.game = new Game();
 var playerControl = new PlayerControl(game);
 setupHtmlControls(game, playerControl);
@@ -58,6 +60,8 @@ let cmpController = new CMPController(game.renderer, game.scene, game.camera, {
   scale: [1.5, 1, 1.5]
 });
 game.registerController('cmp', cmpController);
+
+loadBVH(game, 'dancer', BVH_PATH);
 
 function start()
 {
