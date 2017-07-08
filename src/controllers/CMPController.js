@@ -5,6 +5,7 @@ import state from '../lib/cmp/State';
 
 import TWEEN from '@tweenjs/tween.js';
 import MathBox from 'mathbox';
+import _ from 'lodash';
 
 const chartScale=[1.5,1,1.5];
 const chartRange={
@@ -25,6 +26,7 @@ export default class CMPController {
         options = options || {};
         this.position = options.position || [0, 0, 0];
         this.rotation = options.rotation || [0, 0, 0];
+        this.visible = true;
         this.scale = options.scale || chartScale;
 
         let self = this;
@@ -371,6 +373,16 @@ export default class CMPController {
 
     get scale() {
         return this._scale || [1, 1, 1];
+    }
+
+    // array x,y,z [0, 0, 0]
+    set visible(val) {
+        this._visible = val;
+        _.set(this, "context.scene.root.visible", val);
+    }
+
+    get visible() {
+        return this._visible;
     }
 
     _updateMatrix() {
