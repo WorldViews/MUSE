@@ -379,7 +379,7 @@ export default class CMPController {
     set visible(val) {
         this._visible = val;
         _.set(this, "context.scene.root.visible", val);
-        //(val) ? this.start() : this.stop();
+        (val) ? this.play() : this.stop();
     }
 
     get visible() {
