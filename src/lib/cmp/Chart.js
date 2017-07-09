@@ -2,61 +2,61 @@
 import state from './State';
 
 const PreIndustrial = {
-	temperature : 13.36,
-	ice: 7.78,
-	co2: 284.7,
-	balance: 0,
-	precipitation: 3.38E-05
+    temperature : 13.36,
+    ice: 7.78,
+    co2: 284.7,
+    balance: 0,
+    precipitation: 3.38E-05
 }
 
 // Warning: do not mutate camera.position
 // Mutating camera.position will break PointlockControls.
 export default class Chart {
-	constructor(mathbox, options){
-		this.mathbox = mathbox
-		this.x = options.x
-		this.y = options.y
-		this.z_offset = options.z_offset
-		this.id = options.id
+    constructor(mathbox, options){
+        this.mathbox = mathbox
+        this.x = options.x
+        this.y = options.y
+        this.z_offset = options.z_offset
+        this.id = options.id
         this.data = options.data
-		this.xRange = options.xRange
-		this.yRange = options.yRange
-		this.zRange = options.zRange
-		this.scale = options.scale
-		this.color = options.color
+        this.xRange = options.xRange
+        this.yRange = options.yRange
+        this.zRange = options.zRange
+        this.scale = options.scale
+        this.color = options.color
         this.view = options.view
 	        this.dotColor = options.dotColor || this.color;
-		this.colors = options.colors
+        this.colors = options.colors
 	        this.lineWidth = options.lineWidth || 20
-		this.labelFunc = options.labelFunc || ((val)=>{return [val]})
+        this.labelFunc = options.labelFunc || ((val)=>{return [val]})
 	        //this.labelSize = options.labelSize || 36
 	        this.labelSize = state.labelSize
-		this.chart = null
+        this.chart = null
         this.position = options.position || [ 0, 0, 0 ]
 
-		this.init()
-	}
+        this.init()
+    }
 
-	init(){
-		// debugger
-		// trun z_offset into array
+    init(){
+        // debugger
+        // trun z_offset into array
         this.position = this.position.slice()
 
-		this.z = this.x.map(()=>{return this.z_offset})
+        this.z = this.x.map(()=>{return this.z_offset})
 
-		var data = _.zip(this.x, this.y, this.z)
-		var reference = [[this.x[0], this.y[0], this.z_offset],
-			[_.last(this.x), this.y[0], this.z_offset]]
+        var data = _.zip(this.x, this.y, this.z)
+        var reference = [[this.x[0], this.y[0], this.z_offset],
+            [_.last(this.x), this.y[0], this.z_offset]]
 
-		var view = this.mathbox.cartesian({
+        var view = this.mathbox.cartesian({
             range: [this.xRange, this.yRange, this.zRange],
             scale: this.scale,
             position: this.position,
             rotation: this.rotation
-		});
+        });
 
-		// draw line
-		view
+        // draw line
+        view
             .array({
                 id: this.id,
                 width: state.numData,
@@ -72,8 +72,8 @@ export default class Chart {
                 width: this.lineWidth
             })
 
-		// draw current year mark as a point
-		view
+        // draw current year mark as a point
+        view
             .array({
                 id: this.id+'-lineend-point-pos',
                 width: 1,
@@ -83,14 +83,14 @@ export default class Chart {
                 live: true
             }).point({
                 id: this.id+'-lineend-point-mark',
-            //	opacity: 0.3,
+                //	opacity: 0.3,
                 opacity: 0.8,
                 color: this.dotColor,
                 zIndex: 21, //DGK
                 size: 60,
             })
 
-		view
+        view
             .array({
                 id: this.id+'-lineend-point-pos-b',
                 width: 1,
@@ -109,17 +109,17 @@ export default class Chart {
 	    this.lineendMarkPos = this.mathbox.select('#'+this.id+'-lineend-point-pos')
 	    this.lineendMarkPosB = this.mathbox.select('#'+this.id+'-lineend-point-pos-b')
 
-		var dataRCP8p5 = _.zip(this.x, this.data.rcp8p5[this.id], this.z)
-		// draw line
-		view
+        var dataRCP8p5 = _.zip(this.x, this.data.rcp8p5[this.id], this.z)
+        // draw line
+        view
             // .transform({ position: this.position })
             .array({
-            id: this.id+'-rcp8p5',
-            width: state.numData,
-            data: dataRCP8p5,
-            items: 1,
-            channels: 3,
-            live: false
+                id: this.id+'-rcp8p5',
+                width: state.numData,
+                data: dataRCP8p5,
+                items: 1,
+                channels: 3,
+                live: false
             }).line({
                 id: this.id+'-rcp8p5-line',
                 opacity: 0.5,
@@ -130,9 +130,9 @@ export default class Chart {
                 width: state.envelopeLineWidth
             })
 
-		var dataRCP2p6 = _.zip(this.x, this.data.rcp2p6[this.id], this.z)
-		// draw line
-		view
+        var dataRCP2p6 = _.zip(this.x, this.data.rcp2p6[this.id], this.z)
+        // draw line
+        view
             // .transform({ position: this.position })
             .array({
                 id: this.id+'-rcp2p6',
@@ -152,8 +152,8 @@ export default class Chart {
             })
 
 
-		// draw reference line
-		view
+        // draw reference line
+        view
             // .transform({ position: this.position })
             .array({
                 id: this.id+'-reference',
@@ -171,10 +171,10 @@ export default class Chart {
             })
 
 
-		this.chart =this.mathbox.select("#"+this.id)
+        this.chart =this.mathbox.select("#"+this.id)
 
-		// draw XY grid
-		view
+        // draw XY grid
+        view
             // .transform({ position: this.position })
             .transform({position:[0, 0, this.z_offset]})
             .grid({
@@ -188,8 +188,8 @@ export default class Chart {
                 color: this.color
             })
 
-		// // Draw X axis
-		// view
+        // // Draw X axis
+        // view
         //     // .transform({ position: this.position })
         //     .transform({
         //         position:[0, this.yRange[0], this.z_offset]
@@ -202,8 +202,8 @@ export default class Chart {
         //         opacity: .5,
         //     })
 
-		// Draw Y axis
-		// view
+        // Draw Y axis
+        // view
         //     // .transform({ position: this.position })
         //     .transform({
         //         position:[this.xRange[1], 0, this.z_offset]
@@ -216,8 +216,8 @@ export default class Chart {
         //         opacity: .5,
         //     })
 
-		// // Draw Y axis labels and ticks
-		// view.scale({
+        // // Draw Y axis labels and ticks
+        // view.scale({
 	    //   divide: 4,
 	    //   origin: [this.xRange[1], this.yRange[0], this.z_offset],
 	    //   axis: "y",
@@ -245,9 +245,9 @@ export default class Chart {
 
 		    // Y axis id
 	        view.array({
-				data: [[this.xRange[1], 0.1*(this.yRange[1]-this.yRange[0]) + this.yRange[1], this.z_offset]],
-				channels: 3, // necessary
-				live: false,
+                data: [[this.xRange[1], 0.1*(this.yRange[1]-this.yRange[0]) + this.yRange[1], this.z_offset]],
+                channels: 3, // necessary
+                live: false,
 		    }).text({
 		      data: [this.id],
 		      depth: 2
@@ -264,9 +264,9 @@ export default class Chart {
 		    // projection at 2300
 	        view.array({
 	        	id: this.id+'-label-position',
-				data: [[this.xRange[1], 0.1*(this.yRange[1]-this.yRange[0]) + this.yRange[1], this.z_offset]],
-				channels: 3, // necessary
-				live: true,
+                data: [[this.xRange[1], 0.1*(this.yRange[1]-this.yRange[0]) + this.yRange[1], this.z_offset]],
+                channels: 3, // necessary
+                live: true,
 		    }).text({
 		    	id: this.id+'-label-text',
 		      data: [0],
@@ -281,9 +281,9 @@ export default class Chart {
 		    // Current value
 	        view.array({
 	        	id: this.id+'-label-year-position',
-				data: [[state.Year, 0.1*(this.yRange[1]-this.yRange[0]) + this.yRange[1], this.z_offset]],
-				channels: 3, // necessary
-				live: true,
+                data: [[state.Year, 0.1*(this.yRange[1]-this.yRange[0]) + this.yRange[1], this.z_offset]],
+                channels: 3, // necessary
+                live: true,
 		    }).text({
 		    	id: this.id+'-label-year-text',
 		      data: ['temperature'],
@@ -299,34 +299,34 @@ export default class Chart {
 		    this.labelText = this.mathbox.select('#'+this.id+'-label-text')
 		    this.labelYearPos = this.mathbox.select('#'+this.id+'-label-year-position')
 		    this.labelYearText = this.mathbox.select('#'+this.id+'-label-year-text')
-		}
-	}
+        }
+    }
 
-	update(y) {
-		var newData=_.zip(this.x, y, this.z)
-		// this.chart =this.mathbox.select("#"+this.id)
-		this.chart.set('data', newData)
+    update(y) {
+        var newData=_.zip(this.x, y, this.z)
+        // this.chart =this.mathbox.select("#"+this.id)
+        this.chart.set('data', newData)
 
-		this.lineendMarkPos.set('data',
-			[[state.Year, y[state.Year-1850], this.z_offset]]
-			)
+        this.lineendMarkPos.set('data',
+            [[state.Year, y[state.Year-1850], this.z_offset]]
+        )
 
-		this.lineendMarkPosB.set('data',
-			[[state.Year, y[state.Year-1850], this.z_offset]]
-			)
+        this.lineendMarkPosB.set('data',
+            [[state.Year, y[state.Year-1850], this.z_offset]]
+        )
 	        // $("#yearText").html(Year);
 	        //$("#yearLabel").html(Year);
-		if(!state.hideLegend){
-			this.labelPosition.set('data', [[this.xRange[1], this.y[state.numData-1], this.z_offset]])
+        if(!state.hideLegend){
+            this.labelPosition.set('data', [[this.xRange[1], this.y[state.numData-1], this.z_offset]])
 
-			this.labelText.set('data', [this.y[state.numData-1].toPrecision(3)])
+            this.labelText.set('data', [this.y[state.numData-1].toPrecision(3)])
 
-			this.labelYearPos.set('data',
-				[[state.Year, 0.1*(this.yRange[1]-this.yRange[0]) + this.y[state.Year-1850], this.z_offset]])
-			this.labelYearText.set('data',
-				this.labelFunc(state.Year, (this.y[state.Year-1850] - PreIndustrial[this.id]).toFixed(1)))
-		}
-	}
+            this.labelYearPos.set('data',
+                [[state.Year, 0.1*(this.yRange[1]-this.yRange[0]) + this.y[state.Year-1850], this.z_offset]])
+            this.labelYearText.set('data',
+                this.labelFunc(state.Year, (this.y[state.Year-1850] - PreIndustrial[this.id]).toFixed(1)))
+        }
+    }
 
     interpolate(lo, hi, n) {
         n--; // go to end of range

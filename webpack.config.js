@@ -36,6 +36,21 @@ module.exports = (env) => {
           use: ['script-loader']
         },
         {
+          enforce: "pre",
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          loader: "eslint-loader",
+          options: {
+              extends: ["eslint:recommended", "google"],
+              parser: "babel-eslint",
+              fix: true,
+              rules: {
+                indent: [2, 4],
+                "no-trailing-spaces": 1,
+              }
+          }
+        },
+        {
           test: /\.js$/,
           exclude: /(node_modules|bower_components)/,
           use: {

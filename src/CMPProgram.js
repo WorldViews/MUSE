@@ -27,7 +27,7 @@ import {sprintf} from "sprintf-js";
 function getVideoOpacity(gss, t)
 {
     if (!gss)
-	return 0;
+        return 0;
     var y = timeToYear(t);
     var va = gss.getFieldByYear(y, "videofade");
     //report("getVideoOpacity "+t+" va: "+va);
@@ -38,7 +38,7 @@ function getVideoOpacity(gss, t)
 function getNarrative(gss, t)
 {
     if (!gss)
-	return "";
+        return "";
     var y = timeToYear(t);
     return gss.getFieldByYear(y, "narrative");
 }
@@ -48,14 +48,14 @@ class CMPProgram extends ProgramControl
 {
 
     constructor(game) {
-	super(game);
+        super(game);
     }
-    
-    setPlayTime(t) {
-	super.setPlayTime(t);
 
-	//TODO: Move this into registered players
-	if (game.gss) {
+    setPlayTime(t) {
+        super.setPlayTime(t);
+
+        //TODO: Move this into registered players
+        if (game.gss) {
 	    var year = GSS.timeToYear(t);
 	    console.log("year: "+year);
 	    var tStr = sprintf("%8.1f", t);
@@ -63,25 +63,25 @@ class CMPProgram extends ProgramControl
 					    message: {'name': 'timeText', 'value': tStr}});
 	    var yearStr = "";
 	    if (year) {
-		var va = game.gss.getFieldByYear(year, "videofade");
+                var va = game.gss.getFieldByYear(year, "videofade");
                 var nar = game.gss.getFieldByYear(year, "narrative") || "";
-		console.log("va: "+va+"  narrative: "+nar);
-		yearStr = Math.floor(year);
-		this.game.events.dispatchEvent({type: 'valueChange',
-						message: {'name': 'narrativeText', 'value': nar}});
+                console.log("va: "+va+"  narrative: "+nar);
+                yearStr = Math.floor(year);
+                this.game.events.dispatchEvent({type: 'valueChange',
+                    message: {'name': 'narrativeText', 'value': nar}});
 	    }
 	    this.game.events.dispatchEvent({type: 'valueChange',
 					    message: {'name': 'yearText', 'value': yearStr}});
-	}
-	var cmp = game.CMP || game.controllers['cmp'];
-	if (cmp) {
+        }
+        var cmp = game.CMP || game.controllers['cmp'];
+        if (cmp) {
 	    var nt = 0;
 	    if (t > 10*60) {
-		nt = t / (32*60.0);
+                nt = t / (32*60.0);
 	    }
 	    if (nt > 1) nt = 1;
 	    cmp.seek(nt);
-	}
+        }
     }
 }
 

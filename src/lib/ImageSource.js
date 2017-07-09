@@ -67,8 +67,8 @@ ImageSource.prototype.gotoMark = function() {
 ImageSource.prototype.goBack = function() {
     var t = this.getPlayTime();
     if (t == null) {
-	report("No play time");
-	return;
+        report("No play time");
+        return;
     }
     this.setPlayTime(t-1);
 };
@@ -76,8 +76,8 @@ ImageSource.prototype.goBack = function() {
 ImageSource.prototype.goForward = function() {
     var t = this.getPlayTime();
     if (t == null) {
-	report("No play time");
-	return;
+        report("No play time");
+        return;
     }
     this.setPlayTime(t+1);
 };
@@ -86,7 +86,7 @@ ImageSource.prototype.setPlaySpeed = function(s) {
     report("ImageSource.setPlaySpeed "+s);
     this.playSpeed = s;
     if (this.video)
-	this.video.playbackRate = s;
+        this.video.playbackRate = s;
 }
 
 ImageSource.prototype.getPlaySpeed = function() {
@@ -96,9 +96,9 @@ ImageSource.prototype.getPlaySpeed = function() {
 
 ImageSource.prototype.pause = function() {
     if (this.video)
-	this.video.pause();
+        this.video.pause();
     else
-	report("*** no video ***");
+        report("*** no video ***");
 };
 
 ImageSource.prototype.play = function() {
@@ -106,7 +106,7 @@ ImageSource.prototype.play = function() {
         return this.video.play();
     }
     else {
-        report("*** no video ***");        
+        report("*** no video ***");
     }
 };
 
@@ -126,14 +126,14 @@ ImageSource.prototype.setPlayTime = function(t) {
     this.playTime = t;
     this.lastSeekTime = getClockTime();
     if (this.type == ImageSource.TYPE.VIDEO) {
-	if (this.video) {
+        if (this.video) {
             //this.video.seek(t);
 	    report("*** setting video.currentTime to "+t);
             this.video.currentTime = t;
-	}
-	else {
+        }
+        else {
 	    report("*** No video yet ***");
-	}
+        }
     }
 };
 
@@ -141,15 +141,15 @@ ImageSource.prototype.getPlayTime = function() {
     var t = getClockTime();
     var dt = t - this.lastSeekTime;
     if (this.type == ImageSource.TYPE.VIDEO) {
-	if (this.video) {
+        if (this.video) {
 	    this.playTime = this.video.currentTime;
-	}
-	else {
+        }
+        else {
 	    report("*** No video yet ***");
-	}
+        }
     }
     else {
-	this.playTime += this.playSpeed*dt;
+        this.playTime += this.playSpeed*dt;
     }
     this.lastSeekTime = t;
     return this.playTime;
@@ -165,8 +165,8 @@ ImageSource.prototype.getImageUrl = function()
 {
     this.imNum += 1;
     if (this.playTime == null) { // real time
-	// note 'uniq' is used to avoid caching.
-	// The dvr should ignore that and give most recent if no time is given.
+        // note 'uniq' is used to avoid caching.
+        // The dvr should ignore that and give most recent if no time is given.
         return this.url + "&uniq="+getClockTime();
     }
     //return this.imageUrl + "&t="+this.getPlayTime();
@@ -222,8 +222,8 @@ ImageSource.prototype.createTexture = function() {
  */
 ImageSource.prototype.updateTexture = function() {
     if (this.type != ImageSource.TYPE.IMAGE) {
-	report("updateTexture only used for TYPE.IMAGE");
-	return;
+        report("updateTexture only used for TYPE.IMAGE");
+        return;
     }
     var inst = this;
     var texture = this.texture;
@@ -244,22 +244,22 @@ ImageSource.prototype.updateTexture = function() {
 	    if (inst.running)
 	        inst.updateTexture();
         },
-	null,
+        null,
         function(xhr) {
-            if (inst.running) {				
+            if (inst.running) {
                 report("failed on texture load... retrying...");
                 setTimeout(function() { inst.updateTexture(); }, 500);
 	    }
-	}
-   );
+        }
+    );
 }
 
 ImageSource.prototype.start = function()
 {
     report("ImageSource.start...");
-//    xxxx.yyyy.ddd;
+    //    xxxx.yyyy.ddd;
     if (this.startTime)
-	this.setPlayTime(this.startTime);
+        this.setPlayTime(this.startTime);
     this.running = true;
     setTimeout(this.updateTexture(), 1000);
 }

@@ -8,8 +8,8 @@ export default class DataLoader {
         let self = this;
 
         return Promise.all(dataFiles.map(f => {
-                return this.loadData(f);
-            }))
+            return this.loadData(f);
+        }))
             .then(data => {
                 console.log("done data loading")
                 var data = {

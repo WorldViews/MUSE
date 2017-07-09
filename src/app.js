@@ -22,10 +22,10 @@ let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 let {degToRad} = THREE.Math;
 
 let MODEL_SPECS = [{
-  path: 'models/PlayDomeSkp.dae',
-  position: [0, 0, 0],
-  rotation: [0, degToRad(0), 0],
-  scale: 0.025
+    path: 'models/PlayDomeSkp.dae',
+    position: [0, 0, 0],
+    rotation: [0, degToRad(0), 0],
+    scale: 0.025
 }];
 
 let game = new VRGame('canvas3d');
@@ -35,9 +35,9 @@ let bodyAnimationController = new BodyAnimationController(game.body);
 let navigationController = new NavigationController(game.body, game.camera, game.plControls);
 let starsController = new StarsController(game.scene, [0, 0, 0]);
 let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
-  position: [0, 3, 0],
-  rotation: [0, 0, 0],
-  scale: [1.5, 1, 1.5]
+    position: [0, 3, 0],
+    rotation: [0, 0, 0],
+    scale: [1.5, 1, 1.5]
 });
 
 game.registerController('body', bodyAnimationController);
@@ -62,20 +62,20 @@ function initAnimations() {
 }
 
 function start() {
-  loadModels(MODEL_SPECS, game);
-  loadScreen(VIDEO_PATH, game);
+    loadModels(MODEL_SPECS, game);
+    loadScreen(VIDEO_PATH, game);
 
-  console.log("****** adding planets ******");
-  let earth = addPlanet(game, 'Earth', 1000, -2000, 0, 0);
-  let mars = addPlanet(game, 'Mars', 200, 2000, 0, 2000, './textures/Mars_4k.jpg');
-  let jupiter = addPlanet(game, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
-  let nepture = addPlanet(game, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
-  
-  setupLights(game.scene);
+    console.log("****** adding planets ******");
+    let earth = addPlanet(game, 'Earth', 1000, -2000, 0, 0);
+    let mars = addPlanet(game, 'Mars', 200, 2000, 0, 2000, './textures/Mars_4k.jpg');
+    let jupiter = addPlanet(game, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
+    let nepture = addPlanet(game, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
 
-  game.body.position.set(2, 2, 2);
+    setupLights(game.scene);
 
-  game.animate(0);
+    game.body.position.set(2, 2, 2);
+
+    game.animate(0);
 }
 
 window.start = start;

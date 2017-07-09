@@ -8,19 +8,19 @@ function handleCenterScene(e, game)
     var option = $("#centerScene").val();
     console.log("Click: "+option);
     items.forEach(item=> {
-	var obj = game.models[item];
-	//console.log("item: "+item+"  obj: "+obj);
-	if (obj) {
+        var obj = game.models[item];
+        //console.log("item: "+item+"  obj: "+obj);
+        if (obj) {
 	    obj.visible = (item == option);
 	    return;
-	}
-	var c = game.controllers[item];
-	if (c) {
+        }
+        var c = game.controllers[item];
+        if (c) {
 	    c.visible = (item == option);
-	}
-	else {
+        }
+        else {
 	    console.log("No such model or controller as "+item);
-	}
+        }
     });
 }
 
@@ -31,7 +31,7 @@ function tourSliderChanged(e, ui, playerControl)
     var t = v*duration;
     console.log("v: "+v+"   t: "+t);
     if (playerControl)
-	playerControl.setPlayTime(t);
+        playerControl.setPlayTime(t);
     //imageSrc.setPlayTime(t);
     //e.preventDefault();// doesn't help...
 }
@@ -41,22 +41,22 @@ function setupHtmlControls(game, playerControl) {
     console.log("************************* htmlControls setup *********************");
 
     game.events.addEventListener('valueChange', msg => {
-	console.log("valueChange: "+JSON.stringify(msg));
-	var name = msg.message.name;
-	//$("#narrativeText").html(msg.message.value);
-	$("#"+name).html(msg.message.value);
+        console.log("valueChange: "+JSON.stringify(msg));
+        var name = msg.message.name;
+        //$("#narrativeText").html(msg.message.value);
+        $("#"+name).html(msg.message.value);
     });
 
     $(document).ready(function() {
-	console.log("**** setting up slider ****");
-	$("#timeLine").slider({
+        console.log("**** setting up slider ****");
+        $("#timeLine").slider({
 	    slide: (e,ui) => tourSliderChanged(e,ui,playerControl),
 	    min: 0, max: 1, step: 0.001
-	});
-	$("#playStop").click(function() {
+        });
+        $("#playStop").click(function() {
             console.log("click");
-	});
-	$("#centerScene").change(e => handleCenterScene(e,game));
+        });
+        $("#centerScene").change(e => handleCenterScene(e,game));
     });
 }
 

@@ -80,12 +80,12 @@ export default class CMPController {
                 live: true,
             }).text({
                 id: 'label-year-text',
-            data: ['Year'],
+                data: ['Year'],
             }).label({
-            color: 0xffffff,
-            background: state.colors.bg,
-            size: 36*3,
-            depth: 1
+                color: 0xffffff,
+                background: state.colors.bg,
+                size: 36*3,
+                depth: 1
             });
 
             var labelYearText = mathbox.select("#label-year-text")
@@ -155,9 +155,9 @@ export default class CMPController {
             // color : 0xffcc44,
             color : 0xffffff,
             dotColor : 0x44bbff,
-                colors : '#tempratureColor',
-                //labelSize : labelSize,
-                lineWidth : state.tempLineWidth,
+            colors : '#tempratureColor',
+            //labelSize : labelSize,
+            lineWidth : state.tempLineWidth,
             labelFunc: (year, val)=>{
                 //return [''+year+': '+val+'\u2103 increase']
                 //var str = val+'\u2103 increase';
@@ -182,8 +182,8 @@ export default class CMPController {
             //color : 0x00ffff,
             color : 0x02ff7f,
             colors : '#lineAlpha',
-                //labelSize : labelSize,
-                lineWidth: state.balanceLineWidth,
+            //labelSize : labelSize,
+            lineWidth: state.balanceLineWidth,
             labelFunc: (year, val)=>{
                 //return [''+year+': '+val+' energy balance']
                 //str = val + 'balance';
@@ -207,8 +207,8 @@ export default class CMPController {
             scale : chartScale,
             color : 0xaf8f30,
             colors : '#lineAlpha',
-                lineWidth : state.co2LineWidth,
-                //labelSize : labelSize,
+            lineWidth : state.co2LineWidth,
+            //labelSize : labelSize,
             labelFunc: (year, val)=>{
                 //return [''+year+': '+val+'PPM increase']
                 //var str = val+'PPM increase';
@@ -220,18 +220,18 @@ export default class CMPController {
 
         // draw sands
 	    this.sands = new Sands(mathbox, {
-			x : data.year,
-			y : data['temperature'],
-			z_offset : -10,
-			id : 'sands',
+            x : data.year,
+            y : data['temperature'],
+            z_offset : -10,
+            id : 'sands',
             position: this.position,
-			xRange : chartRange.x,
-			yRange : [12, 24],
-			zRrange : chartRange.z,
-			scale : chartScale,
-			// color : 0xffcc44,
-			color : 0xffffff,
-			colors : '#tempratureColor'
+            xRange : chartRange.x,
+            yRange : [12, 24],
+            zRrange : chartRange.z,
+            scale : chartScale,
+            // color : 0xffcc44,
+            color : 0xffffff,
+            colors : '#tempratureColor'
 	    })
     }
 
@@ -240,37 +240,37 @@ export default class CMPController {
         const alpha = 0.3;
 
         view
-        .transform({
-            position:[0, origin.y, 0]
-        })
-        .grid({
-            axes: "zx",
-            divideX: 4,
-            divideY: 5,
-            niceX: false,
-            niceY: false,
-            width: lineWidth,
-        });
+            .transform({
+                position:[0, origin.y, 0]
+            })
+            .grid({
+                axes: "zx",
+                divideX: 4,
+                divideY: 5,
+                niceX: false,
+                niceY: false,
+                width: lineWidth,
+            });
 
         view
-        .transform({
-            position:[2300, 0, 0]
-        })
-        .grid({
-            axes: "yz",
-            divideX: 4,
-            divideY: 4,
-            niceX: false,
-            niceY: false,
-            width: lineWidth,
-        });
+            .transform({
+                position:[2300, 0, 0]
+            })
+            .grid({
+                axes: "yz",
+                divideX: 4,
+                divideY: 4,
+                niceX: false,
+                niceY: false,
+                width: lineWidth,
+            });
 
         this.play();
     }
 
 
     update(t) {
-		TWEEN.update();
+        TWEEN.update();
         if (this.charts) {
             let data = this.loader.data.active;
             let charts = this.charts;

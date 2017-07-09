@@ -40,8 +40,8 @@ export let screen2 = {
 export let screen3 = {
     name: "bubbleScreen1",
     radius: 0.5,
-//    phiStart: 0,
-//    phiLength: 90,
+    //    phiStart: 0,
+    //    phiLength: 90,
     position: [3,3,0]
 };
 

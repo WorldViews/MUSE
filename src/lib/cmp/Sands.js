@@ -1,167 +1,167 @@
 import TWEEN from '@tweenjs/tween.js';
 
 function temperatureColorMap(val) {
-	var min = 13.36
-	var max = 23
+    var min = 13.36
+    var max = 23
 
-	var r0 = 1 - (val-min) / (max-min) // Green percentage
-	var r1 = 1 - r0
+    var r0 = 1 - (val-min) / (max-min) // Green percentage
+    var r1 = 1 - r0
 
-	var c0 = [0.1, 0.7, 1] // Blue
-	var c1 = [1, 0.2, 0.1] // Red
-	return {
-		r: r0*c0[0]+r1*c1[0],
-		g: r0*c0[1]+r1*c1[1],
-		b: r0*c0[2]+r1*c1[2]
-	}
+    var c0 = [0.1, 0.7, 1] // Blue
+    var c1 = [1, 0.2, 0.1] // Red
+    return {
+        r: r0*c0[0]+r1*c1[0],
+        g: r0*c0[1]+r1*c1[1],
+        b: r0*c0[2]+r1*c1[2]
+    }
 }
 
 class Sand {
-	constructor(x,y,z){
-		this.x = x
-		this.y = y
-		this.z = z
+    constructor(x,y,z){
+        this.x = x
+        this.y = y
+        this.z = z
 
-		this.r = 0
-		this.g = 1
-		this.b = 0
+        this.r = 0
+        this.g = 1
+        this.b = 0
 
-		this.a = 0
+        this.a = 0
 
-		this.moving = false
-	}
-	pos(){
-		return [this.x, this.y, this.z]
-	}
-	color(){
-		return [this.r, this.g, this.b, this.a]
-	}
-	move(y) {
-		this.moving = true
-		this.x = y
-		this.a = 0
+        this.moving = false
+    }
+    pos(){
+        return [this.x, this.y, this.z]
+    }
+    color(){
+        return [this.r, this.g, this.b, this.a]
+    }
+    move(y) {
+        this.moving = true
+        this.x = y
+        this.a = 0
 
-		//var target = data.active.temperature[y - 1850]
+        //var target = data.active.temperature[y - 1850]
         var target = this.y[y - 1850]
 
-		var param = {y: 13.36}
-		var t = new TWEEN.Tween(param)
-			.to({y: target}, 4000)
-			.onUpdate(()=>{
-				this.y = param.y
-				var newColor = temperatureColorMap(this.y)
-				this.r = newColor.r
-				this.g = newColor.g
-				this.b = newColor.b
-				this.a = 1
-			})
-			.easing(TWEEN.Easing.Quadratic.InOut)
-			.onComplete(()=>{
-				this.moving = false
-				// this.y = 13
-			})
-			.start()
-	}
+        var param = {y: 13.36}
+        var t = new TWEEN.Tween(param)
+            .to({y: target}, 4000)
+            .onUpdate(()=>{
+                this.y = param.y
+                var newColor = temperatureColorMap(this.y)
+                this.r = newColor.r
+                this.g = newColor.g
+                this.b = newColor.b
+                this.a = 1
+            })
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .onComplete(()=>{
+                this.moving = false
+                // this.y = 13
+            })
+            .start()
+    }
 }
 
 export default class Sands {
-	constructor(mathbox, options){
-		this.mathbox = mathbox
+    constructor(mathbox, options){
+        this.mathbox = mathbox
 
-		this.numSands = 200
-		this.sands = []
-		this.sandsColor=[]
+        this.numSands = 200
+        this.sands = []
+        this.sandsColor=[]
 
-		this.x = options.x
-		this.y = options.y
-		this.z_offset = options.z_offset
-		this.id = options.id
-		this.xRange = options.xRange
-		this.yRange = options.yRange
-		this.zRrange = options.zRrange
+        this.x = options.x
+        this.y = options.y
+        this.z_offset = options.z_offset
+        this.id = options.id
+        this.xRange = options.xRange
+        this.yRange = options.yRange
+        this.zRrange = options.zRrange
         this.position = options.position || [0,0,0]
-		this.scale = options.scale
-		this.color = options.color
-		this.colors = options.colors
+        this.scale = options.scale
+        this.color = options.color
+        this.colors = options.colors
 
-		this.chart = null
+        this.chart = null
 
-		this.init()
-	}
+        this.init()
+    }
 
-	init(){
-		// debugger
-		// trun z_offset into array
+    init(){
+        // debugger
+        // trun z_offset into array
 
-		for(var i=0; i<this.numSands; i++){
-			this.sands.push(new Sand(1850, 0, this.z_offset))
-		}
+        for(var i=0; i<this.numSands; i++){
+            this.sands.push(new Sand(1850, 0, this.z_offset))
+        }
 
-		var data=this.sands.map(d=>{return d.pos()})
-		this.sandsColor = this.sands.map(d=>{return d.color()})
+        var data=this.sands.map(d=>{return d.pos()})
+        this.sandsColor = this.sands.map(d=>{return d.color()})
 
 
-		var reference = [[this.x[0], this.y[0], this.z_offset],
-			[_.last(this.x), this.y[0], this.z_offset]]
+        var reference = [[this.x[0], this.y[0], this.z_offset],
+            [_.last(this.x), this.y[0], this.z_offset]]
 
-		var view = this.mathbox.cartesian({
+        var view = this.mathbox.cartesian({
 		  range: [this.xRange, this.yRange, this.zRrange],
 		  scale: this.scale,
 		  position: this.position
-		});
+        });
 
-		// colors
-		view.array({
-			id:'sandsColor',
-			width: this.numSands,
-			data: this.sandsColor,
-			channels: 4,
-			items: 1,
-			live: true
-		})
+        // colors
+        view.array({
+            id:'sandsColor',
+            width: this.numSands,
+            data: this.sandsColor,
+            channels: 4,
+            items: 1,
+            live: true
+        })
 
 
-		// draw points
-		view.array({
+        // draw points
+        view.array({
 		  id: this.id,
 		  width: this.numSands,
 		  data: data,
 		  items: 1,
 		  channels: 3,
 		  live: true
-		}).point({
-			id: this.id+'-sand',
-			opacity: 1.0,
-			color: this.color,
-			colors: '#sandsColor',
-			size: 5
-			// width: 10
-		})
+        }).point({
+            id: this.id+'-sand',
+            opacity: 1.0,
+            color: this.color,
+            colors: '#sandsColor',
+            size: 5
+            // width: 10
+        })
 
-		this.chart =this.mathbox.select("#"+this.id)
+        this.chart =this.mathbox.select("#"+this.id)
 
-	}
+    }
 
-	update(y){
-		this.sands.forEach(sand => {
-			if (Math.random()<0.01 && !sand.moving){
-				sand.move(y)
-			}
-		})
-		var data=this.sands.map(d=>{return d.pos()})
+    update(y){
+        this.sands.forEach(sand => {
+            if (Math.random()<0.01 && !sand.moving){
+                sand.move(y)
+            }
+        })
+        var data=this.sands.map(d=>{return d.pos()})
 
-		// for some reason, the color data has to be from the same object!
-		// this.sandsColor = this.sands.map(d=>{return d.color()})
-		for(var i=0; i<this.numSands; i++){
-			var c = this.sands[i].color()
-			this.sandsColor[i][0]=c[0]
-			this.sandsColor[i][1]=c[1]
-			this.sandsColor[i][2]=c[2]
-			this.sandsColor[i][3]=c[3]
-		}
+        // for some reason, the color data has to be from the same object!
+        // this.sandsColor = this.sands.map(d=>{return d.color()})
+        for(var i=0; i<this.numSands; i++){
+            var c = this.sands[i].color()
+            this.sandsColor[i][0]=c[0]
+            this.sandsColor[i][1]=c[1]
+            this.sandsColor[i][2]=c[2]
+            this.sandsColor[i][3]=c[3]
+        }
 
-		this.chart.set('data', data)
+        this.chart.set('data', data)
 
-		this.chart.select('#sandsColor').set('data', this.sandsColor)
-	}
+        this.chart.select('#sandsColor').set('data', this.sandsColor)
+    }
 }

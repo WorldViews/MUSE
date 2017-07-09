@@ -24,11 +24,11 @@ function loadScreen(path, game, spec)
     //var spec = {x: 5.5, y: 2.5, z: -0.1, width: 6.5, height: 4.0};
     //loadVideo(VIDEO_PATH).then(({imageSource, videoMaterial}) => {
     loadVideo(path).then(({imageSource, videoMaterial}) => {
-	console.log('Creating video geometry...');
+        console.log('Creating video geometry...');
 
-	// note that the theta and phi arguments are reversed
-	// from what is described in THREE.SphereGeometry documenation.
-	let geometry = new THREE.SphereGeometry(
+        // note that the theta and phi arguments are reversed
+        // from what is described in THREE.SphereGeometry documenation.
+        let geometry = new THREE.SphereGeometry(
 	    spec.radius,
 	    40,
 	    40,
@@ -36,30 +36,30 @@ function loadScreen(path, game, spec)
 	    toRad(spec.thetaLength),
 	    toRad(spec.phiStart),
 	    toRad(spec.phiLength)
-	);
-	let screenObject = new THREE.Mesh(geometry, videoMaterial);
-	
-	var s = 1.0;
-	if (spec.scale)
+        );
+        let screenObject = new THREE.Mesh(geometry, videoMaterial);
+
+        var s = 1.0;
+        if (spec.scale)
 	    s = spec.scale;
-	screenObject.scale.x = -1*s;
-	screenObject.scale.y = s;
-	screenObject.scale.z = s;
-	screenObject.position.y = 0;
-	if (spec.position)
+        screenObject.scale.x = -1*s;
+        screenObject.scale.y = s;
+        screenObject.scale.z = s;
+        screenObject.position.y = 0;
+        if (spec.position)
 	    screenObject.position.fromArray(spec.position);
-	screenObject.name = "movieScreen";
+        screenObject.name = "movieScreen";
 
-	let screenParent = new THREE.Object3D();
-	screenParent.add(screenObject);
-	screenParent.rotation.z = 0;
+        let screenParent = new THREE.Object3D();
+        screenParent.add(screenObject);
+        screenParent.rotation.z = 0;
 
-	scene.add(screenParent);
-	screenObj.imageSource = imageSource;
-	screenObj.ready = true;
+        scene.add(screenParent);
+        screenObj.imageSource = imageSource;
+        screenObj.ready = true;
     });
     if (spec.name)
-	game.screens[spec.name] = screenObj;
+        game.screens[spec.name] = screenObj;
     return screenObj;
 }
 

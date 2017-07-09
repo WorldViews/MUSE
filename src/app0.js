@@ -25,12 +25,12 @@ let VIDEO2_PATH = 'http://dvr4.paldeploy.com/video/Sakura/WashingtonDCCherryBlos
 
 let MODEL_SPECS = [
     {
-	name: 'platform',
-	path: 'models/PlayDomeSkp.dae',
-	position: [0, 0, 0],
-	//rotation: [0, degToRad(90), 0],
-	rotation: [0, degToRad(0), 0],
-	scale: 0.025
+        name: 'platform',
+        path: 'models/PlayDomeSkp.dae',
+        position: [0, 0, 0],
+        //rotation: [0, degToRad(90), 0],
+        rotation: [0, degToRad(0), 0],
+        scale: 0.025
     }
     /*
     {
@@ -63,9 +63,9 @@ starsGroup.position.set(0, 0, 0);
 
 //let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
 let cmpController = new CMPController(game.renderer, game.scene, game.camera, {
-  position: [0, 3, 0],
-  rotation: [0, 0, 0],
-  scale: [1.5, 1, 1.5]
+    position: [0, 3, 0],
+    rotation: [0, 0, 0],
+    scale: [1.5, 1, 1.5]
 });
 game.registerController('cmp', cmpController);
 
