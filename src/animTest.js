@@ -7,7 +7,7 @@ class Anim
 {
     constructor(name, target) {
         var inst = this;
-	this.target = target;
+        this.target = target;
         window.OBJ = {'x': 0}
         console.log("Anim "+name);
         this.name = name;
@@ -20,19 +20,19 @@ class Anim
 
     handleChange(obj)
     {
-	console.log("OBJ: "+JSON.stringify(obj));
-	//var m = game.models.platform.scene;
-	//var m = game.models.station.scene;
-	var m = this.target;
-	this.target.x = obj.x;
+        console.log("OBJ: "+JSON.stringify(obj));
+        //var m = game.models.platform.scene;
+        //var m = game.models.station.scene;
+        var m = this.target;
+        this.target.x = obj.x;
     }
-    
+
     get playTime() {
-	return 0;
+        return 0;
     }
-    
+
     set playTime(t) {
-	this.tween.setPosition(t);
+        this.tween.setPosition(t);
     }
 }
 

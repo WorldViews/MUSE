@@ -17,35 +17,35 @@ function loadModels(specs, game) {
     var i = specs.length;
 
     return new Promise((resolve, reject) => {
-	specs.forEach(spec => {
+        specs.forEach(spec => {
 	    //TODO: check for type and call appropriate loader
 	    // for now we just do collada
 	    if (spec.path) {
-		loadCollada(spec.path, spec).then((collada) => {
+                loadCollada(spec.path, spec).then((collada) => {
 		    game.setFromProps(collada.scene, spec);
 		    game.addToGame(collada.scene, spec.name, spec.parent);
 		    --i;
 		    if (i === 0) {
-			resolve();
+                        resolve();
 		    }
-		});
+                });
 	    }
 	    else {
-		// if no path, assume we are just creating a new group
-		// (should we requre a type field?)
-		if (!spec.name) {
+                // if no path, assume we are just creating a new group
+                // (should we requre a type field?)
+                if (!spec.name) {
 		    console.log("**** new groups must have name ****");
 		    reportError("**** new groups must have name ****");
 		    return;
-		}
-		console.log("**** defining an empty named group: "+spec.name);
-		var group = game.getGroup(spec.name, spec);
-		--i;
-		if (i === 0) {
+                }
+                console.log("**** defining an empty named group: "+spec.name);
+                var group = game.getGroup(spec.name, spec);
+                --i;
+                if (i === 0) {
 		    resolve();
-		}
+                }
 	    }
-	});
+        });
     });
 }
 
