@@ -56,8 +56,9 @@ class DanceController
     }
 
     loadBVH(name, bvhPath, opts) {
+	opts = opts || {};
         console.log("loadBVH: "+name+" "+bvhPath);
-        var scene = this.game.scene;
+        //var scene = this.game.scene;
         //var loader = new THREE.BVHLoader();
         var loader = new BVHLoader();
         var inst = this;
@@ -74,10 +75,8 @@ class DanceController
             dancer.add( skeletonHelper );
             dancer.add( boneContainer );
             console.log(dancer);
-            //dancer.scale.x = 0.06;
-            //dancer.scale.y = 0.06;
-            //dancer.scale.z = 0.06;
-            scene.add(dancer);
+            //scene.add(dancer);
+	    game.addToGame(dancer, opts.name, opts.parent);
             // play animation
             inst.mixer = new THREE.AnimationMixer( skeletonHelper );
             //inst.mixer.clipAction( result.clip ).setEffectiveWeight( 1.0 ).play();
