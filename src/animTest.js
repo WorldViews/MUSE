@@ -43,6 +43,7 @@ class Anim
 
 function animTest(game)
 {
+    game = game || window.game;
     console.log("!!!! >>>>>>>>>>>>>>>>>>>>>>>>>> animTest...........");
     window.a = new Anim("anim1", game.models.station.position);
     game.programControl.registerPlayer(a, "anim1");
