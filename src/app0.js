@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import {CMPProgram} from './CMPProgram';
 import {Game} from './Game';
 import Marquee from './Marquee';
+import StarsController from './controllers/StarsController';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
@@ -49,6 +50,9 @@ let MODEL_SPECS = [
 
 window.game = new Game();
 game.defaultGroupName = "station";
+
+let starsController = new StarsController(game.scene, [0, 0, 0]);
+game.registerController('stars', starsController);
 
 var programControl = new CMPProgram(game);
 setupHtmlControls(game, programControl);
