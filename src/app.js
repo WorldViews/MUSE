@@ -65,7 +65,7 @@ function start() {
     let jupiter = addPlanet(game, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
     let nepture = addPlanet(game, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
 
-    setupLights(game.scene);
+    setupLights(game);
 
     game.body.position.set(2, 1.5, 2);
 

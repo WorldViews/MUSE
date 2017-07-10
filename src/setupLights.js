@@ -1,40 +1,37 @@
 
 import * as THREE from 'three';
 
+let sphere = null;
+
 function addLight(game, spec)
 {
+    console.log("adding light "+JSON.stringify(spec));
+    var bulbRad = spec.bulbRadius || 0.2;
+    if (!sphere) {
+	console.log("Setting up sphere for lights");
+	sphere = new THREE.SphereGeometry( 1, 16, 8 );
+    }
+    var color = spec.color || 0xffffff;
+    let light = new THREE.PointLight(color, 2, 50);
+    var g = new THREE.Group();
+    g.add(light);
+    var bulb = new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color }));
+    bulb.scale.x = bulbRad;
+    bulb.scale.y = bulbRad;
+    bulb.scale.z = bulbRad;
+    g.add( bulb );
+    game.addToGame(g, spec);
+    game.setFromProps(g, spec);
 }
 
-function setupLights(scene)
+
+function setupLights(game)
 {
-    let sphere = new THREE.SphereGeometry( 0.5, 16, 8 );
 
-    let color1 = 0xffaaaa;
-    let light1 = new THREE.PointLight(color1, 2, 50);
-    light1.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color1 } ) ) );
-    light1.position.y = 30;
-    light1.position.x = -10;
-    light1.position.z = -10;
-    light1.name = "light1";
-    scene.add(light1);
-
-    let color2 = 0xaaffaa;
-    let light2 = new THREE.PointLight(color2, 2, 50);
-    light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color2 } ) ) );
-    light2.position.y = 30;
-    light2.position.x = -10;
-    light2.position.z = 5;
-    light2.name = "light2";
-    scene.add(light2);
-
-    let color3 = 0xaaaaff;
-    let light3 = new THREE.PointLight(color3, 2, 50);
-    light3.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color3 } ) ) );
-    light3.position.y = 30;
-    light3.position.x = -10;
-    light3.position.z = -5;
-    light3.name = "light3";
-    scene.add(light3);
+    addLight(game, {name: 'domeLight', color: 0xffffff, position: [0,9.5,0]});
+    addLight(game, {name: 'light1', color: 0xffaaaa, position: [30, 15,-10]});
+    addLight(game, {name: 'light2', color: 0xaaffaa, position: [30, 15,  5]});
+    addLight(game, {name: 'light3', color: 0xaaaaff, position: [30, 15, -5]});
 }
 
 export {addLight, setupLights};
