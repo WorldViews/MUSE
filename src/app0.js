@@ -24,25 +24,26 @@ let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 let VIDEO2_PATH = 'http://dvr4.paldeploy.com/video/Sakura/WashingtonDCCherryBlossomFestival360.mp4';
 
 let MODEL_SPECS = [
+    {   name: 'station'  },
     {
         name: 'platform',
+	parent: 'station',
         path: 'models/PlayDomeSkp.dae',
         position: [0, 0, 0],
         //rotation: [0, degToRad(90), 0],
         rotation: [0, degToRad(0), 0],
         scale: 0.025
-    }
-    /*
+    },
     {
 	name: 'bmw',
+	parent: 'station',
 	path: 'models/bmw/model.dae',
-	position: [0, 0, 0],
+	position: [0, 5, 0],
 	//rotation: [0, degToRad(90), 0],
 	rotation: [0, degToRad(0), 0],
 	scale: 0.025,
 	visible: false
     }
-*/
 ];
 
 window.game = new Game();
