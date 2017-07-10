@@ -14,6 +14,9 @@ function addLight(game, spec)
     var color = spec.color || 0xffffff;
     let light = new THREE.PointLight(color, 2, 50);
     var g = new THREE.Group();
+    if (spec.name)
+	g.name = spec.name;
+    g.name = spec.name;
     g.add(light);
     var bulb = new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color }));
     bulb.scale.x = bulbRad;
