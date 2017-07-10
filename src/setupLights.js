@@ -1,6 +1,10 @@
 
 import * as THREE from 'three';
 
+function addLight(game, spec)
+{
+}
+
 function setupLights(scene)
 {
     let sphere = new THREE.SphereGeometry( 0.5, 16, 8 );
@@ -33,4 +37,5 @@ function setupLights(scene)
     scene.add(light3);
 }
 
-export default setupLights;
+export {addLight, setupLights};
+

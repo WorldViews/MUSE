@@ -33,7 +33,7 @@ var game = new Game();
 game.addControls();
 window.game = game;
 var programControl = new ProgramControl(game);
-setupHtmlControls(playerControl);
+setupHtmlControls(game, programControl);
 //window.scene = scene;
 
 function start()

@@ -12,7 +12,7 @@ import {DanceController} from './controllers/DanceController';
 import loadModels from './loadModels';
 import {loadScreen} from './loadScreen';
 import CMPController from './controllers/CMPController';
-import setupLights from './setupLights';
+import {setupLights} from './setupLights';
 import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
 
