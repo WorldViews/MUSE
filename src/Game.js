@@ -30,6 +30,7 @@ class Game {
 
         window.addEventListener('resize', this.handleResize.bind(this));
 
+	this._defaultGroupName;
         this.screens = {};
         this.models = {};
         this.events = new THREE.EventDispatcher();
@@ -147,11 +148,21 @@ class Game {
     // Utility functions.  These could be moved to another module
     // but it is convenient for them to have access to Game.
 
+    // Create a group with specified name, parent and transform.
+    // Return if a group already exists.  TODO: (If the group exists,
+    // the properties are not applied.  Should we flag an error.)
     getGroup(name, props) {
+	props = props || {};
 	if (name && this.models[name])
 	    return this.models[name];
 	var obj = new THREE.Group();
+	if (name) {
+	    obj.name = name;
+	}
 	this.setFromProps(obj, props);
+	//this.addToGame(obj, name, props.parent);
+	// (this would cause stackoverflow if default
+	//  group doesn't exist.)
 	if (name) {
 	    obj.name = name;
 	    this.models[name] = obj;
@@ -166,11 +177,25 @@ class Game {
 	return obj;
     }
 
+    // These specify the default group name used
+    // when objects are added to the game.
+    get defaultGroupName()
+    {
+	return this._defaultGroupName;
+    }
+    
+    set defaultGroupName(groupName)
+    {
+	this._defaultGroupName = groupName;
+    }
+    
     // add this obj to game scene graph.  If a parent is specified
-    // place in that group (creating if necessary.)  If a name is
-    // specified, store in models table.
+    // or if there is a defaultGroupName, place in that group (creating
+    // if necessary.) Otherwise place directly into scene.
+    // If name is specified, store in models table.
     // 
     addToGame(obj, name, parentName) {
+	parentName = parentName || this.defaultGroupName;
 	if (parentName) {
 	    var parentObj = this.getGroup(parentName);
 	    parentObj.add(obj);

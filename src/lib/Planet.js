@@ -96,21 +96,9 @@ function addPlanet(game, name, radius, x, y, z, tex)
     console.log(">>> addPlanet "+name);
     var scene = game.scene;
     var group = new THREE.Group();
-    game.models[name] = group;
-    scene.add(group);
-    var opts = {'name': name, 'texture': tex};
-    var planet = new EARTH.Planet(group, radius, opts);
-    planet.group.position.x = x;
-    planet.group.position.y = y;
-    planet.group.position.z = z;
-    return planet;
-}
-
-function addPlanetOld(scene, name, radius, x, y, z, tex)
-{
-    console.log(">>> addPlanet "+name);
-    var group = new THREE.Group();
-    scene.add(group);
+    game.addToGame(group, name);
+    //game.models[name] = group;
+    //scene.add(group);
     var opts = {'name': name, 'texture': tex};
     var planet = new EARTH.Planet(group, radius, opts);
     planet.group.position.x = x;

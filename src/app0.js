@@ -47,6 +47,7 @@ let MODEL_SPECS = [
 ];
 
 window.game = new Game();
+game.defaultGroupName = "station";
 //var programControl = new ProgramControl(game);
 var programControl = new CMPProgram(game);
 setupHtmlControls(game, programControl);

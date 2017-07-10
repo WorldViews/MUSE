@@ -30,6 +30,7 @@ let MODEL_SPECS = [{
 
 let game = new VRGame('canvas3d');
 window.game = game;
+game.defaultGroupName = 'station';
 
 let bodyAnimationController = new BodyAnimationController(game.body);
 let navigationController = new NavigationController(game.body, game.camera, game.plControls);

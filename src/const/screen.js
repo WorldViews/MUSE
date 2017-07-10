@@ -12,6 +12,7 @@ export let PH_LEN = Math.degToRad(49);
 // to improve readability of the spec.
 export let screen1 = {
     name: "mainScreen",
+    parent: 'station',
     radius: 8.6,
     phiStart: 32,
     phiLength: 49,
@@ -21,6 +22,7 @@ export let screen1 = {
 
 export var labelsScreen = {
     name: "labelsScreen",
+    parent: 'station',
     radius: 8.6,
     phiStart: 32,
     phiLength: 49,
@@ -29,6 +31,7 @@ export var labelsScreen = {
 }
 
 export let screen2 = {
+    parent: 'station',
     radius: 1.0,
     phiStart: 10,
     phiLength: 80,
