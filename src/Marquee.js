@@ -77,6 +77,10 @@ class Marquee extends THREE.Mesh {
 	        }
         );
     }
+
+    updateText(text) {
+    	this.updateHTML(`<h1>${text}</h1>`);
+    }
 }
 
 export default Marquee;

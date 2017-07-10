@@ -53,9 +53,6 @@ function setupHtmlControls(game, playerControl) {
 	    slide: (e,ui) => tourSliderChanged(e,ui,playerControl),
 	    min: 0, max: 1, step: 0.001
         });
-        $("#playStop").click(function() {
-            console.log("click");
-        });
         $("#centerScene").change(e => handleCenterScene(e,game));
     });
 }
