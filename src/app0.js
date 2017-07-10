@@ -93,7 +93,7 @@ function start()
     loadModels(MODEL_SPECS, game);
     loadScreen(VIDEO_PATH, game, screen1);
     loadScreen(VIDEO_PATH, game, labelsScreen);
-    loadScreen(VIDEO2_PATH, game, screen3);
+//    loadScreen(VIDEO2_PATH, game, screen3);
     setupLights(game);
     game.animate();
 }
