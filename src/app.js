@@ -74,7 +74,7 @@ function start() {
 
     setupLights(game);
 
-    game.body.position.set(2, 2, 2);
+    game.body.position.set(2, 1.5, 2);
 
     game.animate(0);
 }
