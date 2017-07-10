@@ -1,12 +1,21 @@
 
 import * as THREE from 'three';
 
+let sphere = null;
 function addLight(game, spec)
 {
+    if (!sphere) {
+	console.log("Setting up sphere for lights");
+	sphere = new THREE.SphereGeometry( 0.5, 16, 8 );
+    }
+    var color = spec.color || 0xffffff;
+    let light = new THREE.PointLight(color, 2, 50);
+    game.addToGame(light, spec);
 }
 
-function setupLights(scene)
+function setupLights(game)
 {
+    let scene = game.scene;
     let sphere = new THREE.SphereGeometry( 0.5, 16, 8 );
 
     let color1 = 0xffaaaa;
