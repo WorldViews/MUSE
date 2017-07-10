@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
 
+
 class Game {
 
     constructor(domElementId) {
@@ -140,6 +141,79 @@ class Game {
 
     render() {
         this.renderer.render(this.scene, this.camera);
+    }
+
+    //*************************************************************
+    // Utility functions.  These could be moved to another module
+    // but it is convenient for them to have access to Game.
+
+    getGroup(name, props) {
+	if (name && this.models[name])
+	    return this.models[name];
+	var obj = new THREE.Group();
+	this.setFromProps(obj, props);
+	if (name) {
+	    obj.name = name;
+	    this.models[name] = obj;
+	}
+	if (props.parent) {
+	    var parentObj = this.getGroup(props.parent);
+	    parentObj.add(obj);
+	}
+	else {
+	    game.scene.add(obj);
+	}
+	return obj;
+    }
+
+    // add this obj to game scene graph.  If a parent is specified
+    // place in that group (creating if necessary.)  If a name is
+    // specified, store in models table.
+    // 
+    addToGame(obj, name, parentName) {
+	if (parentName) {
+	    var parentObj = this.getGroup(parentName);
+	    parentObj.add(obj);
+	}
+	else
+	    this.scene.add(obj);
+	if (name) {
+	    game.models[name] = obj;
+	}
+    }
+
+    //
+    // Takes an Object3d and sets the position, rotation and scale if they
+    // are present in props.
+    setFromProps(obj3d, props) {
+	if (props.position) {
+            if (Array.isArray(props.position)) {
+                obj3d.position.fromArray(props.position);
+            }
+	    else {
+		reportError("position should be array");
+	    }
+	}
+	if (props.rotation) {
+            if (Array.isArray(props.rotation)) {
+                obj3d.rotation.fromArray(props.rotation);
+            }
+	    else {
+		reportError("rotations should be array");
+	    }
+	}
+        if (props.scale) {
+	    if (Array.isArray(props.scale)) {
+		obj3d.scale.fromArray(scaleVec(props.scale));
+	    }
+	    else if (typeof(props.scale) === "number") {
+		obj3d.scale.fromArray([props.scale,props.scale,props.scale]);
+	    }
+	    else {
+		reportError("rotations should be array");
+	    }
+	}
+	obj3d.updateMatrix();
     }
 }
 
