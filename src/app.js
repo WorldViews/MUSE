@@ -47,7 +47,8 @@ game.registerController('stars', starsController);
 game.registerController('cmp', cmpController);
 
 let marquee = new Marquee();
-game.scene.add(marquee);
+//game.scene.add(marquee);
+game.addToGame(marquee, "marque1"); // cause it to get grouped properly
 window.marquee = marquee;
 
 function initAnimations() {

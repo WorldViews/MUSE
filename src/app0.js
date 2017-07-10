@@ -76,7 +76,9 @@ game.registerController('dancer', dancer);
 programControl.registerPlayer(dancer);
 
 let marquee = new Marquee();
-game.scene.add(marquee);
+//game.scene.add(marquee);
+window.marquee = marquee;
+game.addToGame(marquee, "marquee1");
 
 //var dc2 = new DanceController(game, {name: 'dancer2', position: [0,4,0], scale: 0.12});
 //game.registerController('dancer2', dc2);
