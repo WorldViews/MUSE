@@ -14,7 +14,7 @@ import {addPlanet} from './lib/Planet';
 import loadCollada from './loadCollada';
 import loadModels from './loadModels';
 import {loadScreen} from './loadScreen';
-import setupLights from './setupLights';
+import {setupLights} from './setupLights';
 
 let DAE_PATH = 'models/PlayDomeSkp.dae';
 let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
