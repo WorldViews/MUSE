@@ -240,6 +240,18 @@ class Game {
 	}
 	obj3d.updateMatrix();
     }
+
+    // untested... don't use yet.
+    reparent(obj, parent) {
+	if (typeof parent === "string")
+	    parent = this.models[parent];
+	if (!parent) {
+	    console.log("**** no parent found for "+parent);
+	    return;
+	}
+	parent.updateMatrixWorld();
+	THREE.SceneUtils.attach(obj, game.scene, parent);
+    }
 }
 
 export {Game};

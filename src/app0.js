@@ -82,6 +82,7 @@ function start()
 {
     console.log("animTest: ... ");
     window.Anim = Anim;
+    window.animTest = animTest;
     addPlanets(game);
     var vEarth =  addPlanet(game, 'vEarth',   1.2, 0, 2, 0);
     var SF = {lat: 37.4, lon: -122};
