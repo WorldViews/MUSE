@@ -29,10 +29,15 @@ class Marquee extends THREE.Mesh {
 
         this._element = document.createElement('div');
         this._element.setAttribute('style', STYLE);
-        document.body.appendChild(this._element);
 
+        this._iframe = document.createElement('iframe');
+        document.body.appendChild(this._iframe);
+        this._iframe.contentDocument.body.appendChild(this._element);
+        this._iframe.setAttribute('style', `position: absolute; left: -5000px; display: none`);
+
+        let texture = new THREE.Texture();
 	    this.material = new THREE.MeshBasicMaterial({
-	    	map: null,
+	    	map: texture,
 	    	side: THREE.BackSide,
 	    	transparent: true,
 	    });
@@ -51,9 +56,9 @@ class Marquee extends THREE.Mesh {
 
     handleRender(canvas) {
 	  	let texture = new THREE.Texture(canvas);
-	    texture.needsUpdate = true;
 	    texture.wrapS = THREE.RepeatWrapping;
         texture.repeat.x = -1;
+	    texture.needsUpdate = true;
 
         this.material.map = texture;
     }
@@ -66,6 +71,7 @@ class Marquee extends THREE.Mesh {
         	{
 	            width: this._width,
 	            height: this._height,
+	            background: undefined,
 	            useCORS: true,
 	            onrendered: this.handleRender,
 	        }
