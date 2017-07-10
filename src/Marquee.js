@@ -6,6 +6,13 @@ import html2canvas from 'html2canvas';
 
 let {degToRad} = THREE.Math;
 
+let STYLE = `
+	color: white;
+	font-family: arial;
+	font-size: 72px;
+	text-align: center;
+`;
+
 class Marquee extends THREE.Mesh {
 
     constructor() {
@@ -18,46 +25,57 @@ class Marquee extends THREE.Mesh {
         // Because this mesh has a transparent background,
         // it must render after other objects for blending to happen properly.
         this.renderOrder = 1;
+        this.handleRender = this.handleRender.bind(this);
 
-        var html = [
-            '<div style="width: 100%; height: 100%; text-align: center; background-image: url(/textures/dot-bal.png); background-color: #ccc">',
-            '<h1>Testing... from HTML</h1>',
-            '<img src="/textures/dot-temp.png">',
-            '</div>'].join('');
-        this.updateHTML(html);
+        this._element = document.createElement('div');
+        this._element.setAttribute('style', STYLE);
+
+        this._iframe = document.createElement('iframe');
+        document.body.appendChild(this._iframe);
+        this._iframe.contentDocument.body.appendChild(this._element);
+        this._iframe.setAttribute('style', `position: absolute; left: -5000px; display: none`);
+
+        let texture = new THREE.Texture();
+	    this.material = new THREE.MeshBasicMaterial({
+	    	map: texture,
+	    	side: THREE.BackSide,
+	    	transparent: true,
+	    });
+	    this.geometry = new THREE.SphereGeometry(
+	        marqueeSpec.radius,
+	        40,
+	        40,
+	        degToRad(marqueeSpec.phiStart),
+	        degToRad(marqueeSpec.phiLength),
+	        degToRad(marqueeSpec.thetaStart),
+	        degToRad(marqueeSpec.thetaLength)
+	    );
+
+        this.updateHTML("<h1>TESTING!!!</h1>");
+    }
+
+    handleRender(canvas) {
+	  	let texture = new THREE.Texture(canvas);
+	    texture.wrapS = THREE.RepeatWrapping;
+        texture.repeat.x = -1;
+	    texture.needsUpdate = true;
+
+        this.material.map = texture;
     }
 
     updateHTML(html) {
-        var div = document.createElement('div');
-        div.setAttribute('style', 'absolute; width: 512px; height: 512px;');
-        div.innerHTML = html;
-        document.body.appendChild(div);
+        this._element.innerHTML = html;
 
-        var self = this;
-        html2canvas(div, {
-            width: this._width,
-            height: this._height,
-            background: '#fff',
-            useCORS: true,
-            onrendered: (canvas) => {
-                document.body.removeChild(div);
-                self._canvas = canvas;
-                self._context = canvas.getContext('2d');
-
-                self._texture = new THREE.Texture(self._canvas);
-                self._texture.needsUpdate = true;
-                self.material = new THREE.MeshBasicMaterial({map: self._texture, side: THREE.BackSide});
-                self.geometry = new THREE.SphereGeometry(
-                    marqueeSpec.radius,
-                    40,
-                    40,
-                    degToRad(marqueeSpec.thetaStart),
-                    degToRad(marqueeSpec.thetaLength),
-                    degToRad(marqueeSpec.phiStart),
-                    degToRad(marqueeSpec.phiLength)
-                );
-            }
-        });
+        html2canvas(
+        	this._element,
+        	{
+	            width: this._width,
+	            height: this._height,
+	            background: undefined,
+	            useCORS: true,
+	            onrendered: this.handleRender,
+	        }
+        );
     }
 }
 

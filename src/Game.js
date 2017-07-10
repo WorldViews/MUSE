@@ -30,7 +30,7 @@ class Game {
 
         window.addEventListener('resize', this.handleResize.bind(this));
 
-	this._defaultGroupName;
+        this._defaultGroupName;
         this.screens = {};
         this.models = {};
         this.events = new THREE.EventDispatcher();
@@ -152,105 +152,105 @@ class Game {
     // Return if a group already exists.  TODO: (If the group exists,
     // the properties are not applied.  Should we flag an error.)
     getGroup(name, props) {
-	props = props || {};
-	if (name && this.models[name])
+        props = props || {};
+        if (name && this.models[name])
 	    return this.models[name];
-	var obj = new THREE.Group();
-	if (name) {
+        var obj = new THREE.Group();
+        if (name) {
 	    obj.name = name;
-	}
-	this.setFromProps(obj, props);
-	//this.addToGame(obj, name, props.parent);
-	// (this would cause stackoverflow if default
-	//  group doesn't exist.)
-	if (name) {
+        }
+        this.setFromProps(obj, props);
+        //this.addToGame(obj, name, props.parent);
+        // (this would cause stackoverflow if default
+        //  group doesn't exist.)
+        if (name) {
 	    obj.name = name;
 	    this.models[name] = obj;
-	}
-	if (props.parent) {
+        }
+        if (props.parent) {
 	    var parentObj = this.getGroup(props.parent);
 	    parentObj.add(obj);
-	}
-	else {
+        }
+        else {
 	    game.scene.add(obj);
-	}
-	return obj;
+        }
+        return obj;
     }
 
     // These specify the default group name used
     // when objects are added to the game.
     get defaultGroupName()
     {
-	return this._defaultGroupName;
+        return this._defaultGroupName;
     }
-    
+
     set defaultGroupName(groupName)
     {
-	this._defaultGroupName = groupName;
+        this._defaultGroupName = groupName;
     }
-    
+
     // add this obj to game scene graph.  If a parent is specified
     // or if there is a defaultGroupName, place in that group (creating
     // if necessary.) Otherwise place directly into scene.
     // If name is specified, store in models table.
     // 
     addToGame(obj, name, parentName) {
-	parentName = parentName || this.defaultGroupName;
-	if (parentName) {
+        parentName = parentName || this.defaultGroupName;
+        if (parentName) {
 	    var parentObj = this.getGroup(parentName);
 	    parentObj.add(obj);
-	}
-	else
+        }
+        else
 	    this.scene.add(obj);
-	if (name) {
+        if (name) {
 	    game.models[name] = obj;
-	}
+        }
     }
 
     //
     // Takes an Object3d and sets the position, rotation and scale if they
     // are present in props.
     setFromProps(obj3d, props) {
-	if (props.position) {
+        if (props.position) {
             if (Array.isArray(props.position)) {
                 obj3d.position.fromArray(props.position);
             }
 	    else {
-		reportError("position should be array");
+                reportError("position should be array");
 	    }
-	}
-	if (props.rotation) {
+        }
+        if (props.rotation) {
             if (Array.isArray(props.rotation)) {
                 obj3d.rotation.fromArray(props.rotation);
             }
 	    else {
-		reportError("rotations should be array");
+                reportError("rotations should be array");
 	    }
-	}
+        }
         if (props.scale) {
 	    if (Array.isArray(props.scale)) {
-		obj3d.scale.fromArray(scaleVec(props.scale));
+                obj3d.scale.fromArray(scaleVec(props.scale));
 	    }
 	    else if (typeof(props.scale) === "number") {
-		obj3d.scale.fromArray([props.scale,props.scale,props.scale]);
+                obj3d.scale.fromArray([props.scale,props.scale,props.scale]);
 	    }
 	    else {
-		reportError("rotations should be array");
+                reportError("rotations should be array");
 	    }
-	}
-	obj3d.updateMatrix();
+        }
+        obj3d.updateMatrix();
     }
 
     // untested... don't use yet.
     reparent(obj, parent) {
-	if (typeof parent === "string")
+        if (typeof parent === "string")
 	    parent = this.models[parent];
-	if (!parent) {
+        if (!parent) {
 	    console.log("**** no parent found for "+parent);
 	    return;
-	}
-	parent.updateMatrixWorld();
-	THREE.SceneUtils.attach(obj, game.scene, parent);
+        }
+        parent.updateMatrixWorld();
+        THREE.SceneUtils.attach(obj, game.scene, parent);
     }
 }
 

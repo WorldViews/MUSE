@@ -1,10 +1,10 @@
-
 import * as THREE from 'three';
 
 //import OrbitControls from './lib/controls/OrbitControls';
 //import CMP_Controls from './lib/controls/CMP_Controls';
-import {Game} from './Game';
 import {CMPProgram} from './CMPProgram';
+import {Game} from './Game';
+import Marquee from './Marquee';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
@@ -27,7 +27,7 @@ let MODEL_SPECS = [
     {   name: 'station'  },
     {
         name: 'platform',
-	parent: 'station',
+        parent: 'station',
         path: 'models/PlayDomeSkp.dae',
         position: [0, 0, 0],
         //rotation: [0, degToRad(90), 0],
@@ -35,14 +35,14 @@ let MODEL_SPECS = [
         scale: 0.025
     },
     {
-	name: 'bmw',
-	parent: 'station',
-	path: 'models/bmw/model.dae',
-	position: [0, 5, 0],
-	//rotation: [0, degToRad(90), 0],
-	rotation: [0, degToRad(0), 0],
-	scale: 0.025,
-	visible: false
+        name: 'bmw',
+        parent: 'station',
+        path: 'models/bmw/model.dae',
+        position: [0, 5, 0],
+        //rotation: [0, degToRad(90), 0],
+        rotation: [0, degToRad(0), 0],
+        scale: 0.025,
+        visible: false
     }
 ];
 
@@ -74,6 +74,9 @@ game.registerController('cmp', cmpController);
 var dancer = new DanceController(game);
 game.registerController('dancer', dancer);
 programControl.registerPlayer(dancer);
+
+let marquee = new Marquee();
+game.scene.add(marquee);
 
 //var dc2 = new DanceController(game, {name: 'dancer2', position: [0,4,0], scale: 0.12});
 //game.registerController('dancer2', dc2);

@@ -57,7 +57,7 @@ function loadScreen(path, game, spec)
         //scene.add(screenParent);
         screenObj.imageSource = imageSource;
         screenObj.ready = true;
-	game.addToGame(screenParent, spec.name, spec.parent);
+        game.addToGame(screenParent, spec.name, spec.parent);
     });
     if (spec.name)
         game.screens[spec.name] = screenObj;
