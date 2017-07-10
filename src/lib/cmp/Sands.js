@@ -1,4 +1,4 @@
-import TWEEN from '@tweenjs/tween.js';
+import 'yuki-createjs';
 
 function temperatureColorMap(val) {
     var min = 13.36
@@ -45,9 +45,9 @@ class Sand {
         var target = this.y[y - 1850]
 
         var param = {y: 13.36}
-        var t = new TWEEN.Tween(param)
-            .to({y: target}, 4000)
-            .onUpdate(()=>{
+        var t = createjs.Tween.get(param)
+            .to({y: target}, 4000, createjs.Ease.quadInOut)
+            .on('change', ()=>{
                 this.y = param.y
                 var newColor = temperatureColorMap(this.y)
                 this.r = newColor.r
@@ -55,12 +55,10 @@ class Sand {
                 this.b = newColor.b
                 this.a = 1
             })
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .onComplete(()=>{
+            .call(()=>{
                 this.moving = false
                 // this.y = 13
             })
-            .start()
     }
 }
 

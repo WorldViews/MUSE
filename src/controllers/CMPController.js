@@ -3,7 +3,7 @@ import Chart from '../lib/cmp/Chart';
 import DataLoader from '../lib/cmp/DataLoader'
 import state from '../lib/cmp/State';
 
-import TWEEN from '@tweenjs/tween.js';
+import 'yuki-createjs';
 import MathBox from 'mathbox';
 import _ from 'lodash';
 
@@ -270,7 +270,7 @@ export default class CMPController {
 
 
     update(t) {
-        TWEEN.update();
+        // TWEEN.update();
         if (this.charts) {
             let data = this.loader.data.active;
             let charts = this.charts;
@@ -319,27 +319,28 @@ export default class CMPController {
         this._stopHistory()
         var duration = _duration || 120 // 2min
         var param = {y: _from}
-        this.historyT1 = new TWEEN.Tween(param)
+        this.historyT1 = createjs.Tween.get(param);
+        this.historyT1
             .to({y:_to}, duration*1000)
-            .onUpdate(()=>{
+            .on('change', ()=>{
                 state.SandYear = Math.round(param.y)
             })
-            .start()
 
         var param1 = {y: _from}
-        setTimeout(()=>{
-            this.historyT2 = new TWEEN.Tween(param1)
-                .to({y:_to}, duration*1000)
-                .onUpdate(()=>{
-                    state.Year = Math.round(param1.y)
-                })
-                .start()
-        }, 4000)
+        this.historyT2 = createjs.Tween.get(param1)
+        this.historyT2
+            .wait(4000)
+            .to({y:_to}, duration*1000)
+            .on('change', ()=>{
+                state.Year = Math.round(param1.y)
+            })
     }
 
     _stopHistory() {
-        TWEEN.remove(this.historyT1)
-        TWEEN.remove(this.historyT2)
+        if (this.historyT1 && this.historyT2) {
+            createjs.Tween.removeTweens(this.historyT1._target);
+            createjs.Tween.removeTweens(this.historyT2._target);
+        }
     }
 
     // array x,y,z [0, 0, 0]

@@ -8,7 +8,7 @@ import NavigationController from './controllers/NavigationController';
 import StarsController from './controllers/StarsController';
 import CMPController from './controllers/CMPController';
 
-import {Easing, Tween} from '@tweenjs/tween.js';
+import 'yuki-createjs';
 
 import {addPlanet} from './lib/Planet';
 import loadCollada from './loadCollada';
@@ -55,9 +55,8 @@ function initAnimations() {
     // TODO: figure out algo for looking
     // plControls.lookAt(new THREE.Vector3(0, 0, 0));
 
-    let anim = new Tween(body.position)
-        .to({x: 2, y: 2, z: 2}, 10000)
-        .easing(Easing.Quadratic.In);
+    let anim = createjs.Tween.get(body.position)
+        .to({x: 2, y: 2, z: 2}, 10000, createjs.Ease.quadIn)
 
     bodyAnimationController.enqueue(anim);
 }
