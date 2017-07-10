@@ -1,6 +1,8 @@
 
 //import * as THREE from 'three';
 
+//import TWEEN from '@tweenjs/tween.js';
+
 console.log("********************************************");
 
 class Anim
@@ -12,6 +14,7 @@ class Anim
         console.log("Anim "+name);
         this.name = name;
         this.tween = createjs.Tween.get(OBJ)
+        //this.tween = new TWEEN.Tween(OBJ)
 	    .to({x:0},   0)
 	    .to({x:10},  10000)
 	    .to({x:20}, 100000);
