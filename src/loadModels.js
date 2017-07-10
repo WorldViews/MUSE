@@ -18,9 +18,9 @@ function loadModels(specs, game) {
 
     return new Promise((resolve, reject) => {
 	specs.forEach(spec => {
+	    //TODO: check for type and call appropriate loader
+	    // for now we just do collada
 	    if (spec.path) {
-		// should check for type, and call appropriate loader
-		// for now we just do collada
 		loadCollada(spec.path, spec).then((collada) => {
 		    game.setFromProps(collada.scene, spec);
 		    game.addToGame(collada.scene, spec.name, spec.parent);
@@ -32,7 +32,7 @@ function loadModels(specs, game) {
 	    }
 	    else {
 		// if no path, assume we are just creating a new group
-		// (should we for this to be explicity with a type field?)
+		// (should we requre a type field?)
 		if (!spec.name) {
 		    console.log("**** new groups must have name ****");
 		    reportError("**** new groups must have name ****");
