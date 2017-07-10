@@ -17,7 +17,6 @@ export default (path, opts) => {
             path,
             (collada) => {
                 let {scene} = collada;
-
                 scene.traverse(child => {
                     if (child instanceof SkinnedMesh) {
                         let animation = new Animation(child, child.geometry.animation);
@@ -25,24 +24,6 @@ export default (path, opts) => {
                         console.log('animating...');
                     }
                 });
-
-                if (Array.isArray(opts.position)) {
-                    scene.position.fromArray(opts.position);
-                }
-
-                // Rotation array must be in radians!
-                if (Array.isArray(opts.rotation)) {
-                    scene.rotation.fromArray(opts.rotation);
-                }
-
-                //if (Array.isArray(opts.scale)) {
-                //  scene.scale.fromArray(opts.scale)
-                //}
-                if (opts.scale)
-	  scene.scale.fromArray(scaleVec(opts.scale));
-
-                scene.updateMatrix();
-
                 resolve(collada);
             },
             () => {},
