@@ -16,8 +16,8 @@ class Anim
         this.tween = createjs.Tween.get(OBJ)
         //this.tween = new TWEEN.Tween(OBJ)
 	    .to({x:0},   0)
-	    .to({x:10},  10000)
-	    .to({x:20}, 100000);
+	    .to({x:100},  10000)
+	    .to({x:2000}, 100000);
         this.tween.addEventListener('change', () => inst.handleChange(OBJ))
     }
 
