@@ -56,7 +56,7 @@ class DanceController
     }
 
     loadBVH(name, bvhPath, opts) {
-	opts = opts || {};
+        opts = opts || {};
         console.log("loadBVH: "+name+" "+bvhPath);
         //var scene = this.game.scene;
         //var loader = new THREE.BVHLoader();

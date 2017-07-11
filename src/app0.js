@@ -77,7 +77,7 @@ game.registerController('dancer', dancer);
 programControl.registerPlayer(dancer);
 
 game.marquee = new Marquee();
-game.addToGame(marquee, "marquee1");
+game.addToGame(game.marquee, "marquee1");
 setupMarquee(game);
 
 //var dc2 = new DanceController(game, {name: 'dancer2', position: [0,4,0], scale: 0.12});
@@ -95,7 +95,7 @@ function start()
     loadModels(MODEL_SPECS, game);
     loadScreen(VIDEO_PATH, game, screen1);
     loadScreen(VIDEO_PATH, game, labelsScreen);
-//    loadScreen(VIDEO2_PATH, game, screen3);
+    //    loadScreen(VIDEO2_PATH, game, screen3);
     setupLights(game);
     game.animate();
 }

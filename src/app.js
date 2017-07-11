@@ -52,7 +52,7 @@ let cmpProgram = new CMPProgram(game);
 setupHtmlControls(game, cmpProgram);
 
 game.marquee = new Marquee();
-game.addToGame(marquee, "marque1"); // cause it to get grouped properly
+game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
 setupMarquee(game);
 
 function start() {

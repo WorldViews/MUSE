@@ -8,14 +8,14 @@ function addLight(game, spec)
     console.log("adding light "+JSON.stringify(spec));
     var bulbRad = spec.bulbRadius || 0.2;
     if (!sphere) {
-	console.log("Setting up sphere for lights");
-	sphere = new THREE.SphereGeometry( 1, 16, 8 );
+        console.log("Setting up sphere for lights");
+        sphere = new THREE.SphereGeometry( 1, 16, 8 );
     }
     var color = spec.color || 0xffffff;
     let light = new THREE.PointLight(color, 2, 50);
     var g = new THREE.Group();
     if (spec.name)
-	g.name = spec.name;
+        g.name = spec.name;
     g.name = spec.name;
     g.add(light);
     var bulb = new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color }));
