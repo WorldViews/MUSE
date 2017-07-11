@@ -90,7 +90,7 @@ class Game {
     }
 
     addCMPControls() {
-        this.cmpControls = new CMP_Controls(this.camera);
+        this.cmpControls = new CMP_Controls(this.camera, this.renderer.domElement);
         //this.cmpControls.addEventListener('change', this.render.bind(this));
         this.cmpControls.keys = [65, 83, 68];
         this.camera.lookAt(new THREE.Vector3());

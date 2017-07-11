@@ -57,9 +57,9 @@ var CMP_Controls = function ( object, domElement )
     this.panRatio = 0.2;
     this.pitchRatio = 0.2;
 
-    if ( this.domElement !== document ) {
-        this.domElement.setAttribute( 'tabindex', - 1 );
-    }
+    //if ( this.domElement !== document ) {
+    //    this.domElement.setAttribute( 'tabindex', - 1 );
+    //}
 
     this.handleResize = function () {
         if ( this.domElement === document ) {
