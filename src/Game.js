@@ -135,7 +135,7 @@ class Game {
     }
 
     animate(msTime) {
-        if (game.controls) {
+        if (this.controls) {
             this.controls.update(msTime);
         }
 
@@ -261,7 +261,7 @@ class Game {
 	    return;
         }
         parent.updateMatrixWorld();
-        THREE.SceneUtils.attach(obj, game.scene, parent);
+        THREE.SceneUtils.attach(obj, this.scene, parent);
     }
 }
 
