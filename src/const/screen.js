@@ -13,9 +13,9 @@ export let PH_LEN = Math.degToRad(49);
 export let screen1 = {
     name: "mainScreen",
     parent: 'station',
-    radius: 8.6,
-    phiStart: 32,
-    phiLength: 49,
+    radius: 8.8,
+    phiStart: 34,
+    phiLength: 47,
     thetaStart: 110,
     thetaLength: 140
 };
@@ -23,7 +23,7 @@ export let screen1 = {
 export var labelsScreen = {
     name: "labelsScreen",
     parent: 'station',
-    radius: 8.6,
+    radius: 8.8,
     phiStart: 32,
     phiLength: 49,
     thetaStart: -90,
