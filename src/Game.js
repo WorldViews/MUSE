@@ -172,7 +172,8 @@ class Game {
 	    parentObj.add(obj);
         }
         else {
-	    game.scene.add(obj);
+	    //game.scene.add(obj);
+	    this.scene.add(obj);
         }
         return obj;
     }
@@ -203,7 +204,8 @@ class Game {
         else
 	    this.scene.add(obj);
         if (name) {
-	    game.models[name] = obj;
+	    //game.models[name] = obj;
+	    this.models[name] = obj;
         }
     }
 
