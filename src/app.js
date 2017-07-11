@@ -59,6 +59,8 @@ game.marquee = new Marquee();
 game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
 setupMarquee(game);
 
+game.marquee.updateText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+
 function start() {
     loadModels(MODEL_SPECS, game);
     loadScreens(game);
