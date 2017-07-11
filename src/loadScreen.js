@@ -5,6 +5,7 @@ import {Math} from 'three';
 
 //import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
 import {screen1} from './const/screen';
+import bindVideoControls from './bindVideoControls';
 
 //var spec = screen1;
 //console.log("spec: "+spec);
@@ -58,6 +59,8 @@ function loadScreen(path, game, spec)
         screenObj.imageSource = imageSource;
         screenObj.ready = true;
         game.addToGame(screenParent, spec.name, spec.parent);
+
+        bindVideoControls(game, imageSource);
     });
     if (spec.name)
         game.screens[spec.name] = screenObj;
