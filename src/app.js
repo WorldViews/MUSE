@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import Earth from './lib/EARTH';
 import Marquee from './Marquee';
+import {Game} from './Game';
 import VRGame from './VRGame';
 
 import BodyAnimationController from './controllers/BodyAnimationController';
@@ -9,27 +9,27 @@ import CMPController from './controllers/CMPController';
 import NavigationController from './controllers/NavigationController';
 import StarsController from './controllers/StarsController';
 
-import {addPlanet} from './lib/Planet';
-import loadCollada from './loadCollada';
+import {addPlanet, addPlanets} from './lib/Planet';
+import {DanceController} from './controllers/DanceController';
 import loadModels from './loadModels';
 import {loadScreens} from './loadScreen';
 import {setupLights} from './setupLights';
+import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
 import setupMarquee from './setupMarquee';
 
-let DAE_PATH = 'models/PlayDomeSkp.dae';
-//let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
-
 let {degToRad} = THREE.Math;
 
-let MODEL_SPECS = [{
-    path: 'models/PlayDomeSkp.dae',
-    position: [0, 0, 0],
-    rotation: [0, degToRad(0), 0],
-    scale: 0.025
-}];
+let MODEL_SPECS = [
+    {   name: 'station'  },
+    {
+        path: 'models/PlayDomeSkp.dae',
+        position: [0, 0, 0],
+        rotation: [0, degToRad(0), 0],
+        scale: 0.025
+    }];
 
-let game = new VRGame('canvas3d');
+window.game = new VRGame('canvas3d');
 game.defaultGroupName = 'station';
 
 let bodyAnimationController = new BodyAnimationController(game.body);
@@ -51,27 +51,24 @@ game.gss = new GSS.SpreadSheet();
 let cmpProgram = new CMPProgram(game);
 setupHtmlControls(game, cmpProgram);
 
+//var dancer = new DanceController(game);
+//game.registerController('dancer', dancer);
+//programControl.registerPlayer(dancer);
+
 game.marquee = new Marquee();
 game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
 setupMarquee(game);
 
 function start() {
     loadModels(MODEL_SPECS, game);
-    //loadScreen(VIDEO_PATH, game);
     loadScreens(game);
-
-    console.log("****** adding planets ******");
-    let earth = addPlanet(game, 'Earth', 1000, -2000, 0, 0);
-    let mars = addPlanet(game, 'Mars', 200, 2000, 0, 2000, './textures/Mars_4k.jpg');
-    let jupiter = addPlanet(game, 'Jupiter', 300, 1500, 0, -1500, './textures/Jupiter_Map.jpg');
-    let nepture = addPlanet(game, 'Nepture', 100, -1000, 0, -1000, './textures/Neptune.jpg');
-
+    addPlanets(game);
+    var vEarth =  addPlanet(game, 'vEarth',   1.2, 0, 2, 0, null, game.defaultGroupName);
+    var SF = {lat: 37.4, lon: -122};
+    vEarth.addMarker(SF.lat, SF.lon)
     setupLights(game);
-
     game.body.position.set(2, 1.5, 2);
-
     game.animate(0);
 }
 
 window.start = start;
-window.game = game;
