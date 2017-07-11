@@ -40,36 +40,36 @@ let MODEL_SPECS = [
     }
 ];
 
-window.game = new VRGame('canvas3d');
-game.defaultGroupName = 'station';
-
-let bodyAnimationController = new BodyAnimationController(game.body);
-let navigationController = new NavigationController(game.body, game.camera, game.plControls);
-let starsController = new StarsController(game.scene, [0, 0, 0]);
-let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
-    position: [0, 3, 0],
-    rotation: [0, 0, 0],
-    scale: [1.5, 1, 1.5]
-});
-//var dancer = new DanceController(game);
-
-game.registerController('body', bodyAnimationController);
-game.registerController('navigation', navigationController);
-game.registerController('stars', starsController);
-game.registerController('cmp', cmpController);
-//game.registerController('dancer', dancer);
-
-game.gss = new GSS.SpreadSheet();
-
-let cmpProgram = new CMPProgram(game);
-setupHtmlControls(game, cmpProgram);
-//cmpProgram.registerPlayer(dancer);
-
-game.marquee = new Marquee();
-game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
-setupMarquee(game);
-
 function start() {
+    window.game = new VRGame('canvas3d');
+    game.defaultGroupName = 'station';
+
+    let bodyAnimationController = new BodyAnimationController(game.body);
+    let navigationController = new NavigationController(game.body, game.camera, game.plControls);
+    let starsController = new StarsController(game.scene, [0, 0, 0]);
+    let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
+        position: [0, 3, 0],
+        rotation: [0, 0, 0],
+        scale: [1.5, 1, 1.5]
+    });
+    //var dancer = new DanceController(game);
+
+    game.registerController('body', bodyAnimationController);
+    game.registerController('navigation', navigationController);
+    game.registerController('stars', starsController);
+    game.registerController('cmp', cmpController);
+    //game.registerController('dancer', dancer);
+
+    game.gss = new GSS.SpreadSheet();
+
+    let cmpProgram = new CMPProgram(game);
+    setupHtmlControls(game, cmpProgram);
+    //cmpProgram.registerPlayer(dancer);
+
+    game.marquee = new Marquee();
+    game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
+    setupMarquee(game);
+
     loadModels(MODEL_SPECS, game);
     loadScreens(game);
     addPlanets(game);
@@ -82,3 +82,4 @@ function start() {
 }
 
 window.start = start;
+
