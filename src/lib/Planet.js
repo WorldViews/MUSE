@@ -36,7 +36,7 @@ EARTH.Planet = function(group, radius, opts)
         console.log("*** Planet.loading "+texPath);
         loader.load( texPath, function ( texture ) {
             var geometry = new THREE.SphereGeometry( radius, 30, 30 );
-            var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+            var material = new THREE.MeshPhongMaterial( { map: texture, overdraw: 0.5 } );
             inst.mesh = new THREE.Mesh( geometry, material );
 	    inst.mesh.name = "Earth";
             group.add(inst.mesh);
