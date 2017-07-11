@@ -68,7 +68,7 @@ game.registerController('cmp', cmpController);
 
 var dancer = new DanceController(game);
 game.registerController('dancer', dancer);
-programControl.registerPlayer(dancer);
+cmpProgram.registerPlayer(dancer);
 
 game.marquee = new Marquee();
 game.addToGame(game.marquee, "marquee1"); // cause it to get grouped properly
