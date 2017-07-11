@@ -7,9 +7,9 @@ import BodyAnimationController from './controllers/BodyAnimationController';
 import {CMPProgram} from './CMPProgram';
 import CMPController from './controllers/CMPController';
 import NavigationController from './controllers/NavigationController';
+import SolarSystemController from './controllers/SolarSystemController';
 import StarsController from './controllers/StarsController';
 
-import {addPlanet, addPlanets} from './lib/Planet';
 import {DanceController} from './controllers/DanceController';
 import loadModels from './loadModels';
 import {loadScreens} from './loadScreen';
@@ -56,13 +56,13 @@ game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
 setupMarquee(game);
 
 function start() {
+    let solarSystemController = new SolarSystemController(game);
+    game.registerController('solarSystem', solarSystemController);
+
     loadModels(MODEL_SPECS, game);
     loadScreens(game);
-    addPlanets(game);
-    var vEarth =  addPlanet(game, 'vEarth',   1.2, 0, 2, 0, null, game.defaultGroupName);
-    var SF = {lat: 37.4, lon: -122};
-    vEarth.addMarker(SF.lat, SF.lon)
     setupLights(game);
+
     game.body.position.set(2, 1.5, 2);
     game.animate(0);
 }
