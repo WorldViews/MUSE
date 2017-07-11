@@ -4,17 +4,18 @@ import Marquee from './Marquee';
 import VRGame from './VRGame';
 
 import BodyAnimationController from './controllers/BodyAnimationController';
+import {CMPProgram} from './CMPProgram';
+import CMPController from './controllers/CMPController';
 import NavigationController from './controllers/NavigationController';
 import StarsController from './controllers/StarsController';
-import CMPController from './controllers/CMPController';
-
-import {Easing, Tween} from '@tweenjs/tween.js';
 
 import {addPlanet} from './lib/Planet';
 import loadCollada from './loadCollada';
 import loadModels from './loadModels';
 import {loadScreen} from './loadScreen';
 import {setupLights} from './setupLights';
+import {setupHtmlControls} from './htmlControls';
+import setupMarquee from './setupMarquee';
 
 let DAE_PATH = 'models/PlayDomeSkp.dae';
 let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
@@ -29,7 +30,6 @@ let MODEL_SPECS = [{
 }];
 
 let game = new VRGame('canvas3d');
-window.game = game;
 game.defaultGroupName = 'station';
 
 let bodyAnimationController = new BodyAnimationController(game.body);
@@ -46,22 +46,14 @@ game.registerController('navigation', navigationController);
 game.registerController('stars', starsController);
 game.registerController('cmp', cmpController);
 
-let marquee = new Marquee();
-//game.scene.add(marquee);
+game.gss = new GSS.SpreadSheet();
+
+let cmpProgram = new CMPProgram(game);
+setupHtmlControls(game, cmpProgram);
+
+game.marquee = new Marquee();
 game.addToGame(marquee, "marque1"); // cause it to get grouped properly
-window.marquee = marquee;
-
-function initAnimations() {
-    body.position.set(500, 250, 200);
-    // TODO: figure out algo for looking
-    // plControls.lookAt(new THREE.Vector3(0, 0, 0));
-
-    let anim = new Tween(body.position)
-        .to({x: 2, y: 2, z: 2}, 10000)
-        .easing(Easing.Quadratic.In);
-
-    bodyAnimationController.enqueue(anim);
-}
+setupMarquee(game);
 
 function start() {
     loadModels(MODEL_SPECS, game);
@@ -81,3 +73,4 @@ function start() {
 }
 
 window.start = start;
+window.game = game;

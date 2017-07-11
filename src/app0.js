@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import {CMPProgram} from './CMPProgram';
 import {Game} from './Game';
 import Marquee from './Marquee';
+import StarsController from './controllers/StarsController';
 
 import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
@@ -15,6 +16,7 @@ import CMPController from './controllers/CMPController';
 import {setupLights} from './setupLights';
 import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
+import setupMarquee from './setupMarquee';
 
 import {screen1,labelsScreen,screen2,screen3} from './const/screen';
 
@@ -48,7 +50,10 @@ let MODEL_SPECS = [
 
 window.game = new Game();
 game.defaultGroupName = "station";
-//var programControl = new ProgramControl(game);
+
+let starsController = new StarsController(game.scene, [0, 0, 0]);
+game.registerController('stars', starsController);
+
 var programControl = new CMPProgram(game);
 setupHtmlControls(game, programControl);
 game.events.addEventListener('valueChange', msg => {
@@ -57,13 +62,9 @@ game.events.addEventListener('valueChange', msg => {
 
 game.addOrbitControls();
 let scene = game.scene;
-game.gss = new GSS.SpreadSheet();
-let starsGroup = new THREE.Group();
-scene.add(starsGroup);
-let stars = new Stars(starsGroup, 2500, {name: 'Stars'});
-starsGroup.position.set(0, 0, 0);
 
-//let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
+game.gss = new GSS.SpreadSheet();
+
 let cmpController = new CMPController(game.renderer, game.scene, game.camera, {
     position: [0, 3, 0],
     rotation: [0, 0, 0],
@@ -75,10 +76,9 @@ var dancer = new DanceController(game);
 game.registerController('dancer', dancer);
 programControl.registerPlayer(dancer);
 
-let marquee = new Marquee();
-//game.scene.add(marquee);
-window.marquee = marquee;
+game.marquee = new Marquee();
 game.addToGame(marquee, "marquee1");
+setupMarquee(game);
 
 //var dc2 = new DanceController(game, {name: 'dancer2', position: [0,4,0], scale: 0.12});
 //game.registerController('dancer2', dc2);
