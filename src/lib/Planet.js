@@ -91,12 +91,13 @@ EARTH.Planet = function(group, radius, opts)
 };
 
 //EARTH.Earth = EARTH.Planet;
-function addPlanet(game, name, radius, x, y, z, tex)
+function addPlanet(game, name, radius, x, y, z, tex, parent)
 {
+    parent = parent || 'solarSystem';
     console.log(">>> addPlanet "+name);
     var scene = game.scene;
     var group = new THREE.Group();
-    game.addToGame(group, name);
+    game.addToGame(group, name, parent);
     //game.models[name] = group;
     //scene.add(group);
     var opts = {'name': name, 'texture': tex};

@@ -83,8 +83,7 @@ game.marquee = new Marquee();
 game.addToGame(game.marquee, "marquee1");
 setupMarquee(game);
 
-//var dc2 = new DanceController(game, {name: 'dancer2', position: [0,4,0], scale: 0.12});
-//game.registerController('dancer2', dc2);
+//game.reparent(game.camera, 'station');
 
 function start()
 {
@@ -92,7 +91,7 @@ function start()
     window.Anim = Anim;
     window.animTest = animTest;
     addPlanets(game);
-    var vEarth =  addPlanet(game, 'vEarth',   1.2, 0, 2, 0);
+    var vEarth =  addPlanet(game, 'vEarth',   1.2, 0, 2, 0, null, game.defaultGroupName);
     var SF = {lat: 37.4, lon: -122};
     vEarth.addMarker(SF.lat, SF.lon)
     loadModels(MODEL_SPECS, game);
