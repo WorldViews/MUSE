@@ -61,9 +61,9 @@ game.events.addEventListener('valueChange', msg => {
     console.log("valueChange: "+JSON.stringify(msg));
 });
 
-game.addOrbitControls();
+//game.addOrbitControls();
 //game.addCMPControls();
-//game.addMultiControls();
+game.addMultiControls();
 let scene = game.scene;
 
 game.gss = new GSS.SpreadSheet();

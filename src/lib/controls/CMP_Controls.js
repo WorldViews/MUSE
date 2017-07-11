@@ -76,7 +76,7 @@ var CMP_Controls = function ( object, domElement )
 	    this.domElement.focus();
         }
         event.preventDefault();
-        event.stopPropagation();
+        //event.stopPropagation();
         this.mouseDragOn = true;
         this.mousePtDown = this.getMousePt(event);
         this.phiDown = this.phi;
@@ -85,7 +85,7 @@ var CMP_Controls = function ( object, domElement )
 
     this.onMouseUp = function ( event ) {
         event.preventDefault();
-        event.stopPropagation();
+        //event.stopPropagation();
         this.mouseDragOn = false;
         this.moveForward = false;
         this.moveBackward = false;
@@ -97,7 +97,7 @@ var CMP_Controls = function ( object, domElement )
     }
 
     this.onMouseMove = function ( event ) {
-        if (!this.mouseDragOn)
+        if (!this.mouseDragOn || !this.enabled)
 	    return;
         var pt = this.getMousePt(event);
         var dx = pt.x - this.mousePtDown.x;
