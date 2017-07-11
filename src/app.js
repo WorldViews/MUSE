@@ -27,7 +27,18 @@ let MODEL_SPECS = [
         position: [0, 0, 0],
         rotation: [0, degToRad(0), 0],
         scale: 0.025
-    }];
+    },
+    {
+        name: 'bmw',
+        parent: 'station',
+        path: 'models/bmw/model.dae',
+        position: [0.2, 0, 1.6],
+        //rotation: [0, degToRad(90), 0],
+        rotation: [0, degToRad(0), 0],
+        scale: 0.020,
+        visible: false
+    }
+];
 
 window.game = new VRGame('canvas3d');
 game.defaultGroupName = 'station';
@@ -40,16 +51,19 @@ let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), gam
     rotation: [0, 0, 0],
     scale: [1.5, 1, 1.5]
 });
+//var dancer = new DanceController(game);
 
 game.registerController('body', bodyAnimationController);
 game.registerController('navigation', navigationController);
 game.registerController('stars', starsController);
 game.registerController('cmp', cmpController);
+//game.registerController('dancer', dancer);
 
 game.gss = new GSS.SpreadSheet();
 
 let cmpProgram = new CMPProgram(game);
 setupHtmlControls(game, cmpProgram);
+//cmpProgram.registerPlayer(dancer);
 
 game.marquee = new Marquee();
 game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
