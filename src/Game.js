@@ -98,7 +98,7 @@ class Game {
     }
 
     addMultiControls() {
-        var mc = new MultiControls(this, this.camera);
+        var mc = new MultiControls(this, this.camera, this.renderer.domElement);
         this.controls = mc;
     }
 
