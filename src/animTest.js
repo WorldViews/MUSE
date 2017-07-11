@@ -20,7 +20,7 @@ class Anim
 
     handleChange(obj)
     {
-        console.log("OBJ: "+JSON.stringify(obj));
+        //console.log("OBJ: "+JSON.stringify(obj));
         //var m = game.models.platform.scene;
         //var m = game.models.station.scene;
         var m = this.target;
@@ -34,6 +34,18 @@ class Anim
     set playTime(t) {
         this.tween.setPosition(t);
     }
+
+    setPaused(v) {
+        this.tween.setPaused(v);
+    }
+
+    play() {
+        this.setPaused(false);
+    }
+
+    pause() {
+        this.setPaused(true);
+    }
 }
 
 
@@ -44,6 +56,7 @@ function animTest(game)
     console.log("!!!! >>>>>>>>>>>>>>>>>>>>>>>>>> animTest...........");
     window.a = new Anim("anim1", game.models.station.position);
     game.programControl.registerPlayer(a, "anim1");
+    return a;
 }
 
 export {animTest, Anim};
