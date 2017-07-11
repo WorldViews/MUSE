@@ -51,8 +51,6 @@ class Marquee extends THREE.Mesh {
 	        degToRad(marqueeSpec.thetaStart),
 	        degToRad(marqueeSpec.thetaLength)
 	    );
-
-        this.updateHTML("<h1>TESTING!!!</h1>");
     }
 
     handleRender(canvas) {
