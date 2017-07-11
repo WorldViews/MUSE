@@ -240,6 +240,9 @@ class Game {
                 reportError("rotations should be array");
 	    }
         }
+        if (props.visible != null) {
+	    obj3d.visible = props.visible;
+        }
         obj3d.updateMatrix();
     }
 
