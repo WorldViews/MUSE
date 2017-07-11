@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
+import {MultiControls} from './lib/controls/MultiControls';
 
 
 class Game {
@@ -94,6 +95,11 @@ class Game {
         this.cmpControls.keys = [65, 83, 68];
         this.camera.lookAt(new THREE.Vector3());
         this.controls = this.cmpControls;
+    }
+
+    addMultiControls() {
+        var mc = new MultiControls(this, this.camera);
+        this.controls = mc;
     }
 
     // Isn't this more complicated than it needs to be?
