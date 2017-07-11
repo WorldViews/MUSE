@@ -12,13 +12,13 @@ import StarsController from './controllers/StarsController';
 import {addPlanet} from './lib/Planet';
 import loadCollada from './loadCollada';
 import loadModels from './loadModels';
-import {loadScreen} from './loadScreen';
+import {loadScreens} from './loadScreen';
 import {setupLights} from './setupLights';
 import {setupHtmlControls} from './htmlControls';
 import setupMarquee from './setupMarquee';
 
 let DAE_PATH = 'models/PlayDomeSkp.dae';
-let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
+//let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 
 let {degToRad} = THREE.Math;
 
@@ -57,7 +57,8 @@ setupMarquee(game);
 
 function start() {
     loadModels(MODEL_SPECS, game);
-    loadScreen(VIDEO_PATH, game);
+    //loadScreen(VIDEO_PATH, game);
+    loadScreens(game);
 
     console.log("****** adding planets ******");
     let earth = addPlanet(game, 'Earth', 1000, -2000, 0, 0);

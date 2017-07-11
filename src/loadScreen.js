@@ -14,11 +14,12 @@ function toRad(v)
     return v ? Math.degToRad(v) : v;
 }
 
-function loadScreen(path, game, spec)
+function loadScreen(game, spec, path)
 {
+    spec = spec || screen1;
     var screenObj = {ready: false};
     var scene = game.scene;
-    spec = spec || screen1;
+    var path = path || spec.path;
     console.log('Loading screen... video: '+path);
     console.log("spec: "+JSON.stringify(spec));
     //var spec = {x: 5.5, y: 2.5, z: -0.1, width: 6.5, height: 4.0};
@@ -64,4 +65,10 @@ function loadScreen(path, game, spec)
     return screenObj;
 }
 
-export {loadScreen};
+function loadScreens(game)
+{
+    loadScreen(game, screen1);
+}
+
+
+export {loadScreen, loadScreens};

@@ -11,14 +11,14 @@ import {addPlanet, addPlanets} from './lib/Planet';
 import Stars from './lib/Stars';
 import {DanceController} from './controllers/DanceController';
 import loadModels from './loadModels';
-import {loadScreen} from './loadScreen';
+import {loadScreen, loadScreens} from './loadScreen';
 import CMPController from './controllers/CMPController';
 import {setupLights} from './setupLights';
 import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
 import setupMarquee from './setupMarquee';
 
-import {screen1,labelsScreen,screen2,screen3} from './const/screen';
+import {screen1,labelsScreen,screen2,screen3,coverScreen} from './const/screen';
 
 let {degToRad} = THREE.Math;
 
@@ -96,9 +96,11 @@ function start()
     var SF = {lat: 37.4, lon: -122};
     vEarth.addMarker(SF.lat, SF.lon)
     loadModels(MODEL_SPECS, game);
-    loadScreen(VIDEO_PATH, game, screen1);
-    loadScreen(VIDEO_PATH, game, labelsScreen);
-    //    loadScreen(VIDEO2_PATH, game, screen3);
+    loadScreens(game);
+    //loadScreen(game, screen1, VIDEO_PATH);
+    //loadScreen(game, labelsScreen, VIDEO_PATH);
+    //loadScreen(VIDEO_PATH, game, coverScreen);
+    //loadScreen(VIDEO2_PATH, game, screen3);
     setupLights(game);
     game.animate();
 }

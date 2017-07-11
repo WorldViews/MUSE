@@ -8,11 +8,13 @@ export let PH_MIN = Math.degToRad(31);
 export let PH_LEN = Math.degToRad(49);
 */
 
+let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 // moved the degToRad into the function reading this
 // to improve readability of the spec.
 export let screen1 = {
     name: "mainScreen",
     parent: 'station',
+    path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
     radius: 8.8,
     phiStart: 34,
     phiLength: 47,
@@ -46,6 +48,14 @@ export let screen3 = {
     //    phiStart: 0,
     //    phiLength: 90,
     position: [3,3,0]
+};
+
+export let coverScreen = {
+    name: "cover",
+    radius: 9.0,
+    phiStart: 0,
+    phiLength: 90,
+    position: [0,0,0]
 };
 
 export let marquee = {
