@@ -59,5 +59,6 @@ function animTest(game)
     return a;
 }
 
+window.animTest = animTest;
 export {animTest, Anim};
 
