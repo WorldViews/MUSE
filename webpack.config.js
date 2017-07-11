@@ -43,7 +43,7 @@ module.exports = (env) => {
           options: {
               extends: ["eslint:recommended", "google"],
               parser: "babel-eslint",
-              fix: true,
+              fix: false,
               rules: {
                 indent: [2, 4],
                 "no-trailing-spaces": 1,

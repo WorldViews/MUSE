@@ -20,53 +20,74 @@ import setupMarquee from './setupMarquee';
 
 let {degToRad} = THREE.Math;
 
-let MODEL_SPECS = [
-    {   name: 'station'  },
-    {
-        path: 'models/PlayDomeSkp.dae',
-        position: [0, 0, 0],
-        rotation: [0, degToRad(0), 0],
-        scale: 0.025
-    },
-    {
-        name: 'bmw',
-        parent: 'station',
-        path: 'models/bmw/model.dae',
-        position: [0.2, 0, 1.6],
-        //rotation: [0, degToRad(90), 0],
-        rotation: [0, degToRad(0), 0],
-        scale: 0.020,
-        visible: false
-    }
-];
+function start(useVR) {
+    console.log("************************** app.js: useVR: "+useVR);
 
-function start() {
-    window.game = new VRGame('canvas3d');
+    let MODEL_SPECS = [
+	{   name: 'station'  },
+	{
+            name: 'platform',
+            parent: 'station',
+            //path: 'models/PlayDomeSkp.dae',
+            path: 'models/PlayDomeSkp_v1.dae',
+            position: [0, 0, 0],
+            rotation: [0, degToRad(0), 0],
+            scale: 0.025
+	},
+	{
+            name: 'bmw',
+            parent: 'station',
+            path: 'models/bmw/model.dae',
+            position: [0.2, 0, 1.6],
+            //rotation: [0, degToRad(90), 0],
+            rotation: [0, degToRad(0), 0],
+            scale: 0.020,
+            visible: false
+	}
+    ];
+    
+    if (useVR) {
+        window.game = new VRGame('canvas3d');
+    }
+    else {
+        window.game = new Game();
+        //game.addOrbitControls();
+        //game.addCMPControls();
+        game.addMultiControls();
+    }
+    window.game = game;
+    game.useVR = useVR;
     game.defaultGroupName = 'station';
 
-    let bodyAnimationController = new BodyAnimationController(game.body);
-    let navigationController = new NavigationController(game.body, game.camera, game.plControls);
+    game.gss = new GSS.SpreadSheet();
+    let cmpProgram = new CMPProgram(game);
+    setupHtmlControls(game, cmpProgram);
+
     let solarSystemController = new SolarSystemController(game);
     let starsController = new StarsController(game.scene, [0, 0, 0]);
-    let cmpController = new CMPController(game.renderer.getUnderlyingRenderer(), game.scene, game.camera, {
+    var renderer = useVR ? game.renderer.getUnderlyingRenderer() : game.renderer;
+    let cmpController = new CMPController(renderer, game.scene, game.camera, {
         position: [0, 3, 0],
         rotation: [0, 0, 0],
         scale: [1.5, 1, 1.5]
     });
-    //var dancer = new DanceController(game);
 
-    game.registerController('body', bodyAnimationController);
-    game.registerController('navigation', navigationController);
+    var dancer = null;
+    if (useVR) {
+        let bodyAnimationController = new BodyAnimationController(game.body);
+        let navigationController = new NavigationController(game.body, game.camera, game.plControls);
+        game.registerController('body', bodyAnimationController);
+        game.registerController('navigation', navigationController);
+    }
+    else {
+	dancer = new DanceController(game);
+	game.registerController('dancer', dancer);
+	cmpProgram.registerPlayer(dancer);
+    }	
     game.registerController('stars', starsController);
     game.registerController('cmp', cmpController);
     game.registerController('solarSystem', solarSystemController);
-    // game.registerController('dancer', dancer);
 
-    game.gss = new GSS.SpreadSheet();
-
-    let cmpProgram = new CMPProgram(game);
-    setupHtmlControls(game, cmpProgram);
-    //cmpProgram.registerPlayer(dancer);
 
     game.marquee = new Marquee();
     game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
@@ -75,8 +96,9 @@ function start() {
     loadModels(MODEL_SPECS, game);
     loadScreens(game);
     setupLights(game);
-
-    game.body.position.set(2, 1.5, 2);
+    if (useVR) {
+        game.body.position.set(2, 1.5, 2);
+    }
     game.animate(0);
 }
 
