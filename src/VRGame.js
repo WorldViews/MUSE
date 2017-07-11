@@ -23,6 +23,7 @@ class VRGame extends Game {
             this.body = this.plControls.getObject();
         } else {
             this.body = new THREE.Object3D();
+            this.body.add(this.camera);
         }
 
         this.scene.add(this.body);
