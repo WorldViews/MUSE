@@ -102,7 +102,7 @@ var CMP_Controls = function ( object, domElement )
         var pt = this.getMousePt(event);
         var dx = pt.x - this.mousePtDown.x;
         var dy = pt.y - this.mousePtDown.y;
-        console.log("dx: "+dx+"  dy: "+dy);
+        //console.log("dx: "+dx+"  dy: "+dy);
         if (event.button == 0) {
 	    this.theta = this.thetaDown + this.panRatio * THREE.Math.degToRad( dx );
 	    this.phi = this.phiDown + this.pitchRatio * THREE.Math.degToRad( dy );

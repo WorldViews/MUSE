@@ -43,7 +43,7 @@ class MultiControls {
 
     update() {
         var type = this.shiftDown ? "CMP" : "Orbit";
-        console.log("MultiControls.update "+this.shiftDown+" "+type);
+        //console.log("MultiControls.update "+this.shiftDown+" "+type);
         if (type == "CMP") {
             this.orbitControls.enabled = false;
 	    this.cmpControls.enabled = true;
