@@ -51,15 +51,9 @@ game.gss = new GSS.SpreadSheet();
 let cmpProgram = new CMPProgram(game);
 setupHtmlControls(game, cmpProgram);
 
-//var dancer = new DanceController(game);
-//game.registerController('dancer', dancer);
-//programControl.registerPlayer(dancer);
-
 game.marquee = new Marquee();
 game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
 setupMarquee(game);
-
-game.marquee.updateText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 
 function start() {
     loadModels(MODEL_SPECS, game);
