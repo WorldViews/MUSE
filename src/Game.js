@@ -3,7 +3,6 @@ import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
 import {MultiControls} from './lib/controls/MultiControls';
 
-
 class Game {
 
     constructor(domElementId) {

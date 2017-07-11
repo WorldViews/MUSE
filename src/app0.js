@@ -1,27 +1,29 @@
 import * as THREE from 'three';
 import Marquee from './Marquee';
-import {Game} from './Game';
+import { Game } from './Game';
 import VRGame from './VRGame';
 
 import BodyAnimationController from './controllers/BodyAnimationController';
-import {CMPProgram} from './CMPProgram';
+import { CMPProgram } from './CMPProgram';
 import CMPController from './controllers/CMPController';
 import NavigationController from './controllers/NavigationController';
+import SolarSystemController from './controllers/SolarSystemController';
 import StarsController from './controllers/StarsController';
 
-import {addPlanet, addPlanets} from './lib/Planet';
-import {DanceController} from './controllers/DanceController';
+import { DanceController } from './controllers/DanceController';
 import loadModels from './loadModels';
-import {loadScreens} from './loadScreen';
-import {setupLights} from './setupLights';
-import {animTest, Anim} from './animTest';
-import {setupHtmlControls} from './htmlControls';
+import { loadScreens } from './loadScreen';
+import { setupLights } from './setupLights';
+import { animTest, Anim } from './animTest';
+import { setupHtmlControls } from './htmlControls';
 import setupMarquee from './setupMarquee';
 
 let {degToRad} = THREE.Math;
 
 let MODEL_SPECS = [
-    {   name: 'station'  },
+    {
+        name: 'station'
+    },
     {
         name: 'platform',
         parent: 'station',
@@ -52,27 +54,27 @@ function start()
     //game.addCMPControls();
     game.addMultiControls();
 
-
     let bodyAnimationController = new BodyAnimationController(game.body);
     let navigationController = new NavigationController(game.body, game.camera, game.plControls);
+    let solarSystemController = new SolarSystemController(game);
     let starsController = new StarsController(game.scene, [0, 0, 0]);
     let cmpController = new CMPController(game.renderer, game.scene, game.camera, {
         position: [0, 3, 0],
         rotation: [0, 0, 0],
         scale: [1.5, 1, 1.5]
     });
-    var dancer = new DanceController(game);
-
+    let dancer = new DanceController(game);
 
     //game.registerController('body', bodyAnimationController);
     //game.registerController('navigation', navigationController);
     game.registerController('stars', starsController);
     game.registerController('cmp', cmpController);
     game.registerController('dancer', dancer);
+    game.registerController('solarSystem', solarSystemController);
 
     game.gss = new GSS.SpreadSheet();
 
-    var cmpProgram = new CMPProgram(game);
+    let cmpProgram = new CMPProgram(game);
     setupHtmlControls(game, cmpProgram);
     cmpProgram.registerPlayer(dancer);
 
@@ -80,18 +82,15 @@ function start()
     game.addToGame(game.marquee, "marquee1"); // cause it to get grouped properly
     setupMarquee(game);
 
+
     loadModels(MODEL_SPECS, game);
     loadScreens(game);
-    addPlanets(game);
+
     window.Anim = Anim;
     window.animTest = animTest;
-    var vEarth =  addPlanet(game, 'vEarth',   1.2, 0, 2, 0, null, game.defaultGroupName);
-    var SF = {lat: 37.4, lon: -122};
-    vEarth.addMarker(SF.lat, SF.lon)
     setupLights(game);
     //game.body.position.set(2, 1.5, 2);
     game.animate();
 }
 
 window.start = start;
-
