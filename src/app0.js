@@ -30,7 +30,8 @@ let MODEL_SPECS = [
     {
         name: 'platform',
         parent: 'station',
-        path: 'models/PlayDomeSkp.dae',
+        //path: 'models/PlayDomeSkp.dae',
+        path: 'models/PlayDomeSkp_v1.dae',
         position: [0, 0, 0],
         //rotation: [0, degToRad(90), 0],
         rotation: [0, degToRad(0), 0],
@@ -40,10 +41,10 @@ let MODEL_SPECS = [
         name: 'bmw',
         parent: 'station',
         path: 'models/bmw/model.dae',
-        position: [0, 5, 0],
+        position: [0.2, 0, 1.6],
         //rotation: [0, degToRad(90), 0],
         rotation: [0, degToRad(0), 0],
-        scale: 0.025,
+        scale: 0.020,
         visible: false
     }
 ];
