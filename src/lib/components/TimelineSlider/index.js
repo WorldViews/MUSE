@@ -40,6 +40,27 @@ export default class TimelineSlider extends React.Component {
         return this.state.yearText;
     }
 
+    onValueChange(event) {
+        switch (event.message.name) {
+        case 'timeText':
+            this.timeText = event.message.value;
+            break;
+
+        case 'yearText':
+            this.yearText = event.message.value;
+            break;
+        }
+    }
+
+    componentDidMount() {
+        this.onValueChangeListener = this.onValueChange.bind(this);
+        game.events.addEventListener('valueChange', this.onValueChangeListener);
+    }
+
+    componentWillUnmount() {
+        game.events.removeEventListener('valueChange', this.onValueChangeListener)
+    }
+
     render() {
         return <div className={styles}>
             <div className="info">
