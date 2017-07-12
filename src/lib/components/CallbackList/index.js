@@ -26,11 +26,15 @@ export default class CallbackList extends React.Component {
                     floatingLabelText="Callbacks"
                     value={this.state.value}
                     onChange={this.onChange.bind(this)}>
-                    {_.map(this.props.callbacks, (callback) => (
-                        <MenuItem value={callback.name} primaryText={callback.name} />
+                    {_.map(this.props.callbacks, (callback, key) => (
+                        <MenuItem
+                            key={key}
+                            value={callback.name}
+                            primaryText={callback.name}
+                        />
                     ))}
                 </SelectField>
             </div>
         )
     }
-}
+};

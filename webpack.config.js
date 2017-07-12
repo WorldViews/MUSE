@@ -13,7 +13,6 @@ module.exports = (env) => {
     entry: {
       app: './app.js',
       nohApp: './nohApp.js',
-      app0: './app0.js',
       app2: './app2.js',
     },
     output: {

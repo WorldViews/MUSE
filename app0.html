@@ -31,51 +31,9 @@
          horizontal-align: center;
       }
     </style>
-    <link rel="stylesheet" href="./css/jquery-ui.css">
-    <style>
-      .ui-slider {
-          height: 20px;
-          width: 100%;
-          align-items: center;
-          //padding-left: 50px;
-      }
-
-      .ui-slider-handle {
-         color: rgba(240,40,40, .9);
-         background: rgba(200,0,0,0.0);
-         height: 20px;
-         width: 5px;
-         //padding-left: 50px;
-      }
-      
-    </style>
   </head> 
   <body>
-<!--
-    <canvas id="canvas3d"></canvas>
--->
-  <div class="textViewer" style="display:none;">
-<!--
-      <input id="playStop" type="button" value="Play">
--->
 
-    <div id="timeLine" style="width:100%;height:10px;border-style:solid;border-width: 2;align-content:center">
-    </div>
-      <select id="centerScene">
-	<option value="cmp">Climate Data</option>
-	<option value="vEarth">Earth</option>
-	<option value="dancer">Dancer</option>
-	<option value="portal">Portal</option>
-	<option value="bmw">Erik's Car</option>
-	<option value="none">None</option>
-      </select>
-      <span id="timeText"></span>&nbsp;&nbsp;
-      <span id="yearText">0000</span><br>
-      <span id="narrativeText">????</span><br>
-  </div>
-<!--
-    <script src="dist/three.min.js"></script>
--->
   <script src="dist/mathbox-bundle.min.js"></script>
   <script src="src/legacy/jquery-3.1.1.min.js"></script>
   <script src="src/legacy/jquery-ui.js"></script>
@@ -83,8 +41,7 @@
   <script src="dist/app.bundle.js"></script>
   <script src="https://code.createjs.com/tweenjs-0.6.2.min.js"></script>
   <script>
-   window.GSS = GSS;
-  start(false);
+    start({preferredControl: 'multi'});
   </script>
   </body>
 </html>
