@@ -7,7 +7,7 @@ import TimelineSlider from '../TimelineSlider';
 export default class TweakUI extends React.Component {
 
     state = {
-        visible: true
+        visible: false
     }
 
     onToggleUI() {
