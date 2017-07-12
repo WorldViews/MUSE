@@ -10,6 +10,7 @@ the displays, which objects are on stage, etc.
 */
 import {sprintf} from "sprintf-js";
 
+function getClockTime() { return new Date().getTime()/1000.0; }
 
 class ProgramControl
 {
@@ -17,6 +18,11 @@ class ProgramControl
         this.game = game;
         game.programControl = this;
         this.players = {};
+	this._playTime = 0;
+	this._playSpeed = 10.0;
+	this.setPlayTime(0);
+	var inst = this;
+	//setInterval(()=>inst.tick(), 1000);
     }
 
     registerPlayer(player, name)
@@ -26,9 +32,22 @@ class ProgramControl
         this.players[name] = player;
     }
 
-    // uneasy about this being set or get
+    tick() {
+	var t = this.playTime;
+	console.log("tick "+t);
+	this.displayTime(t);
+    }
+
+    displayTime(t) {
+	console.log("displayTime "+t);
+    }
+    
     get playTime() {
-        // bogus... fix this later
+	var t = getClockTime();
+	var dt = t - this._prevClockTime;
+	this._prevClockTime = t;
+	//console.log("dt: "+dt+"  "+this._playSpeed);
+	this._playTime += dt*this._playSpeed;
         return this._playTime;
     }
 
@@ -37,6 +56,7 @@ class ProgramControl
     }
 
     setPlayTime(t) {
+	this._prevClockTime = getClockTime();
         this._playTime = t;
         console.log(">>>> noticeTime "+t);
         for (name in this.players) {
