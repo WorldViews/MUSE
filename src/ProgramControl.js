@@ -22,7 +22,7 @@ class ProgramControl
 	this._playSpeed = 10.0;
 	this.setPlayTime(0);
 	var inst = this;
-	//setInterval(()=>inst.tick(), 1000);
+	setInterval(()=>inst.tick(), 200);
     }
 
     registerPlayer(player, name)
