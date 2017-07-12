@@ -54,6 +54,7 @@
     "build": "webpack",
     "build:analyze": "webpack --env=analyze",
     "build:fix": "webpack --env=fix",
+    "build:stats": "webpack --profile --json > stats.json",
     "watch": "webpack --progress --watch",
     "start": "http-server"
   },

@@ -66,7 +66,7 @@ class CMPProgram extends ProgramControl {
             }
             if (nt > 1)
                 nt = 1;
-            cmp.seek(nt);
+            cmp.seekNormalize(nt);
         }
     }
 

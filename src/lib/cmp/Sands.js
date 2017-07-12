@@ -1,4 +1,4 @@
-import 'yuki-createjs';
+import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 
 function temperatureColorMap(val) {
     var min = 13.36

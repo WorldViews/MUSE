@@ -15,9 +15,9 @@ module.exports = (env) => {
       app: './app.js',
       nohApp: './nohApp.js',
       app2: './app2.js',
-      vendor: ['yuki-createjs', 'brace', 'react-dom', 'react', 'lodash',
+      vendor: ['yuki-createjs/lib/tweenjs-0.6.2.combined', 'brace', 'react-dom', 'react', 'lodash',
         'jsoneditor', 'material-ui', 'html2canvas', 'papaparse', 'sprintf-js', 'react-icons-kit', 'no-case',
-        'react-tap-event-plugin', 'fbjs'
+        'react-tap-event-plugin'
       ],
     },
     output: {

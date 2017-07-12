@@ -3,7 +3,7 @@ import Chart from '../lib/cmp/Chart';
 import DataLoader from '../lib/cmp/DataLoader'
 import state from '../lib/cmp/State';
 
-import 'yuki-createjs';
+import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 import MathBox from 'mathbox';
 import _ from 'lodash';
 
@@ -302,14 +302,14 @@ export default class CMPController {
     }
 
     // seek val 0 -> 1 : years 1850 -> 2300
-    seek(val) {
+    seekNormalize(val) {
         var start = startYear + parseInt(val*(endYear - startYear));
         var dur = (endYear - start)*(secPerYear());
         this._playHistory(dur, start, endYear)
     }
 
     play() {
-        this.seek(0);
+        this.seekNormalize(0);
     }
 
     stop() {

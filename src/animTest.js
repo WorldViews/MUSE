@@ -1,5 +1,5 @@
 
-import 'yuki-createjs';
+import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 console.log("********************************************");
 
 class Anim
