@@ -69,20 +69,13 @@ export default class TimelineSlider extends React.Component {
             <table>
                 <tbody>
                     <tr>
-                        <td width="260px">
+                        <td width="160px">
                             <RaisedButton
                                 className="button"
                                 primary={true}
                                 label="Play/Pause"
                                 onClick={(e) => this.props.onPlayerButtonClick('playpause')}
                                 icon={<Icon icon={ic_play_arrow} size={16} style={{color: 'white'}}/>}
-                            />
-                            <RaisedButton
-                                className="button"
-                                secondary={true}
-                                label="Stop"
-                                onClick={(e) => this.props.onPlayerButtonClick('stop')}
-                                icon={<Icon icon={ic_stop} size={16} style={{color: 'white'}}/>}
                             />
                         </td>
                         <td>
