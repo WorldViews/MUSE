@@ -1,0 +1,27 @@
+:local(.styles) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, .3);
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    text-align: center;
+
+    table {
+        width: 98%;
+        padding: 10px;
+    }
+
+    .button {
+        margin-right: 10px;
+    }
+
+    .slider {
+        margin-top: 40px;
+    }
+
+    .info {
+        text-align: center;
+    }
+}

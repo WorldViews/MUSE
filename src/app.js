@@ -9,6 +9,7 @@ import CMPController from './controllers/CMPController';
 import NavigationController from './controllers/NavigationController';
 import SolarSystemController from './controllers/SolarSystemController';
 import StarsController from './controllers/StarsController';
+import UIController from './controllers/UIController';
 
 import {DanceController} from './controllers/DanceController';
 import loadModels from './loadModels';
@@ -71,6 +72,10 @@ function start(useVR) {
         rotation: [0, 0, 0],
         scale: [1.5, 1, 1.5]
     });
+    let uiController = new UIController({
+        game: game,
+        playerControl: cmpProgram
+    });
 
     var dancer = null;
     if (useVR) {
@@ -80,13 +85,14 @@ function start(useVR) {
         game.registerController('navigation', navigationController);
     }
     else {
-	dancer = new DanceController(game);
+        dancer = new DanceController(game);
         game.registerController('dancer', dancer);
         cmpProgram.registerPlayer(dancer);
     }
     game.registerController('stars', starsController);
     game.registerController('cmp', cmpController);
     game.registerController('solarSystem', solarSystemController);
+    game.registerController('ui', uiController);
 
     game.marquee = new Marquee();
     game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
