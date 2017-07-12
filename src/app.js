@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import Marquee from './Marquee';
 import {Game} from './Game';
 import {Scripts} from './Scripts';
+import {PanoPortal} from './lib/PanoPortal';
 import VRGame from './VRGame';
 import BodyAnimationController from './controllers/BodyAnimationController';
 import {CMPProgram} from './CMPProgram';
@@ -85,15 +86,12 @@ function start(useVR) {
         game.registerController('dancer', dancer);
         cmpProgram.registerPlayer(dancer);
     }
-    var scriptControls = new Scripts(uiController);
+    var scriptControls = new Scripts(game, uiController);
     game.registerController('stars', starsController);
     game.registerController('cmp', cmpController);
     game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
-    if (!useVR) {
-	game.attachCameraToStation();
-    }
 
     uiController.registerCallback('...', () => { console.log("..........................");});
 
@@ -105,19 +103,21 @@ function start(useVR) {
     loadScreens(game);
     if (!useVR) {
 	console.log("hello");
-	var screen3 = {
-	    name: "bubbleScreen1",
+	var pspec = {
+	    name: "portal1",
 	    radius: 0.5,
 	    path: 'videos/YukiyoCompilation.mp4',
-	    //    phiStart: 0,
-	    //    phiLength: 90,
-	    position: [3,3,0]
+	    position: [3,1,0]
 	}
-	loadScreen(game, screen3);
+	game.portal = new PanoPortal(game,pspec);
     }
     setupLights(game);
     if (useVR) {
         game.body.position.set(2, 1.5, 2);
+    }
+    if (!useVR) {
+        game.camera.position.set(0, 10, 10);
+	//game.attachCameraToStation();
     }
     game.animate(0);
 }
