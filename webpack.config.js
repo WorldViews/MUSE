@@ -45,7 +45,7 @@ module.exports = (env) => {
               parser: "babel-eslint",
               fix: false,
               rules: {
-                indent: [2, 4],
+                indent: [1, 4],
                 "no-trailing-spaces": 1,
               }
           }
