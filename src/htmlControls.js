@@ -41,7 +41,7 @@ function setupHtmlControls(game, playerControl) {
     console.log("************************* htmlControls setup *********************");
 
     game.events.addEventListener('valueChange', msg => {
-        console.log("valueChange: "+JSON.stringify(msg));
+        //console.log("valueChange: "+JSON.stringify(msg));
         var name = msg.message.name;
         //$("#narrativeText").html(msg.message.value);
         $("#"+name).html(msg.message.value);
