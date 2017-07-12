@@ -9,6 +9,7 @@ import CMPController from './controllers/CMPController';
 import NavigationController from './controllers/NavigationController';
 import SolarSystemController from './controllers/SolarSystemController';
 import StarsController from './controllers/StarsController';
+import UIController from './controllers/UIController';
 
 import {DanceController} from './controllers/DanceController';
 import loadModels from './loadModels';
@@ -24,8 +25,8 @@ function start(useVR) {
     console.log("************************** app.js: useVR: "+useVR);
 
     let MODEL_SPECS = [
-	{   name: 'station'  },
-	{
+        {   name: 'station'  },
+        {
             name: 'platform',
             parent: 'station',
             //path: 'models/PlayDomeSkp.dae',
@@ -33,8 +34,8 @@ function start(useVR) {
             position: [0, 0, 0],
             rotation: [0, degToRad(0), 0],
             scale: 0.025
-	},
-	{
+        },
+        {
             name: 'bmw',
             parent: 'station',
             path: 'models/bmw/model.dae',
@@ -43,9 +44,9 @@ function start(useVR) {
             rotation: [0, degToRad(0), 0],
             scale: 0.020,
             visible: false
-	}
+        }
     ];
-    
+
     if (useVR) {
         window.game = new VRGame('canvas3d');
     }
@@ -71,6 +72,10 @@ function start(useVR) {
         rotation: [0, 0, 0],
         scale: [1.5, 1, 1.5]
     });
+    let uiController = new UIController({
+        game: game,
+        playerControl: cmpProgram
+    });
 
     var dancer = null;
     if (useVR) {
@@ -80,13 +85,14 @@ function start(useVR) {
         game.registerController('navigation', navigationController);
     }
     else {
-	dancer = new DanceController(game);
-	game.registerController('dancer', dancer);
-	cmpProgram.registerPlayer(dancer);
-    }	
+        dancer = new DanceController(game);
+        game.registerController('dancer', dancer);
+        cmpProgram.registerPlayer(dancer);
+    }
     game.registerController('stars', starsController);
     game.registerController('cmp', cmpController);
     game.registerController('solarSystem', solarSystemController);
+    game.registerController('ui', uiController);
 
 
     game.marquee = new Marquee();

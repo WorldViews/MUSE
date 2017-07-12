@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default (game, imageSource) => {
     let timeline = $('#timeLine');
     var initialized = false;
@@ -10,6 +12,7 @@ export default (game, imageSource) => {
     	if (initialized) {
     		let value = Math.round(e.target.currentTime / e.target.duration * 1000) / 1000;
     		timeline.slider('value', value);
+            _.set(game, 'controllers.ui.slider.value', value);
     	}
     });
 };
