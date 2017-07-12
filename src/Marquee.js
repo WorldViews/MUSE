@@ -18,7 +18,7 @@ class Marquee extends THREE.Mesh {
     constructor() {
         super();
         this.type = 'Marquee';
-
+	this._prevText = null;
         this._width = window.innerWidth;
         this._height = window.innerHeight;
 
@@ -78,6 +78,9 @@ class Marquee extends THREE.Mesh {
     }
 
     updateText(text) {
+	if (text == this._prevText)
+	    return;
+	this._prevText = text;
     	this.updateHTML(`<h1>${text}</h1>`);
     }
 }
