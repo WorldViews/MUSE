@@ -111,6 +111,12 @@ class CMPProgram extends ProgramControl {
         }
 	var dur = this.duration;
     	let value = (t/(0.0+dur));
+	try {
+	    game.controllers.ui.slider.value = value;
+	}
+	catch (e) {
+	    console.log("exception setting slider");
+	}
 	//console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
 	try {
 	    let timeline = $('#timeLine');

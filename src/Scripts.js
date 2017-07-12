@@ -14,15 +14,20 @@ time.
 
 */
 import {animTest, Anim} from './animTest';
+import {PanoPortal} from './lib/PanoPortal';
 
 class Scripts {
 
-    constructor(uiControl) {
+    constructor(game, uiControl) {
+	this.game;
 	this.uiControl = uiControl;
 	var inst = this;
 	var ui = this.uiControl;
-	ui.registerCallback("...", () => inst.dots());
+	ui.registerCallback("--------------------", () => inst.dots());
+	ui.registerCallback("Add Panoramic Portal", () => inst.addPortal());
+	ui.registerCallback("Hide Portal", () => inst.hidePortal());
 	ui.registerCallback("Go to Mars", () => inst.goToMars());
+	ui.registerCallback("Dancing with the Stars", () => inst.danceWithStars());
 	ui.registerCallback("stop", () => inst.stop());
     }
 
@@ -32,6 +37,25 @@ class Scripts {
 
     goToMars() {
 	animTest();
+    }
+
+    addPortal() {
+	var pspec = {
+	    name: "portal2",
+	    radius: 0.5,
+	    path: 'videos/YukiyoCompilation.mp4',
+	    position: [5,2,1]
+	}
+	game.portal2 = new PanoPortal(game,pspec);
+    }
+
+    hidePortal() {
+	game.portal2.visible = false;
+    }
+
+    danceWithStars() {
+	var d = game.controllers.dancer;
+	d.setScale(.3);
     }
     
     stop() {

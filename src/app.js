@@ -1,5 +1,7 @@
 import * as THREE from 'three';
+
 import CMPController from './controllers/CMPController';
+import {PanoPortal} from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
 import { DanceController } from './controllers/DanceController';
 import { Game } from './Game';
@@ -46,8 +48,8 @@ function start(config) {
   ];
 
   let isVRWithFallbackControl =
-    config.preferredControl === 'vr' ||
-    config.fallbackControl === 'pointerlock'; 
+      config.preferredControl === 'vr' ||
+      config.fallbackControl === 'pointerlock'; 
 
   if (isVRWithFallbackControl) {
     window.game = new VRGame('canvas3d');   
@@ -74,7 +76,7 @@ function start(config) {
     game: game,
     playerControl: cmpProgram
   });
-  let scriptControls = new Scripts(uiController);
+  let scriptControls = new Scripts(game, uiController);
 
   if (isVRWithFallbackControl) {
     let navigationController = new NavigationController(game.body, game.camera, game.plControls);

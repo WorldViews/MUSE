@@ -1,3 +1,4 @@
+import _ from 'lodash';
 
 var stateDefault = {
     labelSize: 60,
@@ -51,3 +52,8 @@ function clone(obj) {
 
 var state = clone(stateDefault);
 export default state;
+
+export const setState = (newState) => {
+    _.merge(state, newState)
+}
+

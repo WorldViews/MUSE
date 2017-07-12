@@ -1,0 +1,9 @@
+@import "~jsoneditor/dist/jsoneditor.css";
+
+:local(.styles) {
+    width: 500px;
+    height: 600px;
+    background-color: #fff;
+    overflow: auto;
+    margin-top: 10px;
+}

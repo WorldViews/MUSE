@@ -264,7 +264,13 @@ class Game {
     }
 
     attachCameraTo(parent) {
+	//TODO: Make this smarter about where camera is already
+	// parented.
 	this.reparent(this.camera, this.models[parent]);
+    }
+
+    attachCameraToStation() {
+	this.attachCameraTo('station');
     }
 }
 
