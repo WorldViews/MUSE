@@ -14,6 +14,7 @@ export default class TimelineSlider extends React.Component {
     state = {
         timeText: '0000',
         yearText: '????',
+        narrativeText: '....'
     }
 
     set value(val) {
@@ -40,6 +41,14 @@ export default class TimelineSlider extends React.Component {
         return this.state.yearText;
     }
 
+    set narrativeText(val) {
+        this.setState({narrativeText: val});
+    }
+
+    get narrativeText() {
+        return this.state.narrativeText;
+    }
+
     onValueChange(event) {
         switch (event.message.name) {
         case 'timeText':
@@ -48,6 +57,10 @@ export default class TimelineSlider extends React.Component {
 
         case 'yearText':
             this.yearText = event.message.value;
+            break;
+
+        case 'narrativeText':
+            this.narrativeText = event.message.value;
             break;
         }
     }
@@ -64,7 +77,11 @@ export default class TimelineSlider extends React.Component {
     render() {
         return <div className={styles}>
             <div className="info">
-                Time: {this.state.timeText} Year: {this.state.yearText}
+                <ul>
+                    <li>Time: {this.state.timeText}</li>
+                    <li>Year: {this.state.yearText}</li>
+                    <li>Narrative Text: {this.state.narrativeText}</li>
+                </ul>
             </div>
             <table>
                 <tbody>
