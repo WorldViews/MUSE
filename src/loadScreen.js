@@ -61,7 +61,7 @@ function loadScreen(game, spec, path)
         screenObj.ready = true;
         game.addToGame(screenParent, spec.name, spec.parent);
 
-        bindVideoControls(game, imageSource);
+        //bindVideoControls(game, imageSource);
     });
     if (spec.name)
         game.screens[spec.name] = screenObj;
