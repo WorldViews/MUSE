@@ -46,12 +46,30 @@ class CMPProgram extends ProgramControl {
 
     constructor(game) {
         super(game);
+	this.duration = 32*60;
     }
 
     setPlayTime(t) {
         super.setPlayTime(t);
+	this.displayTime(t);
+        var cmp = game.CMP || game.controllers['cmp'];
+        if (cmp) {
+            var nt = 0;
+            if (t > 10 * 60) {
+                nt = t / (32 * 60.0);
+            }
+            if (nt > 1)
+                nt = 1;
+            cmp.seek(nt);
+        }
+    }
 
-        //TODO: Move this into registered players
+    // This should just update UI elements with playtime information.
+    // this may get called with every tick, so the things it causes
+    // should be lightweight. (E.g. not seeking videos or redrawing
+    // animations.)
+    displayTime(t) {
+	console.log("CMPProgram.displayTime "+t);
         if (game.gss) {
             var year = GSS.timeToYear(t);
             console.log("year: " + year);
@@ -85,17 +103,15 @@ class CMPProgram extends ProgramControl {
                 }
             });
         }
-
-        var cmp = game.CMP || game.controllers['cmp'];
-        if (cmp) {
-            var nt = 0;
-            if (t > 10 * 60) {
-                nt = t / (32 * 60.0);
-            }
-            if (nt > 1)
-                nt = 1;
-            cmp.seek(nt);
-        }
+	var dur = this.duration;
+    	let value = (t/(0.0+dur));
+	console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
+	try {
+	    let timeline = $('#timeLine');
+    	    timeline.slider('value', value);
+	}
+	catch (e) {
+	}
     }
 }
 
