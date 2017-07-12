@@ -46,7 +46,13 @@ class CMPProgram extends ProgramControl {
 
     constructor(game) {
         super(game);
+	var inst = this;
 	this.duration = 32*60;
+	//game.controllers.ui.registerCallback("...", () => inst.dots());
+    }
+
+    dots() {
+	console.log("......................... just a test ..............................");
     }
 
     setPlayTime(t) {

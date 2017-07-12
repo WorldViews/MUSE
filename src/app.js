@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import Marquee from './Marquee';
 import {Game} from './Game';
+import {Scripts} from './Scripts';
 import VRGame from './VRGame';
-
 import BodyAnimationController from './controllers/BodyAnimationController';
 import {CMPProgram} from './CMPProgram';
 import CMPController from './controllers/CMPController';
@@ -15,7 +15,6 @@ import {DanceController} from './controllers/DanceController';
 import loadModels from './loadModels';
 import {loadScreens,loadScreen} from './loadScreen';
 import {setupLights} from './setupLights';
-import {animTest, Anim} from './animTest';
 import {setupHtmlControls} from './htmlControls';
 import setupMarquee from './setupMarquee';
 
@@ -52,8 +51,6 @@ function start(useVR) {
     }
     else {
         window.game = new Game();
-        //game.addOrbitControls();
-        //game.addCMPControls();
         game.addMultiControls();
     }
     window.game = game;
@@ -76,7 +73,6 @@ function start(useVR) {
         game: game,
         playerControl: cmpProgram
     });
-
     var dancer = null;
     if (useVR) {
         let bodyAnimationController = new BodyAnimationController(game.body);
@@ -89,10 +85,14 @@ function start(useVR) {
         game.registerController('dancer', dancer);
         cmpProgram.registerPlayer(dancer);
     }
+    var scriptControls = new Scripts(uiController);
     game.registerController('stars', starsController);
     game.registerController('cmp', cmpController);
     game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
+    game.registerController('scripts', scriptControls);
+
+    uiController.registerCallback('...', () => { console.log("..........................");});
 
     game.marquee = new Marquee();
     game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
-import CMP_Controls from './lib/controls/CMP_Controls';
+import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
 
 class Game {
@@ -88,12 +88,12 @@ class Game {
         this.controls = this.orbitControls;
     }
 
-    addCMPControls() {
-        this.cmpControls = new CMP_Controls(this.camera, this.renderer.domElement);
+    addLookControls() {
+        this.lookControls = new LookControls(this.camera, this.renderer.domElement);
         //this.cmpControls.addEventListener('change', this.render.bind(this));
-        this.cmpControls.keys = [65, 83, 68];
+        this.lookControls.keys = [65, 83, 68];
         this.camera.lookAt(new THREE.Vector3());
-        this.controls = this.cmpControls;
+        this.controls = this.lookControls;
     }
 
     addMultiControls() {
@@ -261,6 +261,10 @@ class Game {
         }
         parent.updateMatrixWorld();
         THREE.SceneUtils.attach(obj, this.scene, parent);
+    }
+
+    attachCameraTo(parent) {
+	this.reparent(this.camera, this.models[parent]);
     }
 }
 
