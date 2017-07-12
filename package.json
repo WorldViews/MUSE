@@ -2,7 +2,9 @@
   "name": "playspace",
   "version": "1.0.0",
   "description": "",
-  "dependencies": {},
+  "dependencies": {
+    "jsoneditor": "^5.9.0"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/WorldViews/PlaySpace.git"
@@ -23,6 +25,7 @@
     "eslint-loader": "^1.9.0",
     "exports-loader": "^0.6.4",
     "expose-loader": "^0.7.3",
+    "file-loader": "^0.11.2",
     "html2canvas": "^0.5.0-beta4",
     "http-server": "*",
     "imports-loader": "^0.7.1",
@@ -50,6 +53,7 @@
   "scripts": {
     "build": "webpack",
     "build:analyze": "webpack --env=analyze",
+    "build:fix": "webpack --env=fix",
     "watch": "webpack --progress --watch",
     "start": "http-server"
   },
