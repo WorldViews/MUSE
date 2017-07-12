@@ -69,10 +69,10 @@ class CMPProgram extends ProgramControl {
     // should be lightweight. (E.g. not seeking videos or redrawing
     // animations.)
     displayTime(t) {
-	console.log("CMPProgram.displayTime "+t);
+	//console.log("CMPProgram.displayTime "+t);
         if (game.gss) {
             var year = GSS.timeToYear(t);
-            console.log("year: " + year);
+            //console.log("year: " + year);
             var tStr = sprintf("%8.1f", t);
             this.game.events.dispatchEvent({
                 type: 'valueChange',
@@ -85,7 +85,7 @@ class CMPProgram extends ProgramControl {
             if (year) {
                 var va = game.gss.getFieldByYear(year, "videofade");
                 var nar = game.gss.getFieldByYear(year, "narrative") || "";
-                console.log("va: " + va + "  narrative: " + nar);
+                //console.log("va: " + va + "  narrative: " + nar);
                 yearStr = Math.floor(year);
                 this.game.events.dispatchEvent({
                     type: 'valueChange',
@@ -105,7 +105,7 @@ class CMPProgram extends ProgramControl {
         }
 	var dur = this.duration;
     	let value = (t/(0.0+dur));
-	console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
+	//console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
 	try {
 	    let timeline = $('#timeLine');
     	    timeline.slider('value', value);

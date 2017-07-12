@@ -34,7 +34,7 @@ class ProgramControl
 
     tick() {
 	var t = this.playTime;
-	console.log("tick "+t);
+	//console.log("tick "+t);
 	this.displayTime(t);
     }
 
