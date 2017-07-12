@@ -3,14 +3,13 @@
 
 import * as THREE from 'three';
 import OrbitControls from './OrbitControls';
-import CMP_Controls from './CMP_Controls';
+import LookControls from './LookControls';
 
 let {degToRad,radToDeg} = THREE.Math;
 
 let LOOK = "LOOK";
 let ORBIT = "ORBIT";
 
-//THREE.CMP_Controls = function ( object, domElement )
 class MultiControls {
 
     constructor(game, object, domElement) {
@@ -25,7 +24,7 @@ class MultiControls {
         this.orbitControls.keys = [65, 83, 68];
         this.camera.lookAt(new THREE.Vector3());
         this.camera.position.z = 1;
-        this.lookControls = new CMP_Controls(this.camera, domElement);
+        this.lookControls = new LookControls(this.camera, domElement);
         this.enabled = true;
         //this.shiftDown = false;
         window.addEventListener( 'keydown', e=> inst.onKeyDown(e), false );
