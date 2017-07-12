@@ -99,6 +99,10 @@ var OrbitControls = function ( object, domElement ) {
 
     };
 
+    this.setPhi = function(phi) {
+        return spherical.phi = phi;
+    }
+
     this.saveState = function () {
 
         scope.target0.copy( scope.target );

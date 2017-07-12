@@ -61,6 +61,16 @@ var CMP_Controls = function ( object, domElement )
     //    this.domElement.setAttribute( 'tabindex', - 1 );
     //}
 
+    this.getPhi = function() {
+	return this.phi;
+    }
+
+    this.setPhi = function(phi) {
+	this.phi = phi;
+    }
+
+    this.getTheta = function() { return this.theta; }
+    
     this.handleResize = function () {
         if ( this.domElement === document ) {
 	    this.viewHalfX = window.innerWidth / 2;
@@ -172,7 +182,7 @@ var CMP_Controls = function ( object, domElement )
     };
 
     this.update = function( delta ) {
-        console.log("FPC update....");
+        //console.log("FPC update....");
         delta = 0.01;
         if ( this.enabled === false ) return;
 
