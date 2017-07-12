@@ -91,6 +91,9 @@ function start(useVR) {
     game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
+    if (!useVR) {
+	game.attachCameraToStation();
+    }
 
     uiController.registerCallback('...', () => { console.log("..........................");});
 
