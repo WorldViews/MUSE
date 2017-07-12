@@ -1,5 +1,5 @@
 
-import loadVideo from './loadVideo'
+import loadVideo from '../loadVideo'
 import * as THREE from 'three';
 import {Math} from 'three';
 
@@ -14,15 +14,25 @@ export let screen1 = {
     thetaLength: 140
 };
 
+var screen3 = {
+    name: "bubbleScreen1",
+    radius: 0.5,
+    path: 'videos/YukiyoCompilation.mp4',
+    //    phiStart: 0,
+    //    phiLength: 90,
+    position: [3,1,0]
+}
+
 function toRad(v)
 {
     return v ? Math.degToRad(v) : v;
 }
 
+//export default class PanoPortal {
 class PanoPortal {
-    
-    constructor(spec) {
-	spec = spec || screen1;
+
+    constructor(game, spec) {
+	spec = spec || screen3;
 	var screenObj = {ready: false};
 	var scene = game.scene;
 	var path = path || spec.path;
@@ -43,31 +53,55 @@ class PanoPortal {
 		toRad(spec.phiStart),
 		toRad(spec.phiLength)
             );
-            let screenObject = new THREE.Mesh(geometry, videoMaterial);
+            let screenMesh = new THREE.Mesh(geometry, videoMaterial);
             var s = 1.0;
             if (spec.scale)
 		s = spec.scale;
-            screenObject.scale.x = -1*s;
-            screenObject.scale.y = s;
-            screenObject.scale.z = s;
-            screenObject.position.y = 0;
+            screenMesh.scale.x = -1*s;
+            screenMesh.scale.y = s;
+            screenMesh.scale.z = s;
+            screenMesh.position.y = 0;
             if (spec.position)
-		screenObject.position.fromArray(spec.position);
-            screenObject.name = "movieScreen";
+		screenMesh.position.fromArray(spec.position);
+            screenMesh.name = "movieScreen";
 
             let screenParent = new THREE.Object3D();
-            screenParent.add(screenObject);
+            screenParent.add(screenMesh);
             screenParent.rotation.z = 0;
 
             //scene.add(screenParent);
             screenObj.imageSource = imageSource;
             screenObj.ready = true;
             game.addToGame(screenParent, spec.name, spec.parent);
-            bindVideoControls(game, imageSource);
+	    this.screenParent = screenParent;
+	    this.mesh = screenMesh;
 	});
 	if (spec.name)
             game.screens[spec.name] = screenObj;
-	return screenObj;
+    }
+
+    play() {
+	console.log("play");
+    }
+
+    pause() {
+	console.log("pause");
+    }
+
+    get visible() {
+	if (!this.screenParent) {
+	    console.log("PanoPortal.set no screenParent");
+	    return false;
+	}
+	return this.screenParent.visible;
+    }
+
+    set visible(v) {
+	console.log("PanoPortal.set visible "+v);
+	if (!this.screenParent) {
+	    console.log("PanoPortal.set no screenParent");
+	}
+	this.screenParent.visible = v;
     }
 }
 
