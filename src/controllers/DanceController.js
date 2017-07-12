@@ -64,7 +64,8 @@ class DanceController
         var inst = this;
         loader.load( bvhPath, function( result ) {
             console.log("BVH: ", result);
-            var dancer = new THREE.Object3D();
+            //var dancer = new THREE.Object3D();
+            var dancer = new THREE.Group();
 	    setFromOptions(dancer, opts)
             var skeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
             skeletonHelper.skeleton = result.skeleton;
@@ -89,6 +90,10 @@ class DanceController
         } );
     }
 
+    setScale(s) {
+	this.dancer.scale.set(s,s,s);
+    }
+    
     get visible() {
         return this.dancer !=null && this.dancer.visible;
     }
