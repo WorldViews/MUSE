@@ -44,7 +44,14 @@ class NavigationController {
         // Do not allow gamepad controls when pointerlock controls are enabled.
         if (navigator.getGamepads && (!usingPLControls || !this.plControls.enabled)) {
             let gamepadList = navigator.getGamepads();
-            let gamepad = gamepadList[0];
+            var gamepad;
+
+            for (var i = 0; i < gamepadList.length; i++) {
+                if (gamepadList[i]) {
+                    gamepad = gamepadList[i];
+                    break;
+                }
+            }
 
             if (gamepad) {
                 let {axes} = gamepad;
@@ -52,23 +59,23 @@ class NavigationController {
                 let axisY = axes[1];
 
                 if (axisY < -0.5) {
-                    this.body.translateX(0.01 * this.direction.x);
-                    this.body.translateZ(0.01 * this.direction.z);
+                    this.body.translateX(0.02 * this.direction.x);
+                    this.body.translateZ(0.02 * this.direction.z);
                 } else if (axisY > 0.5) {
-                    this.body.translateX(-0.01 * this.direction.x);
-                    this.body.translateZ(-0.01 * this.direction.z);
+                    this.body.translateX(-0.02 * this.direction.x);
+                    this.body.translateZ(-0.02 * this.direction.z);
                 }
 
                 if (axisX > 0.5) {
                     // TODO: refactor into function
                     let right = this.direction.clone().applyAxisAngle(Y_AXIS, -NINETY);
-                    this.body.translateX(0.01 * right.x);
-                    this.body.translateZ(0.01 * right.z);
+                    this.body.translateX(0.02 * right.x);
+                    this.body.translateZ(0.02 * right.z);
                 } else if (axisX < -0.5) {
                     // TODO: refactor into function
                     let left = this.direction.clone().applyAxisAngle(Y_AXIS, NINETY);
-                    this.body.translateX(0.01 * left.x);
-                    this.body.translateZ(0.01 * left.z);
+                    this.body.translateX(0.02 * left.x);
+                    this.body.translateZ(0.02 * left.z);
                 }
             }
         }
