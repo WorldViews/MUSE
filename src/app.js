@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import CMPController from './controllers/CMPController';
+import {PanoPortal0} from './lib/PanoPortal0';
 import {PanoPortal} from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
 import { DanceController } from './controllers/DanceController';
@@ -101,22 +102,17 @@ function start(config) {
   loadScreens(game);
 
   if (!isVRWithFallbackControl) {
-
-    let screen3 = {
-      name: "bubbleScreen1",
-      radius: 0.5,
-      path: 'videos/YukiyoCompilation.mp4',
-      //    phiStart: 0,
-      //    phiLength: 90,
-      position: [3, 3, 0]
-    }
-    loadScreen(game, screen3);
+      //game.portal0 = new PanoPortal0(game);
+      //game.portal0 = new PanoPortal(game);
   }
 
   setupLights(game);
   
   if (isVRWithFallbackControl) {
     game.body.position.set(2, 1.5, 2);
+  }
+  else {
+      game.camera.position.set(100, 200, 150);
   }
   
   game.animate(0);
