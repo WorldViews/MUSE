@@ -26,7 +26,7 @@ export default class UIController {
         this.registerCallback('Dancer', () => { this.selectModel('dancer') });
         this.registerCallback('CMP', () => { this.selectModel('cmp') });
         this.registerCallback('BMW', () => { this.selectModel('bmw') });
-        this.registerCallback('Portal', () => { this.selectModel('portal') });
+        //this.registerCallback('Portal', () => { this.selectModel('portal') });
         this.selectModel('vEarth');
 
         document.body.appendChild(this.root);
