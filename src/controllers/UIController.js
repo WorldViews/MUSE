@@ -6,6 +6,9 @@ import TweakUI from '../lib/components/TweakUI';
 import TimelineSlider from '../lib/components/TimelineSlider';
 import MenuButton from '../lib/components/MenuButton';
 import CallbackList from '../lib/components/CallbackList';
+import JSONEditor from '../lib/components/JSONEditor';
+import State from '../lib/cmp/State';
+import { setState, resetState } from '../lib/cmp/State';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
@@ -41,6 +44,10 @@ export default class UIController {
                     callbacks={this.callbacks}
                     onChange={this.onCallback.bind(this)}
                 />
+                <JSONEditor
+                    onChange={this.onStateChange.bind(this)}
+                    onReset={this.onStateReset.bind(this)}
+                    state={State}/>
             </TweakUI>,
             this.root
         );
@@ -98,6 +105,26 @@ export default class UIController {
         case "playpause":
             break;
         }
+    }
+
+    onStateChange(state) {
+        setState(state);
+        this.resetCMP();
+    }
+
+    onStateReset() {
+        resetState();
+        this.resetCMP();
+    }
+
+    resetCMP() {
+        // reset cmp
+        let self = this;
+        clearTimeout(self.changeTimeout);
+        self.changeTimeout = setTimeout(() => {
+            game.controllers.cmp.reset();
+            self.changeTimeout = null;
+        }, 2000);
     }
 
     dispose() {

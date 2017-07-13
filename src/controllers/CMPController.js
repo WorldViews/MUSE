@@ -3,7 +3,7 @@ import Chart from '../lib/cmp/Chart';
 import DataLoader from '../lib/cmp/DataLoader'
 import state from '../lib/cmp/State';
 
-import 'yuki-createjs';
+import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 import MathBox from 'mathbox';
 import _ from 'lodash';
 
@@ -28,8 +28,12 @@ export default class CMPController {
         this.rotation = options.rotation || [0, 0, 0];
         this.visible = true;
         this.scale = options.scale || chartScale;
+        this.state = state;
 
         let self = this;
+        this.renderer = renderer;
+        this.scene = scene;
+        this.camera = camera;
         this.context = new MathBox.Context(renderer, scene, camera);
         this.context.init();
         this.resize(renderer.domElement.width, renderer.domElement.height);
@@ -40,6 +44,16 @@ export default class CMPController {
         });
 
         this.currRot = [0, 0, 0];
+    }
+
+    reset() {
+        if (this.context) {
+            this.context.destroy();
+        }
+        this.context = new MathBox.Context(this.renderer, this.scene, this.camera);
+        this.context.init();
+        this.resize(this.renderer.domElement.width, this.renderer.domElement.height);
+        this._drawMathbox(this.loader.data);
     }
 
     _drawMathbox(datas) {
@@ -301,14 +315,14 @@ export default class CMPController {
     }
 
     // seek val 0 -> 1 : years 1850 -> 2300
-    seek(val) {
+    seekNormalize(val) {
         var start = startYear + parseInt(val*(endYear - startYear));
         var dur = (endYear - start)*(secPerYear());
         this._playHistory(dur, start, endYear)
     }
 
     play() {
-        this.seek(0);
+        this.seekNormalize(0);
     }
 
     stop() {
@@ -335,13 +349,6 @@ export default class CMPController {
                 let year = Math.round(param1.y);
                 if (year != state.Year) {
                     state.Year = year;
-                    game.events.dispatchEvent({
-                        type: 'valueChange',
-                        message: {
-                            'name': 'yearText',
-                            'value': "" + state.Year
-                        }
-                    });
                 }
             })
     }

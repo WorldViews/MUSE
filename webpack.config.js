@@ -6,14 +6,19 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = (env) => {
   const production = (env === 'prod' || env === 'analyze');
   const analyze = env === 'analyze';
+  const fix = env === 'fix';
 
-  let config = {
+  var config = {
     context: path.resolve(__dirname, './src'),
     devtool: "source-map",
     entry: {
       app: './app.js',
       nohApp: './nohApp.js',
       app2: './app2.js',
+      vendor: ['yuki-createjs/lib/tweenjs-0.6.2.combined', 'brace', 'react-dom', 'react', 'lodash',
+        'jsoneditor', 'material-ui', 'html2canvas', 'papaparse', 'sprintf-js', 'react-icons-kit', 'no-case',
+        'react-tap-event-plugin'
+      ],
     },
     output: {
       path: path.resolve(__dirname, './dist'),
@@ -42,7 +47,7 @@ module.exports = (env) => {
           options: {
               extends: ["eslint:recommended", "google"],
               parser: "babel-eslint",
-              fix: false,
+              fix: fix,
               rules: {
                 indent: [1, 4],
                 "no-trailing-spaces": 1,
@@ -68,6 +73,12 @@ module.exports = (env) => {
             }, {
                 loader: "sass-loader" // compiles Sass to CSS
             }]
+        },
+        {
+            test: /\.(jpe?g|png|gif|svg)$/i,
+            loaders: [
+                'file-loader?hash=sha512&digest=hex&name=/dist/[hash].[ext]',
+            ]
         }
       ]
     },
@@ -78,7 +89,11 @@ module.exports = (env) => {
           to: 'three.min.js' },
         { from: '../node_modules/mathbox/build/mathbox-bundle.js',
           to: 'mathbox-bundle.min.js' }
-      ])
+      ]),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChuncks: Infinity
+      })
     ]
   };
 
