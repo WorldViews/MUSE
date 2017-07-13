@@ -31,6 +31,9 @@ export default class CMPController {
         this.state = state;
 
         let self = this;
+        this.renderer = renderer;
+        this.scene = scene;
+        this.camera = camera;
         this.context = new MathBox.Context(renderer, scene, camera);
         this.context.init();
         this.resize(renderer.domElement.width, renderer.domElement.height);
@@ -41,6 +44,16 @@ export default class CMPController {
         });
 
         this.currRot = [0, 0, 0];
+    }
+
+    reset() {
+        if (this.context) {
+            this.context.destroy();
+        }
+        this.context = new MathBox.Context(this.renderer, this.scene, this.camera);
+        this.context.init();
+        this.resize(this.renderer.domElement.width, this.renderer.domElement.height);
+        this._drawMathbox(this.loader.data);
     }
 
     _drawMathbox(datas) {

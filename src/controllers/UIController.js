@@ -109,6 +109,15 @@ export default class UIController {
     onStateChange(state) {
         console.log('state changed');
         setState(state);
+
+        // reset cmp
+        let self = this;
+        clearTimeout(self.changeTimeout);
+        self.changeTimeout = setTimeout(() => {
+            game.controllers.cmp.reset();
+            self.changeTimeout = null;
+        }, 2000);
+
     }
 
     dispose() {
