@@ -8,7 +8,7 @@ import MenuButton from '../lib/components/MenuButton';
 import CallbackList from '../lib/components/CallbackList';
 import JSONEditor from '../lib/components/JSONEditor';
 import State from '../lib/cmp/State';
-import { setState } from '../lib/cmp/State';
+import { setState, resetState } from '../lib/cmp/State';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
@@ -46,6 +46,7 @@ export default class UIController {
                 />
                 <JSONEditor
                     onChange={this.onStateChange.bind(this)}
+                    onReset={this.onStateReset.bind(this)}
                     state={State}/>
             </TweakUI>,
             this.root
@@ -107,9 +108,16 @@ export default class UIController {
     }
 
     onStateChange(state) {
-        console.log('state changed');
         setState(state);
+        this.resetCMP();
+    }
 
+    onStateReset() {
+        resetState();
+        this.resetCMP();
+    }
+
+    resetCMP() {
         // reset cmp
         let self = this;
         clearTimeout(self.changeTimeout);
@@ -117,7 +125,6 @@ export default class UIController {
             game.controllers.cmp.reset();
             self.changeTimeout = null;
         }, 2000);
-
     }
 
     dispose() {

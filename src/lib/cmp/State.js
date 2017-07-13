@@ -41,19 +41,13 @@ var stateDefault = {
     }
 }
 
-function clone(obj) {
-    if (null == obj || "object" != typeof obj) return obj;
-    var copy = obj.constructor();
-    for (var attr in obj) {
-        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
-    }
-    return copy;
-}
-
-var state = clone(stateDefault);
+var state = _.clone(stateDefault, true);
 export default state;
 
 export const setState = (newState) => {
     _.merge(state, newState)
 }
 
+export const resetState = (newState) => {
+    _.merge(state, stateDefault)
+}
