@@ -8,7 +8,7 @@ module.exports = (env) => {
   const analyze = env === 'analyze';
   const fix = env === 'fix';
 
-  let config = {
+  var config = {
     context: path.resolve(__dirname, './src'),
     devtool: "source-map",
     entry: {

@@ -349,13 +349,6 @@ export default class CMPController {
                 let year = Math.round(param1.y);
                 if (year != state.Year) {
                     state.Year = year;
-                    game.events.dispatchEvent({
-                        type: 'valueChange',
-                        message: {
-                            'name': 'yearText',
-                            'value': "" + state.Year
-                        }
-                    });
                 }
             })
     }
