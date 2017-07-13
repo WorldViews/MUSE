@@ -19,7 +19,7 @@ class ProgramControl
         game.programControl = this;
         this.players = {};
 	this._playTime = 0;
-	this._playSpeed = 10.0;
+	this._playSpeed = 1.0;
 	this.setPlayTime(0);
 	var inst = this;
 	setInterval(()=>inst.tick(), 200);
