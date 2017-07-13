@@ -20,11 +20,12 @@ class Scripts {
 
     constructor(game, uiControl) {
 	this.game;
+	game.portal2 = 0;
 	this.uiControl = uiControl;
 	var inst = this;
 	var ui = this.uiControl;
 	ui.registerCallback("--------------------", () => inst.dots());
-	ui.registerCallback("Add Panoramic Portal", () => inst.addPortal());
+	ui.registerCallback("Toyokawa Panoramic Portal", () => inst.addPortal());
 	ui.registerCallback("Hide Portal", () => inst.hidePortal());
 	ui.registerCallback("Go to Mars", () => inst.goToMars());
 	ui.registerCallback("Dancing with the Stars", () => inst.danceWithStars());
@@ -40,11 +41,17 @@ class Scripts {
     }
 
     addPortal() {
+	if (game.portal2) {
+	    console.log("*********** reusing portal2");
+	    game.portal2.visible = true;
+	    return;
+	}
+	console.log("******************** creating portal2");
 	var pspec = {
 	    name: "portal2",
 	    radius: 0.5,
 	    path: 'videos/YukiyoCompilation.mp4',
-	    position: [5,2,1]
+	    position: [5,.8,0]
 	}
 	game.portal2 = new PanoPortal(game,pspec);
     }
