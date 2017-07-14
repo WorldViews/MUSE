@@ -23,99 +23,100 @@ import setupMarquee from './setupMarquee';
 let {degToRad} = THREE.Math;
 
 function start(config) {
-  let MODEL_SPECS = [
-    {
-      name: 'station'
-    },
-    {
-      name: 'platform',
-      parent: 'station',
-      //path: 'models/PlayDomeSkp.dae',
-      path: 'models/PlayDomeSkp_v1.dae',
-      position: [0, 0, 0],
-      rotation: [0, degToRad(0), 0],
-      scale: 0.025
-    },
-    {
-      name: 'bmw',
-      parent: 'station',
-      path: 'models/bmw/model.dae',
-      position: [0.2, 0, 1.6],
-      //rotation: [0, degToRad(90), 0],
-      rotation: [0, degToRad(0), 0],
-      scale: 0.020,
-      visible: false
+    let MODEL_SPECS = [
+        {
+            name: 'station'
+        },
+        {
+            name: 'platform',
+            parent: 'station',
+            //path: 'models/PlayDomeSkp.dae',
+            path: 'models/PlayDomeSkp_v1.dae',
+            position: [0, 0, 0],
+            rotation: [0, degToRad(0), 0],
+            scale: 0.025
+        },
+        {
+            name: 'bmw',
+            parent: 'station',
+            path: 'models/bmw/model.dae',
+            position: [0.2, 0, 1.6],
+            //rotation: [0, degToRad(90), 0],
+            rotation: [0, degToRad(0), 0],
+            scale: 0.020,
+            visible: false
+        }
+    ];
+
+    let isVRWithFallbackControl =
+        config.preferredControl === 'vr' ||
+        config.fallbackControl === 'pointerlock'; 
+
+    if (isVRWithFallbackControl) {
+        window.game = new VRGame('canvas3d');   
+    } else if (config.preferredControl === 'multi') {
+        window.game = new Game();
+        game.addMultiControls();
     }
-  ];
 
-  let isVRWithFallbackControl =
-      config.preferredControl === 'vr' ||
-      config.fallbackControl === 'pointerlock'; 
+    window.game = game;
+    game.defaultGroupName = 'station';
 
-  if (isVRWithFallbackControl) {
-    window.game = new VRGame('canvas3d');   
-  } else if (config.preferredControl === 'multi') {
-    window.game = new Game();
-    game.addMultiControls();
-  }
+    game.gss = new GSS.SpreadSheet();
+    let cmpProgram = new CMPProgram(game);
 
-  window.game = game;
-  game.defaultGroupName = 'station';
+    let solarSystemController = new SolarSystemController(game);
+    let starsController = new StarsController(game.scene, [0, 0, 0]);
+    let renderer = isVRWithFallbackControl ? game.renderer.getUnderlyingRenderer() : game.renderer;
+    let cmpController = new CMPController(renderer, game.scene, game.camera, {
+        position: [0, 2, 0],
+        rotation: [0, 0, 0],
+        scale: [1.5, 1, 1.5],
+        visible: false
+    });
+    let uiController = new UIController({
+        game: game,
+        playerControl: cmpProgram
+    });
+    let scriptControls = new Scripts(game, uiController);
 
-  game.gss = new GSS.SpreadSheet();
-  let cmpProgram = new CMPProgram(game);
+    if (isVRWithFallbackControl) {
+        let navigationController = new NavigationController(game.body, game.camera, game.plControls);
+        game.registerController('navigation', navigationController);
+    }
 
-  let solarSystemController = new SolarSystemController(game);
-  let starsController = new StarsController(game.scene, [0, 0, 0]);
-  let renderer = isVRWithFallbackControl ? game.renderer.getUnderlyingRenderer() : game.renderer;
-  let cmpController = new CMPController(renderer, game.scene, game.camera, {
-    position: [0, 3, 0],
-    rotation: [0, 0, 0],
-    scale: [1.5, 1, 1.5]
-  });
-  let uiController = new UIController({
-    game: game,
-    playerControl: cmpProgram
-  });
-  let scriptControls = new Scripts(game, uiController);
-
-  if (isVRWithFallbackControl) {
-    let navigationController = new NavigationController(game.body, game.camera, game.plControls);
-    game.registerController('navigation', navigationController);
-  } else {
-    let dancer = new DanceController(game);
+    let dancer = new DanceController(game, {visible: false});
     game.registerController('dancer', dancer);
     cmpProgram.registerPlayer(dancer);
-  }
 
-  game.registerController('stars', starsController);
-  game.registerController('cmp', cmpController);
-  game.registerController('solarSystem', solarSystemController);
-  game.registerController('ui', uiController);
-  game.registerController('scripts', scriptControls);
+    game.registerController('stars', starsController);
+    game.registerController('cmp', cmpController);
+    game.registerController('solarSystem', solarSystemController);
+    game.registerController('ui', uiController);
+    game.registerController('scripts', scriptControls);
 
-  game.marquee = new Marquee();
-  game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
-  setupMarquee(game);
+    game.marquee = new Marquee();
+    game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
+    setupMarquee(game);
 
-  loadModels(MODEL_SPECS, game);
-  loadScreens(game);
+    loadModels(MODEL_SPECS, game);
+    loadScreens(game);
 
-  if (!isVRWithFallbackControl) {
-      //game.portal0 = new PanoPortal0(game);
-      //game.portal0 = new PanoPortal(game);
-  }
+    if (!isVRWithFallbackControl) {
+        //game.portal0 = new PanoPortal0(game);
+        //game.portal0 = new PanoPortal(game);
+    }
 
-  setupLights(game);
-  
-  if (isVRWithFallbackControl) {
-    game.body.position.set(2, 1.5, 2);
-  }
-  else {
-      game.camera.position.set(100, 200, 150);
-  }
-  
-  game.animate(0);
+    setupLights(game);
+    
+    if (isVRWithFallbackControl) {
+        game.body.position.set(2, 1.5, 2);
+    }
+    else {
+        game.camera.position.set(100, 200, 150);
+    }
+    
+    game.animate(0);
 }
 
 window.start = start;
