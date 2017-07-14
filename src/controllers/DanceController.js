@@ -5,31 +5,6 @@ import {BVHLoader} from '../BVHLoader';
 
 let BVH_PATH = './models/bvh/MasterLiuPerformanceChar00.bvh';
 
-function scaleVec(s)
-{
-    if (typeof s == "number")
-        return [s,s,s];
-    return s;
-}
-
-function setFromOptions(obj, opts)
-{
-    if (Array.isArray(opts.position)) {
-        obj.position.fromArray(opts.position);
-    }
-
-    // Rotation array must be in radians!
-    if (Array.isArray(opts.rotation)) {
-        obj.rotation.fromArray(opts.rotation);
-    }
-
-    //if (Array.isArray(opts.scale)) {
-    //  scene.scale.fromArray(opts.scale)
-    //}
-    if (opts.scale)
-        obj.scale.fromArray(scaleVec(opts.scale));
-}
-
 class DanceController
 {
     constructor(game, opts)
@@ -66,7 +41,7 @@ class DanceController
             console.log("BVH: ", result);
             //var dancer = new THREE.Object3D();
             var dancer = new THREE.Group();
-	    setFromOptions(dancer, opts)
+	    game.setFromProps(dancer, opts)
             var skeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
             skeletonHelper.skeleton = result.skeleton;
 	              // allow animation mixer to bind to SkeletonHelper directly
