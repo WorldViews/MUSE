@@ -26,7 +26,9 @@ export default class CMPController {
         options = options || {};
         this.position = options.position || [0, 0, 0];
         this.rotation = options.rotation || [0, 0, 0];
-        this.visible = true;
+        var visible = true;
+        if (options.visible != null)
+            visible = options.visible;
         this.scale = options.scale || chartScale;
         this.state = state;
 
@@ -42,8 +44,8 @@ export default class CMPController {
         this.loader.load().then((data) => {
             self._drawMathbox(data);
         });
-
         this.currRot = [0, 0, 0];
+        this.visible = visible;
     }
 
     reset() {
