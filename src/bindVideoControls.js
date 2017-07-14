@@ -7,15 +7,15 @@ export default (game, imageSource) => {
 
     imageSource.video.addEventListener('timeupdate', (e) => {
     	if (!initialized && timeline.data('ui-slider')) {
-    		initialized = true;
+            initialized = true;
     	}
 
     	if (initialized) {
-    		let value = Math.round(e.target.currentTime / e.target.duration * 1000) / 1000;
-    		timeline.slider('value', value);
+            let value = Math.round(e.target.currentTime / e.target.duration * 1000) / 1000;
+            timeline.slider('value', value);
             _.set(game, 'controllers.ui.slider.value', value);
 
-			var tStr = sprintf("%8.1f", e.target.currentTime);
+            var tStr = sprintf("%8.1f", e.target.currentTime);
             game.events.dispatchEvent({
                 type: 'valueChange',
                 message: {
