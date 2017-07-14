@@ -27,7 +27,7 @@ export default class UIController {
 
         this.registerCallback('Earth', () => { this.selectModel('vEarth') });
         this.registerCallback('Dancer', () => { this.selectModel('dancer') });
-        this.registerCallback('CMP', () => { this.selectModel('cmp') });
+        this.registerCallback('Data Viz', () => { this.selectModel('cmp') });
         this.registerCallback('BMW', () => { this.selectModel('bmw') });
         //this.registerCallback('Portal', () => { this.selectModel('portal') });
         this.selectModel('vEarth');
@@ -44,14 +44,17 @@ export default class UIController {
                     callbacks={this.callbacks}
                     onChange={this.onCallback.bind(this)}
                 />
-                <JSONEditor
-                    onChange={this.onStateChange.bind(this)}
-                    onReset={this.onStateReset.bind(this)}
-                    state={State}/>
             </TweakUI>,
             this.root
         );
     }
+
+    // took this out for now.  it should be something that comes
+    // up when needed, not normally visible.
+    //      <JSONEditor
+    //           onChange={this.onStateChange.bind(this)}
+    //           onReset={this.onStateReset.bind(this)}
+    //           state={State}/>
 
     registerCallback(name, callback) {
         this.callbacks[name] = {
