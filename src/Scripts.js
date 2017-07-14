@@ -24,7 +24,6 @@ class Scripts {
         this.uiControl = uiControl;
         var inst = this;
         var ui = this.uiControl;
-        ui.registerCallback("--------------------", () => inst.dots());
         ui.registerCallback("Toyokawa Panoramic Portal", () => inst.addPortal());
         ui.registerCallback("Hide Portal", () => inst.hidePortal());
         ui.registerCallback("Go to Mars", () => inst.goToMars());
@@ -62,6 +61,7 @@ class Scripts {
 
     danceWithStars() {
         var d = game.controllers.dancer;
+        d.visible = true;
         d.setScale(.3);
     }
 
