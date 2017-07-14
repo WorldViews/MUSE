@@ -6,6 +6,7 @@ import TweakUI from '../lib/components/TweakUI';
 import TimelineSlider from '../lib/components/TimelineSlider';
 import MenuButton from '../lib/components/MenuButton';
 import CallbackList from '../lib/components/CallbackList';
+import ScriptsList from '../lib/components/ScriptsList';
 import JSONEditor from '../lib/components/JSONEditor';
 import State from '../lib/cmp/State';
 import { setState, resetState } from '../lib/cmp/State';
@@ -22,13 +23,14 @@ export default class UIController {
         this.game = this.options.game;
         this.playerControl = this.options.playerControl;
         this.root = document.createElement('div');
-        this.callbacks = {};
         this.models = ['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
+        this.modelCallbacks = {};
+        this.callbacks = {};
 
-        this.registerCallback('Earth', () => { this.selectModel('vEarth') });
-        this.registerCallback('Dancer', () => { this.selectModel('dancer') });
-        this.registerCallback('Data Viz', () => { this.selectModel('cmp') });
-        this.registerCallback('BMW', () => { this.selectModel('bmw') });
+        this.registerModel('Earth', () => { this.selectModel('vEarth') });
+        this.registerModel('Dancer', () => { this.selectModel('dancer') });
+        this.registerModel('Data Viz', () => { this.selectModel('cmp') });
+        this.registerModel('BMW', () => { this.selectModel('bmw') });
         //this.registerCallback('Portal', () => { this.selectModel('portal') });
         this.selectModel('vEarth');
 
@@ -41,6 +43,11 @@ export default class UIController {
                     onPlayerButtonClick={this.onPlayerButtonClick.bind(this)}
                 />
                 <CallbackList
+                    callbacks={this.modelCallbacks}
+                    onChange={this.onModelCallback.bind(this)}
+                />
+                <p/>
+                <ScriptsList
                     callbacks={this.callbacks}
                     onChange={this.onCallback.bind(this)}
                 />
@@ -56,15 +63,21 @@ export default class UIController {
     //           onReset={this.onStateReset.bind(this)}
     //           state={State}/>
 
-    registerCallback(name, callback) {
-        this.callbacks[name] = {
+    registerModel(name, callback) {
+        this.modelCallbacks[name] = {
             name: name,
             callback: callback
         };
     }
 
-    removeCallback(name) {
-        delete this.callbacks[name];
+    removeModel(name) {
+        delete this.modelCallbacks[name];
+    }
+
+    onModelCallback(name) {
+        let cb = this.modelCallbacks[name];
+        if (cb && cb.callback)
+            cb.callback();
     }
 
     selectModel(name) {
@@ -84,6 +97,20 @@ export default class UIController {
         if (game.controllers[name]) {
             game.controllers[name].visible = true;
         }
+    }
+
+    /******************************************************/
+    // Scripts
+    
+    registerCallback(name, callback) {
+        this.callbacks[name] = {
+            name: name,
+            callback: callback
+        };
+    }
+
+    removeCallback(name) {
+        delete this.callbacks[name];
     }
 
     onCallback(name) {
