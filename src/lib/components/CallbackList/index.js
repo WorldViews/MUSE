@@ -23,7 +23,7 @@ export default class CallbackList extends React.Component {
         return (
             <div className={styles}>
                 <SelectField
-                    floatingLabelText="Callbacks"
+                    floatingLabelText="Options"
                     value={this.state.value}
                     onChange={this.onChange.bind(this)}>
                     {_.map(this.props.callbacks, (callback, key) => (
