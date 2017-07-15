@@ -21,7 +21,7 @@ class NetLink {
         this.sock.on(this.channel, msg => { inst.handleMessage(msg);});
         this.getUser("Tony");
         this.getUser("Don");
-        this.updateInterval = 0.5;
+        this.updateInterval = 0.1;
     }
 
     getUser(name, props) {
@@ -72,7 +72,7 @@ class NetLink {
     }
 
     handleMessage(msg) {
-        console.log("NetLink.handleMessage "+JSON.stringify(msg));
+        //console.log("NetLink.handleMessage "+JSON.stringify(msg));
         if (msg.type == 'muse.status') {
             var userName = msg.user;
             this.getUser(userName, msg);

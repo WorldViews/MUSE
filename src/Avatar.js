@@ -29,7 +29,7 @@ class Avatar {
     setProps(props)
     {
         var position = props.position;
-        console.log("Avatar "+this.name+" "+position);
+        //console.log("Avatar "+this.name+" "+position);
         this.game.setFromProps(this.obj, {position});
     }
 }
