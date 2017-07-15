@@ -16,6 +16,7 @@ import VRGame from './VRGame';
 import WebVR from './lib/vr/WebVR';
 
 import { ViewpointManager } from './Viewpoints';
+import { NetLink } from './NetLink';
 import loadModels from './loadModels';
 import { loadScreens, loadScreen } from './loadScreen';
 import { setupLights } from './setupLights';
@@ -92,12 +93,15 @@ function start(config) {
     game.registerController('dancer', dancer);
     cmpProgram.registerPlayer(dancer);
 
+    let netLink = new NetLink(game);
+
     game.registerController('stars', starsController);
     game.registerController('cmp', cmpController);
     game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
     game.registerController("viewpointManager", vm);
+    game.registerController("netLink", netLink);
 
     game.marquee = new Marquee();
     game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly

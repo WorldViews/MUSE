@@ -1,6 +1,7 @@
 node_modules/*
 *~
 *#
+museServer/node_modules/*
 dist/*
 models/*
 videos/*

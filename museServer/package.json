@@ -1,0 +1,29 @@
+{
+  "name": "controls",
+  "version": "1.0.0",
+  "description": "Kinect control of Pano viewers",
+  "main": "KinOSCWatcher.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/worldviews/PanoJS.git"
+  },
+  "author": "Don Kimber",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/worldviews/PanoJS/issues"
+  },
+  "homepage": "https://github.com/worldviews/PanoJS#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "install": "^0.10.1",
+    "ip": "^1.1.5",
+    "mathjs": "^3.13.2",
+    "osc": "^2.2.0",
+    "socket.io": "^2.0.1",
+    "socket.io-client": "^2.0.1"
+  }
+}
