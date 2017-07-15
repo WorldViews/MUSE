@@ -22,6 +22,11 @@ import { loadScreens, loadScreen } from './loadScreen';
 import { setupLights } from './setupLights';
 import setupMarquee from './setupMarquee';
 
+function getParameterByName(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
 let {degToRad} = THREE.Math;
 
 function start(config) {
@@ -93,15 +98,18 @@ function start(config) {
     game.registerController('dancer', dancer);
     cmpProgram.registerPlayer(dancer);
 
-    let netLink = new NetLink(game);
-
     game.registerController('stars', starsController);
     game.registerController('cmp', cmpController);
     game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
     game.registerController("viewpointManager", vm);
-    game.registerController("netLink", netLink);
+
+    game.user = getParameterByName("user");
+    if (game.user) {
+        let netLink = new NetLink(game);
+        game.registerController("netLink", netLink);
+    }
 
     game.marquee = new Marquee();
     game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
