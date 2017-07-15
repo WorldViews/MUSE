@@ -20,7 +20,7 @@ class Game {
         this.camera = new THREE.PerspectiveCamera(
     	    45, // this is vFov.  had been 75 but too large
             size.width / size.height,
-            1,
+            0.1,
             30000
         );
 

@@ -3,7 +3,9 @@
  * @author stewdio / http://stewd.io
  */
 
-THREE.ViveController = function ( id ) {
+import * as THREE from 'three';
+
+let ViveController = function ( id ) {
 
 	THREE.Object3D.call( this );
 
@@ -124,5 +126,7 @@ THREE.ViveController = function ( id ) {
 
 };
 
-THREE.ViveController.prototype = Object.create( THREE.Object3D.prototype );
-THREE.ViveController.prototype.constructor = THREE.ViveController;
+ViveController.prototype = Object.create( THREE.Object3D.prototype );
+ViveController.prototype.constructor = ViveController;
+
+export default ViveController;

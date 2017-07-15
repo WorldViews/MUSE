@@ -1,6 +1,7 @@
 import {Game} from './Game';
 import * as THREE from 'three';
 import PointerLockControls from './lib/controls/PointerLockControls';
+import ViveControllerController from './controllers/ViveControllerController';
 import VRControls from './lib/controls/VRControls';
 import VREffect from './lib/effects/VREffect';
 import WebVR from './lib/vr/WebVR';
@@ -16,17 +17,6 @@ class VRGame extends Game {
         this.plControls = null;
 
         this.addControls();
-
-        if (this.plControls) {
-            // Allow the PointerLockControls to create the body,
-            // even if we do not use the controls for movement.
-            this.body = this.plControls.getObject();
-        } else {
-            this.body = new THREE.Object3D();
-            this.body.add(this.camera);
-        }
-
-        this.scene.add(this.body);
 
         if (WebVR.isAvailable())  {
             WebVR.getVRDisplay((display) => {
@@ -58,12 +48,24 @@ class VRGame extends Game {
 
     addVRControls() {
         this.vrControls = new VRControls(this.camera);
-        this.vrControls.shouldUpdatePosition = false;
         this.registerController('vr', this.vrControls);
+        
+        this.body = new THREE.Object3D();
+        this.scene.add(this.body);
+        this.body.add(this.camera);        
+
+        this.viveControllerController = new ViveControllerController(this.body, this.vrControls);
+        this.registerController('viveControls', this.viveControllerController);
     }
 
     addPointlockControls() {
         this.plControls = new PointerLockControls(this.camera);
+    
+        // Allow the PointerLockControls to create the body,
+        // even if we do not use the controls for movement. 
+        this.body = this.plControls.getObject();
+        this.scene.add(this.body);
+    
         attachPointerLock(this.plControls);
     }
 
