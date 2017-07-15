@@ -23,7 +23,7 @@ import setupMarquee from './setupMarquee';
 let {degToRad} = THREE.Math;
 
 function start(config) {
-    let MODEL_SPECS = [
+    let MODEL_SPECS = config.modelSpecs || [
         {
             name: 'station'
         },
