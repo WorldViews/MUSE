@@ -169,11 +169,11 @@ class Animation
     }
 }
 
-class ViewpointManager
+class ViewManager
 {
     constructor(game, uiController) {
         if (viewManager) {
-            alert("ViewpointManager should be singleton");
+            alert("ViewManager should be singleton");
         }
         viewManager = this; // singleton;
         this.slerp = true;
@@ -204,7 +204,7 @@ class ViewpointManager
         console.log("gotoView "+name);
         var view = this.views[name];
         if (!view) {
-	    console.log("No viewpoint named "+name);
+	    console.log("No view named "+name);
 	    return;
         }
         console.log("pos: "+view.position);
@@ -245,7 +245,8 @@ class ViewpointManager
     bookmarkView = function(name)
     {
         console.log("bookmarkView");
-        if (!P.camera) {
+        var camera = this.game.camera;
+        if (!camera) {
             console.log("Cannot get camera");
             return;
         }
@@ -260,7 +261,6 @@ class ViewpointManager
 	    console.log("*** no name");
 	    return;
         }
-        var camera = this.game.camera;
         var pos = camera.position.clone();
         var eulerAngles = camera.rotation.clone();
         var view = {'name': name, 'position': pos, 'rotation': eulerAngles};
@@ -291,14 +291,14 @@ class ViewpointManager
 
     setViewNameInUI(name)
     {
-        //$("#currentViewName").val(name);
-        console.log("****** setViewNameInUI not really implemented");
+        console.log("****** setViewNameInUI not implemented ... using jQuery");
+        $("#currentViewName").val(name);
     }
     
     getViewNameFromUI() {
-	//name = $("#currentViewName").val();
-        console.log("****** getViewNameFromUI not really implemented");
-        return null;
+	name = $("#currentViewName").val();
+        console.log("****** getViewNameFromUI not implemented correctly ... using jQuery");
+        return name;
     }
     
     getNewViewName()
@@ -317,10 +317,19 @@ class ViewpointManager
     {
         var jstr = JSON.stringify(this.views);
         var url = this.getBookmarksURL();
-        url = url.replace("/", "/update/");
+        console.log("uploadBookmarks url: "+url+"  data: "+jstr);
+        //url = url.replace("/", "/update/");
+        url = "http://localhost:4000/update/bookmarks.json";
         console.log("uploadBookmarks to "+url);
-        jQuery.post(url, jstr, function () {
-	    console.log("Succeeded at upload")}, "json");
+//        jQuery.post(url, jstr, function () {
+//	    console.log("Succeeded at upload")}, "json");
+        $.ajax(url, {
+            data: jstr,
+            //data: this.views,
+            //success: success,
+            contentType: 'application/json',
+            type: "POST",
+        });
     }
 
     getBookmarksURL()
@@ -370,7 +379,7 @@ class ViewpointManager
         var inst = this;
         this.viewNames.forEach(viewName => {
             console.log("view: "+viewName+" ui: "+inst.ui);
-            inst.ui.registerViewpoint(viewName, () => inst.gotoView(viewName));
+            inst.ui.registerView(viewName, () => inst.gotoView(viewName));
         });
         if (this.views["Home"]) {
 	    console.log("Going to Home after loading bookmarks");
@@ -380,4 +389,4 @@ class ViewpointManager
     
 }
 
-export {ViewpointManager};
+export {ViewManager};

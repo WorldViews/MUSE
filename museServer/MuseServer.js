@@ -14,6 +14,7 @@ var sprintf = require("./js/sprintf").sprintf;
 var http = require('http');
 var fs = require('fs');
     // NEVER use a Sync function except at start-up!
+var cors = require('cors');
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -47,6 +48,7 @@ getConfig();
 //   JSON via /update/ urls.
 //
 var app = express();
+app.use(cors())
 var server = http.createServer(app);
 
 app.get('/', function (req, res) {
@@ -109,10 +111,10 @@ app.get('/stats', function(req, resp){
 app.post('/update/*', function(request, response){
    var obj = request.body;
    console.log("/update path: "+request.path);
-   var fileName = request.path.slice("/update/".length);
-   fs.writeFileSync(fileName, JSON.stringify(obj, null, 4));
-   console.log("fileName: "+fileName);
    console.log("/update got: "+JSON.stringify(obj));
+   var fileName = request.path.slice("/update/".length);
+   console.log("fileName: "+fileName);
+   fs.writeFileSync(fileName, JSON.stringify(obj, null, 4));
    obj.size = 'big';
    console.log("returning obj: "+JSON.stringify(obj));      // your JSON
    response.send(obj);    // echo the result back

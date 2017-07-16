@@ -15,7 +15,7 @@ import UIController from './controllers/UIController';
 import VRGame from './VRGame';
 import WebVR from './lib/vr/WebVR';
 
-import { ViewpointManager } from './Viewpoints';
+import { ViewManager } from './ViewManager';
 import { NetLink } from './NetLink';
 import loadModels from './loadModels';
 import { loadScreens, loadScreen } from './loadScreen';
@@ -86,8 +86,7 @@ function start(config) {
         playerControl: cmpProgram
     });
     let scriptControls = new Scripts(game, uiController);
-    var vm = new ViewpointManager(game, uiController);
-    game.vm = vm;
+    game.viewManager = new ViewManager(game, uiController);
 
     if (isVRWithFallbackControl) {
         let navigationController = new NavigationController(game.body, game.camera, game.plControls);
@@ -103,7 +102,7 @@ function start(config) {
     game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
-    game.registerController("viewpointManager", vm);
+    game.registerController("viewManager", game.viewManager);
 
     game.user = getParameterByName("user");
     if (game.user) {
