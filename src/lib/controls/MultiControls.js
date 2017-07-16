@@ -47,7 +47,8 @@ class MultiControls {
 
     onKeyUp( event ) {
         var kc = event.keyCode;
-        //console.log("MC.onKeyUp "+kc);
+        //event.preventDefault();
+        console.log("MC.onKeyUp "+kc);
         //this.shiftDown = false;
 	if (kc == 16) { //16=shift 76=L
 	    this.setModeOrbit();
