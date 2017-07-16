@@ -22,6 +22,7 @@ class NetLink {
         this.getUser("Tony");
         this.getUser("Don");
         this.updateInterval = 0.1;
+        this.verbosity = 0;
     }
 
     getUser(name, props) {
@@ -34,7 +35,7 @@ class NetLink {
             return user;
         }
         else {
-            console.log("Creating user");
+            console.log("NetLink.Creating user");
             this.numUsers++;
             var y = 20*this.numUsers;
             user = new Avatar(this.game,
@@ -65,14 +66,14 @@ class NetLink {
     sendMessage(msg) {
         this.lastMsgSent = msg;
         var str = JSON.stringify(msg);
-        console.log("NetLink.sendStatus "+this.channel+" msg: " + str);
-        //report("sending "+str);
-        //this.sock.emit('viewInfo', str);
+        if (this.verbosity)
+            console.log("NetLink.sendMessage "+this.channel+" msg: " + str);
         this.sock.emit(this.channel, str);
     }
 
     handleMessage(msg) {
-        //console.log("NetLink.handleMessage "+JSON.stringify(msg));
+        if (this.verbosity)
+            console.log("NetLink.handleMessage "+JSON.stringify(msg));
         if (msg.type == 'muse.status') {
             var userName = msg.user;
             this.getUser(userName, msg);
@@ -83,5 +84,3 @@ class NetLink {
 }
 
 export {NetLink};
-
-
