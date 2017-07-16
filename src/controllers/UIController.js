@@ -7,7 +7,7 @@ import TimelineSlider from '../lib/components/TimelineSlider';
 import MenuButton from '../lib/components/MenuButton';
 import CallbackList from '../lib/components/CallbackList';
 import ScriptsList from '../lib/components/ScriptsList';
-import ViewpointTool from '../lib/components/ViewpointTool';
+import ViewTool from '../lib/components/ViewTool';
 import JSONEditor from '../lib/components/JSONEditor';
 import State from '../lib/cmp/State';
 import { setState, resetState } from '../lib/cmp/State';
@@ -27,7 +27,7 @@ export default class UIController {
         this.models = ['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
         this.modelCallbacks = {};
         this.scriptCallbacks = {};
-        this.viewpointCallbacks = {};
+        this.viewCallbacks = {};
 
         this.registerModel('Earth', () => { this.selectModel('vEarth') });
         this.registerModel('Dancer', () => { this.selectModel('dancer') });
@@ -54,9 +54,9 @@ export default class UIController {
                     onChange={this.onScriptCallback.bind(this)}
                 />
                 <p/>
-                <ViewpointTool
-                    callbacks={this.viewpointCallbacks}
-                    onChange={this.onViewpointCallback.bind(this)}
+                <ViewTool
+                    callbacks={this.viewCallbacks}
+                    onChange={this.onViewCallback.bind(this)}
                 />
             </TweakUI>,
             this.root
@@ -64,7 +64,7 @@ export default class UIController {
     }
 
     // took this out for now.  it should be something that comes
-    // up when needed, not normally visible.
+    // up when invoked, not normally visible.
     //      <JSONEditor
     //           onChange={this.onStateChange.bind(this)}
     //           onReset={this.onStateReset.bind(this)}
@@ -186,18 +186,22 @@ export default class UIController {
     }
 
     /**************************************************************/
-    // Viewpoints
-    registerViewpoint(name, callback) {
-        this.viewpointCallbacks[name] = {
+    // Views
+    registerView(name, callback) {
+        this.viewCallbacks[name] = {
             name: name,
             callback: callback
         };
     }
 
-    onViewpointCallback(name) {
-        let cb = this.viewpointCallbacks[name];
+    onViewCallback(name) {
+        let cb = this.viewCallbacks[name];
         if (cb && cb.callback)
             cb.callback();
+    }
+
+    onMarkView(viewName) {
+        console.log('viewName: ' + viewName);
     }
     
 }
