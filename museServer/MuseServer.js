@@ -109,15 +109,18 @@ app.get('/stats', function(req, resp){
 });
 
 app.post('/update/*', function(request, response){
-   var obj = request.body;
-   console.log("/update path: "+request.path);
-   console.log("/update got: "+JSON.stringify(obj));
-   var fileName = request.path.slice("/update/".length);
-   console.log("fileName: "+fileName);
-   fs.writeFileSync(fileName, JSON.stringify(obj, null, 4));
-   obj.size = 'big';
-   console.log("returning obj: "+JSON.stringify(obj));      // your JSON
-   response.send(obj);    // echo the result back
+    var obj = request.body;
+    console.log("/update path: "+request.path);
+    console.log("/update got: "+JSON.stringify(obj));
+    var fileName = request.path.slice("/update/".length);
+    console.log("fileName: "+fileName);
+    var path = "../data/"+fileName;
+    console.log("path: "+path);
+    //fs.writeFileSync(fileName, JSON.stringify(obj, null, 4));
+    fs.writeFileSync(path, JSON.stringify(obj, null, 4));
+    obj.size = 'big';
+    console.log("returning obj: "+JSON.stringify(obj));      // your JSON
+    response.send(obj);    // echo the result back
 });
 
 /////////////////////////////////////////////////////////////////////

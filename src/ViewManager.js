@@ -271,8 +271,8 @@ class ViewManager
         console.log("bookmarkView rot "+JSON.stringify(eulerAngles));
         console.log("bookmarkView test.... "+JSON.stringify({'a': 3, 'b': {'c': 8}}));
         this.uploadBookmarks();
-        //$("#viewNameSelection").append($('<option>', { value: name, text: name}));
-        //    console.log("bookmarkView "+JSON.stringify(view));
+        name = this.getNewViewName();
+        this.setViewNameInUI(name);
     }
     
     deleteView = function(viewName)
@@ -319,7 +319,7 @@ class ViewManager
         var url = this.getBookmarksURL();
         console.log("uploadBookmarks url: "+url+"  data: "+jstr);
         //url = url.replace("/", "/update/");
-        url = "http://localhost:4000/update/bookmarks.json";
+        url = "http://localhost:4000/update/bookmarks.edited.json";
         console.log("uploadBookmarks to "+url);
 //        jQuery.post(url, jstr, function () {
 //	    console.log("Succeeded at upload")}, "json");

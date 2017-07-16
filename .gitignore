@@ -2,6 +2,7 @@ node_modules/*
 *~
 *#
 museServer/node_modules/*
+data/bookmarks.edited.json
 dist/*
 local/*
 models/*
