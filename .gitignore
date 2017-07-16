@@ -3,6 +3,7 @@ node_modules/*
 *#
 museServer/node_modules/*
 dist/*
+local/*
 models/*
 videos/*
 junk/*
