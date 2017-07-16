@@ -4,77 +4,7 @@ import {Mathx} from 'three';
 
 var SAMPLE_VIEWS =
 {
-   "Blue": {
-      "position": {
-         "y": 451.27387359321705, 
-         "x": 1.0463783336096089, 
-         "z": 0.058918704294533546
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": -0.5341352928827048, 
-         "_y": -5.110230176797126e-07, 
-         "_x": -1.5707954474923493
-      }, 
-      "name": "Blue"
-   }, 
-   "Above": {
-      "position": {
-         "y": 1963.0600416757122, 
-         "x": 1.6127622214875328, 
-         "z": 1.1341526937232163
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": -0.5130559587275135, 
-         "_y": -5.07481217937333e-07, 
-         "_x": -1.5707954368346062
-      }, 
-      "name": "Above"
-   }, 
-   "Above SF": {
-      "position": {
-         "y": 91900.85359569384, 
-         "x": -72222.76654703495, 
-         "z": 113266.74454112611
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": -0.5002767770211151, 
-         "_y": -0.5802368114628638, 
-         "_x": -0.783973249225534
-      }, 
-      "name": "Above SF"
-   }, 
-   "Purple": {
-      "position": {
-         "y": 489.58371532762976, 
-         "x": 1.046358756387494, 
-         "z": 0.058951802690731546
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": -0.5341352928827048, 
-         "_y": -5.110230176797126e-07, 
-         "_x": -1.5707954474923493
-      }, 
-      "name": "Purple"
-   }, 
-   "Hurricane": {
-      "position": {
-         "y": 22517.804250706602, 
-         "x": 0.0014613344294209104, 
-         "z": 0.022474149397589665
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.06494248513944514, 
-         "_y": 6.489680970389604e-08, 
-         "_x": -1.570795321216286
-      }, 
-      "name": "Hurricane"
-   }, 
-   "View10": {
+   "View1": {
       "position": {
          "y": 299.3219268854358, 
          "x": -6.13501510231044, 
@@ -86,9 +16,9 @@ var SAMPLE_VIEWS =
          "_y": 0.13649429834707483, 
          "_x": -0.08704598014289926
       }, 
-      "name": "View10"
+      "name": "View1"
    }, 
-   "View11": {
+   "View2": {
       "position": {
          "y": 331.20146986279644, 
          "x": 0.9179406230910985, 
@@ -100,219 +30,10 @@ var SAMPLE_VIEWS =
          "_y": 0.13649429834707483, 
          "_x": -0.08704598014289926
       }, 
-      "name": "View11"
+      "name": "View2"
    }, 
-   "rainbow": {
-      "position": {
-         "y": 626.666405511323, 
-         "x": -29.360717499734648, 
-         "z": 254.03514266059977
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": -0.10766276533488806, 
-         "_y": -0.09898417583941707, 
-         "_x": -0.8301142057155413
-      }, 
-      "name": "rainbow"
-   }, 
-   "Chakra 6": {
-      "position": {
-         "y": 421.63580872285513, 
-         "x": 53.551836785627316, 
-         "z": 139.69347997178124
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.051220457719366314, 
-         "_y": 0.303302387476376, 
-         "_x": -0.16998684286099064
-      }, 
-      "name": "Chakra 6"
-   }, 
-   "Chakra 7": {
-      "position": {
-         "y": 478.9085679722015, 
-         "x": 51.56718616572651, 
-         "z": 130.49319193219944
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.051220457719366314, 
-         "_y": 0.303302387476376, 
-         "_x": -0.16998684286099064
-      }, 
-      "name": "Chakra 7"
-   }, 
-   "Chakra 4": {
-      "position": {
-         "y": 311.3700110643736, 
-         "x": 56.70141640376591, 
-         "z": 157.61976103677327
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.051220457719366314, 
-         "_y": 0.303302387476376, 
-         "_x": -0.16998684286099064
-      }, 
-      "name": "Chakra 4"
-   }, 
-   "Chakra 5": {
-      "position": {
-         "y": 360.08332609359115, 
-         "x": 53.31706016442298, 
-         "z": 150.3330995498241
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.051220457719366314, 
-         "_y": 0.303302387476376, 
-         "_x": -0.16998684286099064
-      }, 
-      "name": "Chakra 5"
-   }, 
-   "Chakra 1": {
-      "position": {
-         "y": 321.1178965662636, 
-         "x": 101.09391917040881, 
-         "z": 437.4085660845747
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.08369755921068968, 
-         "_y": 0.19288211803149222, 
-         "_x": -0.4125413288961756
-      }, 
-      "name": "Chakra 1"
-   }, 
-   "PhotoHead": {
-      "position": {
-         "y": 1027.729923027237, 
-         "x": 1857.0910636807603, 
-         "z": 1074.2477136110886
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.35858030855579814, 
-         "_y": 1.0090044249297367, 
-         "_x": -0.41639407169308434
-      }, 
-      "name": "PhotoHead"
-   }, 
-   "lemons": {
-      "position": {
-         "y": 252.6589821698655, 
-         "x": 2.9009491366726934, 
-         "z": 8.296362267155587
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.010914960910369503, 
-         "_y": 0.1351269278911315, 
-         "_x": -0.08421680778398387
-      }, 
-      "name": "lemons"
-   }, 
-   "View4": {
-      "position": {
-         "y": 2896.813986869436, 
-         "x": 48.31256987417105, 
-         "z": -11.116977555348598
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 1.1113239670543025, 
-         "_y": 8.962861670626188e-07, 
-         "_x": -1.5707958657486127
-      }, 
-      "name": "View4"
-   }, 
-   "View7": {
-      "position": {
-         "y": 435.38994630932547, 
-         "x": 154.3903286592831, 
-         "z": 326.0875324072328
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.19731208768591255, 
-         "_y": 0.3511800037037321, 
-         "_x": -0.5264310303053024
-      }, 
-      "name": "View7"
-   }, 
-   "View1": {
-      "position": {
-         "y": 50.00000000000012, 
-         "x": 0, 
-         "z": 1500
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0, 
-         "_y": 0, 
-         "_x": -0.03332099736753617
-      }, 
-      "name": "View1"
-   }, 
-   "View3": {
-      "position": {
-         "y": 1027.8104153206352, 
-         "x": 1855.623669339618, 
-         "z": 1074.199679428479
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.3582457702538636, 
-         "_y": 1.0080140664111592, 
-         "_x": -0.4167442382799762
-      }, 
-      "name": "View3"
-   }, 
-   "View9": {
-      "position": {
-         "y": 277.9028588000844, 
-         "x": -5.634474264857772, 
-         "z": 9.405693592524699
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0.011873869626116694, 
-         "_y": 0.13649429834707483, 
-         "_x": -0.08704598014289926
-      }, 
-      "name": "View9"
-   }, 
-   "InnerVortex": {
-      "position": {
-         "y": 512.4421053520523, 
-         "x": 1.7266969411611681, 
-         "z": 0.32620929691099976
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 2.753429693582428, 
-         "_y": -0.9674175666768314, 
-         "_x": 2.6974855520673158
-      }, 
-      "name": "InnerVortex"
-   }, 
-   "Home": {
-      "position": {
-         "y": 50.00000000000012, 
-         "x": 0, 
-         "z": 1500
-      }, 
-      "rotation": {
-         "_order": "XYZ", 
-         "_z": 0, 
-         "_y": 0, 
-         "_x": -0.03332099736753617
-      }, 
-      "name": "Home"
-   }
 }
+
 
 // THis version uses linear interpolation or rotations, which is not
 // really correct
@@ -433,26 +154,29 @@ class Animation
 	}
     }
 }
-    
 
 class ViewpointManager
 {
     constructor(game, uiController) {
         this.game = game;
+        this.defaultDuration = 1.5;
         this.viewNum = 0;
         this.views = {};
         this.viewNames = [];
         this.idx = 0;
-        this.bookmarksURL_ = "/Kinetics/bookmarks.json";
+        //this.bookmarksURL_ = "/Kinetics/bookmarks.json";
+        this.bookmarksURL_ = "xxx";
         this.activeAnimations = [];
         this.ui = uiController;
-        this.handleBookmarks(SAMPLE_VIEWS)
+        this.setBookmarksURL("/data/cmp_bookmarks.json");
+        this.downloadBookmarks();
+        //this.handleBookmarks(SAMPLE_VIEWS)
     }
     
     gotoView(name, dur)
     {
         if (dur == null)
-	    dur = 3;
+	    dur = this.defaultDuration;
         console.log("gotoView "+name);
         if (!name) {
             this.idx++;
@@ -603,7 +327,8 @@ class ViewpointManager
     {
         var url = this.getBookmarksURL();
         console.log("downloadBookmarks "+url);
-        $.getJSON(url, this.handleBookmarks)
+        var inst = this;
+        $.getJSON(url, obj => inst.handleBookmarks(obj))
     }
 
     handleBookmarks(obj)
@@ -625,7 +350,8 @@ class ViewpointManager
         */
         var inst = this;
         this.viewNames.forEach(viewName => {
-            this.ui.registerViewpoint(viewName, () => inst.gotoView(viewName));
+            console.log("view: "+viewName+" ui: "+inst.ui);
+            inst.ui.registerViewpoint(viewName, () => inst.gotoView(viewName));
         });
         if (this.views["Home"]) {
 	    console.log("Going to Home after loading bookmarks");
