@@ -2,6 +2,9 @@
 import * as THREE from 'three';
 import {Mathx} from 'three';
 
+// This will be a singleton
+var viewManager = null;
+
 var SAMPLE_VIEWS =
 {
    "View1": {
@@ -35,22 +38,25 @@ var SAMPLE_VIEWS =
 }
 
 
-// THis version uses linear interpolation or rotations, which is not
-// really correct
 class ViewInterpolator {
     constructor(p0, r0, p1, r1, camera)
     {
-        //console.log("ViewInterpolator p0:"+JSON.stringify(p0)+" p1: "+JSON.stringify(p1));
-        //console.log("ViewInterpolator r0:"+JSON.stringify(r0)+" r1: "+JSON.stringify(r1));
+        console.log("ViewInterpolator p0:"+JSON.stringify(p0)+" p1: "+JSON.stringify(p1));
+        console.log("ViewInterpolator r0:"+JSON.stringify(r0)+" r1: "+JSON.stringify(r1));
         this.r0 = r0;
         this.r1 = r1;
         this.p0 = p0;
+/*
         this.q0 = new THREE.Quaternion().setFromEuler(new THREE.Euler().setFromVector3(r0));
-        this.p1 = p1;
         this.q1 = new THREE.Quaternion().setFromEuler(new THREE.Euler().setFromVector3(r1));
+*/
+        this.q0 = new THREE.Quaternion().setFromEuler(new THREE.Euler(r0._x, r0._y, r0._z));
+        this.q1 = new THREE.Quaternion().setFromEuler(new THREE.Euler(r1._x, r1._y, r1._z));
+        this.p1 = p1;
         this.p = new THREE.Vector3(0,0,0);
         this.q = new THREE.Quaternion();
-        //console.log("ViewInterpolator q0:"+JSON.stringify(this.q0)+" q1: "+JSON.stringify(this.q1));
+        console.log("ViewInterpolator q0:"+JSON.stringify(this.q0));
+        console.log("                 q1: "+JSON.stringify(this.q1));
         this.camera = camera;
         this.range = 1.0;
         this.targetP;
@@ -58,22 +64,23 @@ class ViewInterpolator {
     }
     
     // This seems to have a problem that some quaternions are bad
-    setValSLERP(s) {
-	console.log("setVal "+s);
+    setValSlerp(s) {
+	//console.log("setValSlerp "+s);
+        //console.log("ViewInterpolator q0:"+JSON.stringify(this.q0)+" q1: "+JSON.stringify(this.q1));
 	var f = s/this.range;
         this.p.lerpVectors(this.p0, this.p1, f);
-	console.log("p: "+JSON.stringify(this.p));
+	//console.log("p: "+JSON.stringify(this.p));
         var camera = this.camera;
 	camera.position.x = this.p.x;
 	camera.position.y = this.p.y;
 	camera.position.z = this.p.z;
 	THREE.Quaternion.slerp(this.q0, this.q1, this.q, f);
-	console.log("q: "+JSON.stringify(this.q));
+	//console.log("q: "+JSON.stringify(this.q));
 	camera.rotation.setFromQuaternion(this.q)
     }
 
-    setVal(s) {
-	//console.log("setVal "+s);
+    setValLerp(s) {
+	//console.log("setValLerp "+s);
         //console.log("this.r1:"+JSON.stringify(this.r1));
 	var f = s/this.range;
         this.p.lerpVectors(this.p0, this.p1, f);
@@ -91,6 +98,13 @@ class ViewInterpolator {
 	camera.rotation.z = rz;
         //camera.updateProjectionMatrix();
     }
+
+    setVal(s) {
+        if (viewManager.slerp)
+            return this.setValSlerp(s);
+        return this.setValLerp(s);
+    }
+
 }
 
 class Animation
@@ -158,6 +172,11 @@ class Animation
 class ViewpointManager
 {
     constructor(game, uiController) {
+        if (viewManager) {
+            alert("ViewpointManager should be singleton");
+        }
+        viewManager = this; // singleton;
+        this.slerp = true;
         this.game = game;
         this.defaultDuration = 1.5;
         this.viewNum = 0;
