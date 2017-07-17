@@ -8,7 +8,7 @@ import Icon from 'react-icons-kit';
 import { ic_stars } from 'react-icons-kit/md/ic_stars';
 
 
-export default class CallbackList extends React.Component {
+export default class ScriptsList extends React.Component {
     state = {
         value: 'None'
     }
@@ -23,7 +23,7 @@ export default class CallbackList extends React.Component {
         return (
             <div className={styles}>
                 <SelectField
-                    floatingLabelText="Center Stage"
+                    floatingLabelText="Scripts"
                     value={this.state.value}
                     onChange={this.onChange.bind(this)}>
                     {_.map(this.props.callbacks, (callback, key) => (

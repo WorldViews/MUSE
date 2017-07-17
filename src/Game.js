@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
 import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
+import {XControls} from './lib/controls/XControls';
 
 class Game {
 
@@ -98,6 +99,7 @@ class Game {
 
     addMultiControls() {
         var mc = new MultiControls(this, this.camera, this.renderer.domElement);
+        //var mc = new XControls(this, this.camera, this.renderer.domElement);
         this.controls = mc;
     }
 

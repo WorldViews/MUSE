@@ -8,11 +8,15 @@ import Icon from 'react-icons-kit';
 import { ic_stars } from 'react-icons-kit/md/ic_stars';
 
 
-export default class CallbackList extends React.Component {
+export default class ViewTool extends React.Component {
     state = {
         value: 'None'
     }
 
+    onMarkView(e) {
+        console.log("onMarkView");
+    }
+    
     onChange(event, index, value) {
         this.setState({value:value});
         if (this.props.onChange)
@@ -22,8 +26,15 @@ export default class CallbackList extends React.Component {
     render() {
         return (
             <div className={styles}>
+                <input type="text" value="view" id="currentViewName"/>
+                <input type="button" value="Mark"
+            onClick = {
+                //(e) => console.log("onMarkView")
+                (e) => window.game.viewManager.bookmarkView()
+            }
+                />
                 <SelectField
-                    floatingLabelText="Center Stage"
+                    floatingLabelText="View"
                     value={this.state.value}
                     onChange={this.onChange.bind(this)}>
                     {_.map(this.props.callbacks, (callback, key) => (

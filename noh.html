@@ -65,16 +65,45 @@
 
 
     <script src="dist/vendor.bundle.js"></script>
-    <script src="dist/three.min.js"></script>
+    <script src="dist/mathbox-bundle.min.js"></script>
     <script src="src/legacy/jquery-3.1.1.min.js"></script>
     <script src="src/legacy/jquery-ui.js"></script>
     <script src="src/lib/GSpreadSheet.js"></script>
-    <script src="dist/nohApp.bundle.js"></script>
+    <script src="dist/app.bundle.js"></script>
+  <script src="https://code.createjs.com/tweenjs-0.6.2.min.js"></script>
     <script>
 
 var n = 0;
 
-start();
+let MODEL_SPECS = [
+        {
+            name: 'station'
+        },
+        {
+            name: 'platform',
+            parent: 'station',
+            //path: 'models/PlayDomeSkp.dae',
+            //path: 'models/PlayDomeSkp_v1.dae',
+            path: 'models/NOHSpace.dae',
+            position: [0, 0, 0],
+            //rotation: [0, degToRad(0), 0],
+            rotation: [0, 0, 0],
+            scale: 0.025
+        },
+        {
+            name: 'bmw',
+            parent: 'station',
+            path: 'models/bmw/model.dae',
+            position: [0.2, 0, 1.6],
+            //rotation: [0, degToRad(90), 0],
+            //rotation: [0, degToRad(0), 0],
+            rotation: [0, 0, 0],
+            scale: 0.020,
+            visible: false
+        }
+];
+
+start({preferredControl: 'multi', modelSpecs: MODEL_SPECS});
 gss = new GSS.SpreadSheet();
 
     </script>

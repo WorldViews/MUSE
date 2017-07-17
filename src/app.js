@@ -15,22 +15,28 @@ import UIController from './controllers/UIController';
 import VRGame from './VRGame';
 import WebVR from './lib/vr/WebVR';
 
+import { ViewManager } from './ViewManager';
+import { NetLink } from './NetLink';
 import loadModels from './loadModels';
 import { loadScreens, loadScreen } from './loadScreen';
 import { setupLights } from './setupLights';
 import setupMarquee from './setupMarquee';
 
+function getParameterByName(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
 let {degToRad} = THREE.Math;
 
 function start(config) {
-    let MODEL_SPECS = [
+    let MODEL_SPECS = config.modelSpecs || [
         {
             name: 'station'
         },
         {
             name: 'platform',
             parent: 'station',
-            //path: 'models/PlayDomeSkp.dae',
             path: 'models/PlayDomeSkp_v1.dae',
             position: [0, 0, 0],
             rotation: [0, degToRad(0), 0],
@@ -63,6 +69,7 @@ function start(config) {
     game.defaultGroupName = 'station';
 
     game.gss = new GSS.SpreadSheet();
+
     let cmpProgram = new CMPProgram(game);
 
     let solarSystemController = new SolarSystemController(game);
@@ -79,6 +86,7 @@ function start(config) {
         playerControl: cmpProgram
     });
     let scriptControls = new Scripts(game, uiController);
+    game.viewManager = new ViewManager(game, uiController);
 
     if (isVRWithFallbackControl) {
         let navigationController = new NavigationController(game.body, game.camera, game.plControls);
@@ -94,6 +102,13 @@ function start(config) {
     game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
+    game.registerController("viewManager", game.viewManager);
+
+    game.user = getParameterByName("user");
+    if (game.user) {
+        let netLink = new NetLink(game);
+        game.registerController("netLink", netLink);
+    }
 
     game.marquee = new Marquee();
     game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly

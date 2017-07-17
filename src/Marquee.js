@@ -7,18 +7,19 @@ import html2canvas from 'html2canvas';
 let {degToRad} = THREE.Math;
 
 let STYLE = `
-	color: white;
-	font-family: arial;
-	font-size: 72px;
-	text-align: center;
+        color: white;
+        font-family: arial;
+        font-size: 72px;
+        text-align: center;
 `;
 
 class Marquee extends THREE.Mesh {
 
-    constructor() {
+    constructor(spec) {
         super();
+        spec = spec || marqueeSpec;
         this.type = 'Marquee';
-	this._prevText = null;
+        this._prevText = null;
         this._width = window.innerWidth;
         this._height = window.innerHeight;
 
@@ -37,27 +38,27 @@ class Marquee extends THREE.Mesh {
         this._iframe.contentDocument.body.appendChild(this._element);
 
         let texture = new THREE.Texture();
-	    this.material = new THREE.MeshBasicMaterial({
-	    	map: texture,
-	    	side: THREE.BackSide,
-	    	transparent: true,
-	    });
-	    this.geometry = new THREE.SphereGeometry(
-	        marqueeSpec.radius,
-	        40,
-	        40,
-	        degToRad(marqueeSpec.phiStart),
-	        degToRad(marqueeSpec.phiLength),
-	        degToRad(marqueeSpec.thetaStart),
-	        degToRad(marqueeSpec.thetaLength)
-	    );
+        this.material = new THREE.MeshBasicMaterial({
+            map: texture,
+            side: THREE.BackSide,
+            transparent: true,
+        });
+        this.geometry = new THREE.SphereGeometry(
+            spec.radius,
+            40,
+            40,
+            degToRad(spec.phiStart),
+            degToRad(spec.phiLength),
+            degToRad(spec.thetaStart),
+            degToRad(spec.thetaLength)
+        );
     }
 
     handleRender(canvas) {
-	  	let texture = new THREE.Texture(canvas);
-	    texture.wrapS = THREE.RepeatWrapping;
+        let texture = new THREE.Texture(canvas);
+        texture.wrapS = THREE.RepeatWrapping;
         texture.repeat.x = -1;
-	    texture.needsUpdate = true;
+        texture.needsUpdate = true;
 
         this.material.map = texture;
     }
@@ -66,22 +67,22 @@ class Marquee extends THREE.Mesh {
         this._element.innerHTML = html;
 
         html2canvas(
-        	this._element,
-        	{
-	            width: this._width,
-	            height: this._height,
-	            background: undefined,
-	            useCORS: true,
-	            onrendered: this.handleRender,
-	        }
+            this._element,
+            {
+                width: this._width,
+                height: this._height,
+                background: undefined,
+                useCORS: true,
+                onrendered: this.handleRender,
+            }
         );
     }
 
     updateText(text) {
-	if (text == this._prevText)
-	    return;
-	this._prevText = text;
-    	this.updateHTML(`<h1>${text}</h1>`);
+        if (text == this._prevText)
+            return;
+        this._prevText = text;
+        this.updateHTML(`<h1>${text}</h1>`);
     }
 }
 
