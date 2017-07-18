@@ -1,6 +1,7 @@
 
 import * as THREE from 'three';
 import {Mathx} from 'three';
+import {getJSON} from './Util';
 
 // This will be a singleton
 var viewManager = null;
@@ -20,7 +21,7 @@ var SAMPLE_VIEWS =
          "_x": -0.08704598014289926
       }, 
       "name": "View1"
-   }, 
+   },
    "View2": {
       "position": {
          "y": 331.20146986279644, 
@@ -356,7 +357,8 @@ class ViewManager
         var url = this.getBookmarksURL();
         console.log("downloadBookmarks "+url);
         var inst = this;
-        $.getJSON(url, obj => inst.handleBookmarks(obj))
+        //$.getJSON(url, obj => inst.handleBookmarks(obj))
+        getJSON(url, obj => inst.handleBookmarks(obj))
     }
 
     handleBookmarks(obj)
