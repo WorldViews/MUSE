@@ -66,9 +66,14 @@ class ProgramControl
         }
 
         //TODO: Move these into registered players
+        /*
         Object.values(this.game.screens).forEach(scr => {
 	    scr.imageSource.setPlayTime(t);
         });
+        */
+        for (var key in this.game.screens) {
+            this.game.screens[key].imageSource.setPlayTime(t);
+        }
     }
 }
 
