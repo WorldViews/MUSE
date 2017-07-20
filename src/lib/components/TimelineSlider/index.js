@@ -12,7 +12,6 @@ import { ic_stop } from 'react-icons-kit/md/ic_stop';
 export default class TimelineSlider extends React.Component {
 
     state = {
-        status: 'status',
         timeText: '0000',
         yearText: '????',
         narrativeText: '....'
@@ -42,14 +41,6 @@ export default class TimelineSlider extends React.Component {
         return this.state.yearText;
     }
 
-    get status() {
-        return this.state.status;
-    }
-
-    set status(val) {
-        this.setState({status: val});
-    }
-
     set narrativeText(val) {
         this.setState({narrativeText: val});
     }
@@ -60,10 +51,6 @@ export default class TimelineSlider extends React.Component {
 
     onValueChange(event) {
         switch (event.message.name) {
-        case 'status':
-            this.status = event.message.value;
-            break;
-
         case 'timeText':
             this.timeText = event.message.value;
             break;
@@ -91,7 +78,6 @@ export default class TimelineSlider extends React.Component {
         return <div className={styles}>
             <div className="info">
                 <ul>
-            Status: {this.state.status}
                     <li>Time: {this.state.timeText}</li>
                     <li>Year: {this.state.yearText}</li>
                     <li>Narrative Text: {this.state.narrativeText}</li>
