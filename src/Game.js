@@ -274,6 +274,10 @@ class Game {
     attachCameraToStation() {
 	this.attachCameraTo('station');
     }
+
+    setStatus(str) {
+        this.controllers.ui.setStatus(str);
+    }
 }
 
 export {Game};

@@ -210,13 +210,17 @@ class XControls
         //                    this.raycastPt.x, this.raycastPt.y, objs.length, intersects.length));
         if (intersects.length <= 1)
             return;
+        this.pickedName = "";
+        var inst = this;
         intersects.forEach(isect => {
             i++;
             var obj = isect.object;
             if (!obj.name || obj.name == "Stars")
                 return;
+            inst.pickedName = obj.name;
             console.log("isect "+i+" "+obj.name);
         })
+        this.game.setStatus(this.pickedName);
     }
     
     handleLook(dx, dy)
