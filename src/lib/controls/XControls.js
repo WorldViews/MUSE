@@ -127,6 +127,14 @@ class XControls
     onMouseWheel(evt) {
 	console.log("------>>>>>> LookControls.onMouseWheel...");
 	evt.preventDefault();
+        if (evt.shiftKey)
+            this.handleChangeFOV(evt);
+        else
+            this.handleDolly(evt);
+    }
+
+    handleChangeFOV(evt)
+    {
 	var sf = 0.015;
         var camera = this.game.camera;
 	if (evt.wheelDeltaY) { // WebKit
@@ -139,6 +147,33 @@ class XControls
 	//camera.fov = Math.max(20, Math.min(100, camera.fov));
 	camera.fov = Math.max(10, Math.min(140, camera.fov));
 	camera.updateProjectionMatrix();
+    }
+
+    handleDolly(evt)
+    {
+	var sf = 0.015;
+	var dx = 0;
+        var camera = this.game.camera;
+	if (evt.wheelDeltaY) { // WebKit
+	    dx -= evt.wheelDeltaY * sf;
+	} else if (evt.wheelDelta) { 	// Opera / IE9
+	    dx -= evt.wheelDelta * sf;
+	} else if (evt.detail) { // Firefox
+	    dx += evt.detail * 1.0;
+	}
+        var zf = 1.01;
+        console.log(sprintf("handleDolly dx: %f  f: %f", dx, zf));
+        if (dx > 0)
+            this.dolly(zf);
+        if (dx < 0)
+            this.dolly(-zf);
+    }
+
+    dolly(zf) {
+        console.log(sprintf("dolly zf: %f", zf));
+        var cam = this.game.camera;
+        var wv = cam.getWorldDirection();
+        cam.position.addScaledVector(wv, zf);
     }
 
     getMousePt(event)
@@ -171,11 +206,15 @@ class XControls
         var objs = this.game.scene.children;
         var intersects = this.raycaster.intersectObjects(objs, true);
         var i = 0;
-        console.log(sprintf("raycast %f %f -> %d objs %d isects",
-                            this.raycastPt.x, this.raycastPt.y, objs.length, intersects.length));
+        //console.log(sprintf("raycast %f %f -> %d objs %d isects",
+        //                    this.raycastPt.x, this.raycastPt.y, objs.length, intersects.length));
+        if (intersects.length <= 1)
+            return;
         intersects.forEach(isect => {
             i++;
             var obj = isect.object;
+            if (!obj.name || obj.name == "Stars")
+                return;
             console.log("isect "+i+" "+obj.name);
         })
     }
