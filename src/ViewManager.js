@@ -6,6 +6,15 @@ import {getJSON} from './Util';
 // This will be a singleton
 var viewManager = null;
 
+// Convert interpolation parameter s in [0,1]
+// to [0,1] according to parameter a.
+var expEasing = function(s, a)
+{
+    var s = Math.tanh(a * (s-0.5));
+    s = s / Math.tanh(a*0.5);
+    return (s+1)/2;
+}
+
 var SAMPLE_VIEWS =
 {
    "View1": {
@@ -101,6 +110,8 @@ class ViewInterpolator {
     }
 
     setVal(s) {
+        if (viewManager.easingFun)
+            s = viewManager.easingFun(s);
         if (viewManager.slerp)
             return this.setValSlerp(s);
         return this.setValLerp(s);
@@ -177,9 +188,10 @@ class ViewManager
             alert("ViewManager should be singleton");
         }
         viewManager = this; // singleton;
+        this.easingFun = null;
         this.slerp = true;
         this.game = game;
-        this.defaultDuration = 1.5;
+        this.defaultDuration = 5.0;
         this.viewNum = 0;
         this.views = {};
         this.viewNames = [];
@@ -190,7 +202,17 @@ class ViewManager
         this.ui = uiController;
         this.setBookmarksURL("/data/cmp_bookmarks.json");
         this.downloadBookmarks();
+        this.setEasing(10);
         //this.handleBookmarks(SAMPLE_VIEWS)
+    }
+
+    setEasing(a)
+    {
+        if (a) {
+            this.easingFun = function(s) { return expEasing(s,a); }
+            return;
+        }
+        this.easingFun = null;
     }
     
     gotoView(name, dur)
