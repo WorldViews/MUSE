@@ -10,15 +10,20 @@ import { ic_stars } from 'react-icons-kit/md/ic_stars';
 
 export default class ViewTool extends React.Component {
     state = {
-        value: 'None'
+        viewName: 'None'
     }
 
     onMarkView(e) {
         console.log("onMarkView");
     }
+
+    onViewNameChange(event) {
+        console.log("onViewNameChange", event);
+        this.setState({viewName: event.target.value});
+    }
     
     onChange(event, index, value) {
-        this.setState({value:value});
+        this.setState({viewName:value});
         if (this.props.onChange)
             this.props.onChange(value);
     }
@@ -26,7 +31,7 @@ export default class ViewTool extends React.Component {
     render() {
         return (
             <div className={styles}>
-                <input type="text" value="view" id="currentViewName"/>
+                <input type="text" onChange={this.onViewNameChange.bind(this)} value={this.state.viewName} id="currentViewName"/>
                 <input type="button" value="Mark"
             onClick = {
                 //(e) => console.log("onMarkView")
@@ -35,7 +40,7 @@ export default class ViewTool extends React.Component {
                 />
                 <SelectField
                     floatingLabelText="View"
-                    value={this.state.value}
+                    value={this.state.viewName}
                     onChange={this.onChange.bind(this)}>
                     {_.map(this.props.callbacks, (callback, key) => (
                         <MenuItem
