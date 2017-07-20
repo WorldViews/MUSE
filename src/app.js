@@ -56,12 +56,12 @@ function start(config) {
 
     let isVRWithFallbackControl =
         config.preferredControl === 'vr' ||
-        config.fallbackControl === 'pointerlock'; 
+        config.fallbackControl === 'pointerlock';
 
     if (isVRWithFallbackControl) {
-        window.game = new VRGame('canvas3d');   
+        window.game = new VRGame('canvas3d');
     } else if (config.preferredControl === 'multi') {
-        window.game = new Game();
+        window.game = new Game('canvas3d');
         game.addMultiControls();
     }
 
@@ -123,14 +123,14 @@ function start(config) {
     }
 
     setupLights(game);
-    
+
     if (isVRWithFallbackControl) {
         game.body.position.set(2, 1.5, 2);
     }
     else {
         game.camera.position.set(100, 200, 150);
     }
-    
+
     game.animate(0);
 }
 
