@@ -54,6 +54,9 @@ class XControls
         this.panRatio = 0.2;
         this.pitchRatio = 0.2;
 
+        this.raycaster = new THREE.Raycaster();
+        this.raycastPt = new THREE.Vector2()
+
         this._onMouseMove = bind( this, this.onMouseMove );
         this._onMouseDown = bind( this, this.onMouseDown );
         this._onMouseWheel = bind( this, this.onMouseWheel );
@@ -144,6 +147,7 @@ class XControls
     }
 
     onMouseMove( event ) {
+        this.handleRaycast(event);
         if (!this.mouseDragOn || !this.enabled)
 	    return;
         //console.log("XControls.onMouseMove");
@@ -159,6 +163,23 @@ class XControls
         }
     }
 
+    handleRaycast(event) {
+        var pt = new THREE.Vector2()
+        this.raycastPt.x = (event.pageX / window.innerWidth)*2 - 1;
+        this.raycastPt.y = - (event.pageY / window.innerHeight)*2 + 1;
+        this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
+        var objs = this.game.scene.children;
+        var intersects = this.raycaster.intersectObjects(objs, true);
+        var i = 0;
+        console.log(sprintf("raycast %f %f -> %d objs %d isects",
+                            this.raycastPt.x, this.raycastPt.y, objs.length, intersects.length));
+        intersects.forEach(isect => {
+            i++;
+            var obj = isect.object;
+            console.log("isect "+i+" "+obj.name);
+        })
+    }
+    
     handleLook(dx, dy)
     {
         console.log("XControls.handleLook dx: "+dx+"  dy: "+dy);
