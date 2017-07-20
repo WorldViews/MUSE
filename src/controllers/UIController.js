@@ -38,9 +38,10 @@ export default class UIController {
         
         document.body.appendChild(this.root);
         ReactDOM.render(
-            <div>
-                <div ref={(el)=>this.status = el} style={{color:'white',position:'absolute','top':0, 'left':0, zIndex:1000}}>Hello
-                </div>
+         <div>
+            <div ref={(el)=>this.status = el}
+                style={{color:'white',position:'absolute','top':0, 'left':0, zIndex:1000}}>...
+            </div>
             <TweakUI>
                 <TimelineSlider
                     ref={(slider) => this.slider = slider}
@@ -63,9 +64,9 @@ export default class UIController {
                     onChange={this.onViewCallback.bind(this)}
                 />
                 </div>
-                </TweakUI>
-            </div>,
-            this.root
+            </TweakUI>
+         </div>,
+         this.root
         );
     }
 
