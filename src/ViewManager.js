@@ -202,7 +202,7 @@ class ViewManager
         this.ui = uiController;
         this.setBookmarksURL("/data/cmp_bookmarks.json");
         this.downloadBookmarks();
-        this.setEasing(10);
+        this.setEasing(5);
         //this.handleBookmarks(SAMPLE_VIEWS)
     }
 
