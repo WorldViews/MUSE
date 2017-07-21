@@ -8,6 +8,8 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 import { getCameraParams } from '../../Util';
 
+var toDeg = THREE.Math.radToDeg;
+
 function bind( scope, fn ) {
     return function () {
 	fn.apply( scope, arguments );
@@ -23,6 +25,7 @@ class XControls
         console.log("******************** XControls.constructor()");
         var inst = this;
         this.game = game;
+        game.xc = this; // debugging convenience
         this.object = game.camera;
         this.target = new THREE.Vector3( 0, 0, 0 );
 
@@ -30,29 +33,18 @@ class XControls
         this.enabled = true;
         console.log("domElement "+this.domElement);
 
-        this.movementSpeed = 3.0;
-        //this.lookSpeed = 0.005;
-        this.lookSpeed = 0.05;
-
-        this.lookVertical = true;
-        this.verticalMin = 0;
-        this.verticalMax = Math.PI;
-
-        this.mouseX = 0;
-        this.mouseY = 0;
-
         this.phi = THREE.Math.degToRad(90);
         this.theta = 0;
 
         this.mouseDragOn = false;
 
-        this.viewHalfX = 0;
-        this.viewHalfY = 0;
+//        this.viewHalfX = 0;
+//        this.viewHalfY = 0;
         this.mousePtDown = null;
         this.phiDown = null;
         this.thetaDown = null;
-        this.panRatio = 0.2;
-        this.pitchRatio = 0.2;
+        this.panRatio = 0.005;
+        this.pitchRatio = 0.005;
 
         this.raycaster = new THREE.Raycaster();
         this.raycastPt = new THREE.Vector2()
@@ -62,8 +54,8 @@ class XControls
         this._onMouseWheel = bind( this, this.onMouseWheel );
         this._onMouseUp = bind( this, this.onMouseUp );
 /*
-        var _onKeyDown = bind( this, this.onKeyDown );
-        var _onKeyUp = bind( this, this.onKeyUp );
+        this._onKeyDown = bind( this, this.onKeyDown );
+        this._onKeyUp = bind( this, this.onKeyUp );
 */
         //this.domElement.addEventListener( 'contextmenu', contextmenu, false );
 /*
@@ -72,12 +64,12 @@ class XControls
         this.domElement.addEventListener( 'mouseup',       this._onMouseUp, false );
         this.domElement.addEventListener( 'mousemove',     this._onMouseMove, false );
         this.domElement.addEventListener( 'wheel',         this._onMouseWheel, false);
-        this.domElement.addEventListener('DOMMouseScroll', this._onMouseWheel, false);
+        this.domElement.addEventListener( 'DOMMouseScroll',this._onMouseWheel, false);
 
         console.log("set the mouse bindings!!!");
-        this.handleResize();
     }
 
+/*
     getPhi() {
 	return this.phi;
     }
@@ -93,16 +85,7 @@ class XControls
     setTheta(theta) {
         this.theta = theta;
     }
-    
-    handleResize() {
-        if ( this.domElement === document ) {
-	    this.viewHalfX = window.innerWidth / 2;
-	    this.viewHalfY = window.innerHeight / 2;
-        } else {
-	    this.viewHalfX = this.domElement.offsetWidth / 2;
-	    this.viewHalfY = this.domElement.offsetHeight / 2;
-        }
-    };
+*/   
 
     onMouseDown( event ) {
         console.log("XControls.onMouseDown");
@@ -113,8 +96,11 @@ class XControls
         //event.stopPropagation();
         this.mouseDragOn = true;
         this.mousePtDown = this.getMousePt(event);
-        this.phiDown = this.phi;
-        this.thetaDown = this.theta;
+        var sp = this.getAngles();
+        //this.phiDown = this.phi;
+        //this.thetaDown = this.theta;
+        this.phiDown = sp.phi;
+        this.thetaDown = sp.theta;
     };
 
     onMouseUp( event ) {
@@ -125,13 +111,37 @@ class XControls
     };
 
     onMouseWheel(evt) {
-	console.log("------>>>>>> LookControls.onMouseWheel...");
+	//console.log("LookControls.onMouseWheel...");
 	evt.preventDefault();
         if (evt.shiftKey)
             this.handleChangeFOV(evt);
         else
             this.handleDolly(evt);
     }
+
+    onMouseMove( event ) {
+        this.handleRaycast(event);
+        if (!this.mouseDragOn || !this.enabled)
+	    return;
+        //console.log("XControls.onMouseMove");
+        var pt = this.getMousePt(event);
+        var dx = pt.x - this.mousePtDown.x;
+        var dy = pt.y - this.mousePtDown.y;
+        //console.log("XControls.onMouseMove dx: "+dx+"  dy: "+dy);
+        if (event.button == 0) {
+            this.handleLook(dx,dy);
+        }
+        if (event.button == 1) {
+            this.handleOrbit(dx,dy);
+        }
+    }
+
+    getMousePt(event)
+    {
+        return {x: event.pageX, y: event.pageY };
+    }
+
+
 
     handleChangeFOV(evt)
     {
@@ -176,28 +186,6 @@ class XControls
         cam.position.addScaledVector(wv, zf);
     }
 
-    getMousePt(event)
-    {
-        return {x: event.pageX, y: event.pageY };
-    }
-
-    onMouseMove( event ) {
-        this.handleRaycast(event);
-        if (!this.mouseDragOn || !this.enabled)
-	    return;
-        //console.log("XControls.onMouseMove");
-        var pt = this.getMousePt(event);
-        var dx = pt.x - this.mousePtDown.x;
-        var dy = pt.y - this.mousePtDown.y;
-        //console.log("XControls.onMouseMove dx: "+dx+"  dy: "+dy);
-        if (event.button == 0) {
-            this.handleLook(dx,dy);
-        }
-        if (event.button == 1) {
-            this.handleOrbit(dx,dy);
-        }
-    }
-
     handleRaycast(event) {
         var pt = new THREE.Vector2()
         this.raycastPt.x = (event.pageX / window.innerWidth)*2 - 1;
@@ -226,15 +214,36 @@ class XControls
     handleLook(dx, dy)
     {
         console.log("XControls.handleLook dx: "+dx+"  dy: "+dy);
-	this.theta = this.thetaDown + this.panRatio * THREE.Math.degToRad( dx );
-	this.phi = this.phiDown + this.pitchRatio * THREE.Math.degToRad( dy );
+	this.theta = this.thetaDown - this.panRatio   * dx;
+	this.phi =   this.phiDown   + this.pitchRatio * dy;
+        this.updateCam();
     }
 
+    getAngles()
+    {
+        var cam = this.game.camera;
+        var wv = cam.getWorldDirection();
+        var sp = new THREE.Spherical();
+        sp.setFromVector3(wv);
+        return sp;
+    }
+    
     handleOrbit(dx, dy)
     {
         console.log("XControls.handleOrbit dx: "+dx+"  dy: "+dy);
+        var cam = this.game.camera;
+        var wv = cam.getWorldDirection();
+        var d = 100;
+        this.target = cam.position.clone();
+        this.target.addScaledVector(wv, d);
+        var sp = new THREE.Spherical();
+        sp.setFromVector3(wv);
+        var theta = sp.theta;
+        var phi = sp.phi;
+        console.log(sprintf("theta: %6.2f phi: %6.2f", toDeg(theta), toDeg(phi)));
 	this.theta = this.thetaDown + this.panRatio * THREE.Math.degToRad( dx );
 	this.phi = this.phiDown + this.pitchRatio * THREE.Math.degToRad( dy );
+        console.log(sprintf("theta: %6.2f phi: %6.2f", toDeg(this.theta), toDeg(this.phi)));
     }
     
     onKeyDown( event ) {
@@ -255,15 +264,22 @@ class XControls
 
         if (!this.mouseDragOn)
 	    return;
+        //this.updateCam();
+    }
 
+    updateCam() {
         var targetPosition = this.target;
         var position = this.object.position;
-
-        targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
+        var theta = this.theta;
+        var phi = this.phi;
+        theta = Math.PI/2 - theta;
+        console.log(sprintf("uc< theta: %6.2f phi: %6.2f", toDeg(theta), toDeg(phi)));
+        targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( theta );
         targetPosition.y = position.y + 100 * Math.cos( this.phi );
-        targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
+        targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( theta );
         this.object.lookAt( targetPosition );
-
+        var s = this.getAngles();
+        console.log(sprintf("uc> theta: %6.2f phi: %6.2f", toDeg(s.theta), toDeg(s.phi)));
     };
 
     //contextmenu( event ) {
@@ -271,12 +287,12 @@ class XControls
     //}
 
     dispose() {
-        this.domElement.removeEventListener( 'contextmenu', contextmenu, false );
-        this.domElement.removeEventListener( 'mousedown', _onMouseDown, false );
-        this.domElement.removeEventListener( 'mousemove', _onMouseMove, false );
-        this.domElement.removeEventListener( 'mouseup', _onMouseUp, false );
-        window.removeEventListener( 'keydown', _onKeyDown, false );
-        window.removeEventListener( 'keyup', _onKeyUp, false );
+        this.domElement.removeEventListener( 'contextmenu', this.contextmenu, false );
+        this.domElement.removeEventListener( 'mousedown',   this._onMouseDown, false );
+        this.domElement.removeEventListener( 'mousemove',   this._onMouseMove, false );
+        this.domElement.removeEventListener( 'mouseup',     this._onMouseUp, false );
+        window.removeEventListener( 'keydown',              this._onKeyDown, false );
+        window.removeEventListener( 'keyup',                this._onKeyUp, false );
     };
 
 };

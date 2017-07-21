@@ -53,7 +53,8 @@ function getCameraParams(cam)
     var s = new THREE.Spherical();
     s.setFromVector3(wv);
     console.log(sprintf("cam phi: %6.2f theta: %6.2f", toDeg(s.phi), toDeg(s.theta)));
-    return {phi: s.phi, theta: s.theta};
+    //return {phi: s.phi, theta: s.theta};
+    return s;
 }
 
 export {getJSON, getCameraParams};
