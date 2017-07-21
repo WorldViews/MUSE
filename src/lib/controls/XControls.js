@@ -33,16 +33,10 @@ class XControls
         this.enabled = true;
         console.log("domElement "+this.domElement);
 
-        this.phi = THREE.Math.degToRad(90);
-        this.theta = 0;
-
         this.mouseDragOn = false;
-
-//        this.viewHalfX = 0;
-//        this.viewHalfY = 0;
         this.mousePtDown = null;
-        this.phiDown = null;
-        this.thetaDown = null;
+        this.anglesDown = null;
+        this.camPosDown = null;
         this.panRatio = 0.005;
         this.pitchRatio = 0.005;
 
@@ -69,24 +63,6 @@ class XControls
         console.log("set the mouse bindings!!!");
     }
 
-/*
-    getPhi() {
-	return this.phi;
-    }
-
-    setPhi(phi) {
-	this.phi = phi;
-    }
-
-    getTheta() {
-        return this.theta;
-    }
-
-    setTheta(theta) {
-        this.theta = theta;
-    }
-*/   
-
     onMouseDown( event ) {
         console.log("XControls.onMouseDown");
         if ( this.domElement !== document ) {
@@ -96,11 +72,9 @@ class XControls
         //event.stopPropagation();
         this.mouseDragOn = true;
         this.mousePtDown = this.getMousePt(event);
-        var sp = this.getAngles();
-        //this.phiDown = this.phi;
-        //this.thetaDown = this.theta;
-        this.phiDown = sp.phi;
-        this.thetaDown = sp.theta;
+        this.anglesDown = this.getCamAngles();
+        this.camPosDown = this.game.camera.position.clone();
+        this.getTarget();
     };
 
     onMouseUp( event ) {
@@ -214,38 +188,38 @@ class XControls
     handleLook(dx, dy)
     {
         console.log("XControls.handleLook dx: "+dx+"  dy: "+dy);
-	this.theta = this.thetaDown - this.panRatio   * dx;
-	this.phi =   this.phiDown   + this.pitchRatio * dy;
-        this.updateCam();
+	var theta = this.anglesDown.theta - this.panRatio   * dx;
+	var phi =   this.anglesDown.phi   + this.pitchRatio * dy;
+        this.setCamAngles(theta, phi);
     }
 
-    getAngles()
-    {
-        var cam = this.game.camera;
-        var wv = cam.getWorldDirection();
-        var sp = new THREE.Spherical();
-        sp.setFromVector3(wv);
-        return sp;
-    }
-    
     handleOrbit(dx, dy)
     {
         console.log("XControls.handleOrbit dx: "+dx+"  dy: "+dy);
-        var cam = this.game.camera;
+        var d = this.object.position.distanceTo(this.target);
+        console.log("orbit d: "+d);
+/*
         var wv = cam.getWorldDirection();
-        var d = 100;
-        this.target = cam.position.clone();
-        this.target.addScaledVector(wv, d);
         var sp = new THREE.Spherical();
         sp.setFromVector3(wv);
         var theta = sp.theta;
         var phi = sp.phi;
-        console.log(sprintf("theta: %6.2f phi: %6.2f", toDeg(theta), toDeg(phi)));
-	this.theta = this.thetaDown + this.panRatio * THREE.Math.degToRad( dx );
-	this.phi = this.phiDown + this.pitchRatio * THREE.Math.degToRad( dy );
-        console.log(sprintf("theta: %6.2f phi: %6.2f", toDeg(this.theta), toDeg(this.phi)));
+	theta = this.thetaDown + this.panRatio * dx;
+	phi = this.phiDown + this.pitchRatio * dy;
+*/
+        var target = this.target;
+        var pos = this.object.position;
+        console.log("Orbit d: "+d+"  target:", target);
+        console.log("Cam Pos:", pos);
+	var theta = this.anglesDown.theta - this.panRatio   * dx;
+	var phi =   this.anglesDown.phi   + this.pitchRatio * dy;
+        theta = Math.PI/2 - theta;
+        pos.x = target.x - d * Math.sin( phi ) * Math.cos( theta );
+        pos.y = target.y - d * Math.cos( phi );
+        pos.z = target.z - d * Math.sin( phi ) * Math.sin( theta );
+        this.object.lookAt( this.target );
     }
-    
+
     onKeyDown( event ) {
         var kc = event.keyCode;
         //console.log("onKeyUp "+kc);
@@ -257,34 +231,40 @@ class XControls
         console.log("onKeyUp "+kc);
     };
 
-    update( delta ) {
-        //console.log("FPC update....");
-        delta = 0.01;
-        if ( this.enabled === false ) return;
-
-        if (!this.mouseDragOn)
-	    return;
-        //this.updateCam();
+    update() {
     }
 
-    updateCam() {
+    getTarget()
+    {
+        var cam = this.game.camera;
+        var wv = cam.getWorldDirection();
+        var d = 100;
+        this.target = cam.position.clone();
+        this.target.addScaledVector(wv, d);
+        console.log("Target:", this.target);
+    }
+    
+    getCamAngles()
+    {
+        var cam = this.game.camera;
+        var wv = cam.getWorldDirection();
+        var sp = new THREE.Spherical();
+        sp.setFromVector3(wv);
+        return {theta: sp.theta, phi: sp.phi};
+    }
+    
+    setCamAngles(theta, phi) {
         var targetPosition = this.target;
         var position = this.object.position;
-        var theta = this.theta;
-        var phi = this.phi;
         theta = Math.PI/2 - theta;
         console.log(sprintf("uc< theta: %6.2f phi: %6.2f", toDeg(theta), toDeg(phi)));
-        targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( theta );
-        targetPosition.y = position.y + 100 * Math.cos( this.phi );
-        targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( theta );
+        targetPosition.x = position.x + 100 * Math.sin( phi ) * Math.cos( theta );
+        targetPosition.y = position.y + 100 * Math.cos( phi );
+        targetPosition.z = position.z + 100 * Math.sin( phi ) * Math.sin( theta );
         this.object.lookAt( targetPosition );
-        var s = this.getAngles();
+        var s = this.getCamAngles();
         console.log(sprintf("uc> theta: %6.2f phi: %6.2f", toDeg(s.theta), toDeg(s.phi)));
     };
-
-    //contextmenu( event ) {
-    //    event.preventDefault();
-    //}
 
     dispose() {
         this.domElement.removeEventListener( 'contextmenu', this.contextmenu, false );
