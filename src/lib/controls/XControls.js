@@ -1,7 +1,4 @@
 /**
- * @author mrdoob / http://mrdoob.com/
- * @author alteredq / http://alteredqualia.com/
- * @author paulirish / http://paulirish.com/
  */
 
 import * as THREE from 'three';
@@ -16,8 +13,6 @@ function bind( scope, fn ) {
     };
 }
 
-
-//THREE.LookControls = function ( object, domElement )
 class XControls
 {
 
@@ -115,8 +110,6 @@ class XControls
         return {x: event.pageX, y: event.pageY };
     }
 
-
-
     handleChangeFOV(evt)
     {
 	var sf = 0.015;
@@ -161,15 +154,19 @@ class XControls
     }
 
     handleRaycast(event) {
-        var pt = new THREE.Vector2()
-        this.raycastPt.x = (event.pageX / window.innerWidth)*2 - 1;
-        this.raycastPt.y = - (event.pageY / window.innerHeight)*2 + 1;
+        var x = (event.pageX / window.innerWidth)*2 - 1;
+        var y = - (event.pageY / window.innerHeight)*2 + 1;
+        this.raycast(x,y);
+    }
+
+    raycast(x,y)
+    {
+        this.raycastPt.x = x;
+        this.raycastPt.y = y;
         this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
         var objs = this.game.scene.children;
         var intersects = this.raycaster.intersectObjects(objs, true);
         var i = 0;
-        //console.log(sprintf("raycast %f %f -> %d objs %d isects",
-        //                    this.raycastPt.x, this.raycastPt.y, objs.length, intersects.length));
         if (intersects.length <= 1)
             return;
         this.pickedName = "";
@@ -183,6 +180,10 @@ class XControls
             console.log("isect "+i+" "+obj.name);
         })
         this.game.setStatus(this.pickedName);
+        if (intersects.length) {
+            return intersects[0];
+        }
+        return null;
     }
     
     handleLook(dx, dy)
@@ -196,27 +197,15 @@ class XControls
     handleOrbit(dx, dy)
     {
         console.log("XControls.handleOrbit dx: "+dx+"  dy: "+dy);
-        var d = this.object.position.distanceTo(this.target);
-        console.log("orbit d: "+d);
-/*
-        var wv = cam.getWorldDirection();
-        var sp = new THREE.Spherical();
-        sp.setFromVector3(wv);
-        var theta = sp.theta;
-        var phi = sp.phi;
-	theta = this.thetaDown + this.panRatio * dx;
-	phi = this.phiDown + this.pitchRatio * dy;
-*/
+        var camPos = this.object.position;
+        var d = camPos.distanceTo(this.target);
         var target = this.target;
-        var pos = this.object.position;
-        console.log("Orbit d: "+d+"  target:", target);
-        console.log("Cam Pos:", pos);
+        console.log("Target:", target);
+        console.log("Cam Pos:", camPos);
+        console.log("d: "+d);
 	var theta = this.anglesDown.theta - this.panRatio   * dx;
 	var phi =   this.anglesDown.phi   + this.pitchRatio * dy;
-        theta = Math.PI/2 - theta;
-        pos.x = target.x - d * Math.sin( phi ) * Math.cos( theta );
-        pos.y = target.y - d * Math.cos( phi );
-        pos.z = target.z - d * Math.sin( phi ) * Math.sin( theta );
+        camPos.subVectors(target, this.getVec(theta, phi, d));
         this.object.lookAt( this.target );
     }
 
@@ -231,16 +220,24 @@ class XControls
         console.log("onKeyUp "+kc);
     };
 
-    update() {
-    }
+    update() {}
 
     getTarget()
     {
-        var cam = this.game.camera;
-        var wv = cam.getWorldDirection();
-        var d = 100;
-        this.target = cam.position.clone();
-        this.target.addScaledVector(wv, d);
+        console.log("getTarget");
+        var isect = this.raycast(0.5,0.5);
+        if (isect) {
+            console.log("setting target from intersect");
+            this.target = isect.point.clone();
+        }
+        else {
+            console.log("setting target without intersect");
+            var cam = this.game.camera;
+            var wv = cam.getWorldDirection();
+            var d = 100;
+            this.target = cam.position.clone();
+            this.target.addScaledVector(wv, d);
+        }
         console.log("Target:", this.target);
     }
     
@@ -254,18 +251,22 @@ class XControls
     }
     
     setCamAngles(theta, phi) {
-        var targetPosition = this.target;
-        var position = this.object.position;
-        theta = Math.PI/2 - theta;
-        console.log(sprintf("uc< theta: %6.2f phi: %6.2f", toDeg(theta), toDeg(phi)));
-        targetPosition.x = position.x + 100 * Math.sin( phi ) * Math.cos( theta );
-        targetPosition.y = position.y + 100 * Math.cos( phi );
-        targetPosition.z = position.z + 100 * Math.sin( phi ) * Math.sin( theta );
-        this.object.lookAt( targetPosition );
-        var s = this.getCamAngles();
-        console.log(sprintf("uc> theta: %6.2f phi: %6.2f", toDeg(s.theta), toDeg(s.phi)));
+        var targetPos = new THREE.Vector3();
+        targetPos.addVectors(this.object.position, this.getVec(theta, phi));
+        this.object.lookAt( targetPos );
     };
 
+    getVec(theta, phi, d)
+    {
+        d = d || 1.0;
+        theta = Math.PI/2 - theta;
+        var v = new THREE.Vector3();
+        v.x = d * Math.sin( phi ) * Math.cos( theta );
+        v.y = d * Math.cos( phi );
+        v.z = d * Math.sin( phi ) * Math.sin( theta );
+        return v;
+    }
+    
     dispose() {
         this.domElement.removeEventListener( 'contextmenu', this.contextmenu, false );
         this.domElement.removeEventListener( 'mousedown',   this._onMouseDown, false );
