@@ -34,6 +34,7 @@ class XControls
         this.camPosDown = null;
         this.panRatio = 0.005;
         this.pitchRatio = 0.005;
+        this.lookSense = 1;
 
         this.raycaster = new THREE.Raycaster();
         this.raycastPt = new THREE.Vector2()
@@ -42,13 +43,14 @@ class XControls
         this._onMouseDown = bind( this, this.onMouseDown );
         this._onMouseWheel = bind( this, this.onMouseWheel );
         this._onMouseUp = bind( this, this.onMouseUp );
+        this._onContextMenu = bind(this, this.onContextMenu );
 /*
         this._onKeyDown = bind( this, this.onKeyDown );
         this._onKeyUp = bind( this, this.onKeyUp );
 */
-        //this.domElement.addEventListener( 'contextmenu', contextmenu, false );
 /*
 */
+        this.domElement.addEventListener( 'contextmenu', this._onContextMenu, false );
         this.domElement.addEventListener( 'mousedown',     this._onMouseDown, false );
         this.domElement.addEventListener( 'mouseup',       this._onMouseUp, false );
         this.domElement.addEventListener( 'mousemove',     this._onMouseMove, false );
@@ -56,6 +58,10 @@ class XControls
         this.domElement.addEventListener( 'DOMMouseScroll',this._onMouseWheel, false);
 
         console.log("set the mouse bindings!!!");
+    }
+
+    onContextMenu( event ) {
+        event.preventDefault();
     }
 
     onMouseDown( event ) {
@@ -97,7 +103,7 @@ class XControls
         var dx = pt.x - this.mousePtDown.x;
         var dy = pt.y - this.mousePtDown.y;
         //console.log("XControls.onMouseMove dx: "+dx+"  dy: "+dy);
-        if (event.shiftKey) {
+        if (event.shiftKey || event.button == 2) {
             this.handlePan(dx,dy);
             return;
         }
@@ -197,8 +203,10 @@ class XControls
     handleLook(dx, dy)
     {
         console.log("XControls.handleLook dx: "+dx+"  dy: "+dy);
-	var theta = this.anglesDown.theta - this.panRatio   * dx;
-	var phi =   this.anglesDown.phi   + this.pitchRatio * dy;
+        dx *= this.lookSense;
+        dy *= this.lookSense;
+	var theta = this.anglesDown.theta - this.panRatio * dx;
+	var phi =   this.anglesDown.phi + this.pitchRatio * dy;
         this.setCamAngles(theta, phi);
     }
 
@@ -336,6 +344,7 @@ class XControls
         this.domElement.removeEventListener( 'mousedown',   this._onMouseDown, false );
         this.domElement.removeEventListener( 'mousemove',   this._onMouseMove, false );
         this.domElement.removeEventListener( 'mouseup',     this._onMouseUp, false );
+        this.domElement.removeEventListener( 'contextmenu', this._onContextMenu, false );
         window.removeEventListener( 'keydown',              this._onKeyDown, false );
         window.removeEventListener( 'keyup',                this._onKeyUp, false );
     };
