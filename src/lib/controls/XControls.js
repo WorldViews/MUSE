@@ -152,7 +152,8 @@ class XControls
         var camPos = cam.position;
         var d = camPos.distanceTo(this.target);
         console.log(sprintf("dolly dx: %f", dx));
-        var wv = cam.getWorldDirection();
+        //var wv = cam.getWorldDirection();
+        var wv = this.getCamForward();
         var ds = dx < 0 ? 0.1*d : -0.1*d;
         camPos.addScaledVector(wv, ds);
     }
@@ -218,9 +219,16 @@ class XControls
     handlePan(dx, dy)
     {
         var camPos = this.object.position;
-        var f = 1.0;
-        camPos.x = this.camPosDown.x - f*dx;
-        camPos.y = this.camPosDown.y + f*dy;
+        var f = 0.05;
+        var dV = new THREE.Vector3();
+        var vRight = this.getCamRight();
+        var vUp = this.getCamUp();
+        console.log("pan vRight: ", vRight);
+        console.log("pan    vUp: ", vUp);
+        dV.addScaledVector(vRight, -f*dx);
+        dV.addScaledVector(vUp, f*dy);
+        console.log("pan     dV:", dV);
+        camPos.addVectors(this.camPosDown, dV);
     }
     
     onKeyDown( event ) {
@@ -236,6 +244,10 @@ class XControls
 
     update() {}
 
+    // This tries to find an appropriate target for trackballing
+    // The first choice is the intersect with geometry direction
+    // inline with camera center.  If there is none, a point 100
+    // units in front of camera is used.
     getTarget()
     {
         console.log("getTarget");
@@ -247,7 +259,8 @@ class XControls
         else {
             console.log("setting target without intersect");
             var cam = this.game.camera;
-            var wv = cam.getWorldDirection();
+            //var wv = cam.getWorldDirection();
+            var wv = this.getCamForward();
             var d = 100;
             this.target = cam.position.clone();
             this.target.addScaledVector(wv, d);
@@ -257,8 +270,9 @@ class XControls
     
     getCamAngles()
     {
-        var cam = this.game.camera;
-        var wv = cam.getWorldDirection();
+        //var cam = this.game.camera;
+        //var wv = cam.getWorldDirection();
+        var wv = this.getCamForward();
         var sp = new THREE.Spherical();
         sp.setFromVector3(wv);
         return {theta: sp.theta, phi: sp.phi};
@@ -270,6 +284,42 @@ class XControls
         this.object.lookAt( targetPos );
     };
 
+    // Get camera forward direction (direction it is looking)
+    // in world coordinates.
+    getCamForward()
+    {
+        return this.game.camera.getWorldDirection();
+        /*
+        var cam = this.game.camera;
+        var vL = new THREE.Vector3(0,0,-1);
+        var vW = vL.applyMatrix4(cam.matrixWorld);
+        vW.sub(cam.position).normalize();
+        return vW;
+        */
+    }
+
+    getCamRight()
+    {
+        var cam = this.game.camera;
+        cam.updateMatrixWorld();
+        var vRightLocal = new THREE.Vector3(1,0,0);
+        var vRightWorld = vRightLocal.applyMatrix4(cam.matrixWorld);
+        vRightWorld.sub(cam.position).normalize();
+        return vRightWorld;
+    }
+
+    getCamUp()
+    {
+        var cam = this.game.camera;
+        cam.updateMatrixWorld();
+        var vUpLocal = new THREE.Vector3(0,1,0);
+        var vUpWorld = vUpLocal.applyMatrix4(cam.matrixWorld);
+        vUpWorld.sub(cam.position).normalize();
+        return vUpWorld;
+    }
+    
+    // Return vector of given length in direction specified
+    // by spherical coordinates theta,phi.
     getVec(theta, phi, d)
     {
         d = d || 1.0;
