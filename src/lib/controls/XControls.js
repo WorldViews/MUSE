@@ -97,6 +97,10 @@ class XControls
         var dx = pt.x - this.mousePtDown.x;
         var dy = pt.y - this.mousePtDown.y;
         //console.log("XControls.onMouseMove dx: "+dx+"  dy: "+dy);
+        if (event.shiftKey) {
+            this.handlePan(dx,dy);
+            return;
+        }
         if (event.button == 0) {
             this.handleLook(dx,dy);
         }
@@ -138,19 +142,19 @@ class XControls
 	} else if (evt.detail) { // Firefox
 	    dx += evt.detail * 1.0;
 	}
-        var zf = 1.01;
-        console.log(sprintf("handleDolly dx: %f  f: %f", dx, zf));
-        if (dx > 0)
-            this.dolly(zf);
-        if (dx < 0)
-            this.dolly(-zf);
+        console.log(sprintf("handleDolly dx: %f", dx));
+        this.dolly(dx);
     }
 
-    dolly(zf) {
-        console.log(sprintf("dolly zf: %f", zf));
+    dolly(dx) {
+        this.getTarget();
         var cam = this.game.camera;
+        var camPos = cam.position;
+        var d = camPos.distanceTo(this.target);
+        console.log(sprintf("dolly dx: %f", dx));
         var wv = cam.getWorldDirection();
-        cam.position.addScaledVector(wv, zf);
+        var ds = dx < 0 ? 0.1*d : -0.1*d;
+        camPos.addScaledVector(wv, ds);
     }
 
     handleRaycast(event) {
@@ -161,13 +165,14 @@ class XControls
 
     raycast(x,y)
     {
+        //console.log("raycast "+x+" "+y);
         this.raycastPt.x = x;
         this.raycastPt.y = y;
         this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
         var objs = this.game.scene.children;
         var intersects = this.raycaster.intersectObjects(objs, true);
         var i = 0;
-        if (intersects.length <= 1)
+        if (intersects.length == 0)
             return;
         this.pickedName = "";
         var inst = this;
@@ -177,11 +182,13 @@ class XControls
             if (!obj.name || obj.name == "Stars")
                 return;
             inst.pickedName = obj.name;
-            console.log("isect "+i+" "+obj.name);
+            //console.log("isect "+i+" "+obj.name);
         })
         this.game.setStatus(this.pickedName);
-        if (intersects.length) {
-            return intersects[0];
+        if (intersects.length > 0) {
+            var isect = intersects[0];
+            if (isect.object.name != "Stars")
+                return isect;
         }
         return null;
     }
@@ -199,16 +206,23 @@ class XControls
         console.log("XControls.handleOrbit dx: "+dx+"  dy: "+dy);
         var camPos = this.object.position;
         var d = camPos.distanceTo(this.target);
-        var target = this.target;
-        console.log("Target:", target);
+        console.log("Target:", this.target);
         console.log("Cam Pos:", camPos);
         console.log("d: "+d);
 	var theta = this.anglesDown.theta - this.panRatio   * dx;
 	var phi =   this.anglesDown.phi   + this.pitchRatio * dy;
-        camPos.subVectors(target, this.getVec(theta, phi, d));
+        camPos.subVectors(this.target, this.getVec(theta, phi, d));
         this.object.lookAt( this.target );
     }
 
+    handlePan(dx, dy)
+    {
+        var camPos = this.object.position;
+        var f = 1.0;
+        camPos.x = this.camPosDown.x - f*dx;
+        camPos.y = this.camPosDown.y + f*dy;
+    }
+    
     onKeyDown( event ) {
         var kc = event.keyCode;
         //console.log("onKeyUp "+kc);
@@ -225,7 +239,7 @@ class XControls
     getTarget()
     {
         console.log("getTarget");
-        var isect = this.raycast(0.5,0.5);
+        var isect = this.raycast(0,0);
         if (isect) {
             console.log("setting target from intersect");
             this.target = isect.point.clone();
