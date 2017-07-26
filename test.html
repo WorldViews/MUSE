@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+    <title>Climate Music Experience</title>
+
+    <style>
+      html {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #ffffff;
+        margin: 0px;
+        overflow: hidden;
+        font-family:Monospace;
+        font-size:13px;
+        text-align:center;
+        cursor: pointer;
+      }
+      div.textViewer {
+         color: rgba(240,240,240, .9);
+         background: rgba(200,200,0,0.0);
+         position: absolute;
+         top: 15px;
+         left: 200px;
+         width: 700px;
+         align-items: center;
+         horizontal-align: center;
+      }
+      #canvas3d {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top:0;
+      }
+    </style>
+  </head> 
+  <body>
+    <canvas id="canvas3d"></canvas>
+    <script src="dist/vendor.bundle.js"></script>
+    <script src="dist/mathbox-bundle.min.js"></script>
+    <script src="src/legacy/jquery-3.1.1.min.js"></script>
+    <script src="src/legacy/jquery-ui.js"></script>
+    <script src="src/lib/GSpreadSheet.js"></script>
+    <script src="dist/app.bundle.js"></script>
+    <script>
+    var SPECS = [
+      {  type: 'Group',  name: 'station' },
+      {  type: 'Group',  name: 'g2',
+         position: [200,0,0],
+         children: {type: 'Axes'}
+      },
+      {  type: 'Group',  name: 'g3',
+         position: [200,-500,0],
+         rotation: [0,0,0.2],
+         children: [
+           {  type: 'Axes', name: 'axis3',
+              visible: false
+           }
+         ]
+      },
+      {  type: 'Axes',   name: 'xyz' },
+      {  type: 'Model', name: 'platform',
+         parent: 'station',
+         path: 'models/PlayDomeSkp_v1.dae',
+         position: [0, 0, 0],
+         rotation: [0, 0, 0],
+         scale: 0.025
+      },
+      {  type: 'Model', name: 'bmw',
+         parent: 'station',
+         path: 'models/bmw/model.dae',
+         position: [0.2, 0, 1.6],
+         //rotation: [0, degToRad(90), 0],
+         rotation: [0, 0, 0],
+         scale: 0.020,
+         visible: false
+      },
+      {  type: 'PointLight', name: 'torch1',
+         color: 0xff0000, distance: 500
+      },
+      {  type: 'Dancer', name: 'dancer',
+         scale: .06, visible: false
+      }
+    ]
+    </script>
+    <script>
+      start({preferredControl: 'multi', specs: SPECS});
+    </script>
+  </body>
+</html>
