@@ -2,6 +2,7 @@
 import loadVideo from './loadVideo'
 import * as THREE from 'three';
 import {Math} from 'three';
+import {Game} from './Game';
 
 //import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
 import {screen1} from './const/screen';
@@ -21,7 +22,7 @@ function loadScreen(game, spec, path)
     var screenObj = {ready: false};
     var scene = game.scene;
     var path = path || spec.path;
-    console.log('Loading screen... video: '+path);
+    console.log('****************************** Loading screen... video: '+path);
     console.log("spec: "+JSON.stringify(spec));
     //var spec = {x: 5.5, y: 2.5, z: -0.1, width: 6.5, height: 4.0};
     //loadVideo(VIDEO_PATH).then(({imageSource, videoMaterial}) => {
@@ -73,5 +74,6 @@ function loadScreens(game)
     loadScreen(game, screen1);
 }
 
+Game.registerNodeType("Screen", loadScreen);
 
 export {loadScreen, loadScreens};

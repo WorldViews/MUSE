@@ -4,16 +4,24 @@ import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
 import {XControls} from './lib/controls/XControls';
 
-class Game {
+var ntypes = {};
 
+function reportError(str)
+{
+    alert(str);
+}
+
+class Game {
     constructor(domElementId) {
         this.updateHandlers = [];
         this.init(domElementId);
+        this.ntypes = ntypes;
     }
 
     init(domElementId) {
         console.log("init: " + domElementId);
 
+        this.types = {};
         this.domElementId = domElementId;
         this.renderer = this.createRenderer(domElementId);
 
@@ -37,7 +45,7 @@ class Game {
         this.events = new THREE.EventDispatcher();
         this.controllers = {};
         this.setupRAF();
-        this.programControl = null; // for now this is a singleton
+        this.program = null; // for now this is a singleton
     }
 
     setupRAF() {
@@ -123,6 +131,18 @@ class Game {
   	}
     }
 
+    setProgram(program) {
+        this.program = program;
+    }
+    
+    registerPlayer(player) {
+        if (this.program) {
+            this.program.registerPlayer(player);
+        }
+        else {
+            reportError("Attempt to register player with no program");
+        }
+    }
 
     handleResize(e) {
         this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -278,6 +298,33 @@ class Game {
     setStatus(str) {
         this.controllers.ui.setStatus(str);
     }
+
+    /*********************************************************************/
+    // Node system.  Muse is oriented around nodes that correspond to objects
+    // that may be in the scene graph, or may add functionality to the game.
+    // It is an extensible system, where modules may register their node type
+    // with the game.   Then the Loader can create those nodes from JSON objects
+    // specifying the node type.
+    //
+    // A factory should be a function that takes arguments (game, opts)
+    // where opts is an Object containing properties for the object to
+    // be created.
+    static registerNodeType(typeName, factory) {
+        if (ntypes[typeName]) {
+            alert("Node Type "+typeName+" already registered.");
+        }
+        ntypes[typeName] = factory;
+    }
+
+    createNode(typeName, props) {
+        if (ntypes[typeName]) {
+            console.log("*********************** calling factory for "+typeName);
+            return ntypes[typeName](this, props);
+        }
+        return null;
+    }
+
+    
 }
 
 export {Game};
