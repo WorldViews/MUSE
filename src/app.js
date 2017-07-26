@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
-import CMPController from './controllers/CMPController';
+//import CMPController from './controllers/CMPController';
+import { CMPDataVizController } from './controllers/CMPDataVizController';
 import {PanoPortal} from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
 import { Screens } from './Screens';
@@ -79,7 +80,11 @@ let SPECS = [
     {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, 25, 0]},
     {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, 25, 2]},
     {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
-    {  type: 'Inline', name: 'debugStuff', children: TEST }
+    {  type: 'Inline',     name: 'debugStuff', children: TEST },
+    {  type: 'CMPDataViz', name: 'cmp',
+       position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
+       visible: false
+    }
 ];
 
 function start(config) {
@@ -106,12 +111,14 @@ function start(config) {
     let solarSystemController = new SolarSystemController(game);
     let starsController = new StarsController(game.scene, [0, 0, 0]);
     let renderer = isVRWithFallbackControl ? game.renderer.getUnderlyingRenderer() : game.renderer;
+/*
     let cmpController = new CMPController(renderer, game.scene, game.camera, {
         position: [0, 2, 0],
         rotation: [0, 0, 0],
         scale: [1.5, 1, 1.5],
         visible: false
     });
+*/
     let uiController = new UIController({
         game: game,
         playerControl: cmpProgram
@@ -125,7 +132,7 @@ function start(config) {
     }
 
     game.registerController('stars', starsController);
-    game.registerController('cmp', cmpController);
+//    game.registerController('cmp', cmpController);
     game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
