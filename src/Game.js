@@ -3,7 +3,7 @@ import OrbitControls from './lib/controls/OrbitControls';
 import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
 import {XControls} from './lib/controls/XControls';
-
+import {Loader} from './Loader';
 var ntypes = {};
 
 function reportError(str)
@@ -324,7 +324,9 @@ class Game {
         return null;
     }
 
-    
+    load(specs) {
+        game.loader = new Loader(this, specs);
+    }
 }
 
 export {Game};

@@ -1,12 +1,11 @@
 import * as THREE from 'three';
 
 import CMPController from './controllers/CMPController';
-import {PanoPortal0} from './lib/PanoPortal0';
 import {PanoPortal} from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
+import { Screens } from './Screens';
 import { Game } from './Game';
 import { Dancer } from './controllers/DanceController';
-import Marquee from './Marquee';
 import NavigationController from './controllers/NavigationController';
 import { Scripts } from './Scripts';
 import SolarSystemController from './controllers/SolarSystemController';
@@ -17,10 +16,8 @@ import WebVR from './lib/vr/WebVR';
 
 import { ViewManager } from './ViewManager';
 import { NetLink } from './NetLink';
-//import loadModels from './loadModels';
-import {Loader} from './Loader';
-import { loadScreens, loadScreen } from './Screens';
 import { addLight, setupLights } from './Lights';
+import Marquee from './Marquee';
 import setupMarquee from './setupMarquee';
 
 function getParameterByName(name) {
@@ -30,7 +27,7 @@ function getParameterByName(name) {
 
 let {degToRad} = THREE.Math;
 
-var SPECS = [
+var TEST = [
     {  type: 'Group',  name: 'station' },
     {  type: 'Group',  name: 'g2',
        position: [200,0,0],
@@ -45,13 +42,17 @@ var SPECS = [
            }
        ]
     },
-    {  type: 'Axes',   name: 'xyz' },
-    {  type: 'Model', name: 'platform',
-       parent: 'station',
-       path: 'models/PlayDomeSkp_v1.dae',
-       position: [0, 0, 0],
-       rotation: [0, degToRad(0), 0],
-       scale: 0.025
+    {  type: 'Axes',   name: 'xyz' }
+]
+
+let SPECS = [
+    {   type: 'Group', name: 'station'  },
+    {   type: 'Model', name: 'platform',
+        parent: 'station',
+        path: 'models/PlayDomeSkp_v1.dae',
+        position: [0, 0, 0],
+        rotation: [0, degToRad(0), 0],
+        scale: 0.025
     },
     {   type: 'Model', name: 'bmw',
         parent: 'station',
@@ -62,39 +63,27 @@ var SPECS = [
         scale: 0.020,
         visible: false
     },
-    {  type: 'Dancer', name: 'dancer',
-       scale: .1, visible: false
-    }
-]
+    {   type: 'Screen', name: 'mainScreen',
+        parent: 'station', radius: 8.8,
+        path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        phiStart: 34, phiLength: 47,
+        thetaStart: 110, thetaLength: 140
+    },
+    {   type: 'Screen', name: 'rightScreen',
+        parent: 'station', radius: 8.8,
+        path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        phiStart: 34, phiLength: 47,
+        thetaStart: 300, thetaLength: 60
+    },
+    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, 25,-2]},
+    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, 25, 0]},
+    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, 25, 2]},
+    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
+    {  type: 'Inline', name: 'debugStuff', children: TEST }
+];
 
 function start(config) {
-    let MODEL_SPECS = config.specs || [
-        {
-            type: 'Group', name: 'station',
-        },
-        {   type: 'Model', name: 'platform',
-            parent: 'station',
-            path: 'models/PlayDomeSkp_v1.dae',
-            position: [0, 0, 0],
-            rotation: [0, degToRad(0), 0],
-            scale: 0.025
-        },
-        {   type: 'Model', name: 'bmw',
-            parent: 'station',
-            path: 'models/bmw/model.dae',
-            position: [0.2, 0, 1.6],
-            //rotation: [0, degToRad(90), 0],
-            rotation: [0, degToRad(0), 0],
-            scale: 0.020,
-            visible: false
-        },
-        {   type: 'Screen', name: 'mainScreen',
-            parent: 'station', radius: 8.8,
-            path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
-            phiStart: 34, phiLength: 47,
-            thetaStart: 110, thetaLength: 140
-        }
-    ];
+    var specs = config.specs || SPECS;
 
     let isVRWithFallbackControl =
         config.preferredControl === 'vr' ||
@@ -152,17 +141,7 @@ function start(config) {
     game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
     setupMarquee(game);
 
-    //loadModels(MODEL_SPECS, game);
-    game.loader = new Loader(game, MODEL_SPECS);
-    //loadModels(MODEL_SPECS, game);
-    //loadScreens(game);
-
-    if (!isVRWithFallbackControl) {
-        //game.portal0 = new PanoPortal0(game);
-        //game.portal0 = new PanoPortal(game);
-    }
-
-    setupLights(game);
+    game.load(specs);
 
     if (isVRWithFallbackControl) {
         game.body.position.set(2, 1.5, 2);

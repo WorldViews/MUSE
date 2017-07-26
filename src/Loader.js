@@ -62,6 +62,12 @@ class Loader
                     this.loadGroup(spec);
                     return;
                 }
+                if (spec.type == "Inline") {
+                    // for now just use Group.  This may have its own
+                    // code later, such as for loading from a path.
+                    this.loadGroup(spec);
+                    return;
+                }
                 if (spec.type == "Axes") {
                     this.addAxes(spec);
                     return;
