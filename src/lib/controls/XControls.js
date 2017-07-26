@@ -148,7 +148,7 @@ class XControls
 	} else if (evt.detail) { // Firefox
 	    dx += evt.detail * 1.0;
 	}
-        console.log(sprintf("handleDolly dx: %f", dx));
+        //console.log(sprintf("handleDolly dx: %f", dx));
         this.dolly(dx);
     }
 
@@ -258,14 +258,14 @@ class XControls
     // units in front of camera is used.
     getTarget()
     {
-        console.log("getTarget");
+        //console.log("getTarget");
         var isect = this.raycast(0,0);
         if (isect) {
-            console.log("setting target from intersect");
+            //console.log("setting target from intersect");
             this.target = isect.point.clone();
         }
         else {
-            console.log("setting target without intersect");
+            //console.log("setting target without intersect");
             var cam = this.game.camera;
             //var wv = cam.getWorldDirection();
             var wv = this.getCamForward();
@@ -273,7 +273,7 @@ class XControls
             this.target = cam.position.clone();
             this.target.addScaledVector(wv, d);
         }
-        console.log("Target:", this.target);
+        //console.log("Target:", this.target);
     }
     
     getCamAngles()
