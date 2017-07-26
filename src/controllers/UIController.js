@@ -33,6 +33,7 @@ export default class UIController {
         this.registerModel('Dancer', () => { this.selectModel('dancer') });
         this.registerModel('Data Viz', () => { this.selectModel('cmp') });
         this.registerModel('BMW', () => { this.selectModel('bmw') });
+        this.registerModel('None', () => { this.selectModel(null) });
         //this.registerCallback('Portal', () => { this.selectModel('portal') });
         this.selectModel('vEarth');
         
