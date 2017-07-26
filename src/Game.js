@@ -2,20 +2,31 @@ import * as THREE from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
 import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
-import {XControls} from './lib/controls/XControls';
 import {Loader} from './Loader';
-var ntypes = {};
+import { NetLink } from './NetLink';
+
+function getParameterByName(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
 
 function reportError(str)
 {
     alert(str);
 }
 
+var ntypes = {};
+
 class Game {
     constructor(domElementId) {
         this.updateHandlers = [];
         this.init(domElementId);
         this.ntypes = ntypes;
+        this.user = getParameterByName("user");
+        if (this.user) {
+            let netLink = new NetLink(this);
+            this.registerController("netLink", netLink);
+        }
     }
 
     init(domElementId) {
@@ -107,7 +118,7 @@ class Game {
 
     addMultiControls() {
         //var mc = new MultiControls(this, this.camera, this.renderer.domElement);
-        var mc = new XControls(this, this.renderer.domElement);
+        var mc = new MultiControls(this, this.renderer.domElement);
         this.controls = mc;
     }
 
