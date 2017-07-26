@@ -16,15 +16,9 @@ import VRGame from './VRGame';
 import WebVR from './lib/vr/WebVR';
 
 import { ViewManager } from './ViewManager';
-import { NetLink } from './NetLink';
 import { addLight, setupLights } from './Lights';
 import Marquee from './Marquee';
 import setupMarquee from './setupMarquee';
-
-function getParameterByName(name) {
-    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-}
 
 let {degToRad} = THREE.Math;
 
@@ -76,9 +70,14 @@ let SPECS = [
         phiStart: 34, phiLength: 47,
         thetaStart: 300, thetaLength: 60
     },
-    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, 25,-2]},
-    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, 25, 0]},
-    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, 25, 2]},
+    {  type: 'Marquee',    name: 'marquee1',
+       radius: 7,
+       phiStart: -50, phiLength: 100,
+       thetaStart: 65, thetaLength: 20
+    },
+    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2]},
+    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0]},
+    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2]},
     {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
     {  type: 'Inline',     name: 'debugStuff', children: TEST },
     {  type: 'CMPDataViz', name: 'cmp',
@@ -103,7 +102,6 @@ function start(config) {
 
     window.game = game;
     game.defaultGroupName = 'station';
-    game.gss = new GSS.SpreadSheet();
 
     let cmpProgram = new CMPProgram(game);
     game.setProgram(cmpProgram);
@@ -111,14 +109,6 @@ function start(config) {
     let solarSystemController = new SolarSystemController(game);
     let starsController = new StarsController(game.scene, [0, 0, 0]);
     let renderer = isVRWithFallbackControl ? game.renderer.getUnderlyingRenderer() : game.renderer;
-/*
-    let cmpController = new CMPController(renderer, game.scene, game.camera, {
-        position: [0, 2, 0],
-        rotation: [0, 0, 0],
-        scale: [1.5, 1, 1.5],
-        visible: false
-    });
-*/
     let uiController = new UIController({
         game: game,
         playerControl: cmpProgram
@@ -132,21 +122,10 @@ function start(config) {
     }
 
     game.registerController('stars', starsController);
-//    game.registerController('cmp', cmpController);
     game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
     game.registerController("viewManager", game.viewManager);
-
-    game.user = getParameterByName("user");
-    if (game.user) {
-        let netLink = new NetLink(game);
-        game.registerController("netLink", netLink);
-    }
-
-    game.marquee = new Marquee();
-    game.addToGame(game.marquee, "marque1"); // cause it to get grouped properly
-    setupMarquee(game);
 
     game.load(specs);
 

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import {marquee as marqueeSpec} from './const/screen';
+import {Game} from './Game';
 
 import html2canvas from 'html2canvas';
 
@@ -85,5 +86,35 @@ class Marquee extends THREE.Mesh {
         this.updateHTML(`<h1>${text}</h1>`);
     }
 }
+
+//const TIMEOUT = 30000; // 30 seconds
+const TIMEOUT = 5000; // 30 seconds
+
+function setupMarquee(game, marquee) {
+    var timeoutId = null;
+    game.events.addEventListener('valueChange', ({message}) => {
+    	if (message.name === 'narrativeText') {
+    	    marquee.updateText(message.value);
+    	    if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+    	    timeoutId = setTimeout(
+    		() => marquee.updateText(''),
+    		TIMEOUT
+    	    );
+    	}
+    });
+};
+
+function addMarquee(game, opts)
+{
+    console.log("******************* add Marquee opts: ", opts);
+    var marquee = new Marquee(opts);
+    game.addToGame(marquee, opts.name, opts.parent);
+    setupMarquee(game, marquee);
+    return marquee;
+}
+
+Game.registerNodeType("Marquee", addMarquee);
 
 export default Marquee;
