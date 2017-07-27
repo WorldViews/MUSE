@@ -108,8 +108,13 @@ function loadOBJModel(path, opts, afterFun)
     var onError = function ( xhr ) {
     };
 
-    //var dir = "./models/PlaySpace/";
-    //mtlLoader.setPath( dir );
+    var i = path.lastIndexOf("/");
+    var dir = "/";
+    if (i >= 0) {
+        dir = path.slice(0,i+1);
+        mtlPath = mtlPath.slice(i);
+    }
+    mtlLoader.setPath( dir );
     mtlLoader.load( mtlPath, function( materials ) {
 	console.log(">>> Got materials");
 	materials.preload();
@@ -220,8 +225,8 @@ class Loader
         }
         if (path.endsWith(".obj")) {
             this.numPending++;
-	    //loadOBJModel(path, spec, (obj) => {
-	    loadOBJModel0(path, spec, (obj) => {
+	    loadOBJModel(path, spec, (obj) => {
+	    //loadOBJModel0(path, spec, (obj) => {
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
                 this.numPending--;
