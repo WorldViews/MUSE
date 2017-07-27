@@ -405,10 +405,12 @@ class ViewManager
             console.log("view: "+viewName+" ui: "+inst.ui);
             inst.ui.registerView(viewName, () => inst.gotoView(viewName));
         });
+        /*
         if (this.views["Home"]) {
 	    console.log("Going to Home after loading bookmarks");
 	    this.gotoView("Home", 1);
         }
+        */
     }
     
 }

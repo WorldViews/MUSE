@@ -7,9 +7,15 @@ import { NetLink } from './NetLink';
 
 let {degToRad} = THREE.Math;
 
-function getParameterByName(name) {
+function getParameter(name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    if (match) {
+        var str = decodeURIComponent(match[1].replace(/\+/g, ' '));
+        if (str.toLowerCase() == "false")
+            return false;
+        return str;
+    }
+    return null;
 }
 
 function reportError(str)
@@ -24,7 +30,7 @@ class Game {
         this.updateHandlers = [];
         this.init(domElementId);
         this.ntypes = ntypes;
-        this.user = getParameterByName("user");
+        this.user = getParameter("user");
         if (this.user) {
             let netLink = new NetLink(this);
             this.registerController("netLink", netLink);
@@ -356,4 +362,4 @@ class Game {
     }
 }
 
-export {Game};
+export {Game, getParameter};
