@@ -1,14 +1,13 @@
 import * as THREE from 'three';
 
-//import CMPController from './controllers/CMPController';
 import { CMPDataVizController } from './controllers/CMPDataVizController';
-import {PanoPortal} from './lib/PanoPortal';
+import { Scripts } from './Scripts';
+import { PanoPortal } from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
 import { Screens } from './Screens';
 import { Game } from './Game';
 import { Dancer } from './controllers/DanceController';
 import NavigationController from './controllers/NavigationController';
-import { Scripts } from './Scripts';
 import SolarSystemController from './controllers/SolarSystemController';
 import StarsController from './controllers/StarsController';
 import UIController from './controllers/UIController';
@@ -18,19 +17,18 @@ import WebVR from './lib/vr/WebVR';
 import { ViewManager } from './ViewManager';
 import { addLight, setupLights } from './Lights';
 import Marquee from './Marquee';
-import setupMarquee from './setupMarquee';
 
 let {degToRad} = THREE.Math;
 
 var TEST = [
     {  type: 'Group',  name: 'station' },
     {  type: 'Group',  name: 'g2',
-       position: [200,0,0],
+       position: [200,0,0], rot: [45,0,0],
        children: {type: 'Axes'}
     },
     {  type: 'Group',  name: 'g3',
        position: [200,-500,0],
-       rotation: [0,0,0.2],
+       rot: [0,30,0],
        children: [
            {  type: 'Axes', name: 'axis3',
               visible: false
@@ -50,7 +48,7 @@ let LIGHTS = [
 let OBJ_MODEL = {
     type: 'Model', name: 'derrick', parent: 'station',
     path: 'models/obj/derrick.obj',
-    position: [20, 0, 1.6], rotation: [0, degToRad(0), 0], scale: 2.0
+    position: [20, 0, 1.6], rot: [0, 0, 0], scale: 2.0
 };
 
 let SPECS = [
@@ -59,15 +57,14 @@ let SPECS = [
         parent: 'station',
         path: 'models/PlayDomeSkp_v1.dae',
         position: [0, 0, 0],
-        rotation: [0, degToRad(0), 0],
+        rot: [0, 0, 0],
         scale: 0.025
     },
     {   type: 'Model', name: 'bmw',
         parent: 'station',
         path: 'models/bmw/model.dae',
         position: [0.2, 0, 1.6],
-        //rotation: [0, degToRad(90), 0],
-        rotation: [0, degToRad(0), 0],
+        rot: [0, 0, 0],
         scale: 0.020,
         visible: false
     },
@@ -94,7 +91,9 @@ let SPECS = [
     {  type: 'CMPDataViz', name: 'cmp',
        position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
        visible: false
-    }
+    },
+    {  type: 'SolarSystem' },
+    {  type: 'Stars' }
 ];
 
 function start(config) {
@@ -117,9 +116,6 @@ function start(config) {
     let cmpProgram = new CMPProgram(game);
     game.setProgram(cmpProgram);
     
-    let solarSystemController = new SolarSystemController(game);
-    let starsController = new StarsController(game.scene, [0, 0, 0]);
-    let renderer = isVRWithFallbackControl ? game.renderer.getUnderlyingRenderer() : game.renderer;
     let uiController = new UIController({
         game: game,
         playerControl: cmpProgram
@@ -132,8 +128,6 @@ function start(config) {
         game.registerController('navigation', navigationController);
     }
 
-    game.registerController('stars', starsController);
-    game.registerController('solarSystem', solarSystemController);
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
     game.registerController("viewManager", game.viewManager);

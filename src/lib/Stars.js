@@ -13,9 +13,10 @@ function latLonToVector3(lat, lon, radius, height) {
     return new THREE.Vector3(x,y,z);
 }
 
-function Stars(group, radius, opts)
+//function Stars(group, radius, opts)
+function Stars(game, opts)
 {
-    radius = radius || 200;
+    var radius = opts.radius || 5000;
 
     this.init = function() {
         this.name = "";
@@ -23,7 +24,7 @@ function Stars(group, radius, opts)
 	    this.name = opts.name;
         this.radius = radius;
         this.loaded = false;
-        this.group = group;
+        this.group = new THREE.Group();
         var loader = new THREE.TextureLoader();
         //loader.load( 'textures/land_ocean_ice_cloud_2048.jpg', function ( texture ) {
         //loader.load( 'textures/Stars_Tycho2_plus_Milkyway_3000.png', function ( texture ) {
@@ -32,9 +33,13 @@ function Stars(group, radius, opts)
             var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5, side: THREE.DoubleSide } );
             // var material = new THREE.MeshBasicMaterial({color: 0xffff00});
             this.mesh = new THREE.Mesh( geometry, material );
-	        this.mesh.name = opts.name;
+	    this.mesh.name = opts.name;
             this.group.add(this.mesh);
             this.loaded = true;
+            game.setFromProps(this.group, opts);
+            console.log("Stars Group:", this.group);
+            console.log("opts: ", opts);
+            game.addToGame(this.group, opts.name, opts.parent);
         });
     }
 

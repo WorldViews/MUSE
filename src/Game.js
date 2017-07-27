@@ -5,6 +5,8 @@ import {MultiControls} from './lib/controls/MultiControls';
 import {Loader} from './Loader';
 import { NetLink } from './NetLink';
 
+let {degToRad} = THREE.Math;
+
 function getParameterByName(name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
@@ -130,8 +132,8 @@ class Game {
   	} else {
   		throw 'Unsupported controller provided to `registerController`';
   	}
-
         this.controllers[name] = controller;
+        return controller;
     }
 
     registerUpdateHandler(handlerOrObject) {
@@ -263,6 +265,14 @@ class Game {
             }
 	    else {
                 reportError("position should be array");
+	    }
+        }
+        if (props.rot) {
+            if (Array.isArray(props.rot)) {
+                obj3d.rotation.fromArray(props.rot.map(degToRad));
+            }
+	    else {
+                reportError("rotations should be array");
 	    }
         }
         if (props.rotation) {
