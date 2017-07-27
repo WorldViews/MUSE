@@ -5,7 +5,7 @@ import { Scripts } from './Scripts';
 import { PanoPortal } from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
 import { Screens } from './Screens';
-import { Game } from './Game';
+import { Game, getParameter } from './Game';
 import { Dancer } from './controllers/DanceController';
 import NavigationController from './controllers/NavigationController';
 import SolarSystemController from './controllers/SolarSystemController';
@@ -68,7 +68,7 @@ let SPECS = [
         scale: 0.020,
         visible: false
     },
-    OBJ_MODEL,
+    //OBJ_MODEL,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
         path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
@@ -97,20 +97,21 @@ let SPECS = [
 ];
 
 function start(config) {
+    config = config || {};
     var specs = config.specs || SPECS;
+    let vr = config.vr || getParameter("vr");
 
-    let isVRWithFallbackControl =
-        config.preferredControl === 'vr' ||
-        config.fallbackControl === 'pointerlock';
-
-    if (isVRWithFallbackControl) {
+    if (vr) {
         window.game = new VRGame('canvas3d');
-    } else if (config.preferredControl === 'multi') {
+        let navigationController = new NavigationController(game.body, game.camera, game.plControls);
+        game.registerController('navigation', navigationController);
+        game.body.position.set(2, 1.5, 2);
+    } else { // if(config.preferredControl === 'multi')
         window.game = new Game('canvas3d');
         game.addMultiControls();
+        game.camera.position.set(2, 1.5, 2.);
     }
 
-    window.game = game;
     game.defaultGroupName = 'station';
 
     let cmpProgram = new CMPProgram(game);
@@ -123,23 +124,10 @@ function start(config) {
     let scriptControls = new Scripts(game, uiController);
     game.viewManager = new ViewManager(game, uiController);
 
-    if (isVRWithFallbackControl) {
-        let navigationController = new NavigationController(game.body, game.camera, game.plControls);
-        game.registerController('navigation', navigationController);
-    }
-
     game.registerController('ui', uiController);
     game.registerController('scripts', scriptControls);
     game.registerController("viewManager", game.viewManager);
-
     game.load(specs);
-
-    if (isVRWithFallbackControl) {
-        game.body.position.set(2, 1.5, 2);
-    }
-    else {
-        game.camera.position.set(100, 200, 150);
-    }
 
     game.animate(0);
 }
