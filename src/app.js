@@ -40,6 +40,19 @@ var TEST = [
     {  type: 'Axes',   name: 'xyz' }
 ]
 
+let LIGHTS = [
+    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2]},
+    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0]},
+    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2]},
+    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
+];
+
+let OBJ_MODEL = {
+    type: 'Model', name: 'derrick', parent: 'station',
+    path: 'models/obj/derrick.obj',
+    position: [20, 0, 1.6], rotation: [0, degToRad(0), 0], scale: 2.0
+};
+
 let SPECS = [
     {   type: 'Group', name: 'station'  },
     {   type: 'Model', name: 'platform',
@@ -58,6 +71,7 @@ let SPECS = [
         scale: 0.020,
         visible: false
     },
+    OBJ_MODEL,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
         path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
@@ -75,10 +89,7 @@ let SPECS = [
        phiStart: -50, phiLength: 100,
        thetaStart: 65, thetaLength: 20
     },
-    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2]},
-    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0]},
-    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2]},
-    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
+    LIGHTS,
     {  type: 'Inline',     name: 'debugStuff', children: TEST },
     {  type: 'CMPDataViz', name: 'cmp',
        position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],

@@ -1,10 +1,15 @@
 
 import loadCollada from './loadCollada'
+import OBJLoader from './lib/loaders/OBJLoader';
+import MTLLoader from './lib/loaders/MTLLoader';
+import DDSLoader from './lib/loaders/DDSLoader';
 
-//function loadModels(specs, scene)
 /*
-  Load models.  specs is an array of objects, each
-  with the following fields
+  Loader class.  This loads models or creates nodes corresponding to
+  things in the scene, or functionality.
+
+  specs is an array of objects, each with the following fields
+     type   -   Which type of node to be loaded or created
      path   -   The URL of the model to be loaded
      name   -   A named to be assigned to the loaded
                 model that can be used to access it
@@ -28,12 +33,107 @@ function reportError(str)
 
 var numGroups = 0;
 
+function loadFBXModel(path, opts, afterFun)
+{
+    report("loadFBXModel "+path);
+    //var path = './DomeSpace.fbx';
+    var manager = new THREE.LoadingManager();
+    manager.onProgress = function( item, loaded, total ) {
+	console.log( item, loaded, total );
+    };
+    var loader = new THREE.FBXLoader( manager );
+    loader.load( path,
+                 function( object ) {
+                     /*
+	               object.mixer = new THREE.AnimationMixer( object );
+	               mixers.push( object.mixer );
+	               var action = object.mixer.clipAction( object.animations[ 0 ] );
+	               action.play();
+	             */
+	             if (afterFun) {
+		         afterFun(object, opts);
+	             }
+	         },
+                 function() {
+	         },
+	         function (e) {
+	             report("Error loading FBX file "+path+"\n"+e);
+	         }
+	       );
+}
+
+function loadOBJModel0(path, opts, afterFun)
+{
+    var manager = new THREE.LoadingManager();
+    var loader = new OBJLoader( manager );
+
+    var onProgress = function ( xhr ) {
+	if ( xhr.lengthComputable ) {
+	    var percentComplete = xhr.loaded / xhr.total * 100;
+	    console.log( Math.round(percentComplete, 2) + '% downloaded' );
+	}
+    };
+    var onError = function ( xhr ) {
+    };
+    
+    loader.load( path, function ( object ) {
+	object.traverse( function ( child ) {
+	    if ( child instanceof THREE.Mesh ) {
+		//child.material.map = texture;
+	    }
+	} );
+        if (afterFun) {
+            afterFun(object);
+	    //object.position.y = 0;
+	    //console.log("adding loaded model to scene");
+            //OBJM = object;
+	    //scene.add( object );
+        }
+    }, onProgress, onError );    
+}
+
+function loadOBJModel(path, opts, afterFun)
+{
+    THREE.Loader.Handlers.add( /\.dds$/i, new DDSLoader() );
+
+    var mtlLoader = new MTLLoader();
+    var mtlPath = path.replace(".obj", ".mtl")
+
+    var onProgress = function ( xhr ) {
+	if ( xhr.lengthComputable ) {
+	    var percentComplete = xhr.loaded / xhr.total * 100;
+	    console.log( Math.round(percentComplete, 2) + '% downloaded' );
+	}
+    };
+    var onError = function ( xhr ) {
+    };
+
+    //var dir = "./models/PlaySpace/";
+    //mtlLoader.setPath( dir );
+    mtlLoader.load( mtlPath, function( materials ) {
+	console.log(">>> Got materials");
+	materials.preload();
+	var objLoader = new OBJLoader();
+	objLoader.setMaterials( materials );
+	//objLoader.setPath( dir );
+	objLoader.load( path, function ( object ) {
+	    object.position.y = 0;
+	    console.log(">>> adding loaded model to scene");
+	    if (afterFun) {
+		afterFun(object, opts);
+	    }
+	}, onProgress, onError );
+    });
+}
+
 class Loader
 {
-    constructor(game, specs)
+    constructor(game, specs, onCompleted)
     {
         console.log("======================== Loader ========================");
         this.game = game;
+        this.numPending = 0;
+        this.onCompleted;
         if (specs)
             this.load(specs);
     }
@@ -49,56 +149,96 @@ class Loader
         if (!Array.isArray(specs))
             specs = [specs];
         var i = specs.length;
-        
-        return new Promise((resolve, reject) => {
-            specs.forEach(spec => {
-                if (parent && !spec.parent) {
-                    console.log("Assigning parent to spec");
-                    spec.parent = parent;
-                }
-	        //TODO: check for type and call appropriate loader
-	        // for now we just do collada
-                if (spec.type == "Group") {
-                    this.loadGroup(spec);
-                    return;
-                }
-                if (spec.type == "Inline") {
-                    // for now just use Group.  This may have its own
-                    // code later, such as for loading from a path.
-                    this.loadGroup(spec);
-                    return;
-                }
-                if (spec.type == "Axes") {
-                    this.addAxes(spec);
-                    return;
-                }
-	        if (spec.type == "Model") {
-                    if (!spec.type) {
-                        reportWarning("Model specs should have type: Model");
-                    }
-                    loadCollada(spec.path, spec).then((collada) => {
-		        game.setFromProps(collada.scene, spec);
-		        game.addToGame(collada.scene, spec.name, spec.parent);
-		        --i;
-		        if (i === 0) {
-                            resolve();
-		        }
-                    });
-                    return;
-	        }
-                if (!spec.type) {
-                    reportError("Groups should have type: Group");
-                    this.loadGroup(spec);
-                    return;
-                }
-                var obj = game.createNode(spec.type, spec);
-                if (!obj) {
-                    reportError("Unknown loader oject type: "+spec.type);
-                }
-            });
+        specs.forEach(spec => {
+            if (Array.isArray(spec)) {
+                this.load(spec, parent);
+                return;
+            }
+            if (parent && !spec.parent) {
+                console.log("Assigning parent to spec");
+                spec.parent = parent;
+            }
+	    //TODO: check for type and call appropriate loader
+	    // for now we just do collada
+            if (spec.type == "Group") {
+                this.loadGroup(spec);
+                return;
+            }
+            if (spec.type == "Inline") {
+                // for now just use Group.  This may have its own
+                // code later, such as for loading from a path.
+                this.loadGroup(spec);
+                return;
+            }
+            if (spec.type == "Axes") {
+                this.addAxes(spec);
+                return;
+            }
+	    if (spec.type == "Model") {
+                this.loadModel(spec);
+                return;
+            }
+            if (!spec.type) {
+                reportError("Groups should have type: Group");
+                this.loadGroup(spec);
+                return;
+            }
+            var obj = game.createNode(spec.type, spec);
+            if (!obj) {
+                reportError("Unknown loader oject type: "+spec.type);
+            }
         });
     }
 
+    loadModel(spec) {
+        if (spec.type != 'Model') {
+            reportWarning("Model specs should have type: Model");
+        }
+        var path = spec.path;
+        if (path.endsWith(".dae")) {
+            this.numPending++;
+            loadCollada(spec.path, spec).then((collada) => {
+		game.setFromProps(collada.scene, spec);
+		game.addToGame(collada.scene, spec.name, spec.parent);
+                this.numPending--;
+		if (this.numPending === 0) {
+                    this.handleCompletion();
+		}
+            });
+            return;
+	}
+        if (path.endsWith(".fbx")) {
+            this.numPending++;
+	    loadFBXModel(path, spec, (obj) => {
+                game.setFromProps(obj, spec);
+                game.addToGame(obj, spec.name, spec.parent);
+                this.numPending--;
+		if (this.numPending === 0) {
+                    this.handleCompletion();
+		}
+            });
+        }
+        if (path.endsWith(".obj")) {
+            this.numPending++;
+	    //loadOBJModel(path, spec, (obj) => {
+	    loadOBJModel0(path, spec, (obj) => {
+                game.setFromProps(obj, spec);
+                game.addToGame(obj, spec.name, spec.parent);
+                this.numPending--;
+		if (this.numPending === 0) {
+                    this.handleCompletion();
+		}
+            });
+        }
+    }
+    
+    handleCompletion() {
+        console.log("****************** MODELS ALL LOADED ******************");
+        if (this.onCompleted)
+            this.onCompleted();
+        //alert("All Models Loaded");
+    }
+    
     loadGroup(groupSpec) {
         if (!groupSpec.name) {
 	    console.log("**** new groups must have name ****");

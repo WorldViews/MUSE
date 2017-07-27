@@ -2,13 +2,6 @@ import {Animation, SkinnedMesh} from 'three';
 
 import ColladaLoader from './lib/loaders/ColladaLoader';
 
-function scaleVec(s)
-{
-    if (typeof s == "number")
-        return [s,s,s];
-    return s;
-}
-
 export default (path, opts) => {
     return new Promise((resolve, reject) => {
         let loader = new ColladaLoader();
