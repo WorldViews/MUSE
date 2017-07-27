@@ -28,7 +28,8 @@ class CMPDataVizController {
         this.game = game;
         var scene = game.scene;
         var camera = game.camera;
-        var renderer = game.renderer;
+        //var renderer = game.renderer;
+        var renderer = game.getUnderlyingRenderer();
         options = options || {};
         this.position = options.position || [0, 0, 0];
         this.rotation = options.rotation || [0, 0, 0];
