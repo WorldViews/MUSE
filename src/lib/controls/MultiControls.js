@@ -56,8 +56,6 @@ class MultiControls
         this.domElement.addEventListener( 'mousemove',     this._onMouseMove, false );
         this.domElement.addEventListener( 'wheel',         this._onMouseWheel, false);
         this.domElement.addEventListener( 'DOMMouseScroll',this._onMouseWheel, false);
-
-        console.log("set the mouse bindings!!!");
     }
 
     onContextMenu( event ) {
@@ -65,7 +63,7 @@ class MultiControls
     }
 
     onMouseDown( event ) {
-        console.log("MultiControls.onMouseDown");
+        //console.log("MultiControls.onMouseDown");
         if ( this.domElement !== document ) {
 	    this.domElement.focus();
         }
@@ -79,7 +77,7 @@ class MultiControls
     };
 
     onMouseUp( event ) {
-        console.log("MultiControls.onMouseUp");
+        //console.log("MultiControls.onMouseUp");
         event.preventDefault();
         //event.stopPropagation();
         this.mouseDragOn = false;
@@ -202,7 +200,7 @@ class MultiControls
     
     handleLook(dx, dy)
     {
-        console.log("MultiControls.handleLook dx: "+dx+"  dy: "+dy);
+        //console.log("MultiControls.handleLook dx: "+dx+"  dy: "+dy);
         dx *= this.lookSense;
         dy *= this.lookSense;
 	var theta = this.anglesDown.theta - this.panRatio * dx;
@@ -212,12 +210,12 @@ class MultiControls
 
     handleOrbit(dx, dy)
     {
-        console.log("MultiControls.handleOrbit dx: "+dx+"  dy: "+dy);
+        //console.log("MultiControls.handleOrbit dx: "+dx+"  dy: "+dy);
         var camPos = this.object.position;
         var d = camPos.distanceTo(this.target);
-        console.log("Target:", this.target);
-        console.log("Cam Pos:", camPos);
-        console.log("d: "+d);
+        //console.log("Target:", this.target);
+        //console.log("Cam Pos:", camPos);
+        //console.log("d: "+d);
 	var theta = this.anglesDown.theta - this.panRatio   * dx;
 	var phi =   this.anglesDown.phi   + this.pitchRatio * dy;
         camPos.subVectors(this.target, this.getVec(theta, phi, d));
@@ -231,11 +229,11 @@ class MultiControls
         var dV = new THREE.Vector3();
         var vRight = this.getCamRight();
         var vUp = this.getCamUp();
-        console.log("pan vRight: ", vRight);
-        console.log("pan    vUp: ", vUp);
+        //console.log("pan vRight: ", vRight);
+        //console.log("pan    vUp: ", vUp);
         dV.addScaledVector(vRight, -f*dx);
         dV.addScaledVector(vUp, f*dy);
-        console.log("pan     dV:", dV);
+        //console.log("pan     dV:", dV);
         camPos.addVectors(this.camPosDown, dV);
     }
     
@@ -247,7 +245,7 @@ class MultiControls
 
     onKeyUp( event ) {
         var kc = event.keyCode;
-        console.log("onKeyUp "+kc);
+        //console.log("onKeyUp "+kc);
     };
 
     update() {}
