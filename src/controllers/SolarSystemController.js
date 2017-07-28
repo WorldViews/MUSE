@@ -22,7 +22,8 @@ class SolarSystemController {
 function addSolarSystem(game, options)
 {
     var cmp = new SolarSystemController(game, options);
-    game.registerController('cmp', cmp);
+    var name = options.name || 'solarSystem';
+    game.registerController(name, cmp);
     return cmp;
 }
 
