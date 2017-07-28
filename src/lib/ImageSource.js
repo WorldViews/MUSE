@@ -208,7 +208,8 @@ ImageSource.prototype.createTexture = function() {
 
         // Avoid invoking play() here. Use the play() member function.
     } else if (this.type == ImageSource.TYPE.IMAGE) {
-        texture = new THREE.Texture();
+        //texture = new THREE.Texture();
+        texture = new THREE.TextureLoader().load(this.url);
     }
     this.texture = texture;
     texture.minFilter = THREE.LinearFilter;
