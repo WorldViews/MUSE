@@ -108,6 +108,10 @@ class DynamicObjectDB {
         }
         this.currentPlayTime = t;
     }
+
+    getPlayTime() {
+        return this.currentPlayTime;
+    }
 }
 
 /*
