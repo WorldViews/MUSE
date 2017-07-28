@@ -72,7 +72,8 @@ var SPECS = [
        visible: false
     },
     {  type: 'SolarSystem' },
-    {  type: 'Stars' }
+    {  type: 'Stars' },
+    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' }
 ];
 
 CMP_IMAGINARIUM = SPECS;
