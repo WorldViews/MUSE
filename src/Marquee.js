@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 import {marquee as marqueeSpec} from './const/screen';
 import {Game} from './Game';
+import ImageSource from './lib/ImageSource';
 
 import html2canvas from 'html2canvas';
 
@@ -60,7 +61,6 @@ class Marquee extends THREE.Mesh {
         texture.wrapS = THREE.RepeatWrapping;
         texture.repeat.x = -1;
         texture.needsUpdate = true;
-
         this.material.map = texture;
     }
 
@@ -84,6 +84,34 @@ class Marquee extends THREE.Mesh {
             return;
         this._prevText = text;
         this.updateHTML(`<h1>${text}</h1>`);
+    }
+
+    updateImage(url) {
+        console.log("Getting ImageSource "+url);
+        this.imageSource = new ImageSource({
+            //type: ImageSource.TYPE.VIDEO,
+            type: ImageSource.TYPE.IMAGE,
+            url: url
+        });
+        let texture = this.imageSource.createTexture();
+        this.material.map = texture;
+        /*
+        let videoMaterial = new THREE.MeshBasicMaterial({
+            map: videoTexture,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        */
+    }
+
+    updateVideo(video) {
+        console.log("Getting ImageSource "+url);
+        this.imageSource = new ImageSource({
+            type: ImageSource.TYPE.VIDEO,
+            url: url
+        });
+        let texture = imageSource.createTexture();
+        this.material.map = texture;
     }
 }
 
