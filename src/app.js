@@ -17,6 +17,7 @@ import WebVR from './lib/vr/WebVR';
 import { ViewManager } from './ViewManager';
 import { addLight, setupLights } from './Lights';
 import Marquee from './Marquee';
+import { DynamicObjectDB_test } from './lib/DynamicObjectDB'
 
 let {degToRad} = THREE.Math;
 
