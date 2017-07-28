@@ -168,5 +168,5 @@ function DynamicObjectDB_test()
 
 window.DynamicObjectDB_test = DynamicObjectDB_test;
 
-export {DynamicObjectDB_test};
+export {DynamicObjectDB, DynamicObjectDB_test};
 
