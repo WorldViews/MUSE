@@ -19,6 +19,7 @@ class MultiControls
     constructor(game, domElement) {
         console.log("******************** MultiControls.constructor()");
         var inst = this;
+        this.ignoredModels = ["stars"];
         this.game = game;
         game.xc = this; // debugging convenience
         this.object = game.camera;
@@ -184,8 +185,13 @@ class MultiControls
         intersects.forEach(isect => {
             i++;
             var obj = isect.object;
-            if (!obj.name || obj.name == "Stars")
-                return;
+            this.ignoredModels.forEach(name => {
+                if (name == obj.name) {
+                    //console.log("ignoring intersect with "+name);
+                    if (!obj.name || obj.name == "stars")
+                        return;
+                }
+            });
             inst.pickedName = obj.name;
             //console.log("isect "+i+" "+obj.name);
         })
