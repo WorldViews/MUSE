@@ -51,12 +51,11 @@ function start(config) {
         game: game,
         playerControl: cmpProgram
     });
-    let scriptControls = new Scripts(game, uiController);
-    game.viewManager = new ViewManager(game, uiController);
-
     game.registerController('ui', uiController);
+    let scriptControls = new Scripts(game, uiController);
+//    game.viewManager = new ViewManager(game, uiController);
     game.registerController('scripts', scriptControls);
-    game.registerController("viewManager", game.viewManager);
+//    game.registerController("viewManager", game.viewManager);
     game.load(specs);
 
     game.animate(0);

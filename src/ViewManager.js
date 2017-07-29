@@ -1,7 +1,11 @@
 
 import * as THREE from 'three';
-import {Mathx} from 'three';
+//import {Mathx} from 'three';
 import {getJSON} from './Util';
+import {Game} from './Game';
+
+var toDeg = THREE.Math.radToDeg;
+var toRad = THREE.Math.degToRad;
 
 // This will be a singleton
 var viewManager = null;
@@ -183,10 +187,11 @@ class Animation
 
 class ViewManager
 {
-    constructor(game, uiController) {
+    constructor(game, options) {
         if (viewManager) {
             alert("ViewManager should be singleton");
         }
+        this.ui = game.controllers.ui;
         viewManager = this; // singleton;
         this.easingFun = null;
         this.slerp = true;
@@ -199,8 +204,8 @@ class ViewManager
         //this.bookmarksURL_ = "/Kinetics/bookmarks.json";
         this.bookmarksURL_ = "xxx";
         this.activeAnimations = [];
-        this.ui = uiController;
-        this.setBookmarksURL("data/cmp_bookmarks.json");
+        var bookmarksUrl = options.bookmarksUrl || "data/cmp_bookmarks.json";
+        this.setBookmarksURL(bookmarksUrl);
         this.downloadBookmarks();
         this.setEasing(5);
         //this.handleBookmarks(SAMPLE_VIEWS)
@@ -335,10 +340,28 @@ class ViewManager
         return name;
     }
 
+    // Get an object representing the views.  This will be used for
+    // the JSON to be saved in file representing this set of views.
+    getViewsRep()
+    {
+        var rep = {};
+        for (var viewName in this.views) {
+            var view = this.views[viewName];
+            var rot = view.rotation;
+            if (rot)
+                rot = [toDeg(rot._x), toDeg(rot._y), toDeg(rot._z)];
+            var v = {viewName: view.name, position: view.position, rot: rot};
+            //v.rotation = view.rotation;
+            rep[viewName] = v;
+        }
+        //return this.views;
+        return rep;
+    }
+    
     // untested
     uploadBookmarks()
     {
-        var jstr = JSON.stringify(this.views);
+        var jstr = JSON.stringify(this.getViewsRep());
         var url = this.getBookmarksURL();
         console.log("uploadBookmarks url: "+url+"  data: "+jstr);
         //url = url.replace("/", "/update/");
@@ -388,6 +411,14 @@ class ViewManager
         console.log("handleBookmarks");
         console.log("views: "+JSON.stringify(obj));
         this.views = obj;
+        for (name in this.views) {
+            var view = this.views[name];
+            var rot = view.rot;
+            if (rot) {
+                console.log("rot: "+rot);
+                view.rotation = new THREE.Euler(toRad(rot[0]), toRad(rot[1]), toRad(rot[2]));
+            }
+        }
         this.viewNames = Object.keys(this.views);
         this.viewNames.sort();
         /*
@@ -414,5 +445,17 @@ class ViewManager
     }
     
 }
+
+function addViewManager(game, options)
+{
+    if (!options.name)
+        options.name = 'viewManager';
+    var viewManager = new ViewManager(game, options);
+    game.registerController(options.name, viewManager);
+    game.viewManager = viewManager
+    return viewManager;
+}
+
+Game.registerNodeType("ViewManager", addViewManager);
 
 export {ViewManager};

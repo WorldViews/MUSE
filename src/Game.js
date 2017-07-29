@@ -31,6 +31,7 @@ class Game {
         this.init(domElementId);
         this.ntypes = ntypes;
         this.user = getParameter("user");
+        this.viewManager = null;
         if (this.user) {
             let netLink = new NetLink(this);
             this.registerController("netLink", netLink);
