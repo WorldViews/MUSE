@@ -24,7 +24,11 @@ let {degToRad} = THREE.Math;
 
 function start(config) {
     config = config || {};
-    var specs = config.specs || SPECS;
+    var specs = config.specs;
+    if (getParameter("specs"))
+        specs = getParameter("specs");
+    if (!specs)
+        specs = SPECS;
     let vr = config.vr || getParameter("vr");
 
     if (vr) {

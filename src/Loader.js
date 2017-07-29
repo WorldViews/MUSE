@@ -3,6 +3,7 @@ import loadCollada from './loadCollada'
 import OBJLoader from './lib/loaders/OBJLoader';
 import MTLLoader from './lib/loaders/MTLLoader';
 import DDSLoader from './lib/loaders/DDSLoader';
+import {getJSON} from './Util';
 
 /*
   Loader class.  This loads models or creates nodes corresponding to
@@ -155,6 +156,10 @@ class Loader
             specs = [specs];
         var i = specs.length;
         specs.forEach(spec => {
+            if (typeof spec === "string") {
+                this.loadFile(spec);
+                return;
+            }
             if (Array.isArray(spec)) {
                 this.load(spec, parent);
                 return;
@@ -193,6 +198,36 @@ class Loader
                 reportError("Unknown loader oject type: "+spec.type);
             }
         });
+    }
+
+    loadFile(path) {
+        if (path.endsWith(".js")) {
+            return this.loadJS(path);
+        }
+        if (path.endsWith(".json")) {
+            return this.loadJSON(path);
+        }
+        reportError("Loader: Don't know how to load: "+path);
+    }
+
+    loadJS(path) {
+        var inst = this;
+        console.log("Loading JS file "+path);
+        $.getScript(path)
+            .done(function(script, textStatus) {
+                console.log("AFTER SPECS: ", SPECS);
+                inst.load(SPECS);
+            })
+            .fail(function(jqxhr, settings, ex) {
+                console.log("error: ", ex);
+            });
+    }
+
+    loadJSON(path) {
+        return this.loadJS(path);
+        console.log("Loading JSON specs "+path);
+        var inst = this;
+        getJSON(path, specs => { inst.load(specs); });
     }
 
     loadModel(spec) {
