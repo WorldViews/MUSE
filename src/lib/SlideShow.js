@@ -19,6 +19,7 @@ function getRecs()
         recs.records.push(rec);
         t += 30;
     }
+    console.log("slides:\n"+JSON.stringify(recs, null, 3));
     return recs;
 }
 
