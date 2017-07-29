@@ -73,7 +73,8 @@ var SPECS = [
     },
     {  type: 'SolarSystem' },
     {  type: 'Stars' },
-    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' }
+    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
+    {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' }
 ];
 
 CMP_IMAGINARIUM = SPECS;
