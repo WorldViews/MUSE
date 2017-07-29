@@ -15,7 +15,7 @@ function getRecs()
     for (var i=1; i<= 13; i++) {
         var rec = {id: 'slide',
                    t: t,
-                   url: "/assets/images/ColabTalk/Slide"+i+".PNG"};
+                   url: "assets/images/ColabTalk/Slide"+i+".PNG"};
         recs.records.push(rec);
         t += 30;
     }
