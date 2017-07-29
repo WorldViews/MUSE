@@ -200,7 +200,7 @@ class ViewManager
         this.bookmarksURL_ = "xxx";
         this.activeAnimations = [];
         this.ui = uiController;
-        this.setBookmarksURL("/data/cmp_bookmarks.json");
+        this.setBookmarksURL("data/cmp_bookmarks.json");
         this.downloadBookmarks();
         this.setEasing(5);
         //this.handleBookmarks(SAMPLE_VIEWS)
