@@ -67,6 +67,7 @@ var SPECS = [
     },
     LIGHTS,
     {  type: 'Inline',     name: 'debugStuff', children: TEST },
+    {  type: 'Dancer', name: 'dancer' },
     {  type: 'CMPDataViz', name: 'cmp',
        position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
        visible: false
