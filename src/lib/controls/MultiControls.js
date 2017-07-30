@@ -36,7 +36,8 @@ class MultiControls
         this.panRatio = 0.005;
         this.pitchRatio = 0.005;
         this.lookSense = 1;
-
+        this.prevView = null;
+        
         this.raycaster = new THREE.Raycaster();
         this.raycastPt = new THREE.Vector2()
 
@@ -44,19 +45,22 @@ class MultiControls
         this._onMouseDown = bind( this, this.onMouseDown );
         this._onMouseWheel = bind( this, this.onMouseWheel );
         this._onMouseUp = bind( this, this.onMouseUp );
+        this._onMouseClick = bind( this, this.onMouseClick );
         this._onContextMenu = bind(this, this.onContextMenu );
-/*
+
         this._onKeyDown = bind( this, this.onKeyDown );
         this._onKeyUp = bind( this, this.onKeyUp );
-*/
 /*
 */
-        this.domElement.addEventListener( 'contextmenu', this._onContextMenu, false );
+        this.domElement.addEventListener( 'contextmenu',   this._onContextMenu, false );
+        this.domElement.addEventListener( 'dblclick',         this._onMouseClick, false );
         this.domElement.addEventListener( 'mousedown',     this._onMouseDown, false );
         this.domElement.addEventListener( 'mouseup',       this._onMouseUp, false );
         this.domElement.addEventListener( 'mousemove',     this._onMouseMove, false );
         this.domElement.addEventListener( 'wheel',         this._onMouseWheel, false);
         this.domElement.addEventListener( 'DOMMouseScroll',this._onMouseWheel, false);
+        window.addEventListener( 'keydown',       this._onKeyDown, false);
+        window.addEventListener( 'keyup',       this._onKeyUp, false);
     }
 
     onContextMenu( event ) {
@@ -84,6 +88,22 @@ class MultiControls
         this.mouseDragOn = false;
     };
 
+    onMouseClick( event ) {
+        this.handleRaycast(event);
+        var obj = this.pickedObj;
+        console.log("click", obj);
+        if (!obj)
+            return;
+        if (obj.name && obj.name.startsWith("vidBub")) {
+            var position = obj.getWorldPosition();
+            console.log("************* pos: ",position);
+            var rotation = new THREE.Euler(0,0,0);
+            var view = {position, rotation};
+            this.prevView = this.game.viewManager.getCurrentView();
+            this.game.viewManager.goto(view, 2);
+        }
+    }
+    
     onMouseWheel(evt) {
 	//console.log("LookControls.onMouseWheel...");
 	evt.preventDefault();
@@ -166,7 +186,7 @@ class MultiControls
     handleRaycast(event) {
         var x = (event.pageX / window.innerWidth)*2 - 1;
         var y = - (event.pageY / window.innerHeight)*2 + 1;
-        this.raycast(x,y);
+        return this.raycast(x,y);
     }
 
     raycast(x,y)
@@ -177,31 +197,35 @@ class MultiControls
         this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
         var objs = this.game.scene.children;
         var intersects = this.raycaster.intersectObjects(objs, true);
-        var i = 0;
+        //var i = 0;
         if (intersects.length == 0)
-            return;
+            return null;
         this.pickedName = "";
+        this.pickedObj = null;
+        this.pickedIsect = null;
         var inst = this;
-        intersects.forEach(isect => {
-            i++;
+        for (var i=0; i<intersects.length; i++) {
+            //intersects.forEach(isect => {
+            //i++;
+            var isect = intersects[i];
             var obj = isect.object;
-            this.ignoredModels.forEach(name => {
-                if (name == obj.name) {
-                    //console.log("ignoring intersect with "+name);
-                    if (!obj.name || obj.name == "stars")
-                        return;
-                }
-            });
+            if (this.ignoredModels.includes(obj.name))
+                continue;
+            inst.pickedObj = obj;
             inst.pickedName = obj.name;
+            inst.pickedIsect = isect;
+            break;
             //console.log("isect "+i+" "+obj.name);
-        })
+        }
         this.game.setStatus(this.pickedName);
+        /*
         if (intersects.length > 0) {
             var isect = intersects[0];
             if (isect.object.name != "Stars")
                 return isect;
         }
-        return null;
+        */
+        return this.pickedIsect;
     }
     
     handleLook(dx, dy)
@@ -245,13 +269,18 @@ class MultiControls
     
     onKeyDown( event ) {
         var kc = event.keyCode;
-        //console.log("onKeyUp "+kc);
+        console.log("onKeyDown "+kc);
         //event.preventDefault();
+        if (kc == 66) { // 'b'
+            if (this.prevView) {
+                this.game.viewManager.goto(this.prevView, 2);
+            }
+        }
     };
 
     onKeyUp( event ) {
         var kc = event.keyCode;
-        //console.log("onKeyUp "+kc);
+        console.log("onKeyUp "+kc);
     };
 
     update() {}
@@ -265,11 +294,11 @@ class MultiControls
         //console.log("getTarget");
         var isect = this.raycast(0,0);
         if (isect) {
-            //console.log("setting target from intersect");
+            console.log("setting target from intersect");
             this.target = isect.point.clone();
         }
         else {
-            //console.log("setting target without intersect");
+            console.log("setting target without intersect");
             var cam = this.game.camera;
             //var wv = cam.getWorldDirection();
             var wv = this.getCamForward();

@@ -25,6 +25,7 @@ class Screen
         spec = spec || screen1;
         this.game = game;
         this.imageSource = null;
+        var name = spec.name || "movieScreen";
         var scene = game.scene;
         var path = path || spec.path;
         console.log('****************************** Loading screen... video: '+path);
@@ -56,7 +57,7 @@ class Screen
             screenObject.position.y = 0;
             if (spec.position)
 	        screenObject.position.fromArray(spec.position);
-            screenObject.name = "movieScreen";
+            screenObject.name = name;
 
             let screenParent = new THREE.Object3D();
             screenParent.add(screenObject);

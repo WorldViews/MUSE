@@ -235,9 +235,14 @@ class ViewManager
 	    console.log("No view named "+name);
 	    return;
         }
+        this.setViewNameInUI(name)
+        this.goto(view, dur, name);
+    }
+
+    goto(view, dur, name)
+    {
         console.log("pos: "+view.position);
         console.log("rot: "+view.rotation);
-        this.setViewNameInUI(name)
         var camera = this.game.camera;
         if (dur > 0) {
 	    var pos0 = camera.position.clone();
@@ -261,7 +266,19 @@ class ViewManager
         }
         camera.updateProjectionMatrix();
     }
-    
+
+    getCurrentView()
+    {
+        var camera = this.game.camera;
+        if (!camera) {
+            console.log("Cannot get camera");
+            return;
+        }
+        var pos = camera.position.clone();
+        var eulerAngles = camera.rotation.clone();
+        return {'position': pos, 'rotation': eulerAngles};
+    }
+
     update = function()
     {
         for (var i = this.activeAnimations.length-1; i >= 0; i--) {
@@ -270,6 +287,7 @@ class ViewManager
         }
     }
 
+    //TODO: have this get view using getCurrentView()
     bookmarkView = function(name)
     {
         console.log("bookmarkView");

@@ -30,6 +30,12 @@ var OBJ_MODEL = {
     position: [20, 0, 1.6], rot: [0, 0, 0], scale: 2.0
 };
 
+var VID_BUBBLES = [
+    {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
+        path: 'videos/YukiyoCompilation.mp4',
+    }
+];
+
 var SPECS = [
     {   type: 'Group', name: 'station'  },
     {   type: 'Model', name: 'platform',
@@ -48,6 +54,7 @@ var SPECS = [
         visible: false
     },
     //OBJ_MODEL,
+    VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
         path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
