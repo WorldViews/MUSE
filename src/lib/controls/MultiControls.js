@@ -5,6 +5,9 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 import { getCameraParams } from '../../Util';
 
+// The four arrow keys
+var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, B: 66};
+
 var toDeg = THREE.Math.radToDeg;
 
 function bind( scope, fn ) {
@@ -37,7 +40,8 @@ class MultiControls
         this.pitchRatio = 0.005;
         this.lookSense = 1;
         this.prevView = null;
-        
+        this.speedRight = 0;
+        this.speedForward = 0;
         this.raycaster = new THREE.Raycaster();
         this.raycastPt = new THREE.Vector2()
 
@@ -271,19 +275,59 @@ class MultiControls
         var kc = event.keyCode;
         console.log("onKeyDown "+kc);
         //event.preventDefault();
-        if (kc == 66) { // 'b'
+        switch ( event.keyCode ) {
+
+        case KEYS.UP:
+            this.speedForward = 1;
+            this.speedRight = 0;
+            break;
+
+        case KEYS.BOTTOM:
+            this.speedForward = -1;
+            this.speedRight = 0;
+            break;
+
+        case KEYS.LEFT:
+            this.speedForward = 0;
+            this.speedRight = -1;
+            break;
+
+        case KEYS.RIGHT:
+            this.speedForward = 0;
+            this.speedRight = 1;
+            break;
+
+        case KEYS.B:
             if (this.prevView) {
                 this.game.viewManager.goto(this.prevView, 2);
             }
+            break;
         }
     };
 
     onKeyUp( event ) {
         var kc = event.keyCode;
+        this.speedForward = 0;
+        this.speedRight = 0;
         console.log("onKeyUp "+kc);
     };
 
-    update() {}
+    update()
+    {
+        var cam = this.game.camera;
+        if (this.speedForward) {
+            var camPos = cam.position;
+            var v = this.getCamForward();
+            var ds = 0.06*this.speedForward;
+            camPos.addScaledVector(v, ds);
+        }
+        if (this.speedRight) {
+            var camPos = cam.position;
+            var v = this.getCamRight();
+            var ds = 0.06*this.speedRight;
+            camPos.addScaledVector(v, ds);
+        }
+    }
 
     // This tries to find an appropriate target for trackballing
     // The first choice is the intersect with geometry direction
