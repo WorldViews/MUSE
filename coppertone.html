@@ -30,18 +30,29 @@
          align-items: center;
          horizontal-align: center;
       }
+      #canvas3d {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top:0;
+      }
     </style>
   </head> 
   <body>
+    <canvas id="canvas3d"></canvas>
 
-  <script src="dist/vendor.bundle.js"></script>
-  <script src="dist/mathbox-bundle.min.js"></script>
-  <script src="src/legacy/jquery-3.1.1.min.js"></script>
-  <script src="src/legacy/jquery-ui.js"></script>
-  <script src="src/lib/GSpreadSheet.js"></script>
-  <script src="dist/app.bundle.js"></script>
-  <script>
-    start({preferredControl: 'multi'});
-  </script>
+    <script src="dist/vendor.bundle.js"></script>
+    <script src="dist/mathbox-bundle.min.js"></script>
+    <script src="src/legacy/jquery-3.1.1.min.js"></script>
+    <script src="src/legacy/jquery-ui.js"></script>
+    <script src="src/lib/GSpreadSheet.js"></script>
+    <script src="dist/app.bundle.js"></script>
+
+    <script src="configs/cmp_coppertone.js"></script>
+    
+    <script>
+      start({specs: CMP_COPPERTONE});
+    </script>
   </body>
 </html>

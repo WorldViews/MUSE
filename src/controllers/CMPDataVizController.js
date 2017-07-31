@@ -2,6 +2,7 @@ import Sands from '../lib/cmp/Sands';
 import Chart from '../lib/cmp/Chart';
 import DataLoader from '../lib/cmp/DataLoader'
 import state from '../lib/cmp/State';
+import {Game} from '../Game';
 
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 import MathBox from 'mathbox';
@@ -20,9 +21,15 @@ const yearPerMinute = () => state.yearPerMinute || 25 // * 12 // 25=>18min
 const secPerYear = () => 60/yearPerMinute();
 
 
-export default class CMPController {
+class CMPDataVizController {
 
-    constructor(renderer, scene, camera, options) {
+    //constructor(renderer, scene, camera, options) {
+    constructor(game, options) {
+        this.game = game;
+        var scene = game.scene;
+        var camera = game.camera;
+        //var renderer = game.renderer;
+        var renderer = game.getUnderlyingRenderer();
         options = options || {};
         this.position = options.position || [0, 0, 0];
         this.rotation = options.rotation || [0, 0, 0];
@@ -417,3 +424,14 @@ export default class CMPController {
         }
     }
 }
+
+function addCMPDataViz(game, options)
+{
+    var cmp = new CMPDataVizController(game, options);
+    game.registerController('cmp', cmp);
+    return cmp;
+}
+
+Game.registerNodeType("CMPDataViz", addCMPDataViz);
+
+export {CMPDataVizController};

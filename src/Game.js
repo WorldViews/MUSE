@@ -2,18 +2,46 @@ import * as THREE from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
 import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
-import {XControls} from './lib/controls/XControls';
+import {Loader} from './Loader';
+import { NetLink } from './NetLink';
+
+let {degToRad} = THREE.Math;
+
+function getParameter(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    if (match) {
+        var str = decodeURIComponent(match[1].replace(/\+/g, ' '));
+        if (str.toLowerCase() == "false")
+            return false;
+        return str;
+    }
+    return null;
+}
+
+function reportError(str)
+{
+    alert(str);
+}
+
+var ntypes = {};
 
 class Game {
-
     constructor(domElementId) {
         this.updateHandlers = [];
         this.init(domElementId);
+        this.ntypes = ntypes;
+        this.user = getParameter("user");
+        this.viewManager = null;
+        if (this.user) {
+            let netLink = new NetLink(this);
+            this.registerController("netLink", netLink);
+        }
     }
 
     init(domElementId) {
         console.log("init: " + domElementId);
 
+        this.types = {};
         this.domElementId = domElementId;
         this.renderer = this.createRenderer(domElementId);
 
@@ -37,7 +65,7 @@ class Game {
         this.events = new THREE.EventDispatcher();
         this.controllers = {};
         this.setupRAF();
-        this.programControl = null; // for now this is a singleton
+        this.program = null; // for now this is a singleton
     }
 
     setupRAF() {
@@ -98,8 +126,8 @@ class Game {
     }
 
     addMultiControls() {
-        var mc = new MultiControls(this, this.camera, this.renderer.domElement);
-        //var mc = new XControls(this, this.camera, this.renderer.domElement);
+        //var mc = new MultiControls(this, this.camera, this.renderer.domElement);
+        var mc = new MultiControls(this, this.renderer.domElement);
         this.controls = mc;
     }
 
@@ -111,8 +139,8 @@ class Game {
   	} else {
   		throw 'Unsupported controller provided to `registerController`';
   	}
-
         this.controllers[name] = controller;
+        return controller;
     }
 
     registerUpdateHandler(handlerOrObject) {
@@ -123,6 +151,18 @@ class Game {
   	}
     }
 
+    setProgram(program) {
+        this.program = program;
+    }
+    
+    registerPlayer(player) {
+        if (this.program) {
+            this.program.registerPlayer(player);
+        }
+        else {
+            reportError("Attempt to register player with no program");
+        }
+    }
 
     handleResize(e) {
         this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -151,6 +191,12 @@ class Game {
         this.renderer.render(this.scene, this.camera);
     }
 
+    getUnderlyingRenderer() {
+        if (this.renderer.getUnderlyingRenderer)
+            return this.renderer.getUnderlyingRenderer();
+        return this.renderer;
+    }
+    
     //*************************************************************
     // Utility functions.  These could be moved to another module
     // but it is convenient for them to have access to Game.
@@ -228,6 +274,14 @@ class Game {
                 reportError("position should be array");
 	    }
         }
+        if (props.rot) {
+            if (Array.isArray(props.rot)) {
+                obj3d.rotation.fromArray(props.rot.map(degToRad));
+            }
+	    else {
+                reportError("rotations should be array");
+	    }
+        }
         if (props.rotation) {
             if (Array.isArray(props.rotation)) {
                 obj3d.rotation.fromArray(props.rotation);
@@ -274,6 +328,39 @@ class Game {
     attachCameraToStation() {
 	this.attachCameraTo('station');
     }
+
+    setStatus(str) {
+        this.controllers.ui.setStatus(str);
+    }
+
+    /*********************************************************************/
+    // Node system.  Muse is oriented around nodes that correspond to objects
+    // that may be in the scene graph, or may add functionality to the game.
+    // It is an extensible system, where modules may register their node type
+    // with the game.   Then the Loader can create those nodes from JSON objects
+    // specifying the node type.
+    //
+    // A factory should be a function that takes arguments (game, opts)
+    // where opts is an Object containing properties for the object to
+    // be created.
+    static registerNodeType(typeName, factory) {
+        if (ntypes[typeName]) {
+            alert("Node Type "+typeName+" already registered.");
+        }
+        ntypes[typeName] = factory;
+    }
+
+    createNode(typeName, props) {
+        if (ntypes[typeName]) {
+            console.log("*********************** calling factory for "+typeName);
+            return ntypes[typeName](this, props);
+        }
+        return null;
+    }
+
+    load(specs) {
+        game.loader = new Loader(this, specs);
+    }
 }
 
-export {Game};
+export {Game, getParameter};

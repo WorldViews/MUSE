@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 
 import {marquee as marqueeSpec} from './const/screen';
+import {Game} from './Game';
+import ImageSource from './lib/ImageSource';
 
 import html2canvas from 'html2canvas';
 
@@ -59,7 +61,6 @@ class Marquee extends THREE.Mesh {
         texture.wrapS = THREE.RepeatWrapping;
         texture.repeat.x = -1;
         texture.needsUpdate = true;
-
         this.material.map = texture;
     }
 
@@ -84,6 +85,64 @@ class Marquee extends THREE.Mesh {
         this._prevText = text;
         this.updateHTML(`<h1>${text}</h1>`);
     }
+
+    updateImage(url) {
+        console.log("Getting ImageSource "+url);
+        this.imageSource = new ImageSource({
+            //type: ImageSource.TYPE.VIDEO,
+            type: ImageSource.TYPE.IMAGE,
+            url: url
+        });
+        let texture = this.imageSource.createTexture();
+        this.material.map = texture;
+        /*
+        let videoMaterial = new THREE.MeshBasicMaterial({
+            map: videoTexture,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        */
+    }
+
+    updateVideo(video) {
+        console.log("Getting ImageSource "+url);
+        this.imageSource = new ImageSource({
+            type: ImageSource.TYPE.VIDEO,
+            url: url
+        });
+        let texture = imageSource.createTexture();
+        this.material.map = texture;
+    }
 }
+
+//const TIMEOUT = 30000; // 30 seconds
+const TIMEOUT = 5000; // 30 seconds
+
+function setupMarquee(game, marquee) {
+    var timeoutId = null;
+    game.events.addEventListener('valueChange', ({message}) => {
+    	if (message.name === 'narrativeText') {
+    	    marquee.updateText(message.value);
+    	    if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+    	    timeoutId = setTimeout(
+    		() => marquee.updateText(''),
+    		TIMEOUT
+    	    );
+    	}
+    });
+};
+
+function addMarquee(game, opts)
+{
+    console.log("******************* add Marquee opts: ", opts);
+    var marquee = new Marquee(opts);
+    game.addToGame(marquee, opts.name, opts.parent);
+    setupMarquee(game, marquee);
+    return marquee;
+}
+
+Game.registerNodeType("Marquee", addMarquee);
 
 export default Marquee;

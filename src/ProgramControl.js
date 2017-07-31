@@ -62,17 +62,17 @@ class ProgramControl
         for (name in this.players) {
 	    console.log("set playTime "+name);
 	    var player = this.players[name];
-	    player.playTime = t;
+            //******* Get rid of this.  Change our code to not user set and get
+            if (player.setPlayTime)
+                player.setPlayTime(t)
+            else
+	        player.playTime = t;
         }
 
-        //TODO: Move these into registered players
-        /*
-        Object.values(this.game.screens).forEach(scr => {
-	    scr.imageSource.setPlayTime(t);
-        });
-        */
         for (var key in this.game.screens) {
-            this.game.screens[key].imageSource.setPlayTime(t);
+            //this.game.screens[key].imageSource.setPlayTime(t);
+            var screen = this.game.screens[key];
+            screen.setPlayTime(t);
         }
     }
 }

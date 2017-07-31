@@ -33,17 +33,23 @@ export default class UIController {
         this.registerModel('Dancer', () => { this.selectModel('dancer') });
         this.registerModel('Data Viz', () => { this.selectModel('cmp') });
         this.registerModel('BMW', () => { this.selectModel('bmw') });
+        this.registerModel('None', () => { this.selectModel(null) });
         //this.registerCallback('Portal', () => { this.selectModel('portal') });
         this.selectModel('vEarth');
-
+        
         document.body.appendChild(this.root);
         ReactDOM.render(
+         <div>
+            <div ref={(el)=>this.status = el}
+                style={{color:'white',position:'absolute','top':0, 'left':0, zIndex:1000}}>...
+            </div>
             <TweakUI>
                 <TimelineSlider
                     ref={(slider) => this.slider = slider}
                     onSliderChange={this.onSliderChange.bind(this)}
                     onPlayerButtonClick={this.onPlayerButtonClick.bind(this)}
                 />
+                <div className="" style={{width:'100px'}}>
                 <CallbackList
                     callbacks={this.modelCallbacks}
                     onChange={this.onModelCallback.bind(this)}
@@ -58,11 +64,17 @@ export default class UIController {
                     callbacks={this.viewCallbacks}
                     onChange={this.onViewCallback.bind(this)}
                 />
-            </TweakUI>,
-            this.root
+                </div>
+            </TweakUI>
+         </div>,
+         this.root
         );
     }
 
+    setStatus(statStr) {
+        this.status.innerHTML = statStr;
+    }
+    
     // took this out for now.  it should be something that comes
     // up when invoked, not normally visible.
     //      <JSONEditor

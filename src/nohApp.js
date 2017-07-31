@@ -6,8 +6,8 @@ import OrbitControls from './lib/controls/OrbitControls';
 import CMP_Controls from './lib/controls/CMP_Controls';
 
 import loadModels from './loadModels';
-import {loadScreen} from './loadScreen';
-import setupLights from './setupLights';
+import {loadScreen} from './Screens';
+import setupLights from './Lights';
 import {Game} from './Game';
 import {setupHtmlControls} from './htmlControls';
 import {ProgramControl} from './ProgramControl';

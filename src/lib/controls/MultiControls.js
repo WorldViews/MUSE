@@ -2,117 +2,430 @@
  */
 
 import * as THREE from 'three';
-import OrbitControls from './OrbitControls';
-import LookControls from './LookControls';
+import { sprintf } from "sprintf-js";
+import { getCameraParams } from '../../Util';
 
-let {degToRad,radToDeg} = THREE.Math;
+// The four arrow keys
+var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, B: 66};
 
-let LOOK = "LOOK";
-let ORBIT = "ORBIT";
+var toDeg = THREE.Math.radToDeg;
 
-class MultiControls {
+function bind( scope, fn ) {
+    return function () {
+	fn.apply( scope, arguments );
+    };
+}
 
-    constructor(game, object, domElement) {
+class MultiControls
+{
+
+    constructor(game, domElement) {
+        console.log("******************** MultiControls.constructor()");
         var inst = this;
-        this.domElement = ( domElement !== undefined ) ? domElement : document;
+        this.ignoredModels = ["stars"];
         this.game = game;
-        this.camera = object;
+        game.xc = this; // debugging convenience
+        this.object = game.camera;
         this.target = new THREE.Vector3( 0, 0, 0 );
-        //this.orbitControls = new OrbitControls(this.camera, game.renderer.domElement);
-        this.orbitControls = new OrbitControls(this.camera, domElement);
-        //this.orbitControls.addEventListener('change', e=> inst.onChange(e));
-        this.orbitControls.keys = [65, 83, 68];
-        this.camera.lookAt(new THREE.Vector3());
-        this.camera.position.z = 1;
-        this.lookControls = new LookControls(this.camera, domElement);
+
+        this.domElement = ( domElement !== undefined ) ? domElement : document;
         this.enabled = true;
-        //this.shiftDown = false;
-        window.addEventListener( 'keydown', e=> inst.onKeyDown(e), false );
-        window.addEventListener( 'keyup', e=>inst.onKeyUp(e), false );
-	this.setModeOrbit();
+        console.log("domElement "+this.domElement);
+
+        this.mouseDragOn = false;
+        this.mousePtDown = null;
+        this.anglesDown = null;
+        this.camPosDown = null;
+        this.panRatio = 0.005;
+        this.pitchRatio = 0.005;
+        this.lookSense = 1;
+        this.prevView = null;
+        this.speedRight = 0;
+        this.speedForward = 0;
+        this.raycaster = new THREE.Raycaster();
+        this.raycastPt = new THREE.Vector2()
+
+        this._onMouseMove = bind( this, this.onMouseMove );
+        this._onMouseDown = bind( this, this.onMouseDown );
+        this._onMouseWheel = bind( this, this.onMouseWheel );
+        this._onMouseUp = bind( this, this.onMouseUp );
+        this._onMouseClick = bind( this, this.onMouseClick );
+        this._onContextMenu = bind(this, this.onContextMenu );
+
+        this._onKeyDown = bind( this, this.onKeyDown );
+        this._onKeyUp = bind( this, this.onKeyUp );
+/*
+*/
+        this.domElement.addEventListener( 'contextmenu',   this._onContextMenu, false );
+        this.domElement.addEventListener( 'dblclick',         this._onMouseClick, false );
+        this.domElement.addEventListener( 'mousedown',     this._onMouseDown, false );
+        this.domElement.addEventListener( 'mouseup',       this._onMouseUp, false );
+        this.domElement.addEventListener( 'mousemove',     this._onMouseMove, false );
+        this.domElement.addEventListener( 'wheel',         this._onMouseWheel, false);
+        this.domElement.addEventListener( 'DOMMouseScroll',this._onMouseWheel, false);
+        window.addEventListener( 'keydown',       this._onKeyDown, false);
+        window.addEventListener( 'keyup',       this._onKeyUp, false);
     }
 
+    onContextMenu( event ) {
+        event.preventDefault();
+    }
+
+    onMouseDown( event ) {
+        //console.log("MultiControls.onMouseDown");
+        if ( this.domElement !== document ) {
+	    this.domElement.focus();
+        }
+        event.preventDefault();
+        //event.stopPropagation();
+        this.mouseDragOn = true;
+        this.mousePtDown = this.getMousePt(event);
+        this.anglesDown = this.getCamAngles();
+        this.camPosDown = this.game.camera.position.clone();
+        this.getTarget();
+    };
+
+    onMouseUp( event ) {
+        //console.log("MultiControls.onMouseUp");
+        event.preventDefault();
+        //event.stopPropagation();
+        this.mouseDragOn = false;
+    };
+
+    onMouseClick( event ) {
+        this.handleRaycast(event);
+        var obj = this.pickedObj;
+        console.log("click", obj);
+        if (!obj)
+            return;
+        if (obj.name && obj.name.startsWith("vidBub")) {
+            var position = obj.getWorldPosition();
+            console.log("************* pos: ",position);
+            var rotation = new THREE.Euler(0,0,0);
+            var view = {position, rotation};
+            this.prevView = this.game.viewManager.getCurrentView();
+            this.game.viewManager.goto(view, 2);
+        }
+    }
+    
+    onMouseWheel(evt) {
+	//console.log("LookControls.onMouseWheel...");
+	evt.preventDefault();
+        if (evt.shiftKey)
+            this.handleChangeFOV(evt);
+        else
+            this.handleDolly(evt);
+    }
+
+    onMouseMove( event ) {
+        this.handleRaycast(event);
+        if (!this.mouseDragOn || !this.enabled)
+	    return;
+        //console.log("MultiControls.onMouseMove");
+        var pt = this.getMousePt(event);
+        var dx = pt.x - this.mousePtDown.x;
+        var dy = pt.y - this.mousePtDown.y;
+        //console.log("MultiControls.onMouseMove dx: "+dx+"  dy: "+dy);
+        if (event.shiftKey || event.button == 2) {
+            this.handlePan(dx,dy);
+            return;
+        }
+        if (event.button == 0) {
+            this.handleLook(dx,dy);
+        }
+        if (event.button == 1) {
+            this.handleOrbit(dx,dy);
+        }
+    }
+
+    getMousePt(event)
+    {
+        return {x: event.pageX, y: event.pageY };
+    }
+
+    handleChangeFOV(evt)
+    {
+	var sf = 0.015;
+        var camera = this.game.camera;
+	if (evt.wheelDeltaY) { // WebKit
+	    camera.fov -= evt.wheelDeltaY * sf;
+	} else if (evt.wheelDelta) { 	// Opera / IE9
+	    camera.fov -= evt.wheelDelta * sf;
+	} else if (evt.detail) { // Firefox
+	    camera.fov += evt.detail * 1.0;
+	}
+	//camera.fov = Math.max(20, Math.min(100, camera.fov));
+	camera.fov = Math.max(10, Math.min(140, camera.fov));
+	camera.updateProjectionMatrix();
+    }
+
+    handleDolly(evt)
+    {
+	var sf = 0.015;
+	var dx = 0;
+        var camera = this.game.camera;
+	if (evt.wheelDeltaY) { // WebKit
+	    dx -= evt.wheelDeltaY * sf;
+	} else if (evt.wheelDelta) { 	// Opera / IE9
+	    dx -= evt.wheelDelta * sf;
+	} else if (evt.detail) { // Firefox
+	    dx += evt.detail * 1.0;
+	}
+        //console.log(sprintf("handleDolly dx: %f", dx));
+        this.dolly(dx);
+    }
+
+    dolly(dx) {
+        this.getTarget();
+        var cam = this.game.camera;
+        var camPos = cam.position;
+        var d = camPos.distanceTo(this.target);
+        //console.log(sprintf("dolly dx: %f", dx));
+        //var wv = cam.getWorldDirection();
+        var wv = this.getCamForward();
+        var ds = dx < 0 ? 0.1*d : -0.1*d;
+        camPos.addScaledVector(wv, ds);
+    }
+
+    handleRaycast(event) {
+        var x = (event.pageX / window.innerWidth)*2 - 1;
+        var y = - (event.pageY / window.innerHeight)*2 + 1;
+        return this.raycast(x,y);
+    }
+
+    raycast(x,y)
+    {
+        //console.log("raycast "+x+" "+y);
+        this.raycastPt.x = x;
+        this.raycastPt.y = y;
+        this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
+        var objs = this.game.scene.children;
+        var intersects = this.raycaster.intersectObjects(objs, true);
+        //var i = 0;
+        if (intersects.length == 0)
+            return null;
+        this.pickedName = "";
+        this.pickedObj = null;
+        this.pickedIsect = null;
+        var inst = this;
+        for (var i=0; i<intersects.length; i++) {
+            //intersects.forEach(isect => {
+            //i++;
+            var isect = intersects[i];
+            var obj = isect.object;
+            if (this.ignoredModels.includes(obj.name))
+                continue;
+            inst.pickedObj = obj;
+            inst.pickedName = obj.name;
+            inst.pickedIsect = isect;
+            break;
+            //console.log("isect "+i+" "+obj.name);
+        }
+        this.game.setStatus(this.pickedName);
+        /*
+        if (intersects.length > 0) {
+            var isect = intersects[0];
+            if (isect.object.name != "Stars")
+                return isect;
+        }
+        */
+        return this.pickedIsect;
+    }
+    
+    handleLook(dx, dy)
+    {
+        //console.log("MultiControls.handleLook dx: "+dx+"  dy: "+dy);
+        dx *= this.lookSense;
+        dy *= this.lookSense;
+	var theta = this.anglesDown.theta - this.panRatio * dx;
+	var phi =   this.anglesDown.phi + this.pitchRatio * dy;
+        this.setCamAngles(theta, phi);
+    }
+
+    handleOrbit(dx, dy)
+    {
+        //console.log("MultiControls.handleOrbit dx: "+dx+"  dy: "+dy);
+        var camPos = this.object.position;
+        var d = camPos.distanceTo(this.target);
+        //console.log("Target:", this.target);
+        //console.log("Cam Pos:", camPos);
+        //console.log("d: "+d);
+	var theta = this.anglesDown.theta - this.panRatio   * dx;
+	var phi =   this.anglesDown.phi   + this.pitchRatio * dy;
+        camPos.subVectors(this.target, this.getVec(theta, phi, d));
+        this.object.lookAt( this.target );
+    }
+
+    handlePan(dx, dy)
+    {
+        var camPos = this.object.position;
+        var f = 0.05;
+        var dV = new THREE.Vector3();
+        var vRight = this.getCamRight();
+        var vUp = this.getCamUp();
+        //console.log("pan vRight: ", vRight);
+        //console.log("pan    vUp: ", vUp);
+        dV.addScaledVector(vRight, -f*dx);
+        dV.addScaledVector(vUp, f*dy);
+        //console.log("pan     dV:", dV);
+        camPos.addVectors(this.camPosDown, dV);
+    }
+    
     onKeyDown( event ) {
         var kc = event.keyCode;
-        console.log("MC.onKeyDown "+kc);
+        console.log("onKeyDown "+kc);
         //event.preventDefault();
-        //this.shiftDown = true;
-	if (kc == 16 || kc == 76) { //16=shift 76=L
-	    this.setModeLook();
-	}
-	else if (kc == 79) {// 79 =O
-	    this.setModeOrbit();
-	}
-    }
+        switch ( event.keyCode ) {
+
+        case KEYS.UP:
+            this.speedForward = 1;
+            this.speedRight = 0;
+            break;
+
+        case KEYS.BOTTOM:
+            this.speedForward = -1;
+            this.speedRight = 0;
+            break;
+
+        case KEYS.LEFT:
+            this.speedForward = 0;
+            this.speedRight = -1;
+            break;
+
+        case KEYS.RIGHT:
+            this.speedForward = 0;
+            this.speedRight = 1;
+            break;
+
+        case KEYS.B:
+            if (this.prevView) {
+                this.game.viewManager.goto(this.prevView, 2);
+            }
+            break;
+        }
+    };
 
     onKeyUp( event ) {
         var kc = event.keyCode;
-        //event.preventDefault();
-        console.log("MC.onKeyUp "+kc);
-        //this.shiftDown = false;
-	if (kc == 16) { //16=shift 76=L
-	    this.setModeOrbit();
-	}
+        this.speedForward = 0;
+        this.speedRight = 0;
+        console.log("onKeyUp "+kc);
+    };
+
+    update()
+    {
+        var cam = this.game.camera;
+        if (this.speedForward) {
+            var camPos = cam.position;
+            var v = this.getCamForward();
+            var ds = 0.06*this.speedForward;
+            camPos.addScaledVector(v, ds);
+        }
+        if (this.speedRight) {
+            var camPos = cam.position;
+            var v = this.getCamRight();
+            var ds = 0.06*this.speedRight;
+            camPos.addScaledVector(v, ds);
+        }
     }
 
-    update() {
-        //var type = this.shiftDown ? "CMP" : "Orbit";
-        //console.log("MultiControls.update "+this.shiftDown+" "+type);
-        if (this.mode == LOOK) {
-            this.orbitControls.enabled = false;
-	    this.lookControls.enabled = true;
-	    this.lookControls.update();
+    // This tries to find an appropriate target for trackballing
+    // The first choice is the intersect with geometry direction
+    // inline with camera center.  If there is none, a point 100
+    // units in front of camera is used.
+    getTarget()
+    {
+        //console.log("getTarget");
+        var isect = this.raycast(0,0);
+        if (isect) {
+            console.log("setting target from intersect");
+            this.target = isect.point.clone();
         }
         else {
-            this.orbitControls.enabled = true;
-	    this.lookControls.enabled = false;
-            this.orbitControls.update();
+            console.log("setting target without intersect");
+            var cam = this.game.camera;
+            //var wv = cam.getWorldDirection();
+            var wv = this.getCamForward();
+            var d = 100;
+            this.target = cam.position.clone();
+            this.target.addScaledVector(wv, d);
         }
-    }
-
-    showInfo()
-    {
-	var ophi = radToDeg(this.orbitControls.getPolarAngle());
-	var otheta = radToDeg(this.orbitControls.getAzimuthalAngle());
-	var lphi = radToDeg(this.lookControls.getPhi());
-	var ltheta = radToDeg(this.lookControls.getTheta());
-	console.log("orbit phi: "+ophi+"  "+"theta: "+otheta);
-	console.log("look  phi: "+lphi+"  "+"theta: "+ltheta);
-    }
-
-    setModeOrbit() {
-	console.log("************* setModeOrbit");
-	if (this.mode == ORBIT) {
-	    return;
-	}
-	this.showInfo();
-	if (this.mode == LOOK) {
-	    var lphi = radToDeg(this.lookControls.getPhi());
-	    var ltheta = radToDeg(this.lookControls.getTheta());
-	    var ophi = 180 - lphi;
-            this.orbitControls.setPhi(degToRad(ophi));
-	}
-	this.lookControls.enabled = false;
-        this.orbitControls.enabled = true;
-	this.mode = ORBIT;
-	this.update();
+        //console.log("Target:", this.target);
     }
     
-    setModeLook() {
-	console.log("************* setModeLook");
-	if (this.mode == LOOK) {
-	    return;
-	}
-	this.showInfo();
-	var ophi = radToDeg(this.orbitControls.getPolarAngle());
-	var otheta = radToDeg(this.orbitControls.getAzimuthalAngle());
-	var lphi = 180 - ophi;
-	this.lookControls.setPhi(degToRad(lphi));
-        this.orbitControls.enabled = false;
-	this.lookControls.enabled = true;
-	this.mode = LOOK;
-	this.update();
+    getCamAngles()
+    {
+        //var cam = this.game.camera;
+        //var wv = cam.getWorldDirection();
+        var wv = this.getCamForward();
+        var sp = new THREE.Spherical();
+        sp.setFromVector3(wv);
+        return {theta: sp.theta, phi: sp.phi};
     }
-}
+    
+    setCamAngles(theta, phi) {
+        var targetPos = new THREE.Vector3();
+        targetPos.addVectors(this.object.position, this.getVec(theta, phi));
+        this.object.lookAt( targetPos );
+    };
+
+    // Get camera forward direction (direction it is looking)
+    // in world coordinates.
+    getCamForward()
+    {
+        return this.game.camera.getWorldDirection();
+        /*
+        var cam = this.game.camera;
+        var vL = new THREE.Vector3(0,0,-1);
+        var vW = vL.applyMatrix4(cam.matrixWorld);
+        vW.sub(cam.position).normalize();
+        return vW;
+        */
+    }
+
+    getCamRight()
+    {
+        var cam = this.game.camera;
+        cam.updateMatrixWorld();
+        var vRightLocal = new THREE.Vector3(1,0,0);
+        var vRightWorld = vRightLocal.applyMatrix4(cam.matrixWorld);
+        vRightWorld.sub(cam.position).normalize();
+        return vRightWorld;
+    }
+
+    getCamUp()
+    {
+        var cam = this.game.camera;
+        cam.updateMatrixWorld();
+        var vUpLocal = new THREE.Vector3(0,1,0);
+        var vUpWorld = vUpLocal.applyMatrix4(cam.matrixWorld);
+        vUpWorld.sub(cam.position).normalize();
+        return vUpWorld;
+    }
+    
+    // Return vector of given length in direction specified
+    // by spherical coordinates theta,phi.
+    getVec(theta, phi, d)
+    {
+        d = d || 1.0;
+        theta = Math.PI/2 - theta;
+        var v = new THREE.Vector3();
+        v.x = d * Math.sin( phi ) * Math.cos( theta );
+        v.y = d * Math.cos( phi );
+        v.z = d * Math.sin( phi ) * Math.sin( theta );
+        return v;
+    }
+    
+    dispose() {
+        this.domElement.removeEventListener( 'contextmenu', this.contextmenu, false );
+        this.domElement.removeEventListener( 'mousedown',   this._onMouseDown, false );
+        this.domElement.removeEventListener( 'mousemove',   this._onMouseMove, false );
+        this.domElement.removeEventListener( 'mouseup',     this._onMouseUp, false );
+        this.domElement.removeEventListener( 'contextmenu', this._onContextMenu, false );
+        window.removeEventListener( 'keydown',              this._onKeyDown, false );
+        window.removeEventListener( 'keyup',                this._onKeyUp, false );
+    };
+
+};
 
 export {MultiControls};

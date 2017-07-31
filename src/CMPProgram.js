@@ -46,6 +46,7 @@ class CMPProgram extends ProgramControl {
 
     constructor(game) {
         super(game);
+        game.gss = new GSS.SpreadSheet();
 	var inst = this;
 	this.duration = 32*60;
 	//game.controllers.ui.registerCallback("...", () => inst.dots());

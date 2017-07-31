@@ -1,5 +1,6 @@
 
 import * as THREE from 'three';
+import {Game} from "./Game";
 
 let sphere = null;
 
@@ -26,6 +27,7 @@ function addLight(game, spec)
     g.add( bulb );
     game.addToGame(g, spec);
     game.setFromProps(g, spec);
+    return g;
 }
 
 
@@ -36,6 +38,8 @@ function setupLights(game)
     addLight(game, {name: 'light3', color: 0xaaaaff, position: [30, 15, -5]});
     addLight(game, {name: 'sun', color: 0xffffff, position: [0, 1000, 0], distance: 5000});
 }
+
+Game.registerNodeType("PointLight", addLight);
 
 export {addLight, setupLights};
 

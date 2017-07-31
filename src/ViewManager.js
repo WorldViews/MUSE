@@ -1,10 +1,23 @@
 
 import * as THREE from 'three';
-import {Mathx} from 'three';
+//import {Mathx} from 'three';
 import {getJSON} from './Util';
+import {Game} from './Game';
+
+var toDeg = THREE.Math.radToDeg;
+var toRad = THREE.Math.degToRad;
 
 // This will be a singleton
 var viewManager = null;
+
+// Convert interpolation parameter s in [0,1]
+// to [0,1] according to parameter a.
+var expEasing = function(s, a)
+{
+    var s = Math.tanh(a * (s-0.5));
+    s = s / Math.tanh(a*0.5);
+    return (s+1)/2;
+}
 
 var SAMPLE_VIEWS =
 {
@@ -101,6 +114,8 @@ class ViewInterpolator {
     }
 
     setVal(s) {
+        if (viewManager.easingFun)
+            s = viewManager.easingFun(s);
         if (viewManager.slerp)
             return this.setValSlerp(s);
         return this.setValLerp(s);
@@ -172,14 +187,16 @@ class Animation
 
 class ViewManager
 {
-    constructor(game, uiController) {
+    constructor(game, options) {
         if (viewManager) {
             alert("ViewManager should be singleton");
         }
+        this.ui = game.controllers.ui;
         viewManager = this; // singleton;
+        this.easingFun = null;
         this.slerp = true;
         this.game = game;
-        this.defaultDuration = 1.5;
+        this.defaultDuration = 5.0;
         this.viewNum = 0;
         this.views = {};
         this.viewNames = [];
@@ -187,10 +204,20 @@ class ViewManager
         //this.bookmarksURL_ = "/Kinetics/bookmarks.json";
         this.bookmarksURL_ = "xxx";
         this.activeAnimations = [];
-        this.ui = uiController;
-        this.setBookmarksURL("/data/cmp_bookmarks.json");
+        var bookmarksUrl = options.bookmarksUrl || "data/cmp_bookmarks.json";
+        this.setBookmarksURL(bookmarksUrl);
         this.downloadBookmarks();
+        this.setEasing(5);
         //this.handleBookmarks(SAMPLE_VIEWS)
+    }
+
+    setEasing(a)
+    {
+        if (a) {
+            this.easingFun = function(s) { return expEasing(s,a); }
+            return;
+        }
+        this.easingFun = null;
     }
     
     gotoView(name, dur)
@@ -208,9 +235,14 @@ class ViewManager
 	    console.log("No view named "+name);
 	    return;
         }
+        this.setViewNameInUI(name)
+        this.goto(view, dur, name);
+    }
+
+    goto(view, dur, name)
+    {
         console.log("pos: "+view.position);
         console.log("rot: "+view.rotation);
-        this.setViewNameInUI(name)
         var camera = this.game.camera;
         if (dur > 0) {
 	    var pos0 = camera.position.clone();
@@ -234,7 +266,19 @@ class ViewManager
         }
         camera.updateProjectionMatrix();
     }
-    
+
+    getCurrentView()
+    {
+        var camera = this.game.camera;
+        if (!camera) {
+            console.log("Cannot get camera");
+            return;
+        }
+        var pos = camera.position.clone();
+        var eulerAngles = camera.rotation.clone();
+        return {'position': pos, 'rotation': eulerAngles};
+    }
+
     update = function()
     {
         for (var i = this.activeAnimations.length-1; i >= 0; i--) {
@@ -243,6 +287,7 @@ class ViewManager
         }
     }
 
+    //TODO: have this get view using getCurrentView()
     bookmarkView = function(name)
     {
         console.log("bookmarkView");
@@ -313,10 +358,28 @@ class ViewManager
         return name;
     }
 
+    // Get an object representing the views.  This will be used for
+    // the JSON to be saved in file representing this set of views.
+    getViewsRep()
+    {
+        var rep = {};
+        for (var viewName in this.views) {
+            var view = this.views[viewName];
+            var rot = view.rotation;
+            if (rot)
+                rot = [toDeg(rot._x), toDeg(rot._y), toDeg(rot._z)];
+            var v = {viewName: view.name, position: view.position, rot: rot};
+            //v.rotation = view.rotation;
+            rep[viewName] = v;
+        }
+        //return this.views;
+        return rep;
+    }
+    
     // untested
     uploadBookmarks()
     {
-        var jstr = JSON.stringify(this.views);
+        var jstr = JSON.stringify(this.getViewsRep());
         var url = this.getBookmarksURL();
         console.log("uploadBookmarks url: "+url+"  data: "+jstr);
         //url = url.replace("/", "/update/");
@@ -366,6 +429,14 @@ class ViewManager
         console.log("handleBookmarks");
         console.log("views: "+JSON.stringify(obj));
         this.views = obj;
+        for (name in this.views) {
+            var view = this.views[name];
+            var rot = view.rot;
+            if (rot) {
+                console.log("rot: "+rot);
+                view.rotation = new THREE.Euler(toRad(rot[0]), toRad(rot[1]), toRad(rot[2]));
+            }
+        }
         this.viewNames = Object.keys(this.views);
         this.viewNames.sort();
         /*
@@ -383,12 +454,26 @@ class ViewManager
             console.log("view: "+viewName+" ui: "+inst.ui);
             inst.ui.registerView(viewName, () => inst.gotoView(viewName));
         });
+        /*
         if (this.views["Home"]) {
 	    console.log("Going to Home after loading bookmarks");
 	    this.gotoView("Home", 1);
         }
+        */
     }
     
 }
+
+function addViewManager(game, options)
+{
+    if (!options.name)
+        options.name = 'viewManager';
+    var viewManager = new ViewManager(game, options);
+    game.registerController(options.name, viewManager);
+    game.viewManager = viewManager
+    return viewManager;
+}
+
+Game.registerNodeType("ViewManager", addViewManager);
 
 export {ViewManager};

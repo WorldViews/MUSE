@@ -1,4 +1,7 @@
 
+import * as THREE from 'three';
+import { sprintf } from "sprintf-js";
+var toDeg = THREE.Math.radToDeg;
 
 function getClockTime() {
     return new Date().getTime()/1000.0;
@@ -41,4 +44,17 @@ function toJSON(obj)
     return JSON.stringify(obj, null, 3);
 }
 
-export {getJSON};
+function getCameraParams(cam)
+{
+    console.log("LookControls.getCameraParams");
+    cam = cam || window.game.camera;
+    var wv = cam.getWorldDirection();
+    //console.log("wv: "+JSON.stringify(wv));
+    var s = new THREE.Spherical();
+    s.setFromVector3(wv);
+    console.log(sprintf("cam phi: %6.2f theta: %6.2f", toDeg(s.phi), toDeg(s.theta)));
+    //return {phi: s.phi, theta: s.theta};
+    return s;
+}
+
+export {getJSON, getCameraParams};

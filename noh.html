@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 
-    <title>NOH Space</title>
+    <title>NOH Space Climate Music Project Performance</title>
 
     <style>
       html {
@@ -32,6 +32,14 @@
          horizontal-align: center;
       }
 
+      #canvas3d {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top:0;
+      }
+
     </style>
 
     <link rel="stylesheet" href="./css/jquery-ui.css">
@@ -55,56 +63,49 @@
   </head> 
   <body>
 
-  <div class="textViewer">
-      <input id="playStop" type="button" value="Play">
-      <div id="timeLine" style="width:100%;height:10px;border-style:solid;border-width: 2;align-content:center"></div>
-      <span id="textLine">Foo Bar</span><br>
-      <span id="yearText">0000</span><br>
-      <span id="narrativeText">????</span><br>
-  </div>
-
-
+    <canvas id="canvas3d"></canvas>
+    
     <script src="dist/vendor.bundle.js"></script>
     <script src="dist/mathbox-bundle.min.js"></script>
     <script src="src/legacy/jquery-3.1.1.min.js"></script>
     <script src="src/legacy/jquery-ui.js"></script>
     <script src="src/lib/GSpreadSheet.js"></script>
     <script src="dist/app.bundle.js"></script>
-  <script src="https://code.createjs.com/tweenjs-0.6.2.min.js"></script>
     <script>
 
 var n = 0;
 
-let MODEL_SPECS = [
-        {
-            name: 'station'
-        },
-        {
-            name: 'platform',
-            parent: 'station',
-            //path: 'models/PlayDomeSkp.dae',
-            //path: 'models/PlayDomeSkp_v1.dae',
-            path: 'models/NOHSpace.dae',
-            position: [0, 0, 0],
-            //rotation: [0, degToRad(0), 0],
-            rotation: [0, 0, 0],
-            scale: 0.025
-        },
-        {
-            name: 'bmw',
-            parent: 'station',
-            path: 'models/bmw/model.dae',
-            position: [0.2, 0, 1.6],
-            //rotation: [0, degToRad(90), 0],
-            //rotation: [0, degToRad(0), 0],
-            rotation: [0, 0, 0],
-            scale: 0.020,
-            visible: false
-        }
+var LIGHTS = [
+    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2]},
+    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0]},
+    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2]},
+    {  type: 'PointLight', name: 'torch1', color: 0xffffff, distance: 50000 }
+]
+       
+let SPECS = [
+    {   type: 'Group',  name: 'station' },
+    {   type: 'Model',  name: 'platform',
+        parent: 'station',
+        path: 'models/NOHSpace.dae',
+        position: [0, 0, 0],
+        rot: [0, 0, 0],
+        scale: 0.025
+    },
+    {   type: 'Model',  name: 'bmw',
+        parent: 'station',
+        path: 'models/bmw/model.dae',
+        position: [0.2, 0, 1.6],
+        //rotation: [0, degToRad(90), 0],
+        //rotation: [0, degToRad(0), 0],
+        rot: [0, 0, 0],
+        scale: 0.020,
+        visible: false
+    },
+    LIGHTS
 ];
 
-start({preferredControl: 'multi', modelSpecs: MODEL_SPECS});
-gss = new GSS.SpreadSheet();
+start({'specs': SPECS});
+//gss = new GSS.SpreadSheet();
 
     </script>
   </body>

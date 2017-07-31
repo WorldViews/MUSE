@@ -38,7 +38,7 @@ EARTH.Planet = function(group, radius, opts)
             var geometry = new THREE.SphereGeometry( radius, 30, 30 );
             var material = new THREE.MeshPhongMaterial( { map: texture, overdraw: 0.5 } );
             inst.mesh = new THREE.Mesh( geometry, material );
-	    inst.mesh.name = "Earth";
+	    inst.mesh.name = inst.name;
             group.add(inst.mesh);
             inst.loaded = true;
         });

@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 
 import {BVHLoader} from '../BVHLoader';
+import {Game} from '../Game';
 
 let BVH_PATH = './models/bvh/MasterLiuPerformanceChar00.bvh';
 
@@ -65,9 +66,9 @@ class DanceController
         } );
     }
 
-    setScale(s) {
-	this.dancer.scale.set(s,s,s);
-    }
+    //setScale(s) {
+    //   this.dancer.scale.set(s,s,s);
+    //}
     
     get visible() {
         return this.dancer !=null && this.dancer.visible;
@@ -96,5 +97,15 @@ class DanceController
     }
 }
 
+function addDancer(game, opts)
+{
+    let dancer = new DanceController(game, opts);
+    var name = opts.name || 'dancer';
+    game.registerController(name, dancer);
+    game.registerPlayer(dancer);
+    return dancer;
+}
+
+Game.registerNodeType("Dancer", addDancer);
 
 export {DanceController};

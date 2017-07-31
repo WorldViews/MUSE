@@ -5,6 +5,10 @@
  */
 
 import * as THREE from 'three';
+import { sprintf } from "sprintf-js";
+import { getCameraParams } from '../../Util';
+
+var toDeg = THREE.Math.radToDeg;
 
 //THREE.LookControls = function ( object, domElement )
 var LookControls = function ( object, domElement )
@@ -126,6 +130,7 @@ var LookControls = function ( object, domElement )
     this.onMouseMove = function ( event ) {
         if (!this.mouseDragOn || !this.enabled)
 	    return;
+        this.getParamsFromCamera();
         var pt = this.getMousePt(event);
         var dx = pt.x - this.mousePtDown.x;
         var dy = pt.y - this.mousePtDown.y;
@@ -145,10 +150,16 @@ var LookControls = function ( object, domElement )
                 this.moveBackward = false;
 	    }
         }
+        this.setDirection();
     }
 
     this.onKeyDown = function ( event ) {
         var kc = event.keyCode;
+
+        //if (kc == ' '.charCodeAt(0)) {
+        if (kc == 32) {
+            return this.dumpInfo();
+        }
         //console.log("onKeyUp "+kc);
 
         //event.preventDefault();
@@ -177,6 +188,10 @@ var LookControls = function ( object, domElement )
     this.onKeyUp = function ( event ) {
         var kc = event.keyCode;
         console.log("onKeyUp "+kc);
+        //if (kc == ' '.charCodeAt(0)) {
+        if (kc == 32) {
+            return this.dumpInfo();
+        }
         switch ( kc ) {
 
         case 38: /*up*/
@@ -202,6 +217,8 @@ var LookControls = function ( object, domElement )
         //console.log("FPC update....");
         delta = 0.01;
         if ( this.enabled === false ) return;
+
+        this.getParamsFromCamera();
 
         if ( this.heightSpeed ) {
 
@@ -248,17 +265,22 @@ var LookControls = function ( object, domElement )
         if ( this.constrainVertical ) {
 	    this.phi = THREE.Math.mapLinear( this.phi, 0, Math.PI, this.verticalMin, this.verticalMax );
         }
+        this.setDirection();
+    };
 
+    this.setDirection = function()
+    {
         var targetPosition = this.target;
         var position = this.object.position;
-
+        console.log("getting pos phi: %6.2f theta: %6.2f", toDeg(this.phi), toDeg(this.theta));
         targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
         targetPosition.y = position.y + 100 * Math.cos( this.phi );
         targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
-        this.object.lookAt( targetPosition );
-
-    };
-
+        //this.object.lookAt( targetPosition );
+        game.camera.lookAt( targetPosition );
+	//game.camera.updateProjectionMatrix();
+    }
+    
     function contextmenu( event ) {
         event.preventDefault();
     }
@@ -299,6 +321,38 @@ var LookControls = function ( object, domElement )
 
     this.handleResize();
 
+    this.getParamsFromCamera = function() {
+        console.log("LookControls.setParamsFromCamera");
+        var vals = getCameraParams();
+        console.log(sprintf("< phi: %6.2f  theta: %6.2f", toDeg(this.phi), toDeg(this.theta)));
+        this.phi = vals.phi;
+        //this.theta = vals.theta;
+        console.log(sprintf("> phi: %6.2f  theta: %6.2f", toDeg(this.phi), toDeg(this.theta)));
+    }
+    
+/*
+    this.getCameraParams = function(cam) {
+        console.log("LookControls.getCameraParams");
+        cam = cam || window.game.camera;
+        var wv = cam.getWorldDirection();
+        //console.log("wv: "+JSON.stringify(wv));
+        var s = new THREE.Spherical();
+        s.setFromVector3(wv);
+        console.log(sprintf("cam phi: %6.2f theta: %6.2f", toDeg(s.phi), toDeg(s.theta)));
+        return {phi: s.phi, theta: s.theta};
+    }
+*/
+    
+    this.dumpInfo = function() {
+        //var c = this.object;
+        var c = window.game.camera;
+        var wv = c.getWorldDirection();
+        console.log("wv: "+JSON.stringify(wv));
+        var s = new THREE.Spherical();
+        s.setFromVector3(wv);
+        console.log(sprintf("cam  phi: %6.2f  theta: %6.2f", toDeg(s.phi), toDeg(s.theta)));
+        console.log(sprintf("this phi: %6.2f  theta: %6.2f", toDeg(this.phi), toDeg(this.theta)));
+    }
 };
 
 export default LookControls;
