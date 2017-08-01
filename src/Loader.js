@@ -3,6 +3,7 @@ import loadCollada from './loadCollada'
 import OBJLoader from './lib/loaders/OBJLoader';
 import MTLLoader from './lib/loaders/MTLLoader';
 import DDSLoader from './lib/loaders/DDSLoader';
+import {FBXLoader} from './lib/loaders/FBXLoader';
 import {getJSON} from './Util';
 
 /*
@@ -42,7 +43,8 @@ function loadFBXModel(path, opts, afterFun)
     manager.onProgress = function( item, loaded, total ) {
 	console.log( item, loaded, total );
     };
-    var loader = new THREE.FBXLoader( manager );
+    //var loader = new THREE.FBXLoader( manager );
+    var loader = new FBXLoader( manager );
     loader.load( path,
                  function( object ) {
                      /*
@@ -56,9 +58,10 @@ function loadFBXModel(path, opts, afterFun)
 	             }
 	         },
                  function() {
+                     console.log("-----> load FBXModel <-----");
 	         },
 	         function (e) {
-	             report("Error loading FBX file "+path+"\n"+e);
+	             report("************* Error loading FBX file "+path+"\n"+e);
 	         }
 	       );
 }
@@ -250,6 +253,7 @@ class Loader
         if (path.endsWith(".fbx")) {
             this.numPending++;
 	    loadFBXModel(path, spec, (obj) => {
+                console.log("***** Loaded fbx "+path);
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
                 this.numPending--;
