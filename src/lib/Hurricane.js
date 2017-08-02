@@ -6,13 +6,7 @@ class Hurricane
 {
     constructor(game, opts)
     {
-        console.log("++++++++++++++++++++++++++++++++++++++++++++");
-        console.log("++++++++++++++++++++++++++++++++++++++++++++");
-        console.log("++++++++++++++++++++++++++++++++++++++++++++");
-        console.log("++++++++++++++++++++++++++++++++++++++++++++");
-        console.log("++++++++++++++++++++++++++++++++++++++++++++");
-        console.log("++++++++++++++++++++++++++++++++++++++++++++");
-        console.log("++++++++++++++++++++++++++++++++++++++++++++");
+        console.log("**(* Hurricane ****");
         var scene = game.scene;
         this.pos = new THREE.Vector3();
         this.spread = opts.spread || 60;
