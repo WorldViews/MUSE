@@ -36,6 +36,16 @@ var VID_BUBBLES = [
     }
 ];
 
+SATELLITE_MODEL = [
+    {   type: 'Model', name: 'satellite1',
+        parent: 'station',
+        //path: 'models/AcrimSat_FINAL.fbx',
+        //path: 'models/ISS.fbx',
+        path: 'models/satellites/Juno/Juno.obj',
+        scale: 1.0
+    }
+];
+
 var SPECS = [
     {   type: 'Group', name: 'station'  },
     {   type: 'Model', name: 'platform',
@@ -53,6 +63,7 @@ var SPECS = [
         scale: 0.020,
         visible: false
     },
+    //SATELLITE_MODEL,
     //OBJ_MODEL,
     VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
@@ -73,7 +84,7 @@ var SPECS = [
        thetaStart: 65, thetaLength: 20
     },
     LIGHTS,
-    {  type: 'Inline',     name: 'debugStuff', children: TEST },
+    //{  type: 'Inline',     name: 'debugStuff', children: TEST },
     {  type: 'Dancer', name: 'dancer', visible: false },
     {  type: 'CMPDataViz', name: 'cmp',
        position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
@@ -82,7 +93,9 @@ var SPECS = [
     {  type: 'SolarSystem' },
     {  type: 'Stars' },
     {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
-    {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' }
+    {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
+    //{  type: 'Hurricane', scale: 0.01 }
+    {  type: 'VirtualEarth', name: 'vEarth', radius: 1.25, position: [0,1.9,0] }
 ];
 
 CMP_IMAGINARIUM = SPECS;
