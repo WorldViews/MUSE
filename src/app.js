@@ -20,6 +20,7 @@ import Marquee from './Marquee';
 import { DynamicObjectDB_test } from './lib/DynamicObjectDB';
 import { SlidePlayer } from './lib/SlideShow';
 import { Hurricane } from './lib/Hurricane';
+import { VirtualEarth } from './lib/VirtualEarth';
 
 let {degToRad} = THREE.Math;
 
