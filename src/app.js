@@ -19,6 +19,7 @@ import { addLight, setupLights } from './Lights';
 import Marquee from './Marquee';
 import { DynamicObjectDB_test } from './lib/DynamicObjectDB';
 import { SlidePlayer } from './lib/SlideShow';
+import { Hurricane } from './lib/Hurricane';
 
 let {degToRad} = THREE.Math;
 
