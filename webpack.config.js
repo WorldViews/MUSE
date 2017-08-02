@@ -32,6 +32,7 @@ module.exports = (env) => {
     externals: [
       { three: 'THREE' },
       { mathbox: 'MathBox' },
+      { jquery: 'jQuery' },
     ],
     module: {
       rules: [

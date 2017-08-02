@@ -33,7 +33,10 @@ var OBJ_MODEL = {
 var VID_BUBBLES = [
     {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
         path: 'videos/YukiyoCompilation.mp4',
-    }
+    },
+    // {   type: 'Screen', name: 'vidBubble2', parent: 'station', radius: 0.4, position: [1,3.6,0],
+    //     path: 'webrtc+http://localhost:8081',
+    // },
 ];
 
 var SPECS = [

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-
+import WebRTCClient from './webrtc';
 /**
  * Wrapper to create three.js texture from multiple different sources.
  * 
@@ -187,7 +187,7 @@ ImageSource.prototype.createTexture = function() {
     } else if (this.type == ImageSource.TYPE.WEBRTC) {
         texture = new THREE.Texture();
         texture.generateMipmaps = false;
-        var client = new JCClient(this.url);
+        var client = new WebRTCClient(this.url);
         client.on('ready', function(video) {
             scope.video = video;
             texture.image = video;
