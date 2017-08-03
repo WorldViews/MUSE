@@ -57,4 +57,20 @@ export function getCameraParams(cam)
     return s;
 }
 
-export default {getJSON, getCameraParams, getParameterByName};
+export function randomIntFromInterval(min,max)
+{
+    return Math.floor(randomFromInterval(min,max));
+}
+
+export function randomFromInterval(min,max)
+{
+    return Math.random()*(max-min+1)+min;
+}
+
+export default {
+    getJSON,
+    getCameraParams,
+    getParameterByName,
+    randomIntFromInterval,
+    randomFromInterval
+};

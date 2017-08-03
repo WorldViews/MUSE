@@ -26,6 +26,18 @@ import { VirtualEarth } from './lib/VirtualEarth';
 let {degToRad} = THREE.Math;
 
 let DEFAULT_SPECS = "configs/cmp_imaginarium.js";
+function getStartPosition() {
+    // figure out a random start position
+    let radius = Util.randomFromInterval(3, 8);
+    let angle = Util.randomFromInterval(0, 2*Math.PI);
+    let height = Util.randomFromInterval(1.5, 5);
+    let x = Math.cos(angle)*radius;
+    let z = Math.sin(angle)*radius;
+    let start = new THREE.Vector3(x, height, z);
+    let lookAt = new THREE.Vector3(0, 1.5, 0);
+
+    return { start, lookAt };
+}
 
 function start(config) {
     config = config || {};
@@ -34,22 +46,26 @@ function start(config) {
     console.log(Util);
     if (Util.getParameterByName("specs"))
         specs = Util.getParameterByName("specs");
-    if (Util.getParameter("config")) {
+    if (Util.getParameterByName("config")) {
         specs = "configs/"+getParameter("config")+".js";
     }
     if (!specs)
         specs = DEFAULT_SPECS;
     let vr = config.vr || Util.getParameterByName("vr");
 
+    let pos = getStartPosition();
+
     if (vr) {
         window.game = new VRGame('canvas3d');
         let navigationController = new NavigationController(game.body, game.camera, game.plControls);
         game.registerController('navigation', navigationController);
-        game.body.position.set(2, 1.5, 2);
+        game.body.position.set(pos.start.x, pos.start.y, pos.start.z);
     } else { // if(config.preferredControl === 'multi')
         window.game = new Game('canvas3d');
         game.addMultiControls();
-        game.camera.position.set(2, 1.5, 2.);
+        game.camera.position.set(pos.start.x, pos.start.y, pos.start.z);
+        game.camera.up = new THREE.Vector3(0,1,0);
+        game.camera.lookAt(pos.lookAt);
     }
 
     game.defaultGroupName = 'station';
