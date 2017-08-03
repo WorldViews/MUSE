@@ -257,6 +257,7 @@ class Game {
         else
 	    this.scene.add(obj);
         if (name) {
+            obj.name = name;
 	    //game.models[name] = obj;
 	    this.models[name] = obj;
         }

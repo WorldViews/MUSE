@@ -38,7 +38,7 @@ class VRGame extends Game {
         );
     }
 
-    addControls() {
+    addControls() {        
         if (WebVR.isAvailable()) {
             this.addVRControls();
         } else {
@@ -49,12 +49,12 @@ class VRGame extends Game {
     addVRControls() {
         this.vrControls = new VRControls(this.camera);
         this.registerController('vr', this.vrControls);
-        
+
         this.body = new THREE.Object3D();
         this.scene.add(this.body);
         this.body.add(this.camera);        
 
-        this.viveControllerController = new ViveControllerController(this.body, this.vrControls);
+        this.viveControllerController = new ViveControllerController(this.scene, this.body);
         this.registerController('viveControls', this.viveControllerController);
     }
 
