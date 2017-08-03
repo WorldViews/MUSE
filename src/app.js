@@ -5,7 +5,8 @@ import { Scripts } from './Scripts';
 import { PanoPortal } from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
 import { Screens } from './Screens';
-import { Game, getParameter } from './Game';
+import { Game } from './Game';
+import Util from './Util';
 import { Dancer } from './controllers/DanceController';
 import NavigationController from './controllers/NavigationController';
 import SolarSystemController from './controllers/SolarSystemController';
@@ -27,11 +28,12 @@ let {degToRad} = THREE.Math;
 function start(config) {
     config = config || {};
     var specs = config.specs;
-    if (getParameter("specs"))
-        specs = getParameter("specs");
+    console.log(Util);
+    if (Util.getParameterByName("specs"))
+        specs = Util.getParameterByName("specs");
     if (!specs)
         specs = SPECS;
-    let vr = config.vr || getParameter("vr");
+    let vr = config.vr || Util.getParameterByName("vr");
 
     if (vr) {
         window.game = new VRGame('canvas3d');

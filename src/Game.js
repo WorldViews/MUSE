@@ -4,19 +4,9 @@ import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
 import {Loader} from './Loader';
 import { NetLink } from './NetLink';
+import Util from './Util'
 
 let {degToRad} = THREE.Math;
-
-function getParameter(name) {
-    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-    if (match) {
-        var str = decodeURIComponent(match[1].replace(/\+/g, ' '));
-        if (str.toLowerCase() == "false")
-            return false;
-        return str;
-    }
-    return null;
-}
 
 function reportError(str)
 {
@@ -30,7 +20,7 @@ class Game {
         this.updateHandlers = [];
         this.init(domElementId);
         this.ntypes = ntypes;
-        this.user = getParameter("user");
+        this.user = Util.getParameterByName("user");
         this.viewManager = null;
         if (this.user) {
             let netLink = new NetLink(this);
@@ -363,4 +353,4 @@ class Game {
     }
 }
 
-export {Game, getParameter};
+export {Game};
