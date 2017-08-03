@@ -10,7 +10,7 @@ const VIVE_PATH = 'models/vive-controller/';
 const OBJ_NAME = 'vr_controller_vive_1_5.obj';
 const TEXTURE_NAME = 'onepointfive_texture.png';
 const SPEC_MAP_NAME = 'onepointfive_spec.png';
-const SPEED = 1 / 1000; // one unit per sec
+const SPEED = 1 / 500; // one unit per sec
 
 function loadAll(loaderFilePairs) {
     return Promise.all(
