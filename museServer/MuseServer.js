@@ -4,6 +4,8 @@ function getClockTime() { return new Date()/1000.0; }
 
 var verbosity = 1;
 
+var morgan = require('morgan');
+
 //var CHANNELS = ["position", "command", "people"];
 var CHANNELS = ["pano", "pano.heartbeat", "kinect", "kinect.skel"];
 var CHANNEL_STATS = {};
@@ -48,14 +50,11 @@ getConfig();
 //   JSON via /update/ urls.
 //
 var app = express();
+app.use(morgan('common'));
 app.use(cors())
 var server = http.createServer(app);
 
-app.get('/', function (req, res) {
-    res.sendFile('index.html', {root: __dirname});
-});
-
-app.use(express.static(".."));
+app.use(express.static(__dirname + "/.."));
 app.use(bodyParser.json());
 
 app.get('/version', function (req, res) {
@@ -198,7 +197,7 @@ io.on('connection', function(socket) {
     socket.on('disconnect', obj => handleDisconnect(socket, obj));
 });
 
-var port = 4000;
+var port = 8080;
 var addr = "0.0.0.0";
 report("listening on address: "+addr+" port:"+port);
 //app.listen(port, addr);

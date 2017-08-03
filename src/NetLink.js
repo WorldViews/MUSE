@@ -2,6 +2,7 @@
 import io from 'socket.io-client';
 import {Avatar} from "./Avatar";
 import JanusClient from './lib/janus';
+import Util from './Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -16,7 +17,7 @@ class NetLink {
         console.log("****** User: "+this.user);
         this.startTime = getClockTime();
         this.lastSendTime = 0;
-        this.sioURL = window.location.hostname + ":4000";
+        this.sioURL = window.location.origin;
         this.channel = 'pano';
         this.sock = io(this.sioURL);
         this.sock.on(this.channel, msg => { self.handleMessage(msg);});
@@ -24,6 +25,14 @@ class NetLink {
         // this.getUser("Don");
         this.updateInterval = 0.1;
         this.verbosity = 0;
+
+        if (Util.getParameterByName('janus')) {
+            this._initJanus();
+        }
+    }
+
+    _initJanus() {
+        var self = this;
 
         this.client = new JanusClient({
             url: 'wss://sd6.dcpfs.net:8989/janus',

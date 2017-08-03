@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "express": "^4.15.3",
+    "morgan": "^1.8.2",
+    "osc": "^2.2.0",
     "socket.io": "^2.0.3"
   },
   "repository": {
@@ -60,7 +65,7 @@
     "build:fix": "webpack --env=fix",
     "build:stats": "webpack --profile --json > stats.json",
     "watch": "webpack --progress --watch",
-    "start": "http-server"
+    "start": "node museServer/MuseServer.js"
   },
   "author": "",
   "license": "ISC"

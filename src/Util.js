@@ -3,12 +3,12 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 var toDeg = THREE.Math.radToDeg;
 
-function getClockTime() {
+export function getClockTime() {
     return new Date().getTime()/1000.0;
 }
 
 // http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-function getParameterByName(name, url) {
+export function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
@@ -18,7 +18,7 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function getJSON(url, handler)
+export function getJSON(url, handler)
 {
     console.log("Util.getJSON: "+url);
     $.ajax({
@@ -39,12 +39,12 @@ function getJSON(url, handler)
     });
 }
 
-function toJSON(obj)
+export function toJSON(obj)
 {
     return JSON.stringify(obj, null, 3);
 }
 
-function getCameraParams(cam)
+export function getCameraParams(cam)
 {
     console.log("LookControls.getCameraParams");
     cam = cam || window.game.camera;
@@ -57,4 +57,4 @@ function getCameraParams(cam)
     return s;
 }
 
-export {getJSON, getCameraParams};
+export default {getJSON, getCameraParams, getParameterByName};
