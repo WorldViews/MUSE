@@ -46,7 +46,7 @@ function start(config) {
     console.log(Util);
     if (Util.getParameterByName("specs"))
         specs = Util.getParameterByName("specs");
-    if (Util.getParameter("config")) {
+    if (Util.getParameterByName("config")) {
         specs = "configs/"+getParameter("config")+".js";
     }
     if (!specs)
