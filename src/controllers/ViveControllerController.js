@@ -113,18 +113,19 @@ export default class ViveControllerController {
 			) {
 				delete this.tween;
 			}
-		} else if (intersections && intersections.length > 0) {
+		} 
+
+		if (intersections && intersections.length > 0) {
 			let isTriggerPressed = this.controller0.getButtonState('trigger');
 			let intersection = intersections[0];
 
-			if (isTriggerPressed && !this.tween) {
+			if (isTriggerPressed) {
 				let {distance, point: {x, z}} = intersection;
 				let duration = distance / SPEED;
 				let dx = x - this.body.position.x;
 				let dz = z - this.body.position.z;
 
 				this.tween = {dx, dz, x, z, duration, ellapsed: 0, traveled: 0};
-
 			} else {
 				// Move the selector.
 				this.selector.position.copy(intersection.point);

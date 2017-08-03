@@ -59,7 +59,7 @@ function start(config) {
         window.game = new VRGame('canvas3d');
         let navigationController = new NavigationController(game.body, game.camera, game.plControls);
         game.registerController('navigation', navigationController);
-        game.body.position.set(pos.start.x, pos.start.y, pos.start.z);
+        game.body.position.set(pos.start.x, 1.5, pos.start.z);
     } else { // if(config.preferredControl === 'multi')
         window.game = new Game('canvas3d');
         game.addMultiControls();
