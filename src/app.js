@@ -24,13 +24,18 @@ import { VirtualEarth } from './lib/VirtualEarth';
 
 let {degToRad} = THREE.Math;
 
+let DEFAULT_SPECS = "configs/cmp_imaginarium.js";
+
 function start(config) {
     config = config || {};
     var specs = config.specs;
     if (getParameter("specs"))
         specs = getParameter("specs");
+    if (getParameter("config")) {
+        specs = "configs/"+getParameter("config")+".js";
+    }
     if (!specs)
-        specs = SPECS;
+        specs = DEFAULT_SPECS;
     let vr = config.vr || getParameter("vr");
 
     if (vr) {
