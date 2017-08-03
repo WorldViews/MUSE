@@ -13,6 +13,13 @@ function latLonToVector3(lat, lon, radius, height) {
     return new THREE.Vector3(x,y,z);
 }
 
+// return random numver in [low,high]
+function uniform(low,high)
+{
+    var r = Math.random();
+    return low + r*(high-low);
+}
+
 class Planet {
 
     constructor(game, opts) {
@@ -48,6 +55,8 @@ class Planet {
             inst.group.add(inst.mesh);
             inst.loaded = true;
         }
+        if (opts.satellites)
+            this.addSatellites(opts);
     }
 
     latLonToVector3(lat, lng, h)
@@ -76,11 +85,16 @@ class Planet {
         return lg;
     }
 
-    addMarker(lat, lon) {
-        var h = 0.004*this.radius;
-        var geometry = new THREE.SphereGeometry( h, 20, 20 );
-        var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-        var marker = new THREE.Mesh( geometry, material );
+    addMarker(lat, lon, h, s) {
+        h = h || 0.004*this.radius;
+        s = s || 0.004*this.radius;
+        if (!this.markerGeometry) {
+            this.markerGeometry = new THREE.SphereGeometry( s, 20, 20 );
+        }
+        if (!this.markerMaterial) {
+            this.markerMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+        }
+        var marker = new THREE.Mesh( this.markerGeometry, this.markerMaterial );
         return this.addObject(marker, lat, lon, h);
         var lg = this.getLocalGroup(lat, lon, h);
         /*
@@ -92,6 +106,45 @@ class Planet {
         //var axisHelper = new THREE.AxisHelper( 10*h );
         //lg.add( axisHelper );
         return lg;
+    }
+
+    addSatellite(lat, lon, h, s)
+    {
+        return this.addMarker(lat, lon, h, s);
+    }
+    
+    addSatellites(opts) {
+        var n = opts.satellites || 500;
+        this.sats = [];
+        for (var i=0; i<n; i++) {
+            var q = Math.random();
+            var lat = uniform(-90,90);
+            var lon = uniform(-180,180);
+            var h = uniform(this.radius*0.3, this.radius*0.6);
+            var s = this.radius*0.02;
+            var sat = this.addSatellite(lat, lon, h, s);
+            sat.lat = lat;
+            sat.lon = lon;
+            sat.h = h;
+            sat.omega = uniform(.01, .1);
+            this.sats.push(sat);
+        }
+    }
+
+    update() {
+        if (!this.sats)
+            return;
+        //this.group.rotation.y += 0.001;
+        var i = 0;
+        this.sats.forEach(sat => {
+            i++;
+            sat.lon += sat.omega;
+            //var phi = (sat.lat)*Math.PI/180;
+            //var theta = (sat.lon-180)*Math.PI/180;
+            sat.position.copy(this.latLonToVector3(sat.lat, sat.lon, sat.h));
+            //console.log("i: "+i+"  phi: "+phi+"  theta: "+theta);
+            //sat.rotation.set(phi, theta, 0, "YXZ");
+        });
     }
 };
 
@@ -106,9 +159,12 @@ class VirtualEarth extends Planet
 
 function addVirtualEarth(game, opts)
 {
+    if (!opts.name)
+        opts.name = "vEarth";
     var ve = new VirtualEarth(game, opts);
     game.setFromProps(ve.group, opts);
     game.addToGame(ve.group, opts.name, opts.parent);
+    game.registerController(opts.name, ve);
     return ve;
 }
 

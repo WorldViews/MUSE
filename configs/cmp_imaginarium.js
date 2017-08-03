@@ -98,7 +98,10 @@ var SPECS = [
     {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     //{  type: 'Hurricane', scale: 0.01 }
-    {  type: 'VirtualEarth', name: 'vEarth', radius: 1.25, position: [0,1.9,0] }
+    {  type: 'VirtualEarth', name: 'vEarth',
+       radius: 1.25, position: [0,1.9,0],
+       satellites: 500
+    }
 ];
 
 CMP_IMAGINARIUM = SPECS;
