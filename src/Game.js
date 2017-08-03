@@ -39,7 +39,7 @@ class Game {
         this.camera = new THREE.PerspectiveCamera(
     	    45, // this is vFov.  had been 75 but too large
             size.width / size.height,
-            .1,
+            0.1,
             30000
         );
 
@@ -247,6 +247,7 @@ class Game {
         else
 	    this.scene.add(obj);
         if (name) {
+            obj.name = name;
 	    //game.models[name] = obj;
 	    this.models[name] = obj;
         }

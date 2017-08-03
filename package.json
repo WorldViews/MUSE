@@ -41,6 +41,7 @@
     "mathbox": "https://github.com/WorldViews/mathbox/archive/master.tar.gz",
     "node-sass": "^4.5.3",
     "papaparse": "^4.3.3",
+    "ray-input": "^0.1.2",
     "react": "^15.6.1",
     "react-addons-css-transition-group": "^15.6.0",
     "react-dom": "^15.6.1",
