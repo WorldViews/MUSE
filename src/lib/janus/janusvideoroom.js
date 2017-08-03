@@ -1,6 +1,5 @@
 import Janus from './janus';
-import Promise from 'bluebird';
-import EventEmitter from 'super-event-emitter';
+import EventEmitter from 'eventemitter3';
 import _ from 'lodash';
 
 let charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -13,7 +12,7 @@ let charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
  * Events:
  *
  */
-export default class JanusVideoRoom {
+export default class JanusVideoRoom extends EventEmitter {
 
     static VIDEO_TYPE_NORMAL = 'normal';
     static VIDEO_TYPE_360 = '360';
@@ -24,12 +23,12 @@ export default class JanusVideoRoom {
      * @param {string:any} options - configuration options
      */
     constructor(options) {
-        EventEmitter.mixin(this);
+        super();
         options = options || {};
         this.options = options;
-        this.options.id = this.options.userame || this._id();
+        this.options.id = this.options.id || this._id();
         this.options.url = this.options.url || 'ws://localhost:8188';
-        this.options.username = this.options.userame || this._id();
+        this.options.username = this.options.username || this._id();
         this.publisherHandle = undefined;
         this.subscriberHandles = {};
         this.promises = {};

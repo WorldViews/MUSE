@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import WebRTCClient from './webrtc';
+
 /**
  * Wrapper to create three.js texture from multiple different sources.
  * 
@@ -50,8 +51,8 @@ export default class ImageSource {
             VIDEO: 2,
             /** Poll image url. Parameter t is appended to the url starting with startTime in options */
             IMAGE: 3,
-            /** Janus Gateway server connection */
-            JANUS: 4,
+            /** MediaStream object given instead of URL */
+            MEDIASTREAM: 4,
         }
     }
 
@@ -217,13 +218,10 @@ export default class ImageSource {
         } else if (this.type == ImageSource.TYPE.IMAGE) {
             //texture = new THREE.Texture();
             texture = new THREE.TextureLoader().load(this.url);
-        } else if (this.type == ImageSource.TYPE.JANUS) {
-            texture = new THREE.Texture();
-            texture.generateMipmaps = false;
-            // var janus = new JanusClient(this.url, this.options.room);
-            // janus.on('addstream', (stream) => {
-            //     // update texture
-            // });
+        } else if (this.type == ImageSource.TYPE.MEDIASTREAM) {
+            this.video.srcObject = this.options.stream;
+            this.video.play();
+            texture = new THREE.VideoTexture(this.video);
         }
         this.texture = texture;
         texture.minFilter = THREE.LinearFilter;
