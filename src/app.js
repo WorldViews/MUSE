@@ -5,7 +5,8 @@ import { Scripts } from './Scripts';
 import { PanoPortal } from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
 import { Screens } from './Screens';
-import { Game, getParameter } from './Game';
+import { Game } from './Game';
+import Util from './Util';
 import { Dancer } from './controllers/DanceController';
 import NavigationController from './controllers/NavigationController';
 import SolarSystemController from './controllers/SolarSystemController';
@@ -19,17 +20,26 @@ import { addLight, setupLights } from './Lights';
 import Marquee from './Marquee';
 import { DynamicObjectDB_test } from './lib/DynamicObjectDB';
 import { SlidePlayer } from './lib/SlideShow';
+import { Hurricane } from './lib/Hurricane';
+import { VirtualEarth } from './lib/VirtualEarth';
 
 let {degToRad} = THREE.Math;
+
+let DEFAULT_SPECS = "configs/cmp_imaginarium.js";
 
 function start(config) {
     config = config || {};
     var specs = config.specs;
-    if (getParameter("specs"))
-        specs = getParameter("specs");
+
+    console.log(Util);
+    if (Util.getParameterByName("specs"))
+        specs = Util.getParameterByName("specs");
+    if (Util.getParameter("config")) {
+        specs = "configs/"+getParameter("config")+".js";
+    }
     if (!specs)
-        specs = SPECS;
-    let vr = config.vr || getParameter("vr");
+        specs = DEFAULT_SPECS;
+    let vr = config.vr || Util.getParameterByName("vr");
 
     if (vr) {
         window.game = new VRGame('canvas3d');

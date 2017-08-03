@@ -1,13 +1,15 @@
 
 import io from 'socket.io-client';
 import {Avatar} from "./Avatar";
+import JanusClient from './lib/janus';
+import Util from './Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
 class NetLink {
     constructor(game) {
         console.log("****************** NetLink *********************");
-        var inst = this;
+        var self = this;
         this.game = game;
         this.user = game.user || "anon";
         this.users = {};
@@ -15,14 +17,61 @@ class NetLink {
         console.log("****** User: "+this.user);
         this.startTime = getClockTime();
         this.lastSendTime = 0;
-        this.sioURL = "localhost:4000";
+        this.sioURL = window.location.origin;
         this.channel = 'pano';
         this.sock = io(this.sioURL);
-        this.sock.on(this.channel, msg => { inst.handleMessage(msg);});
-        this.getUser("Tony");
-        this.getUser("Don");
+        this.sock.on(this.channel, msg => { self.handleMessage(msg);});
+        // this.getUser("Tony");
+        // this.getUser("Don");
         this.updateInterval = 0.1;
         this.verbosity = 0;
+
+        if (Util.getParameterByName('janus')) {
+            this._initJanus();
+        }
+    }
+
+    _initJanus() {
+        var self = this;
+
+        this.client = new JanusClient({
+            url: 'wss://sd6.dcpfs.net:8989/janus',
+            username: this.user
+        });
+        this.client.connect().then(() => {
+            return self.client.join(9000);
+        }).then(() => {
+            let constraints = {
+                video: true,
+                audio: true
+            }
+            return navigator.mediaDevices.getUserMedia(constraints);            
+        }).then((stream) => {
+            return self.client.publish(stream).then(() => {
+                console.log(' ::::  published local stream');
+            });
+        });
+
+        this.client.on('publishers', (users) => {
+            users.forEach((user) => {
+                self.client.subscribe(user.id, {
+                    audio: true,
+                    video: true,
+                    data: true
+                });
+            });
+        });
+
+        this.client.on('remotestream', (user) => {
+            let name = user.display;
+            if (!self.users[name]) {
+                let avatar = new Avatar(self.game,
+                                name, {position: [20,0,20]});
+                self.users[name] = avatar;
+            }
+            self.users[name].setStream(user.stream);
+        });
+
     }
 
     getUser(name, props) {
@@ -55,7 +104,7 @@ class NetLink {
         this.lastSendTime = getClockTime();
         var c = this.game.camera;
         var msg = {'type': 'muse.status',
-                   'user': 'user',
+                   'user': this.user,
                    'platform': 'threejs',
                    'position': c.position.toArray(),
                    'rotation': c.rotation.toArray()}

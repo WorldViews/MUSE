@@ -24,40 +24,27 @@ var LIGHTS = [
     {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
 ];
 
-var OBJ_MODEL = {
-    type: 'Model', name: 'derrick', parent: 'station',
-    path: 'models/obj/derrick.obj',
-    position: [20, 0, 1.6], rot: [0, 0, 0], scale: 2.0
-};
-
 var VID_BUBBLES = [
     {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
         path: 'videos/YukiyoCompilation.mp4',
-    },
-    // {   type: 'Screen', name: 'vidBubble2', parent: 'station', radius: 0.4, position: [1,3.6,0],
-    //     path: 'webrtc+http://localhost:8081',
-    // },
+    }
 ];
 
-SATELLITE_MODEL = [
-    {   type: 'Model', name: 'satellite1',
+ISS_MODEL = [
+    {   type: 'Model', name: 'iss',
         parent: 'station',
         //path: 'models/AcrimSat_FINAL.fbx',
         //path: 'models/ISS.fbx',
-        path: 'models/satellites/Juno/Juno.obj',
-        scale: 1.0
+        //path: 'models/ISS/NASA/ISS_Interior.dae',
+        //path: 'models/ISS/NASA/TexNoUV/ISS_2016_tex_nouv.dae',
+        path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+        //path: 'models/ISS/NASA/NoTex/ISS_2016_notex.dae'
+        //scale: 0.1
     }
 ];
 
 var SPECS = [
     {   type: 'Group', name: 'station'  },
-    {   type: 'Model', name: 'platform',
-        parent: 'station',
-        path: 'models/PlayDomeSkp_v1.dae',
-        position: [0, 0, 0],
-        rot: [0, 0, 0],
-        scale: 0.025
-    },
     {   type: 'Model', name: 'bmw',
         parent: 'station',
         path: 'models/bmw/model.dae',
@@ -66,6 +53,7 @@ var SPECS = [
         scale: 0.020,
         visible: false
     },
+    ISS_MODEL,
     //SATELLITE_MODEL,
     //OBJ_MODEL,
     VID_BUBBLES,
@@ -95,12 +83,8 @@ var SPECS = [
     },
     {  type: 'SolarSystem' },
     {  type: 'Stars' },
-    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
-    {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
-    //{  type: 'Hurricane', scale: 0.01 }
-    {  type: 'VirtualEarth', name: 'vEarth', satellites: 0,
-       radius: 1.25, position: [0,1.9,0],
-    }
+//    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
+    {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' }
 ];
 
 CMP_IMAGINARIUM = SPECS;

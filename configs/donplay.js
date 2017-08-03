@@ -33,10 +33,7 @@ var OBJ_MODEL = {
 var VID_BUBBLES = [
     {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
         path: 'videos/YukiyoCompilation.mp4',
-    },
-    // {   type: 'Screen', name: 'vidBubble2', parent: 'station', radius: 0.4, position: [1,3.6,0],
-    //     path: 'webrtc+http://localhost:8081',
-    // },
+    }
 ];
 
 SATELLITE_MODEL = [
@@ -97,9 +94,11 @@ var SPECS = [
     {  type: 'Stars' },
     {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
-    //{  type: 'Hurricane', scale: 0.01 }
-    {  type: 'VirtualEarth', name: 'vEarth', satellites: 0,
+    //{  type: 'Hurricane', scale: 0.001, parent: 'station' }
+    //{  type: 'Hurricane', scale: 0.001, parent: 'station' }
+    {  type: 'VirtualEarth', name: 'vEarth',
        radius: 1.25, position: [0,1.9,0],
+       satellites: 500
     }
 ];
 
