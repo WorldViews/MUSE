@@ -27,15 +27,18 @@ let {degToRad} = THREE.Math;
 
 let DEFAULT_SPECS = "configs/cmp_imaginarium.js";
 function getStartPosition() {
-    // figure out a random start position
-    let radius = Util.randomFromInterval(3, 8);
-    let angle = Util.randomFromInterval(0, 2*Math.PI);
-    let height = Util.randomFromInterval(1.5, 5);
-    let x = Math.cos(angle)*radius;
-    let z = Math.sin(angle)*radius;
-    let start = new THREE.Vector3(x, height, z);
-    let lookAt = new THREE.Vector3(0, 1.5, 0);
-
+    var lookAt = new THREE.Vector3(0,2,0);
+    var start = new THREE.Vector3(4, 2,-5);
+    if (Util.getParameterByName("user")) {
+        // figure out a random start position
+        let radius = Util.randomFromInterval(3, 8);
+        let angle = Util.randomFromInterval(0, 2*Math.PI);
+        let height = Util.randomFromInterval(1.5, 5);
+        let x = Math.cos(angle)*radius;
+        let z = Math.sin(angle)*radius;
+        let start = new THREE.Vector3(x, height, z);
+        let lookAt = new THREE.Vector3(0, 1.5, 0);
+    }
     return { start, lookAt };
 }
 
