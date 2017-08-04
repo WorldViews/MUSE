@@ -20,6 +20,17 @@ function uniform(low,high)
     return low + r*(high-low);
 }
 
+function ranVertex(rMin, rMax) {
+    var r = uniform(rMin, rMax);
+    var lat = uniform(-Math.PI, Math.PI);
+    var theta = uniform(0, 2*Math.PI);
+    var z = r*Math.sin(lat);
+    var rxy = r*Math.cos(lat);
+    var x = rxy*Math.cos(theta);
+    var y = rxy*Math.sin(theta);
+    return new THREE.Vector3(x,y,z);
+};
+
 class Planet {
 
     constructor(game, opts) {
@@ -123,17 +134,7 @@ class Planet {
 	sprite = new THREE.TextureLoader().load( texPath );
         var rMin = opts.rMin || this.radius*1.1;
         var rMax = opts.rMax || this.radius*1.2;
-	for (var i = 0; i < n; i++ ) {
-            var r = uniform(rMin, rMax);
-            var lat = uniform(-Math.PI, Math.PI);
-            var theta = uniform(0, 2*Math.PI);
-            var z = r*Math.sin(lat);
-            var rxy = r*Math.cos(lat);
-            var x = rxy*Math.cos(theta);
-            var y = rxy*Math.sin(theta);
-	    var vertex = new THREE.Vector3(x,y,z);
-	    geometry.vertices.push( vertex );
-	}
+        this.setNumBlobs(geometry, n, () => ranVertex(rMin, rMax));
 	var material = new THREE.PointsMaterial( { size: size, sizeAttenuation: false,
                                                    map: sprite,
                                                    color: color,
@@ -146,6 +147,12 @@ class Planet {
         return {geometry, material, particles};
     }
 
+    setNumBlobs(geom, n, posfun) {
+	for (var i = 0; i < n; i++ ) {
+            geom.vertices.push(posfun());
+	}
+    }
+    
     update() {
         if (this.satTracker)
             this.satTracker.update();
@@ -214,6 +221,8 @@ class DataViz {
                                        rMin: this.rMin, rMax: this.rMax});
         this.energOutMat = res.material;
         this.energyOutBlobs = res.particles;
+        this.d2Min = this.rMin*this.rMin;
+        this.d2Max = this.rMax*this.rMax;
     }
     
     update() {
@@ -230,36 +239,26 @@ class DataViz {
             this.co2Mat.opacity = this.co2Density;
         }
         if (this.energyInBlobs) {
-            /*
-            var s = this.energyInBlobs.scale.x;
-            s -= .004;
-            if (s < .8)
-                s = 1.6;
-            this.energyBlobs.scale.set(s,s,s);
-            */
-            var vertices = this.energyInBlobs.geometry.vertices;
-            var d2Min = this.rMin*this.rMin;
-            var d2Max = this.rMax*this.rMax;
-            var s0 = d2Max/d2Min;
+            var s0 = this.rMax/this.rMin;
             var s1 = .99;
-            for (var i=0; i<vertices.length; i++) {
-                var d2 = vertices[i].lengthSq();
-                vertices[i].multiplyScalar(d2 < d2Min ? s0 : s1);
-            }
-            this.energyInBlobs.geometry.verticesNeedUpdate = true;
+            this.scaleVertices(this.energyInBlobs.geometry,
+                               d2 => d2 < this.d2Min ? s0 : s1);
         }
         if (this.energyOutBlobs) {
-            var vertices = this.energyOutBlobs.geometry.vertices;
-            var d2Min = this.rMin*this.rMin;
-            var d2Max = this.rMax*this.rMax;
-            var s0 = d2Min/d2Max;
+            var s0 = this.rMin/this.rMax;
             var s1 = 1/0.99;
-            for (var i=0; i<vertices.length; i++) {
-                var d2 = vertices[i].lengthSq();
-                vertices[i].multiplyScalar(d2 > d2Max ? s0 : s1);
-            }
-            this.energyOutBlobs.geometry.verticesNeedUpdate = true;
+            this.scaleVertices(this.energyOutBlobs.geometry,
+                               d2 => d2 > this.d2Max ? s0 : s1);
         }
+    }
+
+    scaleVertices(geom, sfun) {
+        var vertices = geom.vertices;
+        for (var i=0; i<vertices.length; i++) {
+            var d2 = vertices[i].lengthSq();
+            vertices[i].multiplyScalar(sfun(d2));
+        }
+        geom.verticesNeedUpdate = true;
     }
 }
 
