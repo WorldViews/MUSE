@@ -32,6 +32,7 @@ class MultiControls
         this.enabled = true;
         console.log("domElement "+this.domElement);
 
+        this.whichButton = null;
         this.mouseDragOn = false;
         this.mousePtDown = null;
         this.anglesDown = null;
@@ -72,12 +73,14 @@ class MultiControls
     }
 
     onMouseDown( event ) {
+        console.log("MultiControls.onMouseDown button:" +event.button);
         //console.log("MultiControls.onMouseDown");
         if ( this.domElement !== document ) {
 	    this.domElement.focus();
         }
         event.preventDefault();
         //event.stopPropagation();
+        this.whichButton = event.button;
         this.mouseDragOn = true;
         this.mousePtDown = this.getMousePt(event);
         this.anglesDown = this.getCamAngles();
@@ -125,15 +128,15 @@ class MultiControls
         var pt = this.getMousePt(event);
         var dx = pt.x - this.mousePtDown.x;
         var dy = pt.y - this.mousePtDown.y;
-        //console.log("MultiControls.onMouseMove dx: "+dx+"  dy: "+dy);
-        if (event.shiftKey || event.button == 2) {
+        console.log("MultiControls.onMouseMove button:" +event.button+"  dx: "+dx+"  dy: "+dy);
+        if (event.shiftKey || this.whichButton == 2) {
             this.handlePan(dx,dy);
             return;
         }
-        if (event.button == 0) {
+        if (this.whichButton == 0) {
             this.handleLook(dx,dy);
         }
-        if (event.button == 1) {
+        if (this.whichButton == 1) {
             this.handleOrbit(dx,dy);
         }
     }
