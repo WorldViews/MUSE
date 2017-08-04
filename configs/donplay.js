@@ -33,6 +33,15 @@ var OBJ_MODEL = {
 var VID_BUBBLES = [
     {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
         path: 'videos/YukiyoCompilation.mp4',
+        //path: 'webrtc+http://yulius:8080/'
+    }
+];
+
+VEARTH = [
+    {  type: 'VirtualEarth', name: 'vEarth',
+       radius: 1.25, position: [0,1.9,0],
+       satellites: 0,
+       dataViz: 1
     }
 ];
 
@@ -65,7 +74,7 @@ var SPECS = [
     },
     //SATELLITE_MODEL,
     //OBJ_MODEL,
-    VID_BUBBLES,
+    //VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
         path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
@@ -94,12 +103,8 @@ var SPECS = [
     {  type: 'Stars' },
     {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
-    //{  type: 'Hurricane', scale: 0.001, parent: 'station' }
-    //{  type: 'Hurricane', scale: 0.001, parent: 'station' }
-    {  type: 'VirtualEarth', name: 'vEarth',
-       radius: 1.25, position: [0,1.9,0],
-       satellites: 500
-    }
+    //{  type: 'Hurricane', scale: 0.01, parent: 'station' }
+    VEARTH
 ];
 
 CMP_IMAGINARIUM = SPECS;
