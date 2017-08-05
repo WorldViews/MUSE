@@ -73,8 +73,7 @@ class MultiControls
     }
 
     onMouseDown( event ) {
-        console.log("MultiControls.onMouseDown button:" +event.button);
-        //console.log("MultiControls.onMouseDown");
+        //console.log("MultiControls.onMouseDown button:" +event.button);
         if ( this.domElement !== document ) {
 	    this.domElement.focus();
         }
@@ -128,7 +127,7 @@ class MultiControls
         var pt = this.getMousePt(event);
         var dx = pt.x - this.mousePtDown.x;
         var dy = pt.y - this.mousePtDown.y;
-        console.log("MultiControls.onMouseMove button:" +event.button+"  dx: "+dx+"  dy: "+dy);
+        //console.log("MultiControls.onMouseMove button:" +event.button+"  dx: "+dx+"  dy: "+dy);
         if (event.shiftKey || this.whichButton == 2) {
             this.handlePan(dx,dy);
             return;
