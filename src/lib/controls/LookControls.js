@@ -20,7 +20,7 @@ var LookControls = function ( object, domElement )
 
     this.enabled = true;
 
-    this.movementSpeed = 3.0;
+    this.movementSpeed = 10.0;
     //this.lookSpeed = 0.005;
     this.lookSpeed = 0.05;
 

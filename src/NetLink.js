@@ -25,6 +25,10 @@ class NetLink {
         // this.getUser("Don");
         this.updateInterval = 0.1;
         this.verbosity = 0;
+        this.state = {
+            position: new THREE.Vector3(0, 0, 0),
+            rotation: new THREE.Euler(0, 0, 0),
+        }
 
         if (Util.getParameterByName('janus')) {
             this._initJanus();
@@ -80,7 +84,10 @@ class NetLink {
         var user = this.users[name];
         if (user) {
             //console.log("user "+name+" already exists");
-            user.setProps({position: props.position});
+            user.setProps({
+                position: props.position,
+                rotation: props.rotation
+            });
             return user;
         }
         else {
@@ -88,28 +95,35 @@ class NetLink {
             this.numUsers++;
             var y = 20*this.numUsers;
             user = new Avatar(this.game,
-                              name, {position: [20,y,20]});
+                              name, {position: [0,5,0]});
             this.users[name] = user;
             return user;
         }
     }
     
     update() {
-        var t = getClockTime();
-        if (t - this.lastSendTime > this.updateInterval)
-            this.sendStatus();
+        this.sendStatus();
     }
 
     sendStatus() {
-        this.lastSendTime = getClockTime();
+        var t = getClockTime();
+        if (t - this.lastSendTime < this.updateInterval)
+            return;
+
+        this.lastSendTime = t;
         var c = this.game.camera;
-        var msg = {'type': 'muse.status',
-                   'user': this.user,
-                   'platform': 'threejs',
-                   'position': c.position.toArray(),
-                   'rotation': c.rotation.toArray()}
-        //console.log("NetLink.sendStatus "+JSON.stringify(msg));
-        this.sendMessage(msg);
+        if (!c.position.equals(this.state.position) ||
+            !c.rotation.equals(this.state.rotation)) {
+            this.state.position.set(c.position.x, c.position.y, c.position.z);
+            this.state.rotation.set(c.rotation.x, c.rotation.y, c.rotation.z);
+            var msg = {'type': 'muse.status',
+                    'user': this.user,
+                    'platform': 'threejs',
+                    'position': c.position.toArray(),
+                    'rotation': c.rotation.toArray()}
+            //console.log("NetLink.sendStatus "+JSON.stringify(msg));
+            this.sendMessage(msg);
+        }
     }
 
     sendMessage(msg) {
