@@ -214,7 +214,7 @@ class DataViz {
         this.energyOutMat = null;
         this.energyOutBlobs = null;
         this.hue = 0;
-        this.addCo2(opts);
+        this.setCo2(1000);
         this.addEnergy(opts);
     }
 
@@ -223,6 +223,17 @@ class DataViz {
         var res = this.earth.addBlobs({n: 5000, size: 20,
                                        texture: 'textures/sprites/clouds.png'
                                       });
+        this.co2Mat = res.material;
+        this.co2Blobs = res.particles;
+    }
+
+    setCo2(n) {
+        var material, particles;
+        if (this.co2Blobs)
+            this.earth.group.remove(this.co2Blobs);
+        var res = this.earth.addBlobs({n: n, size: 20, color: 0xFFFF00, opacity: 1,
+                                       texture: 'textures/sprites/clouds.png'});
+//                                       rMin: this.rMin, rMax: this.rMax});
         this.co2Mat = res.material;
         this.co2Blobs = res.particles;
     }
