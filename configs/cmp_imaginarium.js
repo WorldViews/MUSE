@@ -50,6 +50,10 @@ SATELLITE_MODEL = [
 ];
 
 var SPECS = [
+    {  type: 'Stats' },
+    {  type: 'UIControls' },
+    {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
+    {  type: 'Scripts' },
     {   type: 'Group', name: 'station'  },
     {   type: 'Model', name: 'platform',
         parent: 'station',
@@ -96,9 +100,7 @@ var SPECS = [
     },
     {  type: 'SolarSystem' },
     {  type: 'Stars' },
-    {  type: 'Stats' },
     {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
-    {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     //{  type: 'Hurricane', scale: 0.01 }
     {  type: 'VirtualEarth', name: 'vEarth', satellites: 0,
        radius: 1.25, position: [0,1.9,0],

@@ -66,9 +66,9 @@ class DanceController
         } );
     }
 
-    //setScale(s) {
-    //   this.dancer.scale.set(s,s,s);
-    //}
+    setScale(s) {
+       this.dancer.scale.set(s,s,s);
+    }
 
     get visible() {
         return this.dancer !=null && this.dancer.visible;

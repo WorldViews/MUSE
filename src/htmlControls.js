@@ -24,9 +24,9 @@ function handleCenterScene(e, game)
     });
 }
 
-function tourSliderChanged(e, ui, playerControl)
+function sliderChanged(e, ui, playerControl)
 {
-    console.log("**** tourSliderChanged ****");
+    console.log("**** sliderChanged ****");
     var v = ui.value;
     var t = v*duration;
     console.log("v: "+v+"   t: "+t);
@@ -50,7 +50,7 @@ function setupHtmlControls(game, playerControl) {
     $(document).ready(function() {
         console.log("**** setting up slider ****");
         $("#timeLine").slider({
-	    slide: (e,ui) => tourSliderChanged(e,ui,playerControl),
+	    slide: (e,ui) => sliderChanged(e,ui,playerControl),
 	    min: 0, max: 1, step: 0.001
         });
         $("#centerScene").change(e => handleCenterScene(e,game));

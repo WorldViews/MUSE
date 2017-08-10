@@ -141,8 +141,13 @@ class Game {
         }
     }
 
+    getProgram() {
+        return this.program;
+    }
+
     setProgram(program) {
         this.program = program;
+        return program;
     }
 
     registerPlayer(player) {
@@ -345,7 +350,12 @@ class Game {
     }
 
     setStatus(str) {
-        this.controllers.ui.setStatus(str);
+        if (this.controllers.ui) {
+            this.controllers.ui.setStatus(str);
+        }
+        else {
+            console.log("status: "+str);
+        }
     }
 
     /*********************************************************************/

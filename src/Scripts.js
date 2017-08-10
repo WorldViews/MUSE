@@ -15,13 +15,16 @@
 */
 import {animTest, Anim} from './animTest';
 import {PanoPortal} from './lib/PanoPortal';
+import {Game} from './Game';
 
 class Scripts {
 
-    constructor(game, uiControl) {
-        this.game;
+    //constructor(game, uiControl) {
+    constructor(game, options) {
+        this.game = game;
         game.portal2 = 0;
-        this.uiControl = uiControl;
+        //this.uiControl = uiControl;
+        this.uiControl = game.controllers.ui;
         var inst = this;
         var ui = this.uiControl;
         ui.registerScript("Toyokawa Panoramic Portal", () => inst.addPortal());
@@ -73,5 +76,11 @@ class Scripts {
         // may not need this, but may... depending on how this module is written.
     }
 }
+
+Game.registerNodeType("Scripts", (game, options) => {
+    if (!options.name)
+        options.name = "scripts";
+    return game.registerController(options.name, new Scripts(game, options));
+});
 
 export {Scripts};

@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import _ from 'lodash';
 
+import {Game} from '../Game';
 import TweakUI from '../lib/components/TweakUI';
 import TimelineSlider from '../lib/components/TimelineSlider';
 import MenuButton from '../lib/components/MenuButton';
@@ -17,12 +18,13 @@ injectTapEventPlugin();
 
 const duration = 32*60;
 
-export default class UIController {
+class UIController {
 
-    constructor(options) {
+    constructor(game, options) {
         this.options = options || {};
-        this.game = this.options.game;
-        this.playerControl = this.options.playerControl;
+        this.game = game;
+        //this.playerControl = this.options.playerControl;
+        this.playerControl = this.game.getProgram();
         this.root = document.createElement('div');
         this.models = ['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
         this.modelCallbacks = {};
@@ -217,3 +219,13 @@ export default class UIController {
     }
 
 }
+
+Game.registerNodeType("UIControls", (game, options) => {
+    if (!options.name)
+        options.name = "stars";
+    //return game.registerController(options.name, new UIController(game, options));
+    return game.registerController("ui", new UIController(game, options));
+});
+
+export {UIController};
+

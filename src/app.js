@@ -12,7 +12,7 @@ import NavigationController from './controllers/NavigationController';
 import SolarSystemController from './controllers/SolarSystemController';
 import StarsController from './controllers/StarsController';
 import StatsController from './controllers/StatsController';
-import UIController from './controllers/UIController';
+import {UIController} from './controllers/UIController';
 import VRGame from './VRGame';
 import WebVR from './lib/vr/WebVR';
 
@@ -64,7 +64,7 @@ function start(config) {
         let navigationController = new NavigationController(game.body, game.camera, game.plControls);
         game.registerController('navigation', navigationController);
         game.body.position.set(pos.start.x, 1.5, pos.start.z);
-    } else { // if(config.preferredControl === 'multi')
+    } else {
         window.game = new Game('canvas3d');
         game.addMultiControls();
         game.camera.position.set(pos.start.x, pos.start.y, pos.start.z);
@@ -77,17 +77,16 @@ function start(config) {
     let cmpProgram = new CMPProgram(game);
     game.setProgram(cmpProgram);
 
+    game.load(specs);
+/*
     let uiController = new UIController({
         game: game,
-        playerControl: cmpProgram
     });
     game.registerController('ui', uiController);
-    let scriptControls = new Scripts(game, uiController);
-    //    game.viewManager = new ViewManager(game, uiController);
-    game.registerController('scripts', scriptControls);
-    //    game.registerController("viewManager", game.viewManager);
-    game.load(specs);
 
+    let scriptControls = new Scripts(game, uiController);
+    game.registerController('scripts', scriptControls);
+*/
     game.animate(0);
 }
 
