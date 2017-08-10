@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import ImageSource from './lib/ImageSource';
 
-let DEAULT_SCREEN_SPEC = {
+let DEFAULT_SCREEN_SPEC = {
     x: 5.5,
     y: 2.5,
     z: -0.1,
@@ -10,8 +10,8 @@ let DEAULT_SCREEN_SPEC = {
     spherical: true
 };
 
-let re_image = /^(http)?.*\.(png|jpg|jpeg|gif)/;
-let re_video = /^(http)?.*\.(mp4|webm|avi|ogg|mkv)/;
+let re_image = /^(http)?.*\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)/;
+let re_video = /^(http)?.*\.(mp4|MP4|webm|WEBM|avi|AVI|ogg|OGG|mkv|MKV)/;
 let re_webrtc = /^webrtc\+(.*)/;
 let re_janus = /^janus\+(.+)#(\w+)/;
 function getTypeFromURL(url) {
@@ -44,12 +44,12 @@ function getTypeFromURL(url) {
 
 export default (url, spec) => {
     let textureSpec = {
-        ...DEAULT_SCREEN_SPEC,
+        ...DEFAULT_SCREEN_SPEC,
         ...spec
     };
 
     let sourceSpec = getTypeFromURL(url);
-
+    
     return new Promise((resolve, reject) => {
         let imageSource = new ImageSource(sourceSpec);
 
