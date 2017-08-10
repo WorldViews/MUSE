@@ -44,7 +44,7 @@ function setNumBlobs(geom, n, posfun) {
     geom.vertices = v;
     geom.verticesNeedUpdate = true;
 }
-    
+
 class BlobSet {
     constructor(opts, ranVertexFun) {
 
@@ -54,18 +54,18 @@ class BlobSet {
         var color = opts.color || 0xff0000;
         var opacity = opts.opacity || 0.3;
         this.geometry = new THREE.Geometry();
-	var sprite = null;
+        var sprite = null;
         var texPath = opts.texture || "textures/sprites/disc.png";
-	sprite = new THREE.TextureLoader().load( texPath );
+        sprite = new THREE.TextureLoader().load( texPath );
         var rMin = opts.rMin || this.radius*1.1;
         var rMax = opts.rMax || this.radius*1.2;
         setNumBlobs(this.geometry, n, ranVertexFun);
-	this.material = new THREE.PointsMaterial( { size: size, sizeAttenuation: false,
-                                                   map: sprite,
-                                                   color: color,
-                                                   opacity: 0.3,
-                                                   alphaTest: 0.1,
-                                                   transparent: true } );
+        this.material = new THREE.PointsMaterial( { size: size, sizeAttenuation: false,
+            map: sprite,
+            color: color,
+            opacity: 0.3,
+            alphaTest: 0.1,
+            transparent: true } );
         this.particles = new THREE.Points( this.geometry, this.material );
     }
 }
@@ -221,8 +221,8 @@ class DataViz {
     addCo2(opts) {
         var material, particles;
         var res = this.earth.addBlobs({n: 5000, size: 20,
-                                       texture: 'textures/sprites/clouds.png'
-                                      });
+            texture: 'textures/sprites/clouds.png'
+        });
         this.co2Mat = res.material;
         this.co2Blobs = res.particles;
     }
@@ -232,8 +232,8 @@ class DataViz {
         if (this.co2Blobs)
             this.earth.group.remove(this.co2Blobs);
         var res = this.earth.addBlobs({n: n, size: 20, color: 0xFFFF00, opacity: 1,
-                                       texture: 'textures/sprites/clouds.png'});
-//                                       rMin: this.rMin, rMax: this.rMax});
+            texture: 'textures/sprites/clouds.png'});
+        //                                       rMin: this.rMin, rMax: this.rMax});
         this.co2Mat = res.material;
         this.co2Blobs = res.particles;
     }
@@ -241,11 +241,11 @@ class DataViz {
     addEnergy(opts) {
         var material, particles;
         var res = this.earth.addBlobs({n: 5000, size: 5, color: 0xFF0000, opacity: 1,
-                                       rMin: this.rMin, rMax: this.rMax});
+            rMin: this.rMin, rMax: this.rMax});
         this.energInMat = res.material;
         this.eInBlobs = res.particles;
         var res = this.earth.addBlobs({n: 5000, size: 5, color: 0xFFFF00, opacity: 1,
-                                       rMin: this.rMin, rMax: this.rMax});
+            rMin: this.rMin, rMax: this.rMax});
         this.energOutMat = res.material;
         this.eOutBlobs = res.particles;
         this.d2Min = this.rMin*this.rMin;
@@ -267,7 +267,7 @@ class DataViz {
         var material, particles;
         this.earth.group.remove(this.eOutBlobs);
         var res = this.earth.addBlobs({n: n, size: 5, color: 0xFFFF00, opacity: 1,
-                                       rMin: this.rMin, rMax: this.rMax});
+            rMin: this.rMin, rMax: this.rMax});
         this.energOutMat = res.material;
         this.eOutBlobs = res.particles;
     }
@@ -289,13 +289,13 @@ class DataViz {
             var s0 = this.rMax/this.rMin;
             var s1 = .99;
             this.scaleVertices(this.eInBlobs.geometry,
-                               d2 => d2 < this.d2Min ? s0 : s1);
+                d2 => d2 < this.d2Min ? s0 : s1);
         }
         if (this.eOutBlobs) {
             var s0 = this.rMin/this.rMax;
             var s1 = 1/0.99;
             this.scaleVertices(this.eOutBlobs.geometry,
-                               d2 => d2 > this.d2Max ? s0 : s1);
+                d2 => d2 > this.d2Max ? s0 : s1);
         }
     }
 

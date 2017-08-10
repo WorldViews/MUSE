@@ -1,12 +1,12 @@
 /*
-This is base class for object that controls various media and animations
-associated with a program or performance.
+  This is base class for object that controls various media and animations
+  associated with a program or performance.
 
-Long term plan is that this, or a subclass, can read from spreadsheets or
-JSON specs that fully define a performance.
+  Long term plan is that this, or a subclass, can read from spreadsheets or
+  JSON specs that fully define a performance.
 
-It displays things like which displays are visible, what is presented on
-the displays, which objects are on stage, etc.
+  It displays things like which displays are visible, what is presented on
+  the displays, which objects are on stage, etc.
 */
 import {sprintf} from "sprintf-js";
 
@@ -18,11 +18,11 @@ class ProgramControl
         this.game = game;
         game.programControl = this;
         this.players = {};
-	this._playTime = 0;
-	this._playSpeed = 1.0;
-	this.setPlayTime(0);
-	var inst = this;
-	setInterval(()=>inst.tick(), 200);
+        this._playTime = 0;
+        this._playSpeed = 1.0;
+        this.setPlayTime(0);
+        var inst = this;
+        setInterval(()=>inst.tick(), 200);
     }
 
     registerPlayer(player, name)
@@ -33,21 +33,21 @@ class ProgramControl
     }
 
     tick() {
-	var t = this.playTime;
-	//console.log("tick "+t);
-	this.displayTime(t);
+        var t = this.playTime;
+        //console.log("tick "+t);
+        this.displayTime(t);
     }
 
     displayTime(t) {
-	console.log("displayTime "+t);
+        console.log("displayTime "+t);
     }
-    
+
     get playTime() {
-	var t = getClockTime();
-	var dt = t - this._prevClockTime;
-	this._prevClockTime = t;
-	//console.log("dt: "+dt+"  "+this._playSpeed);
-	this._playTime += dt*this._playSpeed;
+        var t = getClockTime();
+        var dt = t - this._prevClockTime;
+        this._prevClockTime = t;
+        //console.log("dt: "+dt+"  "+this._playSpeed);
+        this._playTime += dt*this._playSpeed;
         return this._playTime;
     }
 
@@ -56,17 +56,17 @@ class ProgramControl
     }
 
     setPlayTime(t) {
-	this._prevClockTime = getClockTime();
+        this._prevClockTime = getClockTime();
         this._playTime = t;
         console.log(">>>> noticeTime "+t);
         for (name in this.players) {
-	    console.log("set playTime "+name);
-	    var player = this.players[name];
+            console.log("set playTime "+name);
+            var player = this.players[name];
             //******* Get rid of this.  Change our code to not user set and get
             if (player.setPlayTime)
                 player.setPlayTime(t)
             else
-	        player.playTime = t;
+                player.playTime = t;
         }
 
         for (var key in this.game.screens) {

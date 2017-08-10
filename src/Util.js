@@ -23,19 +23,19 @@ export function getJSON(url, handler)
     console.log("Util.getJSON: "+url);
     $.ajax({
         url: url,
-	dataType: 'text',
-	success: function(str) {
+        dataType: 'text',
+        success: function(str) {
             var data;
             try {
-	        data = JSON.parse(str);
+                data = JSON.parse(str);
             }
             catch (err) {
                 console.log("err: "+err);
                 alert("Error in json for: "+url+"\n"+err);
                 return;
             }
-	    handler(data);
-	}
+            handler(data);
+        }
     });
 }
 

@@ -14,8 +14,8 @@ function getRecs()
     var t = 0;
     for (var i=1; i<= 13; i++) {
         var rec = {id: 'slide',
-                   t: t,
-                   url: "assets/images/ColabTalk/Slide"+i+".PNG"};
+            t: t,
+            url: "assets/images/ColabTalk/Slide"+i+".PNG"};
         recs.records.push(rec);
         t += 30;
     }
@@ -40,7 +40,7 @@ class SlidePlayer extends DynamicObjectDB
 
     update(dt) {
     }
-    
+
     play() {
     }
 
@@ -50,7 +50,7 @@ class SlidePlayer extends DynamicObjectDB
     getPlayTime() {
         return this.playTime;
     }
-    
+
     setPlaySpeed(s) {
         this.playSpeed = s;
     }
@@ -58,7 +58,7 @@ class SlidePlayer extends DynamicObjectDB
     getPlaySpeed() {
         return this.playSpeed;
     }
-    
+
     postMessage(msg)
     {
         msg['name'] = msg['id'];
@@ -78,10 +78,10 @@ function runSlideShow(game)
 {
     var recs = getRecs();
     var db = new SlidePlayer(game,
-                             {name: "slideShow1",
-                              screenName: "mainScreen",
-                              records: recs});
-/*    
+        {name: "slideShow1",
+            screenName: "mainScreen",
+            records: recs});
+    /*    
     var recs = {"records": [
       { "id": "slide", "t": 1,    "label": "one" },
       { "id": "slide", "t": 1.3,  "label": "one.three" }
@@ -93,12 +93,12 @@ function runSlideShow(game)
     var low = 0;
     var high = t;
     for (var t=low; t<high; t+= 0.1) {
-	//report("t: "+t);
-	db.setPlayTime(t);
+        //report("t: "+t);
+        db.setPlayTime(t);
     }
     for (var t=high; t>=low; t-= 0.1) {
-	//report("t: "+t);
-	db.setPlayTime(t);
+        //report("t: "+t);
+        db.setPlayTime(t);
     }
 }
 

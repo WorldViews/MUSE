@@ -47,18 +47,18 @@ class CMPProgram extends ProgramControl {
     constructor(game) {
         super(game);
         game.gss = new GSS.SpreadSheet();
-	var inst = this;
-	this.duration = 32*60;
-	//game.controllers.ui.registerCallback("...", () => inst.dots());
+        var inst = this;
+        this.duration = 32*60;
+        //game.controllers.ui.registerCallback("...", () => inst.dots());
     }
 
     dots() {
-	console.log("......................... just a test ..............................");
+        console.log("......................... just a test ..............................");
     }
 
     setPlayTime(t) {
         super.setPlayTime(t);
-	this.displayTime(t);
+        this.displayTime(t);
         var cmp = game.CMP || game.controllers['cmp'];
         if (cmp) {
             var nt = 0;
@@ -76,7 +76,7 @@ class CMPProgram extends ProgramControl {
     // should be lightweight. (E.g. not seeking videos or redrawing
     // animations.)
     displayTime(t) {
-	//console.log("CMPProgram.displayTime "+t);
+        //console.log("CMPProgram.displayTime "+t);
         if (game.gss) {
             var year = GSS.timeToYear(t);
             //console.log("year: " + year);
@@ -110,21 +110,21 @@ class CMPProgram extends ProgramControl {
                 }
             });
         }
-	var dur = this.duration;
+        var dur = this.duration;
     	let value = (t/(0.0+dur));
-	try {
+        try {
 	    game.controllers.ui.slider.value = value;
-	}
-	catch (e) {
+        }
+        catch (e) {
 	    console.log("exception setting slider");
-	}
-	//console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
-	try {
+        }
+        //console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
+        try {
 	    let timeline = $('#timeLine');
     	    timeline.slider('value', value);
-	}
-	catch (e) {
-	}
+        }
+        catch (e) {
+        }
     }
 }
 

@@ -12,7 +12,7 @@ function getClockTime() { return new Date().getTime()/1000.0; }
 
 
 export default class ImageSource {
-        
+
     constructor(options) {
         this.options = options;
 
@@ -136,11 +136,11 @@ export default class ImageSource {
         if (this.type == ImageSource.TYPE.VIDEO) {
             if (this.video) {
                 //this.video.seek(t);
-            console.log("*** setting video.currentTime to "+t);
+                console.log("*** setting video.currentTime to "+t);
                 this.video.currentTime = t;
             }
             else {
-            console.log("*** No video yet ***");
+                console.log("*** No video yet ***");
             }
         }
     }
@@ -150,10 +150,10 @@ export default class ImageSource {
         var dt = t - this.lastSeekTime;
         if (this.type == ImageSource.TYPE.VIDEO) {
             if (this.video) {
-            this.playTime = this.video.currentTime;
+                this.playTime = this.video.currentTime;
             }
             else {
-            console.log("*** No video yet ***");
+                console.log("*** No video yet ***");
             }
         }
         else {
@@ -251,18 +251,18 @@ export default class ImageSource {
                 texture.needsUpdate = true;
                 if (this.prevTexture) {
                 //console.log("Disposing of previous texture...");
-                this.prevTexture.dispose();
-            }
-            this.prevTexture = tex;
-            if (inst.running)
-                inst.updateTexture();
+                    this.prevTexture.dispose();
+                }
+                this.prevTexture = tex;
+                if (inst.running)
+                    inst.updateTexture();
             },
             null,
             function(xhr) {
                 if (inst.running) {
                     console.log("failed on texture load... retrying...");
                     setTimeout(function() { inst.updateTexture(); }, 500);
-            }
+                }
             }
         );
     }

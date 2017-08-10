@@ -75,16 +75,16 @@ function start(config) {
 
     let cmpProgram = new CMPProgram(game);
     game.setProgram(cmpProgram);
-    
+
     let uiController = new UIController({
         game: game,
         playerControl: cmpProgram
     });
     game.registerController('ui', uiController);
     let scriptControls = new Scripts(game, uiController);
-//    game.viewManager = new ViewManager(game, uiController);
+    //    game.viewManager = new ViewManager(game, uiController);
     game.registerController('scripts', scriptControls);
-//    game.registerController("viewManager", game.viewManager);
+    //    game.registerController("viewManager", game.viewManager);
     game.load(specs);
 
     game.animate(0);

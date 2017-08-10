@@ -12,7 +12,7 @@ export default class WebRTCServer {
         var scope = this;
         $(window).on('beforeunload', function() {
             scope.deletePC(scope.pcid);
-        });    
+        });
 
         // create connection to the server
         this.createPC();
@@ -27,8 +27,8 @@ export default class WebRTCServer {
             data: JSON.stringify(data),
             dataType: 'json',
             success: function(pcinfo) {
-                scope.initPC(pcinfo);            
-            }   
+                scope.initPC(pcinfo);
+            }
         });
     }
 
@@ -53,7 +53,7 @@ export default class WebRTCServer {
                 "stun:stun.voipstunt.com",
                 "stun:stun.voxgratia.org"
                 //'turn:hypermeeting.paldeploy.com:3478?transport=udp'
-                ]
+            ]
         };
 
         var iceServers = {
@@ -66,7 +66,7 @@ export default class WebRTCServer {
         video.addEventListener('loadeddata', function() {
             scope.dispatch('ready', video);
         });
-        
+
         video.autoplay = true;
         video.oncanplay = function() {
             video.play();
@@ -95,7 +95,7 @@ export default class WebRTCServer {
                         $(data.iceCandidates).each(function (i, candidate) {
                             pc.addIceCandidate(new RTCIceCandidate(candidate));
                         });
-                    } 
+                    }
                 });
             }
         };
@@ -122,11 +122,11 @@ export default class WebRTCServer {
                     console.log('setLocalDescription() failure')
                 });
 
-            }, 
-            function (e) { 
+            },
+            function (e) {
                 console.error(e);
             }
-        );        
+        );
     }
 
     updatePC(id, data) {
@@ -143,7 +143,7 @@ export default class WebRTCServer {
         return $.ajax({
             url: this.url + '/' + id,
             method: 'DELETE'
-        });        
+        });
     }
 
     getPC(id) {
@@ -151,7 +151,7 @@ export default class WebRTCServer {
             url: this.url + '/' + id,
             method: 'GET',
             dataType: 'json'
-        });        
+        });
     }
 
     on(name, cb) {
@@ -179,7 +179,7 @@ export default class WebRTCServer {
         for (var i = 1; i < arguments.length; i++) {
             args.push(arguments[i]);
         }
-        
+
         if (callbacks) {
             callbacks.map(function(cb) {
                 cb.apply(this, args);

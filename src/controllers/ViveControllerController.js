@@ -26,9 +26,9 @@ function loadAll(loaderFilePairs) {
 
 export default class ViveControllerController {
 
-	constructor(scene, body) {
-		this.scene = scene;
-		this.body = body;
+    constructor(scene, body) {
+        this.scene = scene;
+        this.body = body;
 
         this.controller0 = new ViveController(0);
         this.controller1 = new ViveController(1);
@@ -59,7 +59,7 @@ export default class ViveControllerController {
 
         let objLoader = new OBJLoader();
         objLoader.setPath(VIVE_PATH);
-   
+
         let textureLoader = new THREE.TextureLoader();
         textureLoader.setPath(VIVE_PATH);
 
@@ -75,72 +75,72 @@ export default class ViveControllerController {
             this.controller0.add(controller.clone());
             this.controller1.add(controller.clone());
         });
-	}
+    }
 
 
-	getIntersections(controller) {
-		let floor = this.scene.getObjectByName('Floor');
+    getIntersections(controller) {
+        let floor = this.scene.getObjectByName('Floor');
 
-		if (floor) {
-			this.tempMatrix.identity().extractRotation(controller.matrixWorld);
+        if (floor) {
+            this.tempMatrix.identity().extractRotation(controller.matrixWorld);
 
-			this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
-			this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+            this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
+            this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
 
-			return this.raycaster.intersectObjects(floor.children, true);
-		}
-	}
+            return this.raycaster.intersectObjects(floor.children, true);
+        }
+    }
 
-	update(timestamp) {
-		let diff = timestamp - this._last || timestamp;
-		this._last = timestamp;
-		let intersections = this.getIntersections(this.controller0);
-		
-		if (this.tween) {
-			let {position} = this.body;
-			let {dx, dz, x, z, duration} = this.tween;
-			let proportion = diff / duration;
-			let moveXBy = dx * proportion;
-			let moveZBy = dz * proportion;
+    update(timestamp) {
+        let diff = timestamp - this._last || timestamp;
+        this._last = timestamp;
+        let intersections = this.getIntersections(this.controller0);
 
-			position.x += moveXBy;
-			position.z += moveZBy;
+        if (this.tween) {
+            let {position} = this.body;
+            let {dx, dz, x, z, duration} = this.tween;
+            let proportion = diff / duration;
+            let moveXBy = dx * proportion;
+            let moveZBy = dz * proportion;
 
-			// Stop the tween when it arrives.
-			if (
-				((dx >= 0 && position.x >= x || dx <= 0 && position.x <= x)) ||
-				((dz >= 0 && position.z >= z || dz <= 0 && position.z <= z))
-			) {
-				delete this.tween;
-			}
-		} 
+            position.x += moveXBy;
+            position.z += moveZBy;
 
-		if (intersections && intersections.length > 0) {
-			let isTriggerPressed = this.controller0.getButtonState('trigger');
-			let intersection = intersections[0];
+            // Stop the tween when it arrives.
+            if (
+                ((dx >= 0 && position.x >= x || dx <= 0 && position.x <= x)) ||
+                    ((dz >= 0 && position.z >= z || dz <= 0 && position.z <= z))
+            ) {
+                delete this.tween;
+            }
+        }
 
-			if (isTriggerPressed) {
-				let {distance, point: {x, z}} = intersection;
-				let duration = distance / SPEED;
-				let dx = x - this.body.position.x;
-				let dz = z - this.body.position.z;
+        if (intersections && intersections.length > 0) {
+            let isTriggerPressed = this.controller0.getButtonState('trigger');
+            let intersection = intersections[0];
 
-				this.tween = {dx, dz, x, z, duration, ellapsed: 0, traveled: 0};
-			} else {
-				// Move the selector.
-				this.selector.position.copy(intersection.point);
-				this.selector.position.y += 0.05;
-				this.selector.visible = true;
+            if (isTriggerPressed) {
+                let {distance, point: {x, z}} = intersection;
+                let duration = distance / SPEED;
+                let dx = x - this.body.position.x;
+                let dz = z - this.body.position.z;
 
-				// Shorten the line to the point of intersection.
-				this.line.scale.z = intersection.distance;				
-			}
-		} else {
-			this.selector.visible = true;
-			this.line.scale.z = 5;
-		}
+                this.tween = {dx, dz, x, z, duration, ellapsed: 0, traveled: 0};
+            } else {
+                // Move the selector.
+                this.selector.position.copy(intersection.point);
+                this.selector.position.y += 0.05;
+                this.selector.visible = true;
 
-		this.controller0.update();
-		this.controller1.update();
-	}
+                // Shorten the line to the point of intersection.
+                this.line.scale.z = intersection.distance;
+            }
+        } else {
+            this.selector.visible = true;
+            this.line.scale.z = 5;
+        }
+
+        this.controller0.update();
+        this.controller1.update();
+    }
 };

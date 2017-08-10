@@ -144,7 +144,7 @@ class Game {
     setProgram(program) {
         this.program = program;
     }
-    
+
     registerPlayer(player) {
         if (this.program) {
             this.program.registerPlayer(player);
@@ -186,7 +186,7 @@ class Game {
             return this.renderer.getUnderlyingRenderer();
         return this.renderer;
     }
-    
+
     //*************************************************************
     // Utility functions.  These could be moved to another module
     // but it is convenient for them to have access to Game.
@@ -311,13 +311,13 @@ class Game {
     }
 
     attachCameraTo(parent) {
-	//TODO: Make this smarter about where camera is already
-	// parented.
-	this.reparent(this.camera, this.models[parent]);
+        //TODO: Make this smarter about where camera is already
+        // parented.
+        this.reparent(this.camera, this.models[parent]);
     }
 
     attachCameraToStation() {
-	this.attachCameraTo('station');
+        this.attachCameraTo('station');
     }
 
     setStatus(str) {

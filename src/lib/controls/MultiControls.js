@@ -12,7 +12,7 @@ var toDeg = THREE.Math.radToDeg;
 
 function bind( scope, fn ) {
     return function () {
-	fn.apply( scope, arguments );
+        fn.apply( scope, arguments );
     };
 }
 
@@ -55,8 +55,8 @@ class MultiControls
 
         this._onKeyDown = bind( this, this.onKeyDown );
         this._onKeyUp = bind( this, this.onKeyUp );
-/*
-*/
+        /*
+         */
         this.domElement.addEventListener( 'contextmenu',   this._onContextMenu, false );
         this.domElement.addEventListener( 'dblclick',         this._onMouseClick, false );
         this.domElement.addEventListener( 'mousedown',     this._onMouseDown, false );
@@ -75,7 +75,7 @@ class MultiControls
     onMouseDown( event ) {
         //console.log("MultiControls.onMouseDown button:" +event.button);
         if ( this.domElement !== document ) {
-	    this.domElement.focus();
+            this.domElement.focus();
         }
         event.preventDefault();
         //event.stopPropagation();
@@ -109,10 +109,10 @@ class MultiControls
             this.game.viewManager.goto(view, 2);
         }
     }
-    
+
     onMouseWheel(evt) {
-	//console.log("LookControls.onMouseWheel...");
-	evt.preventDefault();
+        //console.log("LookControls.onMouseWheel...");
+        evt.preventDefault();
         if (evt.shiftKey)
             this.handleChangeFOV(evt);
         else
@@ -122,7 +122,7 @@ class MultiControls
     onMouseMove( event ) {
         this.handleRaycast(event);
         if (!this.mouseDragOn || !this.enabled)
-	    return;
+            return;
         //console.log("MultiControls.onMouseMove");
         var pt = this.getMousePt(event);
         var dx = pt.x - this.mousePtDown.x;
@@ -147,32 +147,32 @@ class MultiControls
 
     handleChangeFOV(evt)
     {
-	var sf = 0.015;
+        var sf = 0.015;
         var camera = this.game.camera;
-	if (evt.wheelDeltaY) { // WebKit
-	    camera.fov -= evt.wheelDeltaY * sf;
-	} else if (evt.wheelDelta) { 	// Opera / IE9
-	    camera.fov -= evt.wheelDelta * sf;
-	} else if (evt.detail) { // Firefox
-	    camera.fov += evt.detail * 1.0;
-	}
-	//camera.fov = Math.max(20, Math.min(100, camera.fov));
-	camera.fov = Math.max(10, Math.min(140, camera.fov));
-	camera.updateProjectionMatrix();
+        if (evt.wheelDeltaY) { // WebKit
+            camera.fov -= evt.wheelDeltaY * sf;
+        } else if (evt.wheelDelta) {    // Opera / IE9
+            camera.fov -= evt.wheelDelta * sf;
+        } else if (evt.detail) { // Firefox
+            camera.fov += evt.detail * 1.0;
+        }
+        //camera.fov = Math.max(20, Math.min(100, camera.fov));
+        camera.fov = Math.max(10, Math.min(140, camera.fov));
+        camera.updateProjectionMatrix();
     }
 
     handleDolly(evt)
     {
-	var sf = 0.015;
-	var dx = 0;
+        var sf = 0.015;
+        var dx = 0;
         var camera = this.game.camera;
-	if (evt.wheelDeltaY) { // WebKit
-	    dx -= evt.wheelDeltaY * sf;
-	} else if (evt.wheelDelta) { 	// Opera / IE9
-	    dx -= evt.wheelDelta * sf;
-	} else if (evt.detail) { // Firefox
-	    dx += evt.detail * 1.0;
-	}
+        if (evt.wheelDeltaY) { // WebKit
+            dx -= evt.wheelDeltaY * sf;
+        } else if (evt.wheelDelta) {    // Opera / IE9
+            dx -= evt.wheelDelta * sf;
+        } else if (evt.detail) { // Firefox
+            dx += evt.detail * 1.0;
+        }
         //console.log(sprintf("handleDolly dx: %f", dx));
         this.dolly(dx);
     }
@@ -225,22 +225,22 @@ class MultiControls
         }
         this.game.setStatus(this.pickedName);
         /*
-        if (intersects.length > 0) {
-            var isect = intersects[0];
-            if (isect.object.name != "Stars")
-                return isect;
-        }
+          if (intersects.length > 0) {
+          var isect = intersects[0];
+          if (isect.object.name != "Stars")
+          return isect;
+          }
         */
         return this.pickedIsect;
     }
-    
+
     handleLook(dx, dy)
     {
         //console.log("MultiControls.handleLook dx: "+dx+"  dy: "+dy);
         dx *= this.lookSense;
         dy *= this.lookSense;
-	var theta = this.anglesDown.theta - this.panRatio * dx;
-	var phi =   this.anglesDown.phi + this.pitchRatio * dy;
+        var theta = this.anglesDown.theta - this.panRatio * dx;
+        var phi =   this.anglesDown.phi + this.pitchRatio * dy;
         this.setCamAngles(theta, phi);
     }
 
@@ -252,8 +252,8 @@ class MultiControls
         //console.log("Target:", this.target);
         //console.log("Cam Pos:", camPos);
         //console.log("d: "+d);
-	var theta = this.anglesDown.theta - this.panRatio   * dx;
-	var phi =   this.anglesDown.phi   + this.pitchRatio * dy;
+        var theta = this.anglesDown.theta - this.panRatio   * dx;
+        var phi =   this.anglesDown.phi   + this.pitchRatio * dy;
         camPos.subVectors(this.target, this.getVec(theta, phi, d));
         this.object.lookAt( this.target );
     }
@@ -272,7 +272,7 @@ class MultiControls
         //console.log("pan     dV:", dV);
         camPos.addVectors(this.camPosDown, dV);
     }
-    
+
     onKeyDown( event ) {
         var kc = event.keyCode;
         console.log("onKeyDown "+kc);
@@ -354,7 +354,7 @@ class MultiControls
         }
         //console.log("Target:", this.target);
     }
-    
+
     getCamAngles()
     {
         //var cam = this.game.camera;
@@ -364,7 +364,7 @@ class MultiControls
         sp.setFromVector3(wv);
         return {theta: sp.theta, phi: sp.phi};
     }
-    
+
     setCamAngles(theta, phi) {
         var targetPos = new THREE.Vector3();
         targetPos.addVectors(this.object.position, this.getVec(theta, phi));
@@ -377,11 +377,11 @@ class MultiControls
     {
         return this.game.camera.getWorldDirection();
         /*
-        var cam = this.game.camera;
-        var vL = new THREE.Vector3(0,0,-1);
-        var vW = vL.applyMatrix4(cam.matrixWorld);
-        vW.sub(cam.position).normalize();
-        return vW;
+          var cam = this.game.camera;
+          var vL = new THREE.Vector3(0,0,-1);
+          var vW = vL.applyMatrix4(cam.matrixWorld);
+          vW.sub(cam.position).normalize();
+          return vW;
         */
     }
 
@@ -404,7 +404,7 @@ class MultiControls
         vUpWorld.sub(cam.position).normalize();
         return vUpWorld;
     }
-    
+
     // Return vector of given length in direction specified
     // by spherical coordinates theta,phi.
     getVec(theta, phi, d)
@@ -417,7 +417,7 @@ class MultiControls
         v.z = d * Math.sin( phi ) * Math.sin( theta );
         return v;
     }
-    
+
     dispose() {
         this.domElement.removeEventListener( 'contextmenu', this.contextmenu, false );
         this.domElement.removeEventListener( 'mousedown',   this._onMouseDown, false );

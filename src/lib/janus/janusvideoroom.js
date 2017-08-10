@@ -128,37 +128,37 @@ export default class JanusVideoRoom extends EventEmitter {
                     debug: 'all',
                     callback: resolve});
             })
-            .then(() => {
+                .then(() => {
                 // create Janus connection
-                return new Promise((resolve) => {
-                    self.janus = new Janus({
-                        server: self.options.url,
-                        success: () => {
-                            self.connecting = false;
-                            resolve()
+                    return new Promise((resolve) => {
+                        self.janus = new Janus({
+                            server: self.options.url,
+                            success: () => {
+                                self.connecting = false;
+                                resolve()
+                            },
+                            error: reject
+                        });
+                    });
+                }).then(() => {
+                // attach a video room
+                    self.janus.attach({
+                        plugin: 'janus.plugin.videoroom',
+                        opaqueId: self.options.id,
+                        success: (pluginHandle) => {
+                            console.info("janus.plugin.video room attached")
+                            self.publisherHandle = pluginHandle;
+                            self.connected = true;
+                            resolve();
                         },
-                        error: reject
+                        error: reject,
+                        onmessage: (msg, jsep) => { self.onMessagePublisher(msg, jsep); },
+                        mediaState: self.onMediaState.bind(self),
+                        webrtcState: self.onWebrtcState.bind(self),
+                        onlocalstream: self.onLocalStream.bind(self),
+                        oncleanup: self.onCleanup.bind(self)
                     });
                 });
-            }).then(() => {
-                // attach a video room
-                self.janus.attach({
-                    plugin: 'janus.plugin.videoroom',
-                    opaqueId: self.options.id,
-                    success: (pluginHandle) => {
-                        console.info("janus.plugin.video room attached")
-                        self.publisherHandle = pluginHandle;
-                        self.connected = true;
-                        resolve();
-                    },
-                    error: reject,
-                    onmessage: (msg, jsep) => { self.onMessagePublisher(msg, jsep); },
-                    mediaState: self.onMediaState.bind(self),
-                    webrtcState: self.onWebrtcState.bind(self),
-                    onlocalstream: self.onLocalStream.bind(self),
-                    oncleanup: self.onCleanup.bind(self)
-                });
-            });
         });
 
         return promise;
@@ -609,17 +609,17 @@ export default class JanusVideoRoom extends EventEmitter {
 
     // private
     _sendStatus() {
-      let content = {
-        source: this.roomInfo.id,
-        status: this.status
-      };
+        let content = {
+            source: this.roomInfo.id,
+            status: this.status
+        };
 
-      this._sendMessage("statusUpdate", content);
+        this._sendMessage("statusUpdate", content);
     }
 
     _sendMessage(type, content) {
         if (!this.publisherHandle) {
-          return;
+            return;
         }
 
         var text = JSON.stringify({
@@ -641,13 +641,13 @@ export default class JanusVideoRoom extends EventEmitter {
             JSON.stringify(msg) + " jsep = " + JSON.stringify(jsep));
 
         switch (event) {
-            case "joined":
-                this.onmsg_joined(msg, jsep);
-                break;
+        case "joined":
+            this.onmsg_joined(msg, jsep);
+            break;
 
-            case "event":
-                this.onmsg_event(msg, jsep);
-                break;
+        case "event":
+            this.onmsg_event(msg, jsep);
+            break;
         }
 
         if (jsep) {
@@ -661,13 +661,13 @@ export default class JanusVideoRoom extends EventEmitter {
 
         let event = msg.videoroom;
         switch (event) {
-            case "attached":
-                this.onmsg_attached(msg, jsep);
-                break;
+        case "attached":
+            this.onmsg_attached(msg, jsep);
+            break;
 
-            case "event":
-                this.onmsg_event(msg, jsep);
-                break;
+        case "event":
+            this.onmsg_event(msg, jsep);
+            break;
         }
 
         let self = this;
@@ -776,13 +776,13 @@ export default class JanusVideoRoom extends EventEmitter {
         let user = this.publishers[userid];
         if (user) {
             switch (data.type) {
-                case "statusUpdate":
-                    user.status = data.content.status;
-                    this.emit(data.type, [user, data.content.status]);
-                    break;
-                case "chatMsg":
-                    this.emit(data.type, [user, data.content]);
-                    break;
+            case "statusUpdate":
+                user.status = data.content.status;
+                this.emit(data.type, [user, data.content.status]);
+                break;
+            case "chatMsg":
+                this.emit(data.type, [user, data.content]);
+                break;
             }
         }
     }

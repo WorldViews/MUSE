@@ -38,7 +38,7 @@ class VRGame extends Game {
         );
     }
 
-    addControls() {        
+    addControls() {
         if (WebVR.isAvailable()) {
             this.addVRControls();
         } else {
@@ -52,7 +52,7 @@ class VRGame extends Game {
 
         this.body = new THREE.Object3D();
         this.scene.add(this.body);
-        this.body.add(this.camera);        
+        this.body.add(this.camera);
 
         this.viveControllerController = new ViveControllerController(this.scene, this.body);
         this.registerController('viveControls', this.viveControllerController);
@@ -60,12 +60,12 @@ class VRGame extends Game {
 
     addPointlockControls() {
         this.plControls = new PointerLockControls(this.camera);
-    
+
         // Allow the PointerLockControls to create the body,
         // even if we do not use the controls for movement. 
         this.body = this.plControls.getObject();
         this.scene.add(this.body);
-    
+
         attachPointerLock(this.plControls);
     }
 

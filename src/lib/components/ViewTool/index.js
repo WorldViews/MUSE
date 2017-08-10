@@ -21,7 +21,7 @@ export default class ViewTool extends React.Component {
         console.log("onViewNameChange", event);
         this.setState({viewName: event.target.value});
     }
-    
+
     onChange(event, index, value) {
         this.setState({viewName:value});
         if (this.props.onChange)
@@ -33,10 +33,10 @@ export default class ViewTool extends React.Component {
             <div className={styles}>
                 <input type="text" onChange={this.onViewNameChange.bind(this)} value={this.state.viewName} id="currentViewName"/>
                 <input type="button" value="Mark"
-            onClick = {
-                //(e) => console.log("onMarkView")
-                (e) => window.game.viewManager.bookmarkView()
-            }
+                    onClick = {
+                        //(e) => console.log("onMarkView")
+                        (e) => window.game.viewManager.bookmarkView()
+                    }
                 />
                 <SelectField
                     floatingLabelText="View"

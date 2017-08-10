@@ -49,7 +49,7 @@ class NetLink {
                 video: true,
                 audio: true
             }
-            return navigator.mediaDevices.getUserMedia(constraints);            
+            return navigator.mediaDevices.getUserMedia(constraints);
         }).then((stream) => {
             return self.client.publish(stream).then(() => {
                 console.log(' ::::  published local stream');
@@ -70,7 +70,7 @@ class NetLink {
             let name = user.display;
             if (!self.users[name]) {
                 let avatar = new Avatar(self.game,
-                                name, {position: [20,0,20]});
+                    name, {position: [20,0,20]});
                 self.users[name] = avatar;
             }
             self.users[name].setStream(user.stream);
@@ -95,12 +95,12 @@ class NetLink {
             this.numUsers++;
             var y = 20*this.numUsers;
             user = new Avatar(this.game,
-                              name, {position: [0,5,0]});
+                name, {position: [0,5,0]});
             this.users[name] = user;
             return user;
         }
     }
-    
+
     update() {
         this.sendStatus();
     }
@@ -117,10 +117,10 @@ class NetLink {
             this.state.position.set(c.position.x, c.position.y, c.position.z);
             this.state.rotation.set(c.rotation.x, c.rotation.y, c.rotation.z);
             var msg = {'type': 'muse.status',
-                    'user': this.user,
-                    'platform': 'threejs',
-                    'position': c.position.toArray(),
-                    'rotation': c.rotation.toArray()}
+                'user': this.user,
+                'platform': 'threejs',
+                'position': c.position.toArray(),
+                'rotation': c.rotation.toArray()}
             //console.log("NetLink.sendStatus "+JSON.stringify(msg));
             this.sendMessage(msg);
         }

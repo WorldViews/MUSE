@@ -11,14 +11,14 @@ import {getJSON} from './Util';
   things in the scene, or functionality.
 
   specs is an array of objects, each with the following fields
-     type   -   Which type of node to be loaded or created
-     path   -   The URL of the model to be loaded
-     name   -   A named to be assigned to the loaded
-                model that can be used to access it
-                from game.models
-     position   Optional position to place it at
-     rotation   Optional rotation (array in radians)
-     scale      Optional scale, if scalar, uniform scalling
+  type   -   Which type of node to be loaded or created
+  path   -   The URL of the model to be loaded
+  name   -   A named to be assigned to the loaded
+  model that can be used to access it
+  from game.models
+  position   Optional position to place it at
+  rotation   Optional rotation (array in radians)
+  scale      Optional scale, if scalar, uniform scalling
 */
 
 function reportWarning(str)
@@ -41,29 +41,29 @@ function loadFBXModel(path, opts, afterFun)
     //var path = './DomeSpace.fbx';
     var manager = new THREE.LoadingManager();
     manager.onProgress = function( item, loaded, total ) {
-	console.log( item, loaded, total );
+        console.log( item, loaded, total );
     };
     //var loader = new THREE.FBXLoader( manager );
     var loader = new FBXLoader( manager );
     loader.load( path,
-                 function( object ) {
-                     /*
-	               object.mixer = new THREE.AnimationMixer( object );
-	               mixers.push( object.mixer );
-	               var action = object.mixer.clipAction( object.animations[ 0 ] );
-	               action.play();
-	             */
-	             if (afterFun) {
-		         afterFun(object, opts);
-	             }
-	         },
-                 function() {
-                     console.log("-----> load FBXModel <-----");
-	         },
-	         function (e) {
-	             report("************* Error loading FBX file "+path+"\n"+e);
-	         }
-	       );
+        function( object ) {
+            /*
+                       object.mixer = new THREE.AnimationMixer( object );
+                       mixers.push( object.mixer );
+                       var action = object.mixer.clipAction( object.animations[ 0 ] );
+                       action.play();
+                     */
+            if (afterFun) {
+                afterFun(object, opts);
+            }
+        },
+        function() {
+            console.log("-----> load FBXModel <-----");
+        },
+        function (e) {
+            report("************* Error loading FBX file "+path+"\n"+e);
+        }
+    );
 }
 
 function loadOBJModel0(path, opts, afterFun)
@@ -72,28 +72,28 @@ function loadOBJModel0(path, opts, afterFun)
     var loader = new OBJLoader( manager );
 
     var onProgress = function ( xhr ) {
-	if ( xhr.lengthComputable ) {
-	    var percentComplete = xhr.loaded / xhr.total * 100;
-	    console.log( Math.round(percentComplete, 2) + '% downloaded' );
-	}
+        if ( xhr.lengthComputable ) {
+            var percentComplete = xhr.loaded / xhr.total * 100;
+            console.log( Math.round(percentComplete, 2) + '% downloaded' );
+        }
     };
     var onError = function ( xhr ) {
     };
-    
+
     loader.load( path, function ( object ) {
-	object.traverse( function ( child ) {
-	    if ( child instanceof THREE.Mesh ) {
-		//child.material.map = texture;
-	    }
-	} );
+        object.traverse( function ( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                //child.material.map = texture;
+            }
+        } );
         if (afterFun) {
             afterFun(object);
-	    //object.position.y = 0;
-	    //console.log("adding loaded model to scene");
+            //object.position.y = 0;
+            //console.log("adding loaded model to scene");
             //OBJM = object;
-	    //scene.add( object );
+            //scene.add( object );
         }
-    }, onProgress, onError );    
+    }, onProgress, onError );
 }
 
 function loadOBJModel(path, opts, afterFun)
@@ -104,10 +104,10 @@ function loadOBJModel(path, opts, afterFun)
     var mtlPath = path.replace(".obj", ".mtl")
 
     var onProgress = function ( xhr ) {
-	if ( xhr.lengthComputable ) {
-	    var percentComplete = xhr.loaded / xhr.total * 100;
-	    console.log( Math.round(percentComplete, 2) + '% downloaded' );
-	}
+        if ( xhr.lengthComputable ) {
+            var percentComplete = xhr.loaded / xhr.total * 100;
+            console.log( Math.round(percentComplete, 2) + '% downloaded' );
+        }
     };
     var onError = function ( xhr ) {
     };
@@ -120,18 +120,18 @@ function loadOBJModel(path, opts, afterFun)
     }
     mtlLoader.setPath( dir );
     mtlLoader.load( mtlPath, function( materials ) {
-	console.log(">>> Got materials");
-	materials.preload();
-	var objLoader = new OBJLoader();
-	objLoader.setMaterials( materials );
-	//objLoader.setPath( dir );
-	objLoader.load( path, function ( object ) {
-	    object.position.y = 0;
-	    console.log(">>> adding loaded model to scene");
-	    if (afterFun) {
-		afterFun(object, opts);
-	    }
-	}, onProgress, onError );
+        console.log(">>> Got materials");
+        materials.preload();
+        var objLoader = new OBJLoader();
+        objLoader.setMaterials( materials );
+        //objLoader.setPath( dir );
+        objLoader.load( path, function ( object ) {
+            object.position.y = 0;
+            console.log(">>> adding loaded model to scene");
+            if (afterFun) {
+                afterFun(object, opts);
+            }
+        }, onProgress, onError );
     });
 }
 
@@ -146,12 +146,12 @@ class Loader
         if (specs)
             this.load(specs);
     }
-    
+
     newGroupName() {
         numGroups++;
         return "_group_"+numGroups;
     }
-    
+
     load(specs, parent) {
         console.log("<<< load parent: "+parent+"   specs: "+JSON.stringify(specs));
         var game = this.game;
@@ -171,8 +171,8 @@ class Loader
                 console.log("Assigning parent to spec");
                 spec.parent = parent;
             }
-	    //TODO: check for type and call appropriate loader
-	    // for now we just do collada
+            //TODO: check for type and call appropriate loader
+            // for now we just do collada
             if (spec.type == "Group") {
                 this.loadGroup(spec);
                 return;
@@ -187,7 +187,7 @@ class Loader
                 this.addAxes(spec);
                 return;
             }
-	    if (spec.type == "Model") {
+            if (spec.type == "Model") {
                 this.loadModel(spec);
                 return;
             }
@@ -241,52 +241,52 @@ class Loader
         if (path.endsWith(".dae")) {
             this.numPending++;
             loadCollada(spec.path, spec).then((collada) => {
-		game.setFromProps(collada.scene, spec);
-		game.addToGame(collada.scene, spec.name, spec.parent);
+                game.setFromProps(collada.scene, spec);
+                game.addToGame(collada.scene, spec.name, spec.parent);
                 this.numPending--;
-		if (this.numPending === 0) {
+                if (this.numPending === 0) {
                     this.handleCompletion();
-		}
+                }
             });
             return;
-	}
+        }
         if (path.endsWith(".fbx")) {
             this.numPending++;
-	    loadFBXModel(path, spec, (obj) => {
+            loadFBXModel(path, spec, (obj) => {
                 console.log("***** Loaded fbx "+path);
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
                 this.numPending--;
-		if (this.numPending === 0) {
+                if (this.numPending === 0) {
                     this.handleCompletion();
-		}
+                }
             });
         }
         if (path.endsWith(".obj")) {
             this.numPending++;
-	    loadOBJModel(path, spec, (obj) => {
-	    //loadOBJModel0(path, spec, (obj) => {
+            loadOBJModel(path, spec, (obj) => {
+                //loadOBJModel0(path, spec, (obj) => {
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
                 this.numPending--;
-		if (this.numPending === 0) {
+                if (this.numPending === 0) {
                     this.handleCompletion();
-		}
+                }
             });
         }
     }
-    
+
     handleCompletion() {
         console.log("****************** MODELS ALL LOADED ******************");
         if (this.onCompleted)
             this.onCompleted();
         //alert("All Models Loaded");
     }
-    
+
     loadGroup(groupSpec) {
         if (!groupSpec.name) {
-	    console.log("**** new groups must have name ****");
-	    reportError("**** new groups must have name ****");
+            console.log("**** new groups must have name ****");
+            reportError("**** new groups must have name ****");
             groupSpec.name = newGroupName();
         }
         var group = this.game.getGroup(groupSpec.name, groupSpec);

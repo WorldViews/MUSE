@@ -66,29 +66,29 @@ var LookControls = function ( object, domElement )
     //}
 
     this.getPhi = function() {
-	return this.phi;
+        return this.phi;
     }
 
     this.setPhi = function(phi) {
-	this.phi = phi;
+        this.phi = phi;
     }
 
     this.getTheta = function() { return this.theta; }
-    
+
     this.handleResize = function () {
         if ( this.domElement === document ) {
-	    this.viewHalfX = window.innerWidth / 2;
-	    this.viewHalfY = window.innerHeight / 2;
+            this.viewHalfX = window.innerWidth / 2;
+            this.viewHalfY = window.innerHeight / 2;
         } else {
-	    this.viewHalfX = this.domElement.offsetWidth / 2;
-	    this.viewHalfY = this.domElement.offsetHeight / 2;
+            this.viewHalfX = this.domElement.offsetWidth / 2;
+            this.viewHalfY = this.domElement.offsetHeight / 2;
         }
     };
 
     this.onMouseDown = function ( event ) {
-	
+
         if ( this.domElement !== document ) {
-	    this.domElement.focus();
+            this.domElement.focus();
         }
         event.preventDefault();
         //event.stopPropagation();
@@ -107,19 +107,19 @@ var LookControls = function ( object, domElement )
     };
 
     function onMouseWheel (evt) {
-	console.log("------>>>>>> LookControls.onMouseWheel...");
-	evt.preventDefault();
-	var sf = 0.015;
-	if (evt.wheelDeltaY) { // WebKit
-	    camera.fov -= evt.wheelDeltaY * sf;
-	} else if (evt.wheelDelta) { 	// Opera / IE9
-	    camera.fov -= evt.wheelDelta * sf;
-	} else if (evt.detail) { // Firefox
-	    camera.fov += evt.detail * 1.0;
-	}
-	//camera.fov = Math.max(20, Math.min(100, camera.fov));
-	camera.fov = Math.max(10, Math.min(140, camera.fov));
-	camera.updateProjectionMatrix();
+        console.log("------>>>>>> LookControls.onMouseWheel...");
+        evt.preventDefault();
+        var sf = 0.015;
+        if (evt.wheelDeltaY) { // WebKit
+            camera.fov -= evt.wheelDeltaY * sf;
+        } else if (evt.wheelDelta) {    // Opera / IE9
+            camera.fov -= evt.wheelDelta * sf;
+        } else if (evt.detail) { // Firefox
+            camera.fov += evt.detail * 1.0;
+        }
+        //camera.fov = Math.max(20, Math.min(100, camera.fov));
+        camera.fov = Math.max(10, Math.min(140, camera.fov));
+        camera.updateProjectionMatrix();
     }
 
     this.getMousePt = function(event)
@@ -129,26 +129,26 @@ var LookControls = function ( object, domElement )
 
     this.onMouseMove = function ( event ) {
         if (!this.mouseDragOn || !this.enabled)
-	    return;
+            return;
         this.getParamsFromCamera();
         var pt = this.getMousePt(event);
         var dx = pt.x - this.mousePtDown.x;
         var dy = pt.y - this.mousePtDown.y;
         //console.log("dx: "+dx+"  dy: "+dy);
         if (event.button == 0) {
-	    this.theta = this.thetaDown + this.panRatio * THREE.Math.degToRad( dx );
-	    this.phi = this.phiDown + this.pitchRatio * THREE.Math.degToRad( dy );
+            this.theta = this.thetaDown + this.panRatio * THREE.Math.degToRad( dx );
+            this.phi = this.phiDown + this.pitchRatio * THREE.Math.degToRad( dy );
         }
         if (event.button == 2) {
-	    this.theta = this.thetaDown + this.panRatio * THREE.Math.degToRad( dx );
-	    if (dy > 0) {
+            this.theta = this.thetaDown + this.panRatio * THREE.Math.degToRad( dx );
+            if (dy > 0) {
                 this.moveForward = false;
                 this.moveBackward = true;
-	    }
-	    if (dy < 0) {
+            }
+            if (dy < 0) {
                 this.moveForward = true;
                 this.moveBackward = false;
-	    }
+            }
         }
         this.setDirection();
     }
@@ -222,21 +222,21 @@ var LookControls = function ( object, domElement )
 
         if ( this.heightSpeed ) {
 
-	    var y = THREE.Math.clamp( this.object.position.y, this.heightMin, this.heightMax );
-	    var heightDelta = y - this.heightMin;
+            var y = THREE.Math.clamp( this.object.position.y, this.heightMin, this.heightMax );
+            var heightDelta = y - this.heightMin;
 
-	    this.autoSpeedFactor = delta * ( heightDelta * this.heightCoef );
+            this.autoSpeedFactor = delta * ( heightDelta * this.heightCoef );
 
         } else {
 
-	    this.autoSpeedFactor = 0.0;
+            this.autoSpeedFactor = 0.0;
 
         }
 
         var actualMoveSpeed = delta * this.movementSpeed;
 
         if ( this.moveForward || ( this.autoForward && ! this.moveBackward ) )
-	    this.object.translateZ( - ( actualMoveSpeed + this.autoSpeedFactor ) );
+            this.object.translateZ( - ( actualMoveSpeed + this.autoSpeedFactor ) );
 
         if ( this.moveBackward ) this.object.translateZ( actualMoveSpeed );
 
@@ -249,21 +249,21 @@ var LookControls = function ( object, domElement )
         var actualLookSpeed = delta * this.lookSpeed;
 
         if ( ! this.activeLook ) {
-	    actualLookSpeed = 0;
+            actualLookSpeed = 0;
         }
 
         var verticalLookRatio = 1;
 
         if ( this.constrainVertical ) {
-	    verticalLookRatio = Math.PI / ( this.verticalMax - this.verticalMin );
+            verticalLookRatio = Math.PI / ( this.verticalMax - this.verticalMin );
         }
 
         //console.log("mouse x: "+this.mouseX+" y: "+this.mouseY);
         if (!this.mouseDragOn)
-	    return;
+            return;
 
         if ( this.constrainVertical ) {
-	    this.phi = THREE.Math.mapLinear( this.phi, 0, Math.PI, this.verticalMin, this.verticalMax );
+            this.phi = THREE.Math.mapLinear( this.phi, 0, Math.PI, this.verticalMin, this.verticalMax );
         }
         this.setDirection();
     };
@@ -278,9 +278,9 @@ var LookControls = function ( object, domElement )
         targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
         //this.object.lookAt( targetPosition );
         game.camera.lookAt( targetPosition );
-	//game.camera.updateProjectionMatrix();
+        //game.camera.updateProjectionMatrix();
     }
-    
+
     function contextmenu( event ) {
         event.preventDefault();
     }
@@ -308,14 +308,14 @@ var LookControls = function ( object, domElement )
     this.domElement.addEventListener( 'mousemove', _onMouseMove, false );
     this.domElement.addEventListener( 'mousedown', _onMouseDown, false );
     this.domElement.addEventListener( 'mouseup', _onMouseUp, false );
-//    this.domElement.addEventListener('wheel', _onMouseWheel, false);
-//    this.domElement.addEventListener('DOMMouseScroll', _onMouseWheel, false);
+    //    this.domElement.addEventListener('wheel', _onMouseWheel, false);
+    //    this.domElement.addEventListener('DOMMouseScroll', _onMouseWheel, false);
     window.addEventListener( 'keydown', _onKeyDown, false );
     window.addEventListener( 'keyup', _onKeyUp, false );
 
     function bind( scope, fn ) {
         return function () {
-	    fn.apply( scope, arguments );
+            fn.apply( scope, arguments );
         };
     }
 
@@ -329,20 +329,20 @@ var LookControls = function ( object, domElement )
         //this.theta = vals.theta;
         console.log(sprintf("> phi: %6.2f  theta: %6.2f", toDeg(this.phi), toDeg(this.theta)));
     }
-    
-/*
-    this.getCameraParams = function(cam) {
-        console.log("LookControls.getCameraParams");
-        cam = cam || window.game.camera;
-        var wv = cam.getWorldDirection();
-        //console.log("wv: "+JSON.stringify(wv));
-        var s = new THREE.Spherical();
-        s.setFromVector3(wv);
-        console.log(sprintf("cam phi: %6.2f theta: %6.2f", toDeg(s.phi), toDeg(s.theta)));
-        return {phi: s.phi, theta: s.theta};
-    }
-*/
-    
+
+    /*
+      this.getCameraParams = function(cam) {
+      console.log("LookControls.getCameraParams");
+      cam = cam || window.game.camera;
+      var wv = cam.getWorldDirection();
+      //console.log("wv: "+JSON.stringify(wv));
+      var s = new THREE.Spherical();
+      s.setFromVector3(wv);
+      console.log(sprintf("cam phi: %6.2f theta: %6.2f", toDeg(s.phi), toDeg(s.theta)));
+      return {phi: s.phi, theta: s.theta};
+      }
+    */
+
     this.dumpInfo = function() {
         //var c = this.object;
         var c = window.game.camera;

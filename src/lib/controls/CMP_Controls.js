@@ -62,15 +62,15 @@ var CMP_Controls = function ( object, domElement )
     //}
 
     this.getPhi = function() {
-	return this.phi;
+        return this.phi;
     }
 
     this.setPhi = function(phi) {
-	this.phi = phi;
+        this.phi = phi;
     }
 
     this.getTheta = function() { return this.theta; }
-    
+
     this.handleResize = function () {
         if ( this.domElement === document ) {
 	    this.viewHalfX = window.innerWidth / 2;
