@@ -77,7 +77,8 @@ var SPECS = [
     },
     {   type: 'Screen', name: 'rightScreen',
         parent: 'station', radius: 8.8,
-        path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        path: 'assets/images/ColabTalk/Slide1.PNG',
         phiStart: 34, phiLength: 47,
         thetaStart: 300, thetaLength: 60
     },
