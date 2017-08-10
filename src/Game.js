@@ -124,21 +124,21 @@ class Game {
     // Isn't this more complicated than it needs to be?
     // we have a list and map, and functions or objects.
     registerController(name, controller) {
-  	if (typeof controller === 'object' && controller.update) {
-  		this.updateHandlers.push(controller.update.bind(controller));
-  	} else {
-  		throw 'Unsupported controller provided to `registerController`';
-  	}
+        if (typeof controller === 'object' && controller.update) {
+            this.updateHandlers.push(controller.update.bind(controller));
+        } else {
+            throw 'Unsupported controller provided to `registerController`';
+        }
         this.controllers[name] = controller;
         return controller;
     }
 
     registerUpdateHandler(handlerOrObject) {
-  	if (typeof handlerOrObject === 'function') {
-	    this.updateHandlers.push(handlerOrObject);
-  	} else {
-  		throw 'Unsupported handler provided to `registerUpdateHandler`';
-  	}
+        if (typeof handlerOrObject === 'function') {
+            this.updateHandlers.push(handlerOrObject);
+        } else {
+            throw 'Unsupported handler provided to `registerUpdateHandler`';
+        }
     }
 
     setProgram(program) {
@@ -165,13 +165,37 @@ class Game {
         }
     }
 
+    pre(msTime) {
+        // call pre
+        Object.keys(this.controllers).forEach((k) => {
+            let controller = this.controllers[k];
+            if (controller && controller.pre) {
+                controller.pre(msTime);
+            }
+        });
+    }
+
+    post(msTime) {
+        // call pre
+        Object.keys(this.controllers).forEach((k) => {
+            let controller = this.controllers[k];
+            if (controller && controller.pre) {
+                controller.post(msTime);
+            }
+        });
+    }
+
     animate(msTime) {
         if (this.controls) {
             this.controls.update(msTime);
         }
 
+        this.pre(msTime);
+
         this.updateHandlers.forEach(h => h(msTime));
         this.render();
+
+        this.post(msTime);
 
         // Do NOT provide params.
         this.requestAnimate();
