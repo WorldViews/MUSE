@@ -95,6 +95,7 @@ var SPECS = [
     },
     {  type: 'SolarSystem' },
     {  type: 'Stars' },
+    {  type: 'Stats' },
     {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     //{  type: 'Hurricane', scale: 0.01 }

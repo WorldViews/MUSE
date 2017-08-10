@@ -11,6 +11,7 @@ import { Dancer } from './controllers/DanceController';
 import NavigationController from './controllers/NavigationController';
 import SolarSystemController from './controllers/SolarSystemController';
 import StarsController from './controllers/StarsController';
+import StatsController from './controllers/StatsController';
 import UIController from './controllers/UIController';
 import VRGame from './VRGame';
 import WebVR from './lib/vr/WebVR';
