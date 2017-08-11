@@ -51,7 +51,7 @@ SATELLITE_MODEL = [
 
 var SPECS = [
     {  type: 'Stats' },
-    {  type: 'UIControls' },
+    {  type: 'ReactControls' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     {  type: 'Scripts' },
     {   type: 'Group', name: 'station'  },

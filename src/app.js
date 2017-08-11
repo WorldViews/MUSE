@@ -12,7 +12,8 @@ import NavigationController from './controllers/NavigationController';
 import SolarSystemController from './controllers/SolarSystemController';
 import StarsController from './controllers/StarsController';
 import StatsController from './controllers/StatsController';
-import {UIController} from './controllers/UIController';
+//import {UIController} from './controllers/UIController';
+import {ReactControls} from './controllers/ReactControls';
 import VRGame from './VRGame';
 import WebVR from './lib/vr/WebVR';
 
@@ -78,15 +79,6 @@ function start(config) {
     game.setProgram(cmpProgram);
 
     game.load(specs);
-/*
-    let uiController = new UIController({
-        game: game,
-    });
-    game.registerController('ui', uiController);
-
-    let scriptControls = new Scripts(game, uiController);
-    game.registerController('scripts', scriptControls);
-*/
     game.animate(0);
 }
 

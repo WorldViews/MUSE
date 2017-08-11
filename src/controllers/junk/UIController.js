@@ -1,3 +1,4 @@
+/*
 import ReactDOM from 'react-dom';
 import React from 'react';
 import _ from 'lodash';
@@ -17,12 +18,20 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const duration = 32*60;
+*/
 
 class UIController {
+    constructor(game, options) {
+        this.game = game;
+    }
+}
+
+/*
+class ReactController extends UIController {
 
     constructor(game, options) {
+        super(game, options);
         this.options = options || {};
-        this.game = game;
         //this.playerControl = this.options.playerControl;
         this.playerControl = this.game.getProgram();
         this.root = document.createElement('div');
@@ -161,7 +170,6 @@ class UIController {
         this.root.style.display = val ? 'block' : 'none';
     }
 
-    /******************************************************/
     // Scripts
 
     registerScript(name, callback) {
@@ -199,7 +207,6 @@ class UIController {
         }
     }
 
-    /**************************************************************/
     // Views
     registerView(name, callback) {
         this.viewCallbacks[name] = {
@@ -219,13 +226,7 @@ class UIController {
     }
 
 }
+*/
 
-Game.registerNodeType("UIControls", (game, options) => {
-    if (!options.name)
-        options.name = "stars";
-    //return game.registerController(options.name, new UIController(game, options));
-    return game.registerController("ui", new UIController(game, options));
-});
-
-export {UIController};
+export {UIControls};
 

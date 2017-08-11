@@ -113,7 +113,8 @@ app.post('/update/*', function(request, response){
     console.log("/update got: "+JSON.stringify(obj));
     var fileName = request.path.slice("/update/".length);
     console.log("fileName: "+fileName);
-    var path = "../data/"+fileName;
+    //var path = "../data/"+fileName;
+    var path = "data/"+fileName;
     console.log("path: "+path);
     //fs.writeFileSync(fileName, JSON.stringify(obj, null, 4));
     fs.writeFileSync(path, JSON.stringify(obj, null, 4));
