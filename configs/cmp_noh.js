@@ -7,7 +7,7 @@ var LIGHTS = [
 ];
 
 var SPECS = [
-    {  type: 'UIControls' },
+    {  type: 'ReactControls' },
     {  type: 'Stats' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     //{  type: 'Scripts' },

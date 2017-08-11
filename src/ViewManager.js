@@ -317,7 +317,7 @@ class ViewManager
         console.log("bookmarkView rot "+JSON.stringify(eulerAngles));
         console.log("bookmarkView test.... "+JSON.stringify({'a': 3, 'b': {'c': 8}}));
         //inst.ui.registerView(viewName, () => inst.gotoView(viewName));
-        var inst;
+        var inst = this;
         this.ui.registerView(name, () => inst.gotoView(name));
         this.uploadBookmarks();
         name = this.getNewViewName();

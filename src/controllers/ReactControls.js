@@ -206,6 +206,7 @@ class ReactControls extends UIControls {
     /**************************************************************/
     // Views
     registerView(name, callback) {
+        console.log("ReactControls.registerView "+name);
         this.viewCallbacks[name] = {
             name: name,
             callback: callback
