@@ -105,7 +105,7 @@
 			var positionUniforms;
 			var velocityUniforms;
 			var particleUniforms;
-			var effectController;
+			var params;
 
 			init();
 			animate();
@@ -128,7 +128,7 @@
 
 				controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-				effectController = {
+				params = {
 					// Can be changed dynamically
 					gravityConstant: 100.0,
 					density: 0.45,
@@ -150,12 +150,11 @@
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
-				initGUI();
-
 				initProtoplanets();
 
-				dynamicValuesChanger();
-
+				velocityUniforms.gravityConstant.value = params.gravityConstant;
+				velocityUniforms.density.value = params.density;
+				particleUniforms.density.value = params.density;
 			}
 
 			function initComputeRenderer() {
@@ -212,9 +211,9 @@
 
 				for ( var i = 0; i < PARTICLES; i++ ) {
 
-					positions[ p++ ] = ( Math.random() * 2 - 1 ) * effectController.radius;
-					positions[ p++ ] = 0; //( Math.random() * 2 - 1 ) * effectController.radius;
-					positions[ p++ ] = ( Math.random() * 2 - 1 ) * effectController.radius;
+					positions[ p++ ] = ( Math.random() * 2 - 1 ) * params.radius;
+					positions[ p++ ] = 0; //( Math.random() * 2 - 1 ) * params.radius;
+					positions[ p++ ] = ( Math.random() * 2 - 1 ) * params.radius;
 
 				}
 
@@ -264,13 +263,13 @@
 				var posArray = texturePosition.image.data;
 				var velArray = textureVelocity.image.data;
 
-				var radius = effectController.radius;
-				var height = effectController.height;
-				var exponent = effectController.exponent;
-				var maxMass = effectController.maxMass * 1024 / PARTICLES;
-				var maxVel = effectController.velocity;
-				var velExponent = effectController.velocityExponent;
-				var randVel = effectController.randVelocity;
+				var radius = params.radius;
+				var height = params.height;
+				var exponent = params.exponent;
+				var maxMass = params.maxMass * 1024 / PARTICLES;
+				var maxVel = params.velocity;
+				var velExponent = params.velocityExponent;
+				var randVel = params.randVelocity;
 
 				for ( var k = 0, kl = posArray.length; k < kl; k += 4 ) {
 
@@ -345,43 +344,6 @@
 
 			}
 
-			function dynamicValuesChanger() {
-
-				velocityUniforms.gravityConstant.value = effectController.gravityConstant;
-				velocityUniforms.density.value = effectController.density;
-				particleUniforms.density.value = effectController.density;
-
-			}
-
-			function initGUI() {
-
-				var gui = new dat.GUI();
-
-				var folder1 = gui.addFolder( 'Dynamic parameters' );
-
-				folder1.add( effectController, "gravityConstant", 0.0, 1000.0, 0.05 ).onChange( dynamicValuesChanger );
-				folder1.add( effectController, "density", 0.0, 10.0, 0.001 ).onChange( dynamicValuesChanger );
-
-				var folder2 = gui.addFolder( 'Static parameters - press restartSimulation' );
-
-				folder2.add( effectController, "radius", 10.0, 1000.0, 1.0 );
-				folder2.add( effectController, "height", 0.0, 50.0, 0.01 );
-				folder2.add( effectController, "exponent", 0.0, 2.0, 0.001 );
-				folder2.add( effectController, "maxMass", 1.0, 50.0, 0.1 );
-				folder2.add( effectController, "velocity", 0.0, 150.0, 0.1 );
-				folder2.add( effectController, "velocityExponent", 0.0, 1.0, 0.01 );
-				folder2.add( effectController, "randVelocity", 0.0, 50.0, 0.1 );
-
-				var buttonRestart = {
-					restartSimulation: function() { restartSimulation(); }
-				};
-
-				folder2.add( buttonRestart, 'restartSimulation' );
-
-				folder1.open();
-				folder2.open();
-
-			}
 
 			function getCameraConstant( camera ) {
 
