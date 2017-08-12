@@ -24,6 +24,7 @@ import { DynamicObjectDB_test } from './lib/DynamicObjectDB';
 import { SlidePlayer } from './lib/SlideShow';
 import { Hurricane } from './lib/Hurricane';
 import { VirtualEarth } from './lib/VirtualEarth';
+import { Kessler } from './KesslerNode';
 
 let {degToRad} = THREE.Math;
 
