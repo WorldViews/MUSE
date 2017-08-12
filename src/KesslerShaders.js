@@ -1,3 +1,4 @@
+
 var computeShaderPositionStr = `
 
 #define delta ( 1.0 / 60.0 )
