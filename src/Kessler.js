@@ -1,22 +1,20 @@
 
-var Kess = {};
 
 function Kessler(scene, camera, width)
 {
     this.scene = scene;
     this.camera = camera;
-    Kess.WIDTH = width || 30;
-    Kess.PARTICLES = Kess.WIDTH * Kess.WIDTH;
+    this.WIDTH = width || 30;
+    this.PARTICLES = this.WIDTH * this.WIDTH;
 
-    //Kess = this;
-    Kess.gpuCompute = null;
-    Kess.velocityVariable = null;
-    Kess.positionVariable = null;
-    Kess.positionUniforms = null;
-    Kess.velocityUniforms = null;
-    Kess.particleUniforms = null;
+    this.gpuCompute = null;
+    this.velocityVariable = null;
+    this.positionVariable = null;
+    this.positionUniforms = null;
+    this.velocityUniforms = null;
+    this.particleUniforms = null;
 
-    Kess.params = {
+    var params = {
 	// Can be changed dynamically
 	gravityConstant: 100.0,
 	density: 0.45,
@@ -30,36 +28,37 @@ function Kessler(scene, camera, width)
 	velocityExponent: 0.2,
 	randVelocity: 0.001
     };
+    this.params = params;
     this.initComputeRenderer();
     this.initProtoplanets(scene);
 
-    Kess.velocityUniforms.gravityConstant.value = Kess.params.gravityConstant;
-    Kess.velocityUniforms.density.value = Kess.params.density;
-    Kess.particleUniforms.density.value = Kess.params.density;
+    this.velocityUniforms.gravityConstant.value = params.gravityConstant;
+    this.velocityUniforms.density.value = params.density;
+    this.particleUniforms.density.value = params.density;
 }
 
 Kessler.prototype.initComputeRenderer = function () {
 
-    Kess.gpuCompute = new GPUComputationRenderer( Kess.WIDTH, Kess.WIDTH, renderer );
+    this.gpuCompute = new GPUComputationRenderer( this.WIDTH, this.WIDTH, renderer );
 
-    var dtPosition = Kess.gpuCompute.createTexture();
-    var dtVelocity = Kess.gpuCompute.createTexture();
+    var dtPosition = this.gpuCompute.createTexture();
+    var dtVelocity = this.gpuCompute.createTexture();
 
     this.fillTextures( dtPosition, dtVelocity );
 
-    Kess.velocityVariable = Kess.gpuCompute.addVariable( "textureVelocity", computeShaderVelocityStr, dtVelocity );
-    Kess.positionVariable = Kess.gpuCompute.addVariable( "texturePosition", computeShaderPositionStr, dtPosition);
+    this.velocityVariable = this.gpuCompute.addVariable( "textureVelocity", computeShaderVelocityStr, dtVelocity );
+    this.positionVariable = this.gpuCompute.addVariable( "texturePosition", computeShaderPositionStr, dtPosition);
 
-    Kess.gpuCompute.setVariableDependencies( Kess.velocityVariable, [ Kess.positionVariable, Kess.velocityVariable ] );
-    Kess.gpuCompute.setVariableDependencies( Kess.positionVariable, [ Kess.positionVariable, Kess.velocityVariable ] );
+    this.gpuCompute.setVariableDependencies( this.velocityVariable, [ this.positionVariable, this.velocityVariable ] );
+    this.gpuCompute.setVariableDependencies( this.positionVariable, [ this.positionVariable, this.velocityVariable ] );
 
-    Kess.positionUniforms = Kess.positionVariable.material.uniforms;
-    Kess.velocityUniforms = Kess.velocityVariable.material.uniforms;
+    this.positionUniforms = this.positionVariable.material.uniforms;
+    this.velocityUniforms = this.velocityVariable.material.uniforms;
 
-    Kess.velocityUniforms.gravityConstant = { value: 0.0 };
-    Kess.velocityUniforms.density = { value: 0.0 };
+    this.velocityUniforms.gravityConstant = { value: 0.0 };
+    this.velocityUniforms.density = { value: 0.0 };
 
-    var error = Kess.gpuCompute.init();
+    var error = this.gpuCompute.init();
 
     if ( error !== null ) {
 
@@ -70,38 +69,30 @@ Kessler.prototype.initComputeRenderer = function () {
 
 
 Kessler.prototype.initProtoplanets = function(scene) {
-
-    Kess.geometry = new THREE.BufferGeometry();
-
-    var positions = new Float32Array( Kess.PARTICLES * 3 );
+    this.geometry = new THREE.BufferGeometry();
+    var positions = new Float32Array( this.PARTICLES * 3 );
     var p = 0;
 
-    for ( var i = 0; i < Kess.PARTICLES; i++ ) {
-
-	positions[ p++ ] = ( Math.random() * 2 - 1 ) * Kess.params.radius;
-	positions[ p++ ] = 0; //( Math.random() * 2 - 1 ) * Kess.params.radius;
-	positions[ p++ ] = ( Math.random() * 2 - 1 ) * Kess.params.radius;
-
+    for ( var i = 0; i < this.PARTICLES; i++ ) {
+	positions[ p++ ] = ( Math.random() * 2 - 1 ) * this.params.radius;
+	positions[ p++ ] = 0; //( Math.random() * 2 - 1 ) * this.params.radius;
+	positions[ p++ ] = ( Math.random() * 2 - 1 ) * this.params.radius;
     }
 
-    var uvs = new Float32Array( Kess.PARTICLES * 2 );
+    var uvs = new Float32Array( this.PARTICLES * 2 );
     p = 0;
 
-    for ( var j = 0; j < Kess.WIDTH; j++ ) {
-
-	for ( var i = 0; i < Kess.WIDTH; i++ ) {
-
-	    uvs[ p++ ] = i / ( Kess.WIDTH - 1 );
-	    uvs[ p++ ] = j / ( Kess.WIDTH - 1 );
-
+    for ( var j = 0; j < this.WIDTH; j++ ) {
+	for ( var i = 0; i < this.WIDTH; i++ ) {
+	    uvs[ p++ ] = i / ( this.WIDTH - 1 );
+	    uvs[ p++ ] = j / ( this.WIDTH - 1 );
 	}
-
     }
 
-    Kess.geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-    Kess.geometry.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
+    this.geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+    this.geometry.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
 
-    Kess.particleUniforms = {
+    this.particleUniforms = {
 	texturePosition: { value: null },
 	textureVelocity: { value: null },
 	cameraConstant: { value: this.getCameraConstant( this.camera ) },
@@ -110,37 +101,33 @@ Kessler.prototype.initProtoplanets = function(scene) {
 
     // ShaderMaterial
     var material = new THREE.ShaderMaterial( {
-	uniforms:       Kess.particleUniforms,
+	uniforms:       this.particleUniforms,
 	vertexShader:   particleVertexShaderStr,
 	fragmentShader: particleFragmentShaderStr,
     } );
 
     material.extensions.drawBuffers = true;
 
-    particles = new THREE.Points( Kess.geometry, material );
+    particles = new THREE.Points( this.geometry, material );
     //particles.matrixAutoUpdate = false;
     //particles.updateMatrix();
-
     scene.add( particles );
-
 }
 
 
 Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
-
+    var params = this.params;
     var posArray = texturePosition.image.data;
     var velArray = textureVelocity.image.data;
-
-    var radius = Kess.params.radius;
-    var height = Kess.params.height;
-    var exponent = Kess.params.exponent;
-    var maxMass = Kess.params.maxMass * 1024 / Kess.PARTICLES;
-    var maxVel = Kess.params.velocity;
-    var velExponent = Kess.params.velocityExponent;
-    var randVel = Kess.params.randVelocity;
+    var radius = params.radius;
+    var height = params.height;
+    var exponent = params.exponent;
+    var maxMass = params.maxMass * 1024 / this.PARTICLES;
+    var maxVel = params.velocity;
+    var velExponent = params.velocityExponent;
+    var randVel = params.randVelocity;
 
     for ( var k = 0, kl = posArray.length; k < kl; k += 4 ) {
-
 	// Position
 	var x, y, z, rr, r, r0, theta;
         r0 = .8;
@@ -157,15 +144,11 @@ Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
 	    y = 0.0 * ( Math.random() * 2 - 1 );
 	    rr = x*x + y*y + z*z;
             r = Math.sqrt(rr);                           
-
 	    //} while ( rr > 1 );
 	    //} while ( rr > 1 && r < .8 );
 	} while ( rr > 1 );
-
 	rr = Math.sqrt( rr );
-
 	var rExp = radius * Math.pow( rr, exponent );
-
 	// Velocity
 	var vel = maxVel * Math.pow( rr, velExponent );
         var V0 = 142;
@@ -176,7 +159,6 @@ Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
 	x *= rExp;
 	z *= rExp;
 	y = ( Math.random() * 2 - 1 ) * height;
-
 	//var mass = Math.random() * maxMass + 1;
 	//var mass = 0.02;
 	var mass = 2.0;
@@ -196,13 +178,11 @@ Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
 	velArray[ k + 1 ] = vy;
 	velArray[ k + 2 ] = vz;
 	velArray[ k + 3 ] = mass;
-
     }
-
 }
 
 Kessler.prototype.handleResize = function() {
-    Kess.particleUniforms.cameraConstant.value = this.getCameraConstant(this.camera);
+    this.particleUniforms.cameraConstant.value = this.getCameraConstant(this.camera);
 }
 
 Kessler.prototype.getCameraConstant = function( camera ) {
@@ -211,7 +191,7 @@ Kessler.prototype.getCameraConstant = function( camera ) {
 
 Kessler.prototype.update = function()
 {
-    Kess.gpuCompute.compute();
-    Kess.particleUniforms.texturePosition.value = Kess.gpuCompute.getCurrentRenderTarget( Kess.positionVariable ).texture;
-    Kess.particleUniforms.textureVelocity.value = Kess.gpuCompute.getCurrentRenderTarget( Kess.velocityVariable ).texture;
+    this.gpuCompute.compute();
+    this.particleUniforms.texturePosition.value = this.gpuCompute.getCurrentRenderTarget( this.positionVariable ).texture;
+    this.particleUniforms.textureVelocity.value = this.gpuCompute.getCurrentRenderTarget( this.velocityVariable ).texture;
 }
