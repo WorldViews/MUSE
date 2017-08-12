@@ -112,8 +112,8 @@ var SPECS = [
     //VEARTH
     { type: 'Kessler', name: 'kessler' ,
       scale: 1.0, parent: 'station', width: 10,
-      gravityConstant: 0.0001,
-      velocity: 0.0, randVelocity: 0, centralMass: 50
+      gravityConstant: 10.0, height: 2, radius: 15,
+      centralMass: 10, v0: 0.1
     }
 ];
 

@@ -232,21 +232,15 @@ function Kessler(game, options)
 
     var params = {
 	// Can be changed dynamically
-	gravityConstant: 100.0,
+	gravityConstant: 300.0,
 	density: 0.45,
-        
+
 	// Must restart simulation
-	//radius: 300,
-        v0: 10,
-        r0: 0.8,
-	radius: 3,
-	height: 8,
-	exponent: 0.4,
-        centralMass: 20,
-	maxMass: 15.0,
-	velocity: 70,
-	velocityExponent: 0.2,
-	randVelocity: 0.0
+        v0: 0,
+	radius: 10,
+	height: 4,
+        centralMass: 100,
+	satMass: 0.01,
     };
     for (var key in params) {
         if (options[key] != null) {
@@ -352,44 +346,27 @@ Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
     var velArray = textureVelocity.image.data;
     var radius = params.radius;
     var height = params.height;
-    var exponent = params.exponent;
-    var maxMass = params.maxMass * 1024 / this.PARTICLES;
-    var maxVel = params.velocity;
-    var velExponent = params.velocityExponent;
-    var randVel = params.randVelocity;
+    //var maxMass = params.maxMass * 1024 / this.PARTICLES;
+    var satMass = params.satMass;
 
     for ( var k = 0, kl = posArray.length; k < kl; k += 4 ) {
 	// Position
 	var x, y, z, rr, r, r0, theta;
-        r0 = params.r0;
-	do {
-	    //rr = x * x + z * z;
-            r0 = params.r0 + 0.02*Math.random();
-            theta = 2*3.14159*Math.random();
-	    x = r0 * Math.cos(theta);
-	    z = r0 * Math.sin(theta);
-	    //y = 0.000001 * ( Math.random() * 2 - 1 );
-	    y = 0.0 * ( Math.random() * 2 - 1 );
-	    rr = x*x + y*y + z*z;
-            r = Math.sqrt(rr);                           
-	    //} while ( rr > 1 );
-	    //} while ( rr > 1 && r < .8 );
-	} while ( rr > 1 );
-	rr = Math.sqrt( rr );
-	var rExp = radius * Math.pow( rr, exponent );
-	// Velocity
-	var vel = maxVel * Math.pow( rr, velExponent );
+        r0 = radius;
+        //r0 = params.r0 + 0.02*Math.random();
+        theta = 2*3.14159*Math.random();
+	x = r0 * Math.cos(theta);
+	z = r0 * Math.sin(theta);
+	y = height * ( Math.random() * 2 - 1 );
+	rr = x*x + y*y + z*z;
+        r = Math.sqrt(rr);                           
         var v0 = params.v0;
-	var vx = v0 * r0 * -Math.sin(theta);
-	var vz = v0 * r0 * Math.cos(theta);
-	//var vy = 0.000001 * ( Math.random() * 2 - 1 );
+	//var vx = v0 * r0 * -Math.sin(theta);
+	//var vz = v0 * r0 *  Math.cos(theta);
+	var vx = v0 * r * -Math.sin(theta);
+	var vz = v0 * r *  Math.cos(theta);
 	var vy = 0.0 * ( Math.random() * 2 - 1 );
-	x *= rExp;
-	z *= rExp;
-	y = ( Math.random() * 2 - 1 ) * height;
-	//var mass = Math.random() * maxMass + 1;
-	//var mass = 0.02;
-	var mass = 2.0;
+	var mass = satMass;
 
         if (k == 0) {
             x = 0; y = 0; z = 0;
@@ -407,6 +384,28 @@ Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
 	velArray[ k + 2 ] = vz;
 	velArray[ k + 3 ] = mass;
     }
+    this.dump();
+    this.dumpState(posArray, velArray);
+}
+
+Kessler.prototype.dumpState = function(posArray, velArray)
+{
+    console.log("Kessler.state:\n");
+    console.log("  i   mass      x      y      z       vx     vy     vz");
+    var i = 0;
+    for ( var k = 0, kl = posArray.length; k < kl; k += 4 ) {
+        i += 1;
+	var x = posArray[ k + 0 ];
+	var y = posArray[ k + 1 ];
+	var z = posArray[ k + 2 ];
+
+	var vx = velArray[ k + 0 ];
+	var vy = velArray[ k + 1 ];
+	var vz = velArray[ k + 2 ];
+	var mass = velArray[ k + 3 ];
+        console.log(sprintf("%3d %6.1f   %6.3f %6.3f %6.3f   %6.3f %6.3f %6.3f",
+                            i, mass, x, y, z, vx, vy, vz));
+    }    
 }
 
 Kessler.prototype.handleResize = function() {
