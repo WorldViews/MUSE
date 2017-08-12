@@ -55,8 +55,7 @@ SATELLITE_MODEL = [
     }
 ];
 
-var SPECS = [
-    {   type: 'Group', name: 'station'  },
+VENUE = [
     {   type: 'Model', name: 'platform',
         parent: 'station',
         path: 'models/PlayDomeSkp_v1.dae',
@@ -72,9 +71,6 @@ var SPECS = [
         scale: 0.020,
         visible: false
     },
-    //SATELLITE_MODEL,
-    //OBJ_MODEL,
-    //VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
         path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
@@ -91,7 +87,15 @@ var SPECS = [
        radius: 7,
        phiStart: -50, phiLength: 100,
        thetaStart: 65, thetaLength: 20
-    },
+    }
+]
+
+var SPECS = [
+    {   type: 'Group', name: 'station'  },
+    //VENUE,
+    //SATELLITE_MODEL,
+    //OBJ_MODEL,
+    //VID_BUBBLES,
     LIGHTS,
     //{  type: 'Inline',     name: 'debugStuff', children: TEST },
     {  type: 'Dancer', name: 'dancer', visible: false },
@@ -99,14 +103,18 @@ var SPECS = [
        position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
        visible: false
     },
-    {  type: 'SolarSystem' },
-    {  type: 'Stars' },
+    //{  type: 'SolarSystem' },
+    //{  type: 'Stars' },
     //{  type: 'Stats' },
-    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
-    {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
+    //{  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
+    //{  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     //{  type: 'Hurricane', scale: 0.01, parent: 'station' }
     //VEARTH
-    { type: 'Kessler', name: 'kessler' , scale: 1.0, parent: 'station' }
+    { type: 'Kessler', name: 'kessler' ,
+      scale: 1.0, parent: 'station', width: 10,
+      gravityConstant: 0.0001,
+      velocity: 0.0, randVelocity: 0, centralMass: 50
+    }
 ];
 
 CMP_IMAGINARIUM = SPECS;
