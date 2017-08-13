@@ -27,8 +27,10 @@ import { VirtualEarth } from './lib/VirtualEarth';
 import { Kessler } from './KesslerNode';
 
 let {degToRad} = THREE.Math;
-
+let CONFIG = null;
+let SPECS = null;
 let DEFAULT_SPECS = "configs/cmp_imaginarium.js";
+
 function getStartPosition() {
     var lookAt = new THREE.Vector3(0,2,0);
     var start = new THREE.Vector3(4, 2,-5);
@@ -45,16 +47,44 @@ function getStartPosition() {
     return { start, lookAt };
 }
 
+function loadConfig(path)
+{
+    console.log("Loading config file "+path);
+    $.getScript(path)
+        .done(function(script, textStatus) {
+            CONFIG = window.CONFIG;
+            console.log("Loaded CONFIG: ", CONFIG);
+            if (!CONFIG) {
+                SPECS = window.SPECS;
+                console.log("**** No CONFIG defined ... using SPECS");
+                console.log("SPECS", SPECS);
+                CONFIG = {specs: SPECS};
+            }
+            console.log("CONFIG", CONFIG);
+            start(CONFIG);
+        })
+        .fail(function(jqxhr, settings, ex) {
+            console.log("error: ", ex);
+            alert("Cannot load "+path);
+        });
+}
+
 function start(config) {
+    if (config == null && Util.getParameterByName("config")) {
+        var configName = Util.getParameterByName("config");
+        var configPath = "configs/"+configName+".js";
+        loadConfig(configPath);
+        return;
+    }
     config = config || {};
     var specs = config.specs;
 
     console.log(Util);
     if (Util.getParameterByName("specs"))
         specs = Util.getParameterByName("specs");
-    if (Util.getParameterByName("config")) {
-        specs = "configs/"+Util.getParameterByName("config")+".js";
-    }
+    //if (Util.getParameterByName("config")) {
+    //    specs = "configs/"+Util.getParameterByName("config")+".js";
+    //}
     if (!specs)
         specs = DEFAULT_SPECS;
     let vr = config.vr || Util.getParameterByName("vr");
@@ -68,7 +98,10 @@ function start(config) {
         game.body.position.set(pos.start.x, 1.5, pos.start.z);
     } else {
         window.game = new Game('canvas3d');
-        game.addMultiControls();
+        if (config.cameraControls == 'Orbit')
+            game.addOrbitControls();
+        else
+            game.addMultiControls();
         game.camera.position.set(pos.start.x, pos.start.y, pos.start.z);
         game.camera.up = new THREE.Vector3(0,1,0);
         game.camera.lookAt(pos.lookAt);

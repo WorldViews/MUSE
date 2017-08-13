@@ -40,8 +40,8 @@ var VID_BUBBLES = [
 VEARTH = [
     {  type: 'VirtualEarth', name: 'vEarth',
        radius: 1.25, position: [0,1.9,0],
-       satellites: 0,
-       dataViz: 1
+       satellites: 0, satTracks: 1,
+       dataViz: 0
     }
 ];
 
@@ -55,7 +55,7 @@ SATELLITE_MODEL = [
     }
 ];
 
-VENUE = [
+VENUE =  [
     {   type: 'Model', name: 'platform',
         parent: 'station',
         path: 'models/PlayDomeSkp_v1.dae',
@@ -88,14 +88,14 @@ VENUE = [
        phiStart: -50, phiLength: 100,
        thetaStart: 65, thetaLength: 20
     }
-]
+];
 
 var SPECS = [
     {   type: 'Group', name: 'station'  },
-    //VENUE,
     //SATELLITE_MODEL,
     //OBJ_MODEL,
     //VID_BUBBLES,
+    //VENUE,
     LIGHTS,
     //{  type: 'Inline',     name: 'debugStuff', children: TEST },
     {  type: 'Dancer', name: 'dancer', visible: false },
@@ -103,24 +103,13 @@ var SPECS = [
        position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
        visible: false
     },
-    //{  type: 'SolarSystem' },
-    //{  type: 'Stars' },
+    {  type: 'SolarSystem' },
+    {  type: 'Stars' },
     //{  type: 'Stats' },
-    //{  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
-    //{  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
+    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
+    {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     //{  type: 'Hurricane', scale: 0.01, parent: 'station' }
-    //VEARTH
-    { type: 'Kessler', name: 'kessler' ,
-      scale: 1.0, parent: 'station', width: 8,
-      gravityConstant: 3.0, height: 0, radius: 15,
-      centralMass: 10, satMass: 0.0001,
-      v0: 0.1
-    }
+    VEARTH
 ];
-//window.CONFIG = CONFIG;
-CMP_IMAGINARIUM = SPECS;
-CONFIG = {
-    'cameraControls': 'Orbit',
-    'specs': SPECS
-};
 
+CMP_IMAGINARIUM = SPECS;

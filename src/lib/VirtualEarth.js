@@ -1,6 +1,7 @@
 
 import {Game} from '../Game';
 import * as THREE from 'three';
+import {SatTracks} from '../SatTracks'
 
 // convert the positions from a lat, lon to a position on a sphere.
 // http://www.smartjava.org/content/render-open-data-3d-world-globe-threejs
@@ -84,6 +85,7 @@ class Planet {
         this.loaded = false;
         this.satTracker = null;
         this.dataViz = null;
+        this.satTracks = null;
         this.group = new THREE.Group();
         this.group.earth = this;
         var loader = new THREE.TextureLoader();
@@ -111,6 +113,8 @@ class Planet {
             this.satTracker = new SatTracker(this, opts);
         if (opts.dataViz)
             this.dataViz = new DataViz(this, opts);
+        if (opts.satTracks)
+            this.satTracks = new SatTracks();
     }
 
     latLonToVector3(lat, lng, h)
@@ -170,6 +174,8 @@ class Planet {
     }
 
     update() {
+        if (this.satTracks)
+            this.satTracks.update();
         if (this.satTracker)
             this.satTracker.update();
         if (this.dataViz)

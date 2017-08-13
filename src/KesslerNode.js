@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 import {Game} from './Game';
 import {GPUComputationRenderer} from './lib/GPUComputationRenderer';
+import satellite from 'satellite.js';
 
 var computeShaderPositionStr = `
 
@@ -288,10 +289,17 @@ Kessler.prototype.initProtoplanets = function(scene) {
     var positions = new Float32Array( this.PARTICLES * 3 );
     var p = 0;
 
+/*
     for ( var i = 0; i < this.PARTICLES; i++ ) {
 	positions[ p++ ] = ( Math.random() * 2 - 1 ) * this.params.radius;
 	positions[ p++ ] = 0; //( Math.random() * 2 - 1 ) * this.params.radius;
 	positions[ p++ ] = ( Math.random() * 2 - 1 ) * this.params.radius;
+    }
+*/
+    for ( var i = 0; i < this.PARTICLES; i++ ) {
+	positions[ p++ ] = 0;
+	positions[ p++ ] = 0;
+	positions[ p++ ] = 0;
     }
 
     var uvs = new Float32Array( this.PARTICLES * 2 );
@@ -337,6 +345,8 @@ Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
     var params = this.params;
     var posArray = texturePosition.image.data;
     var velArray = textureVelocity.image.data;
+    this.posArray = posArray;
+    this.velArray = velArray;
     var radius = params.radius;
     var height = params.height;
     //var maxMass = params.maxMass * 1024 / this.PARTICLES;
@@ -378,11 +388,13 @@ Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
 	velArray[ k + 3 ] = mass;
     }
     this.dump();
-    this.dumpState(posArray, velArray);
+    this.dumpState();
 }
 
-Kessler.prototype.dumpState = function(posArray, velArray)
+Kessler.prototype.dumpState = function()
 {
+    var posArray = this.posArray;
+    var velArray = this.velArray;
     console.log("Kessler.state:\n");
     console.log("  i    mass       x       y       z        vx      vy      vz");
     var i = 0;
@@ -431,5 +443,59 @@ Game.registerNodeType("Kessler", (game, options) => {
     game.registerController(options.name, kessler);
     return kessler;
 });
+
+function showPosVel(pv)
+{
+    //console.log("positionAndVelocity: "+JSON.stringify(pv));
+    var p = pv.position;
+    var v = pv.velocity;
+    console.log(sprintf("%10.2f %10.2f %10.2f   %10.2f %10.2f %10.2f",
+                        p.x, p.y, p.z, v.x, v.y, v.z));
+    //console.log("pos: "+pv.position+"   vel: "+pv.velocity);
+}
+
+function orbitTest()
+{
+/*
+    var tle = '0 LEMUR-2 JEROEN\n1 40934U 15052E   15306.10048119  .00001740  00000-0  15647-3 0  9990\n2 40934   6.0033 141.2190 0010344 133.6141 226.4604 14.76056230  5130';
+    console.log("tle:" + tle);
+    val = jspredict.observe(tle, null);
+    console.log("val:", val);
+*/
+    // Sample TLE 
+    var tleLine1 = '1 25544U 98067A   13149.87225694  .00009369  00000-0  16828-3 0  9031',
+        tleLine2 = '2 25544 051.6485 199.1576 0010128 012.7275 352.5669 15.50581403831869';
+ 
+    // Initialize a satellite record 
+    var satrec = satellite.twoline2satrec(tleLine1, tleLine2);
+    console.log("satrec:", satrec);
+
+    //  Propagate satellite using time since epoch (in minutes). 
+    var timeSinceTleEpochMinutes = 1000;
+    var positionAndVelocity = satellite.sgp4(satrec, timeSinceTleEpochMinutes);
+    showPosVel(positionAndVelocity);
+
+    //  Or you can use a JavaScript Date
+    var positionAndVelocity = satellite.propagate(satrec, new Date());
+    showPosVel(positionAndVelocity);
+
+    var now = new Date();
+    var t = now.getTime()/1000.0;
+    for (var i=0; i<100; i++) {
+        t += 60;
+        var pv = satellite.propagate(satrec, new Date(1000*t));
+        showPosVel(pv);
+    }
+    
+    // The position_velocity result is a key-value pair of ECI coordinates. 
+    // These are the base results from which all other coordinates are derived. 
+    var positionEci = positionAndVelocity.position,
+    velocityEci = positionAndVelocity.velocity;
+ 
+    // Set the Observer at 122.03 West by 36.96 North, in RADIANS 
+}
+
+window.orbitTest = orbitTest;
+window.satellite = satellite;
 
 export {Kessler};
