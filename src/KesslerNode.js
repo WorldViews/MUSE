@@ -33,184 +33,177 @@ void main() {
 
 var computeShaderVelocityStr = `
 
-			// For PI declaration:
-			#include <common>
+// For PI declaration:
+#include <common>
 
-			#define delta ( 1.0 / 60.0 )
+#define delta ( 1.0 / 60.0 )
 
-			uniform float gravityConstant;
-			uniform float density;
+uniform float gravityConstant;
+uniform float density;
 
-			const float width = resolution.x;
-			const float height = resolution.y;
+const float width = resolution.x;
+const float height = resolution.y;
 
-			float radiusFromMass( float mass ) {
-				// Calculate radius of a sphere from mass and density
-				return pow( ( 3.0 / ( 4.0 * PI ) ) * mass / density, 1.0 / 3.0 );
-			}
+float radiusFromMass( float mass ) {
+	// Calculate radius of a sphere from mass and density
+	return pow( ( 3.0 / ( 4.0 * PI ) ) * mass / density, 1.0 / 3.0 );
+}
 
-			void main()	{
+void main()	{
 
-				vec2 uv = gl_FragCoord.xy / resolution.xy;
-				float idParticle = uv.y * resolution.x + uv.x;
+	vec2 uv = gl_FragCoord.xy / resolution.xy;
+	float idParticle = uv.y * resolution.x + uv.x;
 
-				vec4 tmpPos = texture2D( texturePosition, uv );
-				vec3 pos = tmpPos.xyz;
+	vec4 tmpPos = texture2D( texturePosition, uv );
+	vec3 pos = tmpPos.xyz;
 
-				vec4 tmpVel = texture2D( textureVelocity, uv );
-				vec3 vel = tmpVel.xyz;
-				float mass = tmpVel.w;
+	vec4 tmpVel = texture2D( textureVelocity, uv );
+	vec3 vel = tmpVel.xyz;
+	float mass = tmpVel.w;
 
-				if ( mass > 0.0 ) {
+	if ( mass > 0.0 ) {
 
-					float radius = radiusFromMass( mass );
+		float radius = radiusFromMass( mass );
 
-					vec3 acceleration = vec3( 0.0 );
+		vec3 acceleration = vec3( 0.0 );
 
-					// Gravity interaction
-					for ( float y = 0.0; y < height; y++ ) {
+		// Gravity interaction
+		for ( float y = 0.0; y < height; y++ ) {
 
-						for ( float x = 0.0; x < width; x++ ) {
+			for ( float x = 0.0; x < width; x++ ) {
 
-							vec2 secondParticleCoords = vec2( x + 0.5, y + 0.5 ) / resolution.xy;
-							vec3 pos2 = texture2D( texturePosition, secondParticleCoords ).xyz;
-							vec4 velTemp2 = texture2D( textureVelocity, secondParticleCoords );
-							vec3 vel2 = velTemp2.xyz;
-							float mass2 = velTemp2.w;
+				vec2 secondParticleCoords = vec2( x + 0.5, y + 0.5 ) / resolution.xy;
+				vec3 pos2 = texture2D( texturePosition, secondParticleCoords ).xyz;
+				vec4 velTemp2 = texture2D( textureVelocity, secondParticleCoords );
+				vec3 vel2 = velTemp2.xyz;
+				float mass2 = velTemp2.w;
 
-							float idParticle2 = secondParticleCoords.y * resolution.x + secondParticleCoords.x;
+				float idParticle2 = secondParticleCoords.y * resolution.x + secondParticleCoords.x;
 
-							if ( idParticle == idParticle2 ) {
-								continue;
-							}
-
-							if ( mass2 == 0.0 ) {
-								continue;
-							}
-
-							vec3 dPos = pos2 - pos;
-							float distance = length( dPos );
-							float radius2 = radiusFromMass( mass2 );
-
-							if ( distance == 0.0 ) {
-								continue;
-							}
-
-							// Checks collision
-							if (distance < 0.1*(radius + radius2)) {
-
-								if ( idParticle < idParticle2 ) {
-
-									// This particle is aggregated by the other
-									vel = ( vel * mass + vel2 * mass2 ) / ( mass + mass2 );
-									mass += mass2;
-									radius = radiusFromMass( mass );
-
-								}
-								else {
-
-									// This particle dies
-									mass = 0.0;
-									radius = 0.0;
-									vel = vec3( 0.0 );
-									break;
-
-								}
-
-							}
-							float distanceSq = distance * distance;
-
-							float gravityField = gravityConstant * mass2 / distanceSq;
-
-							gravityField = min( gravityField, 1000.0 );
-
-							acceleration += gravityField * normalize( dPos );
-
-						}
-
-						if ( mass == 0.0 ) {
-							break;
-						}
-					}
-
-					// Dynamics
-					vel += delta * acceleration;
-
+				if ( idParticle == idParticle2 ) {
+					continue;
 				}
 
-				gl_FragColor = vec4( vel, mass );
+				if ( mass2 == 0.0 ) {
+					continue;
+				}
+
+				vec3 dPos = pos2 - pos;
+				float distance = length( dPos );
+				float radius2 = radiusFromMass( mass2 );
+
+				if ( distance == 0.0 ) {
+					continue;
+				}
+
+				// Checks collision
+				if (distance < 0.1*(radius + radius2)) {
+
+					if ( idParticle < idParticle2 ) {
+
+						// This particle is aggregated by the other
+						vel = ( vel * mass + vel2 * mass2 ) / ( mass + mass2 );
+						mass += mass2;
+						radius = radiusFromMass( mass );
+					}
+					else {
+
+						// This particle dies
+						mass = 0.0;
+						radius = 0.0;
+						vel = vec3( 0.0 );
+						break;
+					}
+
+				}
+				float distanceSq = distance * distance;
+
+				float gravityField = gravityConstant * mass2 / distanceSq;
+
+				gravityField = min( gravityField, 1000.0 );
+
+				acceleration += gravityField * normalize( dPos );
 
 			}
+
+			if ( mass == 0.0 ) {
+				break;
+			}
+		}
+
+		// Dynamics
+		vel += delta * acceleration;
+
+	}
+
+	gl_FragColor = vec4( vel, mass );
+
+}
 
 `
 
 var particleVertexShaderStr = `
 
-			// For PI declaration:
-			#include <common>
+// For PI declaration:
+#include <common>
 
-			uniform sampler2D texturePosition;
-			uniform sampler2D textureVelocity;
+uniform sampler2D texturePosition;
+uniform sampler2D textureVelocity;
 
-			uniform float cameraConstant;
-			uniform float density;
+uniform float cameraConstant;
+uniform float density;
 
-			varying vec4 vColor;
+varying vec4 vColor;
 
-			float radiusFromMass( float mass ) {
-				// Calculate radius of a sphere from mass and density
-				return pow( ( 3.0 / ( 4.0 * PI ) ) * mass / density, 1.0 / 3.0 );
-			}
-
-
-			void main() {
+float radiusFromMass( float mass ) {
+	// Calculate radius of a sphere from mass and density
+	return pow( ( 3.0 / ( 4.0 * PI ) ) * mass / density, 1.0 / 3.0 );
+}
 
 
-				vec4 posTemp = texture2D( texturePosition, uv );
-				vec3 pos = posTemp.xyz;
+void main() {
 
-				vec4 velTemp = texture2D( textureVelocity, uv );
-				vec3 vel = velTemp.xyz;
-				float mass = velTemp.w;
 
-				vColor = vec4( 1.0, mass / 250.0, 0.0, 1.0 );
+	vec4 posTemp = texture2D( texturePosition, uv );
+	vec3 pos = posTemp.xyz;
 
-				vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
+	vec4 velTemp = texture2D( textureVelocity, uv );
+	vec3 vel = velTemp.xyz;
+	float mass = velTemp.w;
 
-				// Calculate radius of a sphere from mass and density
-				//float radius = pow( ( 3.0 / ( 4.0 * PI ) ) * mass / density, 1.0 / 3.0 );
-				float radius = radiusFromMass( mass );
+	vColor = vec4( 1.0, mass / 250.0, 0.0, 1.0 );
 
-				// Apparent size in pixels
-				if ( mass == 0.0 ) {
-					gl_PointSize = 0.0;
-				}
-				else {
-					gl_PointSize = radius * cameraConstant / ( - mvPosition.z );
-				}
+	vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
 
-				gl_Position = projectionMatrix * mvPosition;
+	// Calculate radius of a sphere from mass and density
+	//float radius = pow( ( 3.0 / ( 4.0 * PI ) ) * mass / density, 1.0 / 3.0 );
+	float radius = radiusFromMass( mass );
 
-			}
+	// Apparent size in pixels
+	if ( mass == 0.0 ) {
+		gl_PointSize = 0.0;
+	}
+	else {
+		gl_PointSize = radius * cameraConstant / ( - mvPosition.z );
+	}
 
+	gl_Position = projectionMatrix * mvPosition;
+}
 `
 
 
 var particleFragmentShaderStr = `
 
-			varying vec4 vColor;
+varying vec4 vColor;
 
-			void main() {
+void main() {
 
-				float f = length( gl_PointCoord - vec2( 0.5, 0.5 ) );
-				if ( f > 0.5 ) {
-					discard;
-				}
-				gl_FragColor = vColor;
-
-			}
-
-
+	float f = length( gl_PointCoord - vec2( 0.5, 0.5 ) );
+	if ( f > 0.5 ) {
+		discard;
+	}
+	gl_FragColor = vColor;
+}
 `
 
 
@@ -391,7 +384,7 @@ Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
 Kessler.prototype.dumpState = function(posArray, velArray)
 {
     console.log("Kessler.state:\n");
-    console.log("  i   mass      x      y      z       vx     vy     vz");
+    console.log("  i    mass       x       y       z        vx      vy      vz");
     var i = 0;
     for ( var k = 0, kl = posArray.length; k < kl; k += 4 ) {
         i += 1;
@@ -403,7 +396,7 @@ Kessler.prototype.dumpState = function(posArray, velArray)
 	var vy = velArray[ k + 1 ];
 	var vz = velArray[ k + 2 ];
 	var mass = velArray[ k + 3 ];
-        console.log(sprintf("%3d %6.1f   %6.3f %6.3f %6.3f   %6.3f %6.3f %6.3f",
+        console.log(sprintf("%3d %7.1f   %7.3f %7.3f %7.3f   %7.3f %7.3f %7.3f",
                             i, mass, x, y, z, vx, vy, vz));
     }    
 }
