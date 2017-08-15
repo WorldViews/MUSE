@@ -75,6 +75,7 @@ class Planet {
 
     constructor(game, opts) {
         console.log("Planet this: "+this);
+        this.game = game;
         var radius = opts.radius || 2;
         var inst = this;
         this.name = "";
@@ -114,7 +115,7 @@ class Planet {
         if (opts.dataViz)
             this.dataViz = new DataViz(this, opts);
         if (opts.satTracks)
-            this.satTracks = new SatTracks();
+            this.satTracks = new SatTracks(this.game, {});
     }
 
     latLonToVector3(lat, lng, h)
