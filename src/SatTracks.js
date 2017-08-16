@@ -4,6 +4,8 @@ import { sprintf } from "sprintf-js";
 import {Game} from './Game';
 import satellite from 'satellite.js';
 
+function getClockTime() { return new Date().getTime()/1000.0; }
+
 var TLE = ['1 25544U 98067A   13149.87225694  .00009369  00000-0  16828-3 0  9031',
                    '2 25544 051.6485 199.1576 0010128 012.7275 352.5669 15.50581403831869'];
 var SAT_LIST = [
@@ -11,6 +13,38 @@ var SAT_LIST = [
     {tle: TLE, delay: 500.0},
     {tle: TLE, delay: 1000.0},
 ];
+
+var DATA_URLS = [
+    "/data/satellites/geostationary.txt",
+    "/data/satellites/iridium-33-debris.txt",
+    "/data/satellites/1999-025.txt"
+];
+
+var DATA_SETS = [
+    "geostationary",
+    "1999-025",
+    "2012-044",
+    "cubesat",
+    "glo-ops",
+    "goes",
+    "gps-ops",
+    "intelsat",
+    "iridium",
+    "iridium-33-debri",
+    "iridium-NEXT",
+    "noaa",
+    "orbcomm",
+    "resource",
+    "ses",
+    "stations",
+    "weather"
+];
+
+var TEST_DATA_SETS = [
+    "geostationary",
+];
+
+var DATA_URL_PREFIX = "/data/satellites/";
 
 // return random numver in [low,high]
 function uniform(low,high)
@@ -39,13 +73,18 @@ class SatTracks {
         this.delays = [];
         this.satList = SAT_LIST;
         this.initGraphics(opts);
+        this._playSpeed = 60.0;
+        this.setPlayTime(getClockTime());
         var inst = this;
         var dataUrls = [
             "/data/satellites/geostationary.txt",
             "/data/satellites/iridium-33-debris.txt"
         ];
+        dataUrls = DATA_SETS.map(name => DATA_URL_PREFIX+name+".txt");
+        console.log("dataUrls:", dataUrls);
         //var dataUrl = "https://www.celestrak.com/NORAD/elements/geo.txt"
         dataUrls.forEach(url => inst.loadSats(url));
+        //handleSatsData();
         setTimeout(() => inst.handleSatsData(), 1000);
     }
 
@@ -63,7 +102,7 @@ class SatTracks {
     }
     
     initGraphics(opts) {
-        var size = opts.size || 5;
+        var size = opts.size || 2;
         var color = opts.color || 0xff0000;
         var opacity = opts.opacity || 0.3;
         this.geometry = new THREE.Geometry();
@@ -127,13 +166,30 @@ class SatTracks {
         this.particles = new THREE.Points( this.geometry, this.material );
         this.game.addToGame(this.particles);
     }
+
+    setPlayTime(t) {
+        this._prevPlayTime = t;
+        this._prevClockTime = getClockTime();
+    }
+
+    getPlayTime(t) {
+        var t = getClockTime();
+        var dt = t - this._prevClockTime;
+        this._prevPlayTime += dt*this._playSpeed;
+        this._prevClockTime = t;
+        return this._prevPlayTime;
+    }
+
+    setPlaySpeed(s) {
+        this.getPlayTime();
+        this._playSpeed = s;
+    }
     
     updateSats() {
-        this.t += 60;
+        this.t = this.getPlayTime();
         for (var i=0; i<this.satrecs.length; i++) {
             var satrec = this.satrecs[i];
-            var delay = this.delays[i];
-            var pv = satellite.propagate(satrec, new Date(1000*(this.t + delay)));
+            var pv = satellite.propagate(satrec, new Date(1000*(this.t)));
             //showPosVel(pv, this.t);
             var p = pv.position;
             var v3 = this.geometry.vertices[i];
