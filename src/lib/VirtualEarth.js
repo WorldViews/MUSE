@@ -84,7 +84,6 @@ class Planet {
         console.log("*** Planet "+this.name +" "+JSON.stringify(opts));
         this.radius = radius;
         this.loaded = false;
-        this.satTracker = null;
         this.dataViz = null;
         this.satTracks = null;
         this.group = new THREE.Group();
@@ -110,8 +109,6 @@ class Planet {
             inst.group.add(inst.mesh);
             inst.loaded = true;
         }
-        if (opts.satellites)
-            this.satTracker = new SatTracker(this, opts);
         if (opts.dataViz)
             this.dataViz = new DataViz(this, opts);
         if (opts.satTracks)
@@ -177,8 +174,6 @@ class Planet {
     update() {
         if (this.satTracks)
             this.satTracks.update();
-        if (this.satTracker)
-            this.satTracker.update();
         if (this.dataViz)
             this.dataViz.update();
         /*
@@ -246,12 +241,13 @@ class DataViz {
     }
 
     addEnergy(opts) {
+        var size = 6;
         var material, particles;
-        var res = this.earth.addBlobs({n: 5000, size: 5, color: 0xFF0000, opacity: 1,
+        var res = this.earth.addBlobs({n: 5000, size: size, color: 0xFF0000, opacity: 1,
             rMin: this.rMin, rMax: this.rMax});
         this.energInMat = res.material;
         this.eInBlobs = res.particles;
-        var res = this.earth.addBlobs({n: 5000, size: 5, color: 0xFFFF00, opacity: 1,
+        var res = this.earth.addBlobs({n: 5000, size: size, color: 0xFFFF00, opacity: 1,
             rMin: this.rMin, rMax: this.rMax});
         this.energOutMat = res.material;
         this.eOutBlobs = res.particles;
@@ -313,36 +309,6 @@ class DataViz {
             vertices[i].multiplyScalar(sfun(d2));
         }
         geom.verticesNeedUpdate = true;
-    }
-}
-
-class SatTracker {
-    constructor(earth, opts) {
-        opts = opts || {};
-        this.earth = earth;
-        this.satMat = null;
-        this.satHue = 0;
-        this.satPoints = null;
-        this.addSatellites(opts);
-    }
-
-    addSatellites(opts) {
-        var material, particles;
-        var n = opts.satellites || 500;
-        var res = this.earth.addBlobs(opts);
-        this.satMat = res.material;
-        this.satPoints = res.particles;
-    }
-
-    update() {
-        if (this.satPoints)
-            this.satPoints.rotation.y += 0.01;
-        if (this.satMat) {
-            this.satHue += 0.001;
-            if (this.satHue > 1)
-                this.satHue = 0;
-	    this.satMat.color.setHSL( this.satHue, 0.6, 0.7 );
-        }
     }
 }
 

@@ -73,6 +73,7 @@ class SatTracks {
         this.delays = [];
         this.satList = SAT_LIST;
         this.initGraphics(opts);
+        this.rf = 0.00025;
         this._playSpeed = 60.0;
         this.setPlayTime(getClockTime());
         var inst = this;
@@ -194,8 +195,8 @@ class SatTracks {
             var p = pv.position;
             var v3 = this.geometry.vertices[i];
             v3.set(p.x, p.y, p.z);
-            v3.normalize();
-            v3.multiplyScalar(3);
+            //v3.normalize();
+            v3.multiplyScalar(this.rf);
         }
         this.geometry.verticesNeedUpdate = true;
     }
