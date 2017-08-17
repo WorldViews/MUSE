@@ -82,9 +82,6 @@ function start(config) {
     console.log(Util);
     if (Util.getParameterByName("specs"))
         specs = Util.getParameterByName("specs");
-    //if (Util.getParameterByName("config")) {
-    //    specs = "configs/"+Util.getParameterByName("config")+".js";
-    //}
     if (!specs)
         specs = DEFAULT_SPECS;
     let vr = config.vr || Util.getParameterByName("vr");

@@ -49,7 +49,6 @@ class CMPProgram extends ProgramControl {
         game.gss = new GSS.SpreadSheet();
         var inst = this;
         this.duration = 32*60;
-        //game.controllers.ui.registerCallback("...", () => inst.dots());
     }
 
     dots() {
@@ -112,11 +111,13 @@ class CMPProgram extends ProgramControl {
         }
         var dur = this.duration;
     	let value = (t/(0.0+dur));
-        try {
-	    game.controllers.ui.slider.value = value;
-        }
-        catch (e) {
-	    console.log("exception setting slider");
+        if (game.controllers.ui && game.controllers.ui.slider) {
+            try {
+	        game.controllers.ui.slider.value = value;
+            }
+            catch (e) {
+	        console.log("exception setting slider");
+            }
         }
         //console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
         try {

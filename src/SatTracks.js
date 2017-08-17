@@ -67,13 +67,15 @@ function showPosVel(pv, t)
 class SatTracks {
     constructor(game, opts) {
         opts = opts || {};
+        this.radiusVEarth = opts.radius || 1.0;
+        this.opts = opts;
         this.game = game;
         this.t = new Date().getTime()/1000.0;
         this.satrecs = [];
         this.delays = [];
         this.satList = SAT_LIST;
         this.initGraphics(opts);
-        this.rf = 0.00025;
+        this.radiusEarthKm = 6378.1;
         this._playSpeed = 60.0;
         this.setPlayTime(getClockTime());
         var inst = this;
@@ -165,7 +167,8 @@ class SatTracks {
                 parent.remove(this.particles);
         }
         this.particles = new THREE.Points( this.geometry, this.material );
-        this.game.addToGame(this.particles);
+        //this.game.addToGame(this.particles, 'satellites', 'vEarth');
+        this.game.addToGame(this.particles, 'satellites', this.opts.parent);
     }
 
     setPlayTime(t) {
@@ -194,9 +197,9 @@ class SatTracks {
             //showPosVel(pv, this.t);
             var p = pv.position;
             var v3 = this.geometry.vertices[i];
-            v3.set(p.x, p.y, p.z);
+            v3.set(p.x, p.z, -p.y);
             //v3.normalize();
-            v3.multiplyScalar(this.rf);
+            v3.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
         }
         this.geometry.verticesNeedUpdate = true;
     }

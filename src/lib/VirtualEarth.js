@@ -112,7 +112,7 @@ class Planet {
         if (opts.dataViz)
             this.dataViz = new DataViz(this, opts);
         if (opts.satTracks)
-            this.satTracks = new SatTracks(this.game, {});
+            this.satTracks = new SatTracks(this.game, {radius: this.radius, parent:opts.name});
     }
 
     latLonToVector3(lat, lng, h)
