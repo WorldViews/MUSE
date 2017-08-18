@@ -13,8 +13,10 @@ function addLight(game, spec)
         sphere = new THREE.SphereGeometry( 1, 16, 8 );
     }
     var color = spec.color || 0xffffff;
-    let distance = spec.distance || 50;
-    let light = new THREE.PointLight(color, 2, distance);
+    var distance = spec.distance || 50.0;
+    var intensity = spec.intensity || 2.0;
+    var decay = spec.decay || 1.0;
+    let light = new THREE.PointLight(color, intensity, distance, decay);
     var g = new THREE.Group();
     if (spec.name)
         g.name = spec.name;
