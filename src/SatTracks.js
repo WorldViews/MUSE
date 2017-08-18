@@ -44,7 +44,7 @@ var TEST_DATA_SETS = [
     "geostationary",
 ];
 
-var DATA_URL_PREFIX = "/data/satellites/";
+var DATA_URL_PREFIX = "../data/satellites/";
 
 // return random numver in [low,high]
 function uniform(low,high)
