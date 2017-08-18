@@ -9,9 +9,9 @@ function getClockTime() { return new Date().getTime()/1000.0; }
 var TLE = ['1 25544U 98067A   13149.87225694  .00009369  00000-0  16828-3 0  9031',
                    '2 25544 051.6485 199.1576 0010128 012.7275 352.5669 15.50581403831869'];
 var SAT_LIST = [
-    {tle: TLE, delay: 100.0},
-    {tle: TLE, delay: 500.0},
-    {tle: TLE, delay: 1000.0},
+    {tle: TLE},
+    {tle: TLE},
+    {tle: TLE}
 ];
 
 var DATA_URLS = [
@@ -30,7 +30,7 @@ var DATA_SETS = [
     "gps-ops",
     "intelsat",
     "iridium",
-    "iridium-33-debri",
+    "iridium-33-debris",
     "iridium-NEXT",
     "noaa",
     "orbcomm",
@@ -72,7 +72,6 @@ class SatTracks {
         this.game = game;
         this.t = new Date().getTime()/1000.0;
         this.satrecs = [];
-        this.delays = [];
         this.satList = SAT_LIST;
         this.initGraphics(opts);
         this.radiusEarthKm = 6378.1;
@@ -96,7 +95,7 @@ class SatTracks {
         console.log("Getting Satelline data file "+url);
         $.get(url)
             .done(function(data, status) {
-                console.log("loaded:\n"+data);
+                //console.log("loaded:\n"+data);
                 inst.handleSatsData(data);
             })
             .fail(function(jqxhr, settings, ex) {
@@ -128,33 +127,34 @@ class SatTracks {
         //console.log("lines:", lines);
         var n = lines.length;
         var m = Math.floor(n/3);
-        console.log("n: "+n+"   m: "+m);
+        //console.log("n: "+n+"   m: "+m);
         var satList = [];
         for (var i=0; i<m; i++) {
             var name = lines[3*i].trim();
             var tle = [lines[3*i+1], lines[3*i+2]];
-            console.log("name: "+name);
-            console.log("tle: "+tle+"\n");
+            //console.log("name: "+name);
+            //console.log("tle: "+tle+"\n");
             satList.push({name: name, tle: tle});
         };
         this.addSats(satList);
     }
     
     addSats(satList) {
+        var now = new Date();
         satList.forEach(sat => {
             var tle = sat.tle;
-            var delay = sat.delay || 0.0;
             var satrec = satellite.twoline2satrec(tle[0], tle[1]);
-            console.log("name: "+sat.name);
-            console.log("tle-1: "+tle[0]);
-            console.log("tle-2: "+tle[1]);
-            console.log("satrec:", satrec);
+            if (0) {
+                console.log("name: "+sat.name);
+                console.log("tle-1: "+tle[0]);
+                console.log("tle-2: "+tle[1]);
+                console.log("satrec:", satrec);
+            }
             this.satrecs.push(satrec);
-            this.delays.push(delay);
             this.geometry.vertices.push(new THREE.Vector3());
             //  Or you can use a JavaScript Date
-            var pv = satellite.propagate(satrec, new Date());
-            showPosVel(pv);
+            var pv = satellite.propagate(satrec, now);
+            //showPosVel(pv);
         });
         //this.particles = new THREE.Points( this.geometry, this.material );
         //this.game.addToGame(this.particles);
@@ -172,6 +172,7 @@ class SatTracks {
     }
 
     setPlayTime(t) {
+        console.log("SatTracks.setPlayTime "+t);
         this._prevPlayTime = t;
         this._prevClockTime = getClockTime();
     }

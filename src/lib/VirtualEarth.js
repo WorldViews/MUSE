@@ -75,6 +75,7 @@ class Planet {
 
     constructor(game, opts) {
         console.log("Planet this: "+this);
+        this.startTime = new Date().getTime()/1000.0;
         this.game = game;
         var radius = opts.radius || 2;
         var inst = this;
@@ -200,6 +201,25 @@ class Planet {
             //sat.rotation.set(phi, theta, 0, "YXZ");
         });
     }
+
+    pause() {
+        if (this.satTracks)
+            this.satTracks.pause();
+    }
+    
+    play() {
+        if (this.satTracks)
+            this.satTracks.play();
+    }
+    
+    setPlayTime(t) {
+        console.log("VirtualEarth.setPlayTime "+t);
+        if (this.satTracks) {
+            var st = this.startTime + 10*t;
+            this.satTracks.setPlayTime(st);
+        }
+    }
+    
 };
 
 class DataViz {
@@ -329,6 +349,7 @@ function addVirtualEarth(game, opts)
     game.setFromProps(ve.group, opts);
     game.addToGame(ve.group, opts.name, opts.parent);
     game.registerController(opts.name, ve);
+    game.registerPlayer(ve);
     return ve;
 }
 
