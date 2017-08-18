@@ -214,6 +214,27 @@ class SatTracks {
         this.getPlayTime();
         this._playSpeed = s;
     }
+
+    checkProximities() {
+        var v = this.geometry.vertices;
+        var d2min = 1000000;
+        var imin = null;
+        var jmin = null;
+        for (var i=0; i<v.length; i++) {
+            var vi = v[i];
+            for (var j=0; j<i; j++) {
+                var d2 = vi.distanceToSquared(v[j]);
+                if (d2 == 0.0)
+                    break;
+                if (d2 < d2min) {
+                    d2min = d2;
+                    imin = i;
+                    jmin = j;
+                }
+            }
+        }
+        console.log("d2min: "+d2min+"  i: "+i+"  j: "+j);
+    }
     
     updateSats() {
         this.t = this.getPlayTime();
@@ -225,6 +246,7 @@ class SatTracks {
             console.log("Inconsisitency in vertices for satellites");
         }
         var i=0;
+        //this.checkProximities();
         for (var satName in this.sats) {
             var sat = this.sats[satName];
             var satrec = sat.satrec;
