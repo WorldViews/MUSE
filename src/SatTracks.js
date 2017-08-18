@@ -13,6 +13,7 @@ var SAT_LIST = [
     {tle: TLE},
     {tle: TLE}
 ];
+SAT_LIST = [];
 
 var DATA_URLS = [
     "/data/satellites/geostationary.txt",
@@ -71,8 +72,8 @@ class SatTracks {
         this.opts = opts;
         this.game = game;
         this.t = new Date().getTime()/1000.0;
-        this.satrecs = [];
-        this.satList = SAT_LIST;
+        //this.satrecs = [];
+        this.sats = {};
         this.initGraphics(opts);
         this.radiusEarthKm = 6378.1;
         this._playSpeed = 60.0;
@@ -82,21 +83,26 @@ class SatTracks {
             "/data/satellites/geostationary.txt",
             "/data/satellites/iridium-33-debris.txt"
         ];
+        /*
         dataUrls = DATA_SETS.map(name => DATA_URL_PREFIX+name+".txt");
         console.log("dataUrls:", dataUrls);
         //var dataUrl = "https://www.celestrak.com/NORAD/elements/geo.txt"
         dataUrls.forEach(url => inst.loadSats(url));
         //handleSatsData();
-        setTimeout(() => inst.handleSatsData(), 1000);
+        */
+        DATA_SETS.forEach(name => inst.loadSats(name));
+        //this.handleSatsData();
+        //setTimeout(() => inst.handleSatsData(), 1000);
     }
 
-    loadSats(url) {
+    loadSats(dataSetName) {
+        var url = DATA_URL_PREFIX+dataSetName+".txt";
+        console.log("Getting Satellite data for "+name+" url:"+url);
         var inst = this;
-        console.log("Getting Satelline data file "+url);
         $.get(url)
             .done(function(data, status) {
                 //console.log("loaded:\n"+data);
-                inst.handleSatsData(data);
+                inst.handleSatsData(data, dataSetName, url);
             })
             .fail(function(jqxhr, settings, ex) {
                 console.log("error: ", ex);
@@ -108,10 +114,11 @@ class SatTracks {
         var color = opts.color || 0xff0000;
         var opacity = opts.opacity || 0.3;
         this.geometry = new THREE.Geometry();
-        this.satrecs.forEach(sr => {
+        //this.satrecs.forEach(sr => {
+        for (var key in this.sats) {
+            var satrec = this.sats[key].satrec;
             this.geometry.vertices.push(new THREE.Vector3());
-        });
-        
+        };
         this.material = new THREE.PointsMaterial(
             { size: size, sizeAttenuation: false,
               color: color, opacity: 0.9, alphaTest: 0.1, transparent: true } );
@@ -120,7 +127,7 @@ class SatTracks {
         //this.game.addToGame(this.particles);
     }
     
-    handleSatsData(data) {
+    handleSatsData(data, dataSetName, url) {
         data = data || defaultSatData;
         var lines = data.split('\n');
         lines = lines.map(s => s.trim());
@@ -134,25 +141,44 @@ class SatTracks {
             var tle = [lines[3*i+1], lines[3*i+2]];
             //console.log("name: "+name);
             //console.log("tle: "+tle+"\n");
-            satList.push({name: name, tle: tle});
+            satList.push({name: name, tle: tle, dataSet: dataSetName});
         };
         this.addSats(satList);
     }
+
+    getUniqueSatName(baseName) {
+        var i=1;
+        var name = baseName;
+        while (this.sats[name] != null) {
+            name = baseName+"_"+i;
+            i += 1;
+        }
+        return name;
+    }
     
-    addSats(satList) {
+    addSats(sats) {
         var now = new Date();
-        satList.forEach(sat => {
+        sats.forEach(sat => {
             var tle = sat.tle;
-            var satrec = satellite.twoline2satrec(tle[0], tle[1]);
             if (0) {
                 console.log("name: "+sat.name);
                 console.log("tle-1: "+tle[0]);
                 console.log("tle-2: "+tle[1]);
-                console.log("satrec:", satrec);
             }
-            this.satrecs.push(satrec);
-            this.geometry.vertices.push(new THREE.Vector3());
-            //  Or you can use a JavaScript Date
+            var name = sat.name;
+            if (this.sats[name]) {
+                //console.log("***** Warning -- replacing record for satellite "+name);
+                //console.log(" prev dataSet "+this.sats[name].dataSet);
+                //console.log(" new  dataSet "+sat.dataSet);
+                name = this.getUniqueSatName(name);
+                //console.log("using new name "+name);
+            }
+            if (!this.sats[name]) {
+                this.geometry.vertices.push(new THREE.Vector3());
+            }                
+            this.sats[name] = sat;
+            var satrec = satellite.twoline2satrec(tle[0], tle[1]);
+            sat.satrec = satrec;
             var pv = satellite.propagate(satrec, now);
             //showPosVel(pv);
         });
@@ -167,7 +193,6 @@ class SatTracks {
                 parent.remove(this.particles);
         }
         this.particles = new THREE.Points( this.geometry, this.material );
-        //this.game.addToGame(this.particles, 'satellites', 'vEarth');
         this.game.addToGame(this.particles, 'satellites', this.opts.parent);
     }
 
@@ -192,15 +217,25 @@ class SatTracks {
     
     updateSats() {
         this.t = this.getPlayTime();
-        for (var i=0; i<this.satrecs.length; i++) {
-            var satrec = this.satrecs[i];
-            var pv = satellite.propagate(satrec, new Date(1000*(this.t)));
+        var time = new Date(1000*this.t);
+        //var nsats = this.satrecs.length;
+        var n = Object.keys(this.sats).length;
+        var nv = this.geometry.vertices.length;
+        if (n != nv) {
+            console.log("Inconsisitency in vertices for satellites");
+        }
+        var i=0;
+        for (var satName in this.sats) {
+            var sat = this.sats[satName];
+            var satrec = sat.satrec;
+            var pv = satellite.propagate(satrec, time);
             //showPosVel(pv, this.t);
             var p = pv.position;
             var v3 = this.geometry.vertices[i];
             v3.set(p.x, p.z, -p.y);
             //v3.normalize();
             v3.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
+            i++;
         }
         this.geometry.verticesNeedUpdate = true;
     }
