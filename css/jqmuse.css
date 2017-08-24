@@ -1,0 +1,22 @@
+
+#uiToggle { color: #ffffff; align: left; }
+
+#uiDiv {
+    position: absolute; left: 10px; top: 10px;
+    text-align:left;
+    //background-color: #ffffff;
+    color: #ffffff;
+    width: 95%;
+    z-index: 10;
+}
+
+#uiPanel {
+    position: absolute; left: 30px; top: 40px;
+    text-align:left;
+    background: rgba(5,5,60,0.6);
+}
+
+#uiTimeSlider {
+    position: absolute; left: 30px; top: 0px;
+    width: 90%;
+}

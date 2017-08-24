@@ -3,9 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-
-    <title>Climate Music Experience</title>
-
+    <title>MUSE Virtual World</title>
+    <link rel="stylesheet" type="text/css" href="css/jqmuse.css"></link>
     <style>
       html {
         margin: 0;
@@ -38,10 +37,29 @@
         top:0;
       }
     </style>
+
+    <link rel="stylesheet" href="./css/jquery-ui.css">
+    <style>
+      .ui-slider {
+          height: 20px;
+          width: 100%;
+          align-items: center;
+          //padding-left: 50px;
+      }
+
+      .ui-slider-handle {
+         color: rgba(240,40,40, .9);
+         background: rgba(200,0,0,0.0);
+         height: 20px;
+         width: 5px;
+         //padding-left: 50px;
+      }
+    </style>
+    
   </head> 
   <body>
+    <div id="uiDiv"></div>
     <canvas id="canvas3d"></canvas>
-
     <script src="dist/vendor.bundle.js"></script>
     <script src="dist/mathbox-bundle.min.js"></script>
     <script src="src/legacy/jquery-3.1.1.min.js"></script>
