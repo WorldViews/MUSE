@@ -4,6 +4,7 @@ assets/*
 *#
 museServer/node_modules/*
 data/bookmarks.edited.json
+data/satellites/cache
 dist/*
 local/*
 models/*

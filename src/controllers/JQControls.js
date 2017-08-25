@@ -32,6 +32,7 @@ class JQControls extends UIControls {
     }
 
     setupElements() {
+        this.textFields = ["time", "year", "narrative"];
         var inst = this;
         var uiDiv = $("#uiDiv");
         uiDiv.append("<button id='uiToggle'>&nbsp;</button>");
@@ -40,9 +41,9 @@ class JQControls extends UIControls {
         this.ui = ui;
         uiDiv.append("<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
         ui.append("<span id='status'></span><br>");
-        ui.append("<span id='timeText'></span><br>");
-        ui.append("<span id='yearText'></span><br>");
-        ui.append("<span id='narrativeText'></span><br>");
+        this.textFields.forEach(name => {
+            ui.append(sprintf("<span id='%sText'></span><br>", name));
+        });
         ui.append("<p></p>");
         $("#uiToggle").click(e => inst.toggleUI());
         //$("#uiTimeSlider").on('change', e => inst.onSliderChange(e));
@@ -66,7 +67,7 @@ class JQControls extends UIControls {
 
     onValueChange(event) {
         var msg = event.message;
-        console.log("onValueChange "+msg.name+" "+msg.value);
+        //console.log("onValueChange "+msg.name+" "+msg.value);
         switch (event.message.name) {
         case 'timeText':
             $("#timeText").html(event.message.value);

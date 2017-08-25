@@ -79,20 +79,8 @@ class SatTracks {
         this._playSpeed = 60.0;
         this.setPlayTime(getClockTime());
         var inst = this;
-        var dataUrls = [
-            "/data/satellites/geostationary.txt",
-            "/data/satellites/iridium-33-debris.txt"
-        ];
-        /*
-        dataUrls = DATA_SETS.map(name => DATA_URL_PREFIX+name+".txt");
-        console.log("dataUrls:", dataUrls);
-        //var dataUrl = "https://www.celestrak.com/NORAD/elements/geo.txt"
-        dataUrls.forEach(url => inst.loadSats(url));
-        //handleSatsData();
-        */
-        DATA_SETS.forEach(name => inst.loadSats(name));
-        //this.handleSatsData();
-        //setTimeout(() => inst.handleSatsData(), 1000);
+        //DATA_SETS.forEach(name => inst.loadSats(name));
+        this.loadAllSats();
     }
 
     loadSats(dataSetName) {
@@ -108,7 +96,20 @@ class SatTracks {
                 console.log("error: ", ex);
             });
     }
-    
+
+    loadAllSats() {
+        var url = DATA_URL_PREFIX+"allSats.json";
+        console.log("Getting All Satellite data from: " + url);
+        var inst = this;
+        $.getJSON(url)
+            .done(function(data, status) {
+                inst.handleAllSatsData(data, url);
+            })
+            .fail(function(jqxhr, settings, ex) {
+                console.log("error: ", ex);
+            });
+    }
+
     initGraphics(opts) {
         var size = opts.size || 2;
         var color = opts.color || 0xff0000;
@@ -146,6 +147,26 @@ class SatTracks {
         this.addSats(satList);
     }
 
+    handleAllSatsData(data,url) {
+        console.log("*************************************");
+        console.log("*************************************");
+        console.log("*************************************");
+        console.log("*************************************");
+        console.log("*************************************");
+        var satList = [];
+        for (var name in data) {
+            console.log("name: "+name);
+            var TLEs = data[name].TLEs;
+            var tle = TLEs[0];
+            var dataSet = tle[0];
+            tle = tle[1];
+            var sat = {name, tle, dataSet};
+            satList.push(sat)
+            //console.log("name: "+name+" "+sat);
+        }
+        this.addSats(satList);
+    }
+    
     getUniqueSatName(baseName) {
         var i=1;
         var name = baseName;
@@ -253,6 +274,10 @@ class SatTracks {
             var pv = satellite.propagate(satrec, time);
             //showPosVel(pv, this.t);
             var p = pv.position;
+            if (!p) {
+                console.log("Problem with satellite "+satName);
+                continue;
+            }
             var v3 = this.geometry.vertices[i];
             v3.set(p.x, p.z, -p.y);
             //v3.normalize();
