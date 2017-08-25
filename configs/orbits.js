@@ -2,7 +2,7 @@
 CONFIG = {
     'cameraControls': 'Orbit',
     'specs': [
-        {  type: 'ReactControls' },
+        {  type: 'JQControls' },
         {  type: 'Stars' },
         {  type: 'PointLight', name: 'sun', position: [-1000, 0, 0], distance: 5000},
         {  type: 'PointLight', name: 'sun', position: [3000, 1000, 0], distance: 5000},
