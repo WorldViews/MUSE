@@ -217,8 +217,9 @@ class SatTracks {
         this.game.addToGame(this.particles, 'satellites', this.opts.parent);
     }
 
-    setPlayTime(t) {
+    setPlayTime(t, f) {
         console.log("SatTracks.setPlayTime "+t);
+        this._fraction = f;
         this._prevPlayTime = t;
         this._prevClockTime = getClockTime();
     }
@@ -268,6 +269,7 @@ class SatTracks {
         }
         var i=0;
         //this.checkProximities();
+        var nsats = this.geometry.vertices.length;
         for (var satName in this.sats) {
             var sat = this.sats[satName];
             var satrec = sat.satrec;
@@ -280,6 +282,11 @@ class SatTracks {
             }
             var v3 = this.geometry.vertices[i];
             v3.set(p.x, p.z, -p.y);
+            if (this._fraction != null) {
+                var f = i/(nsats+0.0);
+                if (f > this._fraction)
+                v3.set(0,0,0);
+            }
             //v3.normalize();
             v3.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
             i++;
