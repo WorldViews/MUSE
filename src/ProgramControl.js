@@ -44,7 +44,32 @@ class ProgramControl
     }
 
     displayTime(t) {
-        console.log("displayTime "+t);
+        //console.log("displayTime "+t);
+        var tStr = sprintf("%8.1f", t);
+        this.game.events.dispatchEvent({
+            type: 'valueChange',
+            message: {
+                'name': 'timeText',
+                'value': tStr
+            }
+        });
+        var dur = this.duration;
+    	let value = (t/(0.0+dur));
+        if (game.controllers.ui && game.controllers.ui.slider) {
+            try {
+	               game.controllers.ui.slider.value = value;
+            }
+            catch (e) {
+	               console.log("exception setting slider");
+            }
+        }
+        //console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
+        try {
+	           let timeline = $('#timeLine');
+    	       timeline.slider('value', value);
+        }
+        catch (e) {
+        }
     }
 
     get playTime() {
@@ -81,6 +106,7 @@ class ProgramControl
             var screen = this.game.screens[key];
             screen.setPlayTime(t);
         }
+        this.displayTime(t);
     }
 }
 

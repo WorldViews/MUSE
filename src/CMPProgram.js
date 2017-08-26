@@ -21,27 +21,7 @@ with various durations.
 */
 
 import { ProgramControl } from './ProgramControl';
-
 import { sprintf } from "sprintf-js";
-
-/*
-function getVideoOpacity(gss, t) {
-    if (!gss)
-        return 0;
-    var y = timeToYear(t);
-    var va = gss.getFieldByYear(y, "videofade");
-    //report("getVideoOpacity "+t+" va: "+va);
-    va = getFloat(va, 1.0);
-    return va;
-}
-
-function getNarrative(gss, t) {
-    if (!gss)
-        return "";
-    var y = timeToYear(t);
-    return gss.getFieldByYear(y, "narrative");
-}
-*/
 
 class CMPProgram extends ProgramControl {
 
@@ -54,13 +34,8 @@ class CMPProgram extends ProgramControl {
         console.log("****** CMPProgram.duration: "+this.duration)
     }
 
-    dots() {
-        console.log("......................... just a test ..............................");
-    }
-
     setPlayTime(t) {
         super.setPlayTime(t);
-        this.displayTime(t);
         var cmp = game.CMP || game.controllers['cmp'];
         if (cmp) {
             var nt = 0;
@@ -79,17 +54,10 @@ class CMPProgram extends ProgramControl {
     // animations.)
     displayTime(t) {
         //console.log("CMPProgram.displayTime "+t);
+        super.displayTime(t);
         if (this.gss) {
             var year = GSS.timeToYear(t);
             //console.log("year: " + year);
-            var tStr = sprintf("%8.1f", t);
-            this.game.events.dispatchEvent({
-                type: 'valueChange',
-                message: {
-                    'name': 'timeText',
-                    'value': tStr
-                }
-            });
             var yearStr = "";
             if (year) {
                 var va = this.gss.getFieldByYear(year, "videofade");
@@ -111,23 +79,6 @@ class CMPProgram extends ProgramControl {
                     'value': yearStr
                 }
             });
-        }
-        var dur = this.duration;
-    	let value = (t/(0.0+dur));
-        if (game.controllers.ui && game.controllers.ui.slider) {
-            try {
-	        game.controllers.ui.slider.value = value;
-            }
-            catch (e) {
-	        console.log("exception setting slider");
-            }
-        }
-        //console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
-        try {
-	    let timeline = $('#timeLine');
-    	    timeline.slider('value', value);
-        }
-        catch (e) {
         }
     }
 }

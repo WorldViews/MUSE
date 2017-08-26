@@ -6,7 +6,7 @@
     text-align:left;
     //background-color: #ffffff;
     color: #ffffff;
-    width: 95%;
+    width: 96%;
     z-index: 10;
 }
 
@@ -20,7 +20,7 @@
 
 #uiTimeSlider {
     position: absolute; left: 30px; top: 0px;
-    width: 90%;
+    width: 98%;
 }
 
 input[type=range]{
@@ -52,4 +52,3 @@ input[type=range]:focus {
 input[type=range]:focus::-webkit-slider-runnable-track {
     background: #ccc;
 }
-
