@@ -24,6 +24,7 @@ import { ProgramControl } from './ProgramControl';
 
 import { sprintf } from "sprintf-js";
 
+/*
 function getVideoOpacity(gss, t) {
     if (!gss)
         return 0;
@@ -40,15 +41,17 @@ function getNarrative(gss, t) {
     var y = timeToYear(t);
     return gss.getFieldByYear(y, "narrative");
 }
-
+*/
 
 class CMPProgram extends ProgramControl {
 
-    constructor(game) {
-        super(game);
-        game.gss = new GSS.SpreadSheet();
+    constructor(game, options) {
+        options = options || {};
+        options.duration = options.duration || 32*60;
+        super(game, options);
         var inst = this;
-        this.duration = 32*60;
+        //this.duration = options.duration || 32*60;
+        console.log("****** CMPProgram.duration: "+this.duration)
     }
 
     dots() {
@@ -76,7 +79,7 @@ class CMPProgram extends ProgramControl {
     // animations.)
     displayTime(t) {
         //console.log("CMPProgram.displayTime "+t);
-        if (game.gss) {
+        if (this.gss) {
             var year = GSS.timeToYear(t);
             //console.log("year: " + year);
             var tStr = sprintf("%8.1f", t);
@@ -89,8 +92,8 @@ class CMPProgram extends ProgramControl {
             });
             var yearStr = "";
             if (year) {
-                var va = game.gss.getFieldByYear(year, "videofade");
-                var nar = game.gss.getFieldByYear(year, "narrative") || "";
+                var va = this.gss.getFieldByYear(year, "videofade");
+                var nar = this.gss.getFieldByYear(year, "narrative") || "";
                 //console.log("va: " + va + "  narrative: " + nar);
                 yearStr = Math.floor(year);
                 this.game.events.dispatchEvent({

@@ -14,9 +14,14 @@ function getClockTime() { return new Date().getTime()/1000.0; }
 
 class ProgramControl
 {
-    constructor(game) {
+    constructor(game, options) {
+        options = options || {};
         this.game = game;
         game.programControl = this;
+        this.gss = null;
+        if (options.gss)
+            this.gss = new GSS.SpreadSheet(options.gss);
+        this.duration = options.duration || 60;
         this.players = {};
         this._playTime = 0;
         this._playSpeed = 1.0;

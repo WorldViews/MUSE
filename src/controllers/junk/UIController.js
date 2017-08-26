@@ -32,8 +32,7 @@ class ReactController extends UIController {
     constructor(game, options) {
         super(game, options);
         this.options = options || {};
-        //this.playerControl = this.options.playerControl;
-        this.playerControl = this.game.getProgram();
+        this.program = this.game.getProgram();
         this.root = document.createElement('div');
         this.models = ['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
         this.modelCallbacks = {};
@@ -193,8 +192,8 @@ class ReactController extends UIController {
         console.log('slider: ' + newValue);
 
         var t = newValue*duration;
-        if (this.playerControl)
-            this.playerControl.setPlayTime(t);
+        if (this.program)
+            this.program.setPlayTime(t);
     }
 
     onPlayerButtonClick(btnName) {
@@ -229,4 +228,3 @@ class ReactController extends UIController {
 */
 
 export {UIControls};
-

@@ -107,7 +107,7 @@ function start(config) {
 
     game.defaultGroupName = 'station';
 
-    let cmpProgram = new CMPProgram(game);
+    let cmpProgram = new CMPProgram(game, config.program);
     game.setProgram(cmpProgram);
 
     game.load(specs);

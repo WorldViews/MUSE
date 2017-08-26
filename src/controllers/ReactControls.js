@@ -20,15 +20,14 @@ import {UIControls} from './UIControls';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-const duration = 32*60;
+//const duration = 32*60;
 
 class ReactControls extends UIControls {
 
     constructor(game, options) {
         super(game, options);
         this.options = options || {};
-        //this.playerControl = this.options.playerControl;
-        this.playerControl = this.game.getProgram();
+        this.program = this.game.getProgram();
         this.root = document.createElement('div');
         this.models = ['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
         this.modelCallbacks = {};
@@ -188,9 +187,9 @@ class ReactControls extends UIControls {
     onSliderChange(e, newValue) {
         console.log('slider: ' + newValue);
 
-        var t = newValue*duration;
-        if (this.playerControl)
-            this.playerControl.setPlayTime(t);
+        var t = newValue*this.program.duration;
+        if (this.program)
+            this.program.setPlayTime(t);
     }
 
     onPlayerButtonClick(btnName) {
@@ -234,4 +233,3 @@ Game.registerNodeType("ReactControls", (game, options) => {
 });
 
 export {ReactControls};
-

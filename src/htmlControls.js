@@ -24,20 +24,20 @@ function handleCenterScene(e, game)
     });
 }
 
-function sliderChanged(e, ui, playerControl)
+function sliderChanged(e, ui, program)
 {
     console.log("**** sliderChanged ****");
     var v = ui.value;
     var t = v*duration;
     console.log("v: "+v+"   t: "+t);
-    if (playerControl)
-        playerControl.setPlayTime(t);
+    if (program)
+        program.setPlayTime(t);
     //imageSrc.setPlayTime(t);
     //e.preventDefault();// doesn't help...
 }
 
 
-function setupHtmlControls(game, playerControl) {
+function setupHtmlControls(game, program) {
     console.log("************************* htmlControls setup *********************");
 
     game.events.addEventListener('valueChange', msg => {
@@ -50,7 +50,7 @@ function setupHtmlControls(game, playerControl) {
     $(document).ready(function() {
         console.log("**** setting up slider ****");
         $("#timeLine").slider({
-	    slide: (e,ui) => sliderChanged(e,ui,playerControl),
+	    slide: (e,ui) => sliderChanged(e,ui,program),
 	    min: 0, max: 1, step: 0.001
         });
         $("#centerScene").change(e => handleCenterScene(e,game));

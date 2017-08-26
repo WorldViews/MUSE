@@ -22,6 +22,7 @@ class Game {
         this.ntypes = ntypes;
         this.user = Util.getParameterByName("user");
         this.viewManager = null;
+        this.program = null;
         if (this.user) {
             let netLink = new NetLink(this);
             this.registerController("netLink", netLink);
@@ -266,7 +267,7 @@ class Game {
     // or if there is a defaultGroupName, place in that group (creating
     // if necessary.) Otherwise place directly into scene.
     // If name is specified, store in models table.
-    // 
+    //
     addToGame(obj, name, parentName) {
         parentName = parentName || this.defaultGroupName;
         if (parentName) {

@@ -10,7 +10,7 @@ var GSS = {};
 
 function report(str) { console.log(str); }
 
-GSS.SSURL = "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json";
+GSS.DEFAULT_URL = "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json";
 
 
 function getFloat(f, defval)
@@ -48,9 +48,11 @@ function timeToYear(t)
 GSS.timeToYear = timeToYear;
 GSS.getFloat = getFloat;
 
-GSS.SpreadSheet = function()
+GSS.SpreadSheet = function(url)
 {
     report("**** GSS.SpreadSheet() ****");
+    this.url = url || GSS.DEFAULT_URL;
+    console.log("GSS.url: "+this.url);
     this.data = null;
     this.ready = false;
     this.load();
@@ -72,9 +74,9 @@ GSS.SpreadSheet.getJSON = function(url, handler)
 GSS.SpreadSheet.prototype.load = function()
 {
     var inst = this;
-    report("GSS.SpreadSheet.load "+GSS.SSURL);
+    report("GSS.SpreadSheet.load "+this.url);
     //GSS.SpreadSheet.getJSON(SSURL, function(data) {
-    $.getJSON(GSS.SSURL, function(data) {
+    $.getJSON(this.url, function(data) {
         //report("GOT JSON: "+data);
 	inst.handleData(data);
 	//inst.dump();
@@ -173,5 +175,3 @@ function getNarrative(t)
     return getFieldByYear(y, "narrative");
 }
 */
-
-

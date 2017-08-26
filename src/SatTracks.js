@@ -111,7 +111,7 @@ class SatTracks {
     }
 
     initGraphics(opts) {
-        var size = opts.size || 2;
+        var size = opts.size || 3;
         var color = opts.color || 0xff0000;
         var opacity = opts.opacity || 0.3;
         this.geometry = new THREE.Geometry();
@@ -127,7 +127,7 @@ class SatTracks {
         //this.particles = new THREE.Points( this.geometry, this.material );
         //this.game.addToGame(this.particles);
     }
-    
+
     handleSatsData(data, dataSetName, url) {
         data = data || defaultSatData;
         var lines = data.split('\n');
@@ -155,7 +155,7 @@ class SatTracks {
         console.log("*************************************");
         var satList = [];
         for (var name in data) {
-            console.log("name: "+name);
+            //console.log("name: "+name);
             var TLEs = data[name].TLEs;
             var tle = TLEs[0];
             var dataSet = tle[0];
@@ -166,7 +166,7 @@ class SatTracks {
         }
         this.addSats(satList);
     }
-    
+
     getUniqueSatName(baseName) {
         var i=1;
         var name = baseName;
@@ -176,7 +176,7 @@ class SatTracks {
         }
         return name;
     }
-    
+
     addSats(sats) {
         var now = new Date();
         sats.forEach(sat => {
@@ -196,7 +196,7 @@ class SatTracks {
             }
             if (!this.sats[name]) {
                 this.geometry.vertices.push(new THREE.Vector3());
-            }                
+            }
             this.sats[name] = sat;
             var satrec = satellite.twoline2satrec(tle[0], tle[1]);
             sat.satrec = satrec;
@@ -256,7 +256,7 @@ class SatTracks {
         }
         console.log("d2min: "+d2min+"  i: "+i+"  j: "+j);
     }
-    
+
     updateSats() {
         this.t = this.getPlayTime();
         var time = new Date(1000*this.t);
@@ -295,22 +295,22 @@ class SatTracks {
 window.SatTracks = SatTracks;
 
 var defaultSatData =
-`TDRS 3                  
+`TDRS 3
 1 19548U 88091B   17227.19367062 -.00000311  00000-0  00000+0 0  9991
 2 19548  14.4451   7.3550 0033429 308.2509  15.6794  1.00269343 92995
-SKYNET 4C               
+SKYNET 4C
 1 20776U 90079A   17226.05407248  .00000118  00000-0  00000-0 0  9995
 2 20776  13.8510  15.5236 0002805 140.2713 219.8059  1.00270391 98562
-TDRS 5                  
+TDRS 5
 1 21639U 91054B   17227.22902649  .00000073  00000-0  00000+0 0  9992
 2 21639  14.4110  20.7852 0020380 349.0255 228.7943  1.00268863 95349
-TDRS 6                  
+TDRS 6
 1 22314U 93003B   17227.46534889 -.00000306  00000-0  00000+0 0  9992
 2 22314  13.9453  23.7292 0002306 263.4207 158.5150  1.00267710 90018
-ASTRA 1D                
+ASTRA 1D
 1 23331U 94070A   17227.46183741 -.00000282  00000-0  00000+0 0  9997
 2 23331   7.6486  48.8467 0003598  99.4143 269.5400  1.00273321 83801
-BRASILSAT B2            
+BRASILSAT B2
 1 23536U 95016A   17226.96367247 -.00000293  00000-0  00000+0 0  9996
 2 23536   7.2697  50.7187 0001851 116.3611  75.4177  1.00271417 81940
 `;

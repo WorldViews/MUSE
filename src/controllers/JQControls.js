@@ -4,15 +4,14 @@ import {Game} from '../Game';
 
 import {UIControls} from './UIControls';
 
-const duration = 32*60;
+//const duration = 32*60;
 
 class JQControls extends UIControls {
     constructor(game, options) {
         super(game, options);
         this._visible = false;
         this.options = options || {};
-        //this.playerControl = this.options.playerControl;
-        this.playerControl = this.game.getProgram();
+        this.program = this.game.getProgram();
         this.root = document.createElement('div');
         this.models = ['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
         this.modelCallbacks = {};
@@ -82,7 +81,7 @@ class JQControls extends UIControls {
             break;
         }
     }
-    
+
     setStatus(statStr) {
         $("#status").html(statStr);
     }
@@ -184,9 +183,9 @@ class JQControls extends UIControls {
         var newValue = $("#uiTimeSlider").val();
         console.log('slider: ' + newValue);
 
-        var t = newValue*duration;
-        if (this.playerControl)
-            this.playerControl.setPlayTime(t);
+        var t = newValue*this.program.duration;
+        if (this.program)
+            this.program.setPlayTime(t);
     }
 
     onPlayerButtonClick(btnName) {
@@ -230,4 +229,3 @@ Game.registerNodeType("JQControls", (game, options) => {
 });
 
 export {JQControls};
-

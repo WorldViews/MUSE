@@ -1,6 +1,9 @@
 
 CONFIG = {
     'cameraControls': 'Orbit',
+    'program': {
+       duration: 100
+    },
     'specs': [
         {  type: 'JQControls' },
         {  type: 'Stars' },
