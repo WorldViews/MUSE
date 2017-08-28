@@ -2,7 +2,7 @@
 import {Game} from '../Game';
 import * as THREE from 'three';
 import {SatTracks} from '../SatTracks'
-
+import {Atmosphere} from './Atmosphere'
 // convert the positions from a lat, lon to a position on a sphere.
 // http://www.smartjava.org/content/render-open-data-3d-world-globe-threejs
 function latLonToVector3(lat, lon, radius, height) {
@@ -114,6 +114,11 @@ class Planet {
             this.dataViz = new DataViz(this, opts);
         if (opts.satTracks)
             this.satTracks = new SatTracks(this.game, {radius: this.radius, parent:opts.name});
+        if (1) {
+            //this.haze = new Haze(game.scene, this, radius);
+            //this.glow = new Glow(game.scene, this, radius);
+            this.atmosphere = new Atmosphere(game.scene, this, radius);
+        }
     }
 
     latLonToVector3(lat, lng, h)
