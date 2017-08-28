@@ -7,7 +7,7 @@ import satellite from 'satellite.js';
 function getClockTime() { return new Date().getTime()/1000.0; }
 
 var TLE = ['1 25544U 98067A   13149.87225694  .00009369  00000-0  16828-3 0  9031',
-                   '2 25544 051.6485 199.1576 0010128 012.7275 352.5669 15.50581403831869'];
+    '2 25544 051.6485 199.1576 0010128 012.7275 352.5669 15.50581403831869'];
 var SAT_LIST = [
     {tle: TLE},
     {tle: TLE},
@@ -62,7 +62,7 @@ function showPosVel(pv, t)
     if (!t)
         t= 0;
     console.log(sprintf("%12.2f   %10.2f %10.2f %10.2f   %10.2f %10.2f %10.2f",
-                        t, p.x, p.y, p.z, v.x, v.y, v.z));
+        t, p.x, p.y, p.z, v.x, v.y, v.z));
 }
 
 class SatTracks {
@@ -122,7 +122,7 @@ class SatTracks {
         };
         this.material = new THREE.PointsMaterial(
             { size: size, sizeAttenuation: false,
-              color: color, opacity: 0.9, alphaTest: 0.1, transparent: true } );
+                color: color, opacity: 0.9, alphaTest: 0.1, transparent: true } );
         this.particles = new THREE.Points( this.geometry, this.material );
         //this.particles = new THREE.Points( this.geometry, this.material );
         //this.game.addToGame(this.particles);
@@ -285,7 +285,7 @@ class SatTracks {
             if (this._fraction != null) {
                 var f = i/(nsats+0.0);
                 if (f > this._fraction)
-                v3.set(0,0,0);
+                    v3.set(0,0,0);
             }
             //v3.normalize();
             v3.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
