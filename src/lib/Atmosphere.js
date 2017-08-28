@@ -115,12 +115,23 @@ class Haze {
 	constructor(obj3d, atmosphere, radius) {
 		radius = radius || 0.51;
 		var inst = this;
-		this.t0 = getClockTime();
-		this.mat = null;
-		this.atmosphere = atmosphere;
-		this.interval = null;
+			this.atmosphere = atmosphere;
 
 		var loader = new THREE.TextureLoader();
+		var geometry = new THREE.SphereGeometry(radius, 32, 32);
+		this.mat = new THREE.MeshBasicMaterial({
+			overdraw: 0.5,
+			color: ("rgb(173,172,196)"),
+			transparent: true,
+			opacity: 0.4,
+		});
+			var mesh = new THREE.Mesh(geometry, this.mat);
+		mesh.name = "co2fog";
+		obj3d.add(mesh);
+		loader.load('textures/wholeFog.jpg', function (texture){
+			inst.mat.map = texture;
+		})
+	/*
 		loader.load('textures/wholeFog.jpg', function (texture){
 			var geometry = new THREE.SphereGeometry(radius, 32, 32);
 			var material = new THREE.MeshBasicMaterial({
@@ -135,26 +146,62 @@ class Haze {
 			mesh.name = "co2fog";
 			obj3d.add(mesh);
 		})
+		*/
+	}
+}
+
+class BasicAtmosphere {
+	constructor(obj3d, planet, opts) {
+		opts = opts || {};
+		this.planet = planet;
+		this.radius = opts.radius || planet.radius || 1.0;
+		this.haze = new Haze(obj3d, this, this.radius*1.02);
+		this.glow = new Glow(obj3d, this, this.radius*1.05);
+	}
+
+	setHSL(h,s,l) {
+		console.log("setHSL "+h+" "+s+" "+l);
+		if (this.haze.mat)
+			this.haze.mat.color.setHSL(h, s, l);
+		this.glow.material.uniforms.glowColor.value.setHSL(h, s, l);
+
+	}
+
+	setOpacity(f) {
+		console.log("Atmosphere.setOpacity "+f);
+		this.haze.mat.opacity = f;
 	}
 
 	setHue(h) {
-		var hsl = this.mat.color.getHSL();
-		this.mat.color.setHSL(h, hsl.s, hsl.l);
+		var hsl = this.haze.mat.color.getHSL();
+		this.setHSL(h,hsl.s, hsl.l);
+	}
+}
+
+class Atmosphere extends BasicAtmosphere {
+
+	constructor(obj3d, planet, opts) {
+		super(obj3d, planet, opts);
+		this.setHSL(0,.4,.5);
+		this.t0 = getClockTime();
+		this.interval = null;
 	}
 
-	animateColor() {
-		if (this.mat == null)
-		return;
+	updateAnimation() {
+		console.log("updateAnimation");
 		var t = getClockTime();
 		var dt = t-this.t0;
 		var f = dt % this.period;
 		f=f/this.period;
+		this.setOpacity(f);
+		this.setHue(f);
+		/*
 		this.mat.opacity=f;
 		this.mat.color.setHSL(f,.5,.4);
 		//this.earth.material.uniforms.glowColor.value.set(0x00b3ff)
 		var glow = this.atmosphere.glow;
 		glow.material.uniforms.glowColor.value.setHSL(f,.5,.4);
-
+		*/
 	}
 
 	setTemperature(t) {
@@ -166,7 +213,7 @@ class Haze {
 	startAnimation(period) {
 		this.period = period || 10;
 		var inst = this;
-		this.interval = setInterval(function() { inst.animateColor(); }, 50);
+		this.interval = setInterval(function() { inst.updateAnimation(); }, 50);
 	}
 
 	stopAnimation() {
@@ -175,16 +222,6 @@ class Haze {
 			clearInterval(this.interval);
 			this.interval = null;
 		}
-	}
-}
-
-class Atmosphere {
-	constructor(obj3d, planet, opts) {
-		opts = opts || {};
-		this.planet = planet;
-		this.radius = opts.radius || planet.radius || 1.0;
-		this.haze = new Haze(obj3d, this, this.radius*1.02);
-		this.glow = new Glow(obj3d, this, this.radius*1.05);
 	}
 }
 
