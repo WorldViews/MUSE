@@ -13,7 +13,8 @@ CONFIG = {
         {  type: 'VirtualEarth', name: 'vEarth',
            radius: 1.25, rot: [0,0,0],
            satTracks: 1,
-           dataViz: 0
+           dataViz: 0,
+           atmosphere: {'name': 'CO2Viz', opacity: .1}
         }
     ]
 };

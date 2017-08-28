@@ -112,8 +112,9 @@ class Glow {
 
 
 class Haze {
-	constructor(obj3d, atmosphere, radius) {
+	constructor(obj3d, atmosphere, radius, opts) {
 		radius = radius || 0.51;
+		var opacity = opts.opacity || .2;
 		var inst = this;
 			this.atmosphere = atmosphere;
 
@@ -123,7 +124,7 @@ class Haze {
 			overdraw: 0.5,
 			color: ("rgb(173,172,196)"),
 			transparent: true,
-			opacity: 0.4,
+			opacity: opacity,
 		});
 			var mesh = new THREE.Mesh(geometry, this.mat);
 		mesh.name = "co2fog";
@@ -155,12 +156,12 @@ class BasicAtmosphere {
 		opts = opts || {};
 		this.planet = planet;
 		this.radius = opts.radius || planet.radius || 1.0;
-		this.haze = new Haze(obj3d, this, this.radius*1.02);
-		this.glow = new Glow(obj3d, this, this.radius*1.05);
+		this.haze = new Haze(obj3d, this, this.radius*1.02, opts);
+		this.glow = new Glow(obj3d, this, this.radius*1.05, opts);
 	}
 
 	setHSL(h,s,l) {
-		console.log("setHSL "+h+" "+s+" "+l);
+		//console.log("setHSL "+h+" "+s+" "+l);
 		if (this.haze.mat)
 			this.haze.mat.color.setHSL(h, s, l);
 		this.glow.material.uniforms.glowColor.value.setHSL(h, s, l);
@@ -168,7 +169,7 @@ class BasicAtmosphere {
 	}
 
 	setOpacity(f) {
-		console.log("Atmosphere.setOpacity "+f);
+		//console.log("Atmosphere.setOpacity "+f);
 		this.haze.mat.opacity = f;
 	}
 

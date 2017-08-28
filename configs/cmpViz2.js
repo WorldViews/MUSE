@@ -3,7 +3,8 @@ VEARTH = [
     {  type: 'VirtualEarth', name: 'vEarth',
        radius: 1.25, position: [0,0,0],
        satellites: 0, satTracks: 0,
-       dataViz: 1
+       dataViz: 1,
+       atmosphere: {'name': 'CO2Viz', opacity: .1}
     }
 ];
 

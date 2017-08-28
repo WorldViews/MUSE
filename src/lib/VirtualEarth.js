@@ -114,10 +114,10 @@ class Planet {
             this.dataViz = new DataViz(this, opts);
         if (opts.satTracks)
             this.satTracks = new SatTracks(this.game, {radius: this.radius, parent:opts.name});
-        if (1) {
+        if (opts.atmosphere) {
             //this.haze = new Haze(game.scene, this, radius);
             //this.glow = new Glow(game.scene, this, radius);
-            this.atmosphere = new Atmosphere(game.scene, this, radius);
+            this.atmosphere = new Atmosphere(game.scene, this, opts.atmosphere);
         }
     }
 
