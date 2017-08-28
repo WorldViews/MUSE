@@ -61,12 +61,14 @@ class BlobSet {
         var rMin = opts.rMin || this.radius*1.1;
         var rMax = opts.rMax || this.radius*1.2;
         setNumBlobs(this.geometry, n, ranVertexFun);
-        this.material = new THREE.PointsMaterial( { size: size, sizeAttenuation: false,
+        this.material = new THREE.PointsMaterial({
+            size: size, sizeAttenuation: false,
             map: sprite,
             color: color,
             opacity: 0.3,
             alphaTest: 0.1,
-            transparent: true } );
+            transparent: true
+        });
         this.particles = new THREE.Points( this.geometry, this.material );
     }
 }
@@ -81,7 +83,7 @@ class Planet {
         var inst = this;
         this.name = "";
         if (opts && opts.name)
-	    this.name = opts.name;
+        this.name = opts.name;
         console.log("*** Planet "+this.name +" "+JSON.stringify(opts));
         this.radius = radius;
         this.loaded = false;
@@ -98,7 +100,7 @@ class Planet {
             loader.load( texPath, function ( texture ) {
                 var material = new THREE.MeshPhongMaterial( { map: texture, overdraw: 0.5 } );
                 inst.mesh = new THREE.Mesh( inst.geometry, material );
-	        inst.mesh.name = inst.name;
+                inst.mesh.name = inst.name;
                 inst.group.add(inst.mesh);
                 inst.loaded = true;
             });
@@ -106,14 +108,14 @@ class Planet {
         else {
             var material = new THREE.MeshPhongMaterial( { overdraw: 0.5 } );
             inst.mesh = new THREE.Mesh( inst.geometry, material );
-	    inst.mesh.name = inst.name;
+            inst.mesh.name = inst.name;
             inst.group.add(inst.mesh);
             inst.loaded = true;
         }
         if (opts.dataViz)
-            this.dataViz = new DataViz(this, opts);
+        this.dataViz = new DataViz(this, opts);
         if (opts.satTracks)
-            this.satTracks = new SatTracks(this.game, {radius: this.radius, parent:opts.name});
+        this.satTracks = new SatTracks(this.game, {radius: this.radius, parent:opts.name});
         if (opts.atmosphere) {
             //this.haze = new Haze(game.scene, this, radius);
             //this.glow = new Glow(game.scene, this, radius);
@@ -124,7 +126,7 @@ class Planet {
     latLonToVector3(lat, lng, h)
     {
         if (!h)
-	    h = 1;
+        h = 1;
         //report(""+this.name+" h: "+h+" r: "+this.radius);
         return latLonToVector3(lat, lng, this.radius, h);
     }
@@ -141,7 +143,7 @@ class Planet {
 
     addObject(obj, lat, lon, h) {
         if (!h)
-	    h = 0.02*this.radius;
+        h = 0.02*this.radius;
         var lg = this.getLocalGroup(lat, lon, h);
         lg.add(obj);
         return lg;
@@ -179,52 +181,52 @@ class Planet {
 
     update() {
         if (this.satTracks)
-            this.satTracks.update();
+        this.satTracks.update();
         if (this.dataViz)
-            this.dataViz.update();
+        this.dataViz.update();
         /*
         if (this.satPoints)
-            this.satPoints.rotation.y += 0.01;
+        this.satPoints.rotation.y += 0.01;
         if (this.satMat) {
-            this.satHue += 0.001;
-            if (this.satHue > 1)
-                this.satHue = 0;
-	    this.satMat.color.setHSL( this.satHue, 0.6, 0.7 );
-        }
-        */
-        if (!this.sats)
-            return;
-        //this.group.rotation.y += 0.001;
-        var i = 0;
-        this.sats.forEach(sat => {
-            i++;
-            sat.lon += sat.omega;
-            //var phi = (sat.lat)*Math.PI/180;
-            //var theta = (sat.lon-180)*Math.PI/180;
-            sat.position.copy(this.latLonToVector3(sat.lat, sat.lon, sat.h));
-            //console.log("i: "+i+"  phi: "+phi+"  theta: "+theta);
-            //sat.rotation.set(phi, theta, 0, "YXZ");
-        });
+        this.satHue += 0.001;
+        if (this.satHue > 1)
+        this.satHue = 0;
+        this.satMat.color.setHSL( this.satHue, 0.6, 0.7 );
     }
+    */
+    if (!this.sats)
+    return;
+    //this.group.rotation.y += 0.001;
+    var i = 0;
+    this.sats.forEach(sat => {
+        i++;
+        sat.lon += sat.omega;
+        //var phi = (sat.lat)*Math.PI/180;
+        //var theta = (sat.lon-180)*Math.PI/180;
+        sat.position.copy(this.latLonToVector3(sat.lat, sat.lon, sat.h));
+        //console.log("i: "+i+"  phi: "+phi+"  theta: "+theta);
+        //sat.rotation.set(phi, theta, 0, "YXZ");
+    });
+}
 
-    pause() {
-        if (this.satTracks)
-            this.satTracks.pause();
-    }
+pause() {
+    if (this.satTracks)
+    this.satTracks.pause();
+}
 
-    play() {
-        if (this.satTracks)
-            this.satTracks.play();
-    }
+play() {
+    if (this.satTracks)
+    this.satTracks.play();
+}
 
-    setPlayTime(t) {
-        var f = t / game.program.duration;
-        console.log("VirtualEarth.setPlayTime "+t+" "+f);
-        if (this.satTracks) {
-            var st = this.startTime + 10*t;
-            this.satTracks.setPlayTime(st, f);
-        }
+setPlayTime(t) {
+    var f = t / game.program.duration;
+    console.log("VirtualEarth.setPlayTime "+t+" "+f);
+    if (this.satTracks) {
+        var st = this.startTime + 10*t;
+        this.satTracks.setPlayTime(st, f);
     }
+}
 
 };
 
@@ -258,9 +260,10 @@ class DataViz {
     setCo2(n) {
         var material, particles;
         if (this.co2Blobs)
-            this.earth.group.remove(this.co2Blobs);
+        this.earth.group.remove(this.co2Blobs);
         var res = this.earth.addBlobs({n: n, size: 20, color: 0xFFFF00, opacity: 1,
-            texture: 'textures/sprites/clouds.png'});
+            texture: 'textures/sprites/clouds.png'
+        });
         //                                       rMin: this.rMin, rMax: this.rMax});
         this.co2Mat = res.material;
         this.co2Blobs = res.particles;
@@ -270,11 +273,13 @@ class DataViz {
         var size = 6;
         var material, particles;
         var res = this.earth.addBlobs({n: 5000, size: size, color: 0xFF0000, opacity: 1,
-            rMin: this.rMin, rMax: this.rMax});
+            rMin: this.rMin, rMax: this.rMax
+        });
         this.energInMat = res.material;
         this.eInBlobs = res.particles;
         var res = this.earth.addBlobs({n: 5000, size: size, color: 0xFFFF00, opacity: 1,
-            rMin: this.rMin, rMax: this.rMax});
+            rMin: this.rMin, rMax: this.rMax
+        });
         this.energOutMat = res.material;
         this.eOutBlobs = res.particles;
         this.d2Min = this.rMin*this.rMin;
@@ -296,35 +301,39 @@ class DataViz {
         var material, particles;
         this.earth.group.remove(this.eOutBlobs);
         var res = this.earth.addBlobs({n: n, size: 5, color: 0xFFFF00, opacity: 1,
-            rMin: this.rMin, rMax: this.rMax});
+            rMin: this.rMin, rMax: this.rMax
+        });
         this.energOutMat = res.material;
         this.eOutBlobs = res.particles;
     }
 
     update() {
         if (this.co2Blobs)
-            this.co2Blobs.rotation.y += 0.005;
+        this.co2Blobs.rotation.y += 0.005;
         if (this.co2Mat) {
             this.hue += 0.001;
             if (this.hue > 1)
-                this.hue = 0;
-	    this.co2Mat.color.setHSL( this.hue, 0.6, 0.7 );
+            this.hue = 0;
+            this.co2Mat.color.setHSL( this.hue, 0.6, 0.7 );
             this.co2Density += 0.002;
             if (this.co2Density > 1)
-                this.co2Density = 0.3;
+            this.co2Density = 0.3;
             this.co2Mat.opacity = this.co2Density;
         }
         if (this.eInBlobs) {
             var s0 = this.rMax/this.rMin;
             var s1 = .99;
-            this.scaleVertices(this.eInBlobs.geometry,
-                d2 => d2 < this.d2Min ? s0 : s1);
+            this.scaleVertices(
+                this.eInBlobs.geometry,
+                d2 => d2 < this.d2Min ? s0 : s1
+            );
         }
         if (this.eOutBlobs) {
             var s0 = this.rMin/this.rMax;
             var s1 = 1/0.99;
             this.scaleVertices(this.eOutBlobs.geometry,
-                d2 => d2 > this.d2Max ? s0 : s1);
+                d2 => d2 > this.d2Max ? s0 : s1
+            );
         }
     }
 
@@ -342,7 +351,7 @@ class VirtualEarth extends Planet
 {
     constructor(game, opts) {
         if (!opts.texture)
-            opts.texture = 'textures/land_ocean_ice_cloud_2048.jpg';
+        opts.texture = 'textures/land_ocean_ice_cloud_2048.jpg';
         super(game, opts);
     }
 }
@@ -350,7 +359,7 @@ class VirtualEarth extends Planet
 function addVirtualEarth(game, opts)
 {
     if (!opts.name)
-        opts.name = "vEarth";
+    opts.name = "vEarth";
     var ve = new VirtualEarth(game, opts);
     game.setFromProps(ve.group, opts);
     game.addToGame(ve.group, opts.name, opts.parent);
