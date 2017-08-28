@@ -225,16 +225,16 @@ function Kessler(game, options)
     this.particleUniforms = null;
 
     var params = {
-	// Can be changed dynamically
-	gravityConstant: 300.0,
-	density: 0.45,
+        // Can be changed dynamically
+        gravityConstant: 300.0,
+        density: 0.45,
 
-	// Must restart simulation
+        // Must restart simulation
         v0: 0,
-	radius: 10,
-	height: 4,
+        radius: 10,
+        height: 4,
         centralMass: 100,
-	satMass: 0.01,
+        satMass: 0.01,
     };
     for (var key in params) {
         if (options[key] != null) {
@@ -278,7 +278,7 @@ Kessler.prototype.initComputeRenderer = function () {
 
     if ( error !== null ) {
 
-	console.error( error );
+        console.error( error );
 
     }
 }
@@ -289,7 +289,7 @@ Kessler.prototype.initProtoplanets = function(scene) {
     var positions = new Float32Array( this.PARTICLES * 3 );
     var p = 0;
 
-/*
+    /*
     for ( var i = 0; i < this.PARTICLES; i++ ) {
 	positions[ p++ ] = ( Math.random() * 2 - 1 ) * this.params.radius;
 	positions[ p++ ] = 0; //( Math.random() * 2 - 1 ) * this.params.radius;
@@ -297,36 +297,36 @@ Kessler.prototype.initProtoplanets = function(scene) {
     }
 */
     for ( var i = 0; i < this.PARTICLES; i++ ) {
-	positions[ p++ ] = 0;
-	positions[ p++ ] = 0;
-	positions[ p++ ] = 0;
+        positions[ p++ ] = 0;
+        positions[ p++ ] = 0;
+        positions[ p++ ] = 0;
     }
 
     var uvs = new Float32Array( this.PARTICLES * 2 );
     p = 0;
 
     for ( var j = 0; j < this.WIDTH; j++ ) {
-	for ( var i = 0; i < this.WIDTH; i++ ) {
+        for ( var i = 0; i < this.WIDTH; i++ ) {
 	    uvs[ p++ ] = i / ( this.WIDTH - 1 );
 	    uvs[ p++ ] = j / ( this.WIDTH - 1 );
-	}
+        }
     }
 
     this.geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
     this.geometry.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
 
     this.particleUniforms = {
-	texturePosition: { value: null },
-	textureVelocity: { value: null },
-	cameraConstant: { value: this.getCameraConstant( this.camera ) },
-	density: { value: 0.0 }
+        texturePosition: { value: null },
+        textureVelocity: { value: null },
+        cameraConstant: { value: this.getCameraConstant( this.camera ) },
+        density: { value: 0.0 }
     };
 
     // ShaderMaterial
     var material = new THREE.ShaderMaterial( {
-	uniforms:       this.particleUniforms,
-	vertexShader:   particleVertexShaderStr,
-	fragmentShader: particleFragmentShaderStr,
+        uniforms:       this.particleUniforms,
+        vertexShader:   particleVertexShaderStr,
+        fragmentShader: particleFragmentShaderStr,
     } );
 
     material.extensions.drawBuffers = true;
@@ -353,39 +353,39 @@ Kessler.prototype.fillTextures = function( texturePosition, textureVelocity ) {
     var satMass = params.satMass;
 
     for ( var k = 0, kl = posArray.length; k < kl; k += 4 ) {
-	// Position
-	var x, y, z, rr, r, r0, theta;
+        // Position
+        var x, y, z, rr, r, r0, theta;
         r0 = radius;
         //r0 = params.r0 + 0.02*Math.random();
         theta = 2*3.14159*Math.random();
-	x = r0 * Math.cos(theta);
-	z = r0 * Math.sin(theta);
-	y = height * ( Math.random() * 2 - 1 );
-	rr = x*x + y*y + z*z;
-        r = Math.sqrt(rr);                           
+        x = r0 * Math.cos(theta);
+        z = r0 * Math.sin(theta);
+        y = height * ( Math.random() * 2 - 1 );
+        rr = x*x + y*y + z*z;
+        r = Math.sqrt(rr);
         var v0 = params.v0;
-	//var vx = v0 * r0 * -Math.sin(theta);
-	//var vz = v0 * r0 *  Math.cos(theta);
-	var vx = v0 * r * -Math.sin(theta);
-	var vz = v0 * r *  Math.cos(theta);
-	var vy = 0.0 * ( Math.random() * 2 - 1 );
-	var mass = satMass;
+        //var vx = v0 * r0 * -Math.sin(theta);
+        //var vz = v0 * r0 *  Math.cos(theta);
+        var vx = v0 * r * -Math.sin(theta);
+        var vz = v0 * r *  Math.cos(theta);
+        var vy = 0.0 * ( Math.random() * 2 - 1 );
+        var mass = satMass;
 
         if (k == 0) {
             x = 0; y = 0; z = 0;
             vx = 0; vy = 0; vz = 0;
             mass = params.centralMass;
         }
-	// Fill in texture values
-	posArray[ k + 0 ] = x;
-	posArray[ k + 1 ] = y;
-	posArray[ k + 2 ] = z;
-	posArray[ k + 3 ] = 1;
+        // Fill in texture values
+        posArray[ k + 0 ] = x;
+        posArray[ k + 1 ] = y;
+        posArray[ k + 2 ] = z;
+        posArray[ k + 3 ] = 1;
 
-	velArray[ k + 0 ] = vx;
-	velArray[ k + 1 ] = vy;
-	velArray[ k + 2 ] = vz;
-	velArray[ k + 3 ] = mass;
+        velArray[ k + 0 ] = vx;
+        velArray[ k + 1 ] = vy;
+        velArray[ k + 2 ] = vz;
+        velArray[ k + 3 ] = mass;
     }
     this.dump();
     this.dumpState();
@@ -400,17 +400,17 @@ Kessler.prototype.dumpState = function()
     var i = 0;
     for ( var k = 0, kl = posArray.length; k < kl; k += 4 ) {
         i += 1;
-	var x = posArray[ k + 0 ];
-	var y = posArray[ k + 1 ];
-	var z = posArray[ k + 2 ];
+        var x = posArray[ k + 0 ];
+        var y = posArray[ k + 1 ];
+        var z = posArray[ k + 2 ];
 
-	var vx = velArray[ k + 0 ];
-	var vy = velArray[ k + 1 ];
-	var vz = velArray[ k + 2 ];
-	var mass = velArray[ k + 3 ];
+        var vx = velArray[ k + 0 ];
+        var vy = velArray[ k + 1 ];
+        var vz = velArray[ k + 2 ];
+        var mass = velArray[ k + 3 ];
         console.log(sprintf("%3d %7.1f   %7.3f %7.3f %7.3f   %7.3f %7.3f %7.3f",
-                            i, mass, x, y, z, vx, vy, vz));
-    }    
+            i, mass, x, y, z, vx, vy, vz));
+    }
 }
 
 Kessler.prototype.handleResize = function() {
@@ -450,7 +450,7 @@ function showPosVel(pv)
     var p = pv.position;
     var v = pv.velocity;
     console.log(sprintf("%10.2f %10.2f %10.2f   %10.2f %10.2f %10.2f",
-                        p.x, p.y, p.z, v.x, v.y, v.z));
+        p.x, p.y, p.z, v.x, v.y, v.z));
     //console.log("pos: "+pv.position+"   vel: "+pv.velocity);
 }
 
@@ -465,7 +465,7 @@ function orbitTest()
     // Sample TLE 
     var tleLine1 = '1 25544U 98067A   13149.87225694  .00009369  00000-0  16828-3 0  9031',
         tleLine2 = '2 25544 051.6485 199.1576 0010128 012.7275 352.5669 15.50581403831869';
- 
+
     // Initialize a satellite record 
     var satrec = satellite.twoline2satrec(tleLine1, tleLine2);
     console.log("satrec:", satrec);
@@ -486,12 +486,12 @@ function orbitTest()
         var pv = satellite.propagate(satrec, new Date(1000*t));
         showPosVel(pv);
     }
-    
+
     // The position_velocity result is a key-value pair of ECI coordinates. 
     // These are the base results from which all other coordinates are derived. 
     var positionEci = positionAndVelocity.position,
-    velocityEci = positionAndVelocity.velocity;
- 
+        velocityEci = positionAndVelocity.velocity;
+
     // Set the Observer at 122.03 West by 36.96 North, in RADIANS 
 }
 

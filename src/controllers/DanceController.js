@@ -67,7 +67,7 @@ class DanceController
     }
 
     setScale(s) {
-       this.dancer.scale.set(s,s,s);
+        this.dancer.scale.set(s,s,s);
     }
 
     get visible() {

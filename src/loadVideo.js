@@ -49,7 +49,7 @@ export default (url, spec) => {
     };
 
     let sourceSpec = getTypeFromURL(url);
-    
+
     return new Promise((resolve, reject) => {
         let imageSource = new ImageSource(sourceSpec);
 
