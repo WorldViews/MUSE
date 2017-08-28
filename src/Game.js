@@ -78,12 +78,14 @@ class Game {
                 canvas: canvas3d,
                 antialias: true
             });
+            //renderer.shadowMapEnabled	= true
             renderer.setSize(canvas3d.width, canvas3d.height);
 
         } else {
             renderer = new THREE.WebGLRenderer({
                 antialias: true
             });
+            //renderer.shadowMapEnabled	= true
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);
 
