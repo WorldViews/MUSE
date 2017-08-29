@@ -76,6 +76,7 @@ class SatTracks {
         this.t = new Date().getTime()/1000.0;
         //this.satrecs = [];
         this.sats = {};
+        this.loader = new Loader(game, []);
         this.initGraphics(opts);
         this.radiusEarthKm = 6378.1;
         this._playSpeed = 60.0;
@@ -92,7 +93,6 @@ class SatTracks {
         console.log(">>>>>>>>>>>>>>>>>> SatTracks loading "+opts.models);
         //var obj = {type: 'Model', path: opts.models, name:'satMod1', scale: 1.0};
         //var obj = {type: 'Model', path: opts.models, scale: [0.5,0.5,0.5]};
-        this.loader = new Loader(game, []);
         var s = 0.001;
         var ids = [0,50,100,200, 300, 302];
         ids = [];
@@ -174,12 +174,9 @@ class SatTracks {
     }
 
     handleAllSatsData(data,url) {
-        console.log("*************************************");
-        console.log("*************************************");
-        console.log("*************************************");
-        console.log("*************************************");
-        console.log("*************************************");
+        console.log("***** handleAllSatsData "+url);
         var satList = [];
+        var j = 0;
         for (var name in data) {
             //console.log("name: "+name);
             var TLEs = data[name].TLEs;
@@ -187,7 +184,18 @@ class SatTracks {
             var dataSet = tle[0];
             tle = tle[1];
             var sat = {name, tle, dataSet};
-            satList.push(sat)
+            satList.push(sat);
+            if (data[name].model) {
+                var satId = 'sat_'+j;
+                var s = 0.001;
+                var obj = {type: 'Model',
+                           path: data[name].model,
+                           name: satId,
+                           scale: s};
+                this.loader.load([obj]);
+                this.models[j] = satId;
+            }
+            j++;
             //console.log("name: "+name+" "+sat);
         }
         this.addSats(satList);
