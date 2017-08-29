@@ -184,10 +184,10 @@ class Game {
     }
 
     post(msTime) {
-        // call pre
+        // call post
         Object.keys(this.controllers).forEach((k) => {
             let controller = this.controllers[k];
-            if (controller && controller.pre) {
+            if (controller && controller.post) {
                 controller.post(msTime);
             }
         });

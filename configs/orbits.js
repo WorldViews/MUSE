@@ -13,7 +13,10 @@ CONFIG = {
         {  type: 'VirtualEarth', name: 'vEarth',
            radius: 1.25, rot: [0,0,0],
            //satTracks: {dataSet: 'historicalSats.json'},
-           satTracks: 1,
+           satTracks: {models: [
+               'models/satellites/ComSat/model.dae',
+               'models/satellites/ComSat2/model.dae']},
+           //satTracks: 1,
            dataViz: 0,
            atmosphere: {'name': 'CO2Viz', opacity: .1}
         }
