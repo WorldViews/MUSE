@@ -114,8 +114,16 @@ class Planet {
         }
         if (opts.dataViz)
         this.dataViz = new DataViz(this, opts);
-        if (opts.satTracks)
-        this.satTracks = new SatTracks(this.game, {radius: this.radius, parent:opts.name});
+        if (opts.satTracks) {
+            console.log("************* VirtualEarth: satTracks: ", opts.satTracks);
+            var satOpts = {};
+            if (typeof opts.satTracks === "object") {
+                satOpts = opts.satTracks;
+            }
+            satOpts.radius = satOpts.radius || this.radius;
+            satOpts.parent = satOpts.parent || opts.name;
+            this.satTracks = new SatTracks(this.game, satOpts);
+        }
         if (opts.atmosphere) {
             //this.haze = new Haze(game.scene, this, radius);
             //this.glow = new Glow(game.scene, this, radius);

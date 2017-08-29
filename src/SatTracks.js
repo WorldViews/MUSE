@@ -80,7 +80,7 @@ class SatTracks {
         this.setPlayTime(getClockTime());
         var inst = this;
         //DATA_SETS.forEach(name => inst.loadSats(name));
-        this.loadAllSats();
+        this.loadAllSats(opts.dataSet);
     }
 
     loadSats(dataSetName) {
@@ -97,8 +97,9 @@ class SatTracks {
             });
     }
 
-    loadAllSats() {
-        var url = DATA_URL_PREFIX+"allSats.json";
+    loadAllSats(dataSet) {
+        dataSet = dataSet || "allSats.json";
+        var url = DATA_URL_PREFIX+dataSet;
         console.log("Getting All Satellite data from: " + url);
         var inst = this;
         $.getJSON(url)
