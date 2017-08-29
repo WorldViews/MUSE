@@ -56,9 +56,12 @@ class Planet {
             inst.group.add(inst.mesh);
             inst.loaded = true;
         }
-        if (opts.dataViz)
-        //this.dataViz = new DataViz(this, opts);
-        this.dataViz = new CMPDataViz2(this, opts);
+        if (opts.atmosphere) {
+            this.atmosphere = new Atmosphere(game.scene, this, opts.atmosphere);
+        }
+        if (opts.dataViz) {
+            this.dataViz = new CMPDataViz2(this, opts);
+        }
         if (opts.satTracks) {
             console.log("************* VirtualEarth: satTracks: ", opts.satTracks);
             var satOpts = {};
@@ -68,9 +71,6 @@ class Planet {
             satOpts.radius = satOpts.radius || this.radius;
             satOpts.parent = satOpts.parent || opts.name;
             this.satTracks = new SatTracks(this.game, satOpts);
-        }
-        if (opts.atmosphere) {
-            this.atmosphere = new Atmosphere(game.scene, this, opts.atmosphere);
         }
     }
 
