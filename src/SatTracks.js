@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 import {Game} from './Game';
 import satellite from 'satellite.js';
+import {Loader} from './Loader';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -71,6 +72,7 @@ class SatTracks {
         this.radiusVEarth = opts.radius || 1.0;
         this.opts = opts;
         this.game = game;
+        this.models = {};
         this.t = new Date().getTime()/1000.0;
         //this.satrecs = [];
         this.sats = {};
@@ -81,8 +83,31 @@ class SatTracks {
         var inst = this;
         //DATA_SETS.forEach(name => inst.loadSats(name));
         this.loadAllSats(opts.dataSet);
+        if (opts.models) {
+            this.loadModels(opts);
+        }
     }
 
+    loadModels(opts) {
+        console.log(">>>>>>>>>>>>>>>>>> SatTracks loading "+opts.models);
+        //var obj = {type: 'Model', path: opts.models, name:'satMod1', scale: 1.0};
+        //var obj = {type: 'Model', path: opts.models, scale: [0.5,0.5,0.5]};
+        this.loader = new Loader(game, []);
+        var s = 0.001;
+        var ids = [0,50,100,200, 300, 302];
+        ids = [];
+        for (var k=0; k<10; k++) { ids.push(k)};
+        var j=0;
+        var n = opts.models.length;
+        ids.forEach(id => {
+            var modelPath = opts.models[j % n];
+            var satName = "satMod_"+id;
+            var obj = {type: 'Model', path: modelPath, name: satName, scale: s};
+            this.loader.load([obj]);
+            this.models[id] = satName;
+            j++;
+        })
+    }
     loadSats(dataSetName) {
         var url = DATA_URL_PREFIX+dataSetName+".txt";
         console.log("Getting Satellite data for "+name+" url:"+url);
@@ -290,6 +315,14 @@ class SatTracks {
             }
             //v3.normalize();
             v3.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
+            if (this.models[i]) {
+                var m = this.game.models[this.models[i]];
+                if (m) {
+                    window.SATMOD = m;
+                    //console.log("set position "+this.models[i]+" "+v3.x+" "+v3.y+" "+v3.z);
+                    m.position.set(v3.x, v3.y,v3.z);
+                }
+            }
             i++;
         }
         this.geometry.verticesNeedUpdate = true;

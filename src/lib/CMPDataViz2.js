@@ -99,7 +99,7 @@ class CMPDataViz2 {
     setCo2(n) {
         var material, particles;
         if (this.co2Blobs)
-        this.earth.group.remove(this.co2Blobs);
+            this.earth.group.remove(this.co2Blobs);
         var res = this.addBlobs({n: n, size: 20, color: 0xFFFF00, opacity: 1,
             texture: 'textures/sprites/clouds.png'
         });
@@ -187,4 +187,4 @@ class CMPDataViz2 {
     }
 }
 
-export {CMPDataViz2,BlobSet,ranVertex};
+export {CMPDataViz2};
