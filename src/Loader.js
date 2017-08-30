@@ -204,6 +204,7 @@ class Loader
     }
 
     loadFile(path) {
+        console.log("Loader.loadFile "+path);
         if (path.endsWith(".js")) {
             return this.loadJS(path);
         }
@@ -214,8 +215,8 @@ class Loader
     }
 
     loadJS(path) {
-        var inst = this;
         console.log("Loading JS file "+path);
+        var inst = this;
         $.getScript(path)
             .done(function(script, textStatus) {
                 console.log("AFTER SPECS: ", SPECS);
@@ -227,8 +228,8 @@ class Loader
     }
 
     loadJSON(path) {
-        return this.loadJS(path);
         console.log("Loading JSON specs "+path);
+        return this.loadJS(path);
         var inst = this;
         getJSON(path, specs => { inst.load(specs); });
     }
