@@ -51,6 +51,7 @@ class TLEFetch:
         fileName, buf = ret
         buf = buf.replace("\r", "").strip()
         lines = buf.split("\n")
+        lines = map(lambda s: s.strip(), lines)
         n = len(lines)
         if n % 3 != 0:
             print "Bad file", url
@@ -62,13 +63,14 @@ class TLEFetch:
             line2 = lines[3*1+2].strip()
             self.numTLEs += 1
             if MAKE_UNIQUE:
-                id = 2
-                name0 = name
-                while 1:
-                    name = "%s_%d" % (name0, id)
-                    if name not in self.sats:
-                        break
-                    id += 1
+                if name in self.sats:
+                    id = 2
+                    name0 = name
+                    while 1:
+                        name = "%s_%d" % (name0, id)
+                        if name not in self.sats:
+                            break
+                        id += 1
             if name in self.sats:
                 obj = self.sats[name]
             else:

@@ -4,6 +4,7 @@ import { sprintf } from "sprintf-js";
 import {Game} from './Game';
 import satellite from 'satellite.js';
 import {Loader} from './Loader';
+import {getJSON} from './Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -127,6 +128,7 @@ class SatTracks {
         var url = DATA_URL_PREFIX+dataSet;
         console.log("Getting All Satellite data from: " + url);
         var inst = this;
+        /*
         $.getJSON(url)
             .done(function(data, status) {
                 inst.handleAllSatsData(data, url);
@@ -134,6 +136,8 @@ class SatTracks {
             .fail(function(jqxhr, settings, ex) {
                 console.log("error: ", ex);
             });
+            */
+        getJSON(url, data => inst.handleAllSatsData(data, url));
     }
 
     initGraphics(opts) {
