@@ -14,7 +14,7 @@ CONFIG = {
             parent: 'station',
             path: 'models/satellites/calipso.dae',
             //path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
-            //scale: 0.1
+            // scale: 0.05
         },
         LIGHTS
     ]

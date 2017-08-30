@@ -188,6 +188,9 @@ class SatTracks {
             if (data[name].model) {
                 var satId = 'sat_'+j;
                 var s = 0.001;
+                if (data[name].modelScale) {
+                    s = data[name].modelScale;
+                }
                 var obj = {type: 'Model',
                            path: data[name].model,
                            name: satId,

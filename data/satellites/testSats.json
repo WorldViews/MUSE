@@ -61,7 +61,9 @@
             ]
          ]
       ],
-      "name": "1998-067ND_2"
+      "name": "1998-067ND_2",
+      "model":"models/satellites/calipso/calipso.dae",
+      "modelScale": 0.00005
    },
    "2015-049G_2": {
       "TLEs": [
