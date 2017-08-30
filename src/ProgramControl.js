@@ -21,6 +21,7 @@ class ProgramControl
         this.gss = null;
         if (options.gss)
             this.gss = new GSS.SpreadSheet(options.gss);
+        this.startTime = options.startTime || 0;
         this.duration = options.duration || 60;
         this.players = {};
         this._playTime = 0;

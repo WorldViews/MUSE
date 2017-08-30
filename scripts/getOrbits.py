@@ -4,7 +4,8 @@ import urllib
 
 urlPattern = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 CACHE_DIR = "../data/satellites/cache"
-OUTPUT_PATH = "../data/satellites/allSats.json"
+#OUTPUT_PATH = "../data/satellites/allSats.json"
+OUTPUT_PATH = "allSats.json"
 MAKE_UNIQUE = True
 
 def verifyDir(dir):
@@ -13,31 +14,33 @@ def verifyDir(dir):
         os.mkdir(dir)
 
 class TLEFetch:
-    def __init__(self, indexPath, cacheDir=CACHE_DIR):
+    def __init__(self, indexPath=None, cacheDir=CACHE_DIR):
         verifyDir(cacheDir)
         self.cacheDir = cacheDir
-        self.getUrls(indexPath)
-        self.getFiles()
-        self.dump()
-
-    def dump(self):
+        if indexPath:
+            self.getUrls(indexPath)
+            
+    def dump(self, outPath=None):
         print "Num TLE's:", self.numTLEs
         print "Num sats:", len(self.sats)
-        outPath = OUTPUT_PATH
+        if not outPath:
+            outPath = OUTPUT_PATH
         file(outPath, "w").write(json.dumps(self.sats, indent=3, sort_keys=True))
         
     def getUrls(self, indexPath):
-        self.sats = {}
         self.urls = []
-        self.numTLEs = 0
         str = file(indexPath).read()
         urls = re.findall(urlPattern, str)
         for url in urls:
             if url.endswith(".txt"):
                 self.urls.append(url)
 
-    def getFiles(self):
-        for url in self.urls:
+    def getFiles(self, urls=None):
+        self.sats = {}
+        self.numTLEs = 0
+        if urls == None:
+            urls = self.urls
+        for url in urls:
             self.handleFile(url)
 
     def handleFile(self, url):
@@ -48,6 +51,7 @@ class TLEFetch:
         fileName, buf = ret
         buf = buf.replace("\r", "").strip()
         lines = buf.split("\n")
+        lines = map(lambda s: s.strip(), lines)
         n = len(lines)
         if n % 3 != 0:
             print "Bad file", url
@@ -59,13 +63,14 @@ class TLEFetch:
             line2 = lines[3*1+2].strip()
             self.numTLEs += 1
             if MAKE_UNIQUE:
-                id = 2
-                name0 = name
-                while 1:
-                    name = "%s_%d" % (name0, id)
-                    if name not in self.sats:
-                        break
-                    id += 1
+                if name in self.sats:
+                    id = 2
+                    name0 = name
+                    while 1:
+                        name = "%s_%d" % (name0, id)
+                        if name not in self.sats:
+                            break
+                        id += 1
             if name in self.sats:
                 obj = self.sats[name]
             else:
@@ -94,9 +99,21 @@ class TLEFetch:
         file(cachePath, "w").write(str)
         return name, str
 
-def run():
-    path = "../data/satellites/CelesTrak_ Master TLE Index.html"
-    tlef = TLEFetch(path)
+def getAll():
+    indexPath = "../data/satellites/CelesTrak_ Master TLE Index.html"
+    tlef = TLEFetch()
+    tlef.getUrls(indexPath)
+    tlef.getFiles()
+    tlef.dump()
+
+def getCollision():
+    indexPath = "../data/satellites/CelesTrak_ Master TLE Index.html"
+    tlef = TLEFetch()
+    urls = ["http://celestrak.com/NORAD/elements/cosmos-2251-debris.txt",
+            "http://celestrak.com/NORAD/elements/iridium-33-debris.txt"]
+    tlef.getFiles(urls)
+    tlef.dump("irid-cosmos.json")
 
 if __name__ == '__main__':
-    run()
+    #getAll()
+    getCollision()

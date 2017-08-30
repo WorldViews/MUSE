@@ -4,6 +4,7 @@ import { sprintf } from "sprintf-js";
 import {Game} from './Game';
 import satellite from 'satellite.js';
 import {Loader} from './Loader';
+import {getJSON} from './Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -127,6 +128,7 @@ class SatTracks {
         var url = DATA_URL_PREFIX+dataSet;
         console.log("Getting All Satellite data from: " + url);
         var inst = this;
+        /*
         $.getJSON(url)
             .done(function(data, status) {
                 inst.handleAllSatsData(data, url);
@@ -134,6 +136,8 @@ class SatTracks {
             .fail(function(jqxhr, settings, ex) {
                 console.log("error: ", ex);
             });
+            */
+        getJSON(url, data => inst.handleAllSatsData(data, url));
     }
 
     initGraphics(opts) {
@@ -259,6 +263,7 @@ class SatTracks {
         this._fraction = f;
         this._prevPlayTime = t;
         this._prevClockTime = getClockTime();
+        console.log("playTime "+this.t+"  "+new Date(t*1000));
     }
 
     getPlayTime(t) {
@@ -298,6 +303,7 @@ class SatTracks {
     updateSats() {
         this.t = this.getPlayTime();
         var time = new Date(1000*this.t);
+        //console.log("playTime "+this.t+"  "+time);
         //var nsats = this.satrecs.length;
         var n = Object.keys(this.sats).length;
         var nv = this.geometry.vertices.length;
@@ -310,6 +316,8 @@ class SatTracks {
         for (var satName in this.sats) {
             var sat = this.sats[satName];
             var satrec = sat.satrec;
+            if (i==0)
+                window.SATREC0 = satrec;
             var pv = satellite.propagate(satrec, time);
             //showPosVel(pv, this.t);
             var p = pv.position;

@@ -70,7 +70,31 @@ function loadConfig(path)
         });
 }
 
+function loadModel(modelPath) {
+    console.log("***** loadModel "+modelPath);
+    CONFIG = {
+        cameraControls: 'Orbit',
+        specs: [
+            {type: 'PointLight', position: [100,0,0], distance: 1000},
+            {type: 'PointLight', position: [0,100,0], distance: 1000},
+            {type: 'PointLight', position: [0,0,100], distance: 1000},
+            {type: 'PointLight', position: [-100,0,0], distance: 1000},
+            {type: 'PointLight', position: [0,-100,0], distance: 1000},
+            {type: 'PointLight', position: [0,0,-100], distance: 1000},
+            {type: 'Model', 'name': 'model', 'path': modelPath, scale: 0.01}
+        ]
+    };
+    console.log("CONFIG: "+JSON.stringify(CONFIG));
+    start(CONFIG);
+}
+
 function start(config) {
+    console.log("app.start", config);
+    if (config == null && Util.getParameterByName("model")) {
+        var modelPath = Util.getParameterByName("model");
+        loadModel(modelPath);
+        return;
+    }
     if (config == null && Util.getParameterByName("config")) {
         var configName = Util.getParameterByName("config");
         var configPath = "configs/"+configName+".js";
@@ -79,13 +103,13 @@ function start(config) {
     }
     config = config || {};
     var specs = config.specs;
-
-    console.log(Util);
-    if (Util.getParameterByName("specs"))
-        specs = Util.getParameterByName("specs");
+    console.log("specs: ", specs);
+//    if (Util.getParameterByName("specs"))
+//        specs = Util.getParameterByName("specs");
     if (!specs)
         specs = DEFAULT_SPECS;
     let vr = config.vr || Util.getParameterByName("vr");
+    console.log("specs: ", specs);
 
     let pos = getStartPosition();
 
@@ -110,7 +134,9 @@ function start(config) {
     let cmpProgram = new CMPProgram(game, config.program);
     game.setProgram(cmpProgram);
 
+    console.log("loading specs", specs);
     game.load(specs);
+    console.log("loaded specs", specs);
     game.animate(0);
 }
 
