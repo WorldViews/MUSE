@@ -102,7 +102,7 @@ var SPECS = [
     {  type: 'Stars' },
     {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
     //{  type: 'Hurricane', scale: 0.01 }
-    {  type: 'VirtualEarth', name: 'vEarth', satTracks: 1,
+    {  type: 'VirtualEarth', name: 'vEarth', satTracks: 0,
        radius: 1.25, position: [0,1.9,0],
     }
 ];
