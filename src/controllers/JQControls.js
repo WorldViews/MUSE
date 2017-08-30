@@ -4,8 +4,6 @@ import {Game} from '../Game';
 
 import {UIControls} from './UIControls';
 
-//const duration = 32*60;
-
 class JQControls extends UIControls {
     constructor(game, options) {
         super(game, options);
@@ -183,7 +181,7 @@ class JQControls extends UIControls {
         var newValue = $("#uiTimeSlider").val();
         console.log('slider: ' + newValue);
 
-        var t = newValue*this.program.duration;
+        var t = this.program.startTime + newValue*this.program.duration;
         if (this.program)
             this.program.setPlayTime(t);
     }

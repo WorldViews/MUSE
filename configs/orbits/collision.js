@@ -2,7 +2,11 @@
 CONFIG = {
     'cameraControls': 'Orbit',
     'program': {
-       duration: 100000
+       //duration: 1*365*24*60*60
+       duration: 100*3600,
+       //startTime: 1504131722.726 - 100*24*3600
+       //startTime: 1504131722.726
+       startTime: 0.0
     },
     'specs': [
         {  type: 'JQControls' },
