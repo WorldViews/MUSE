@@ -1,5 +1,6 @@
 
 var CONFIG = {
+    'cameraControls': 'Orbit',
     specs: [
         {  type: 'Model', name: 'svsc',
            parent: 'station',

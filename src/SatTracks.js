@@ -5,6 +5,7 @@ import {Game} from './Game';
 import satellite from 'satellite.js';
 import {Loader} from './Loader';
 import {getJSON} from './Util';
+import * as Util from './Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -95,12 +96,15 @@ class SatTracks {
     }
 
     formatTime(t) {
+        return Util.formatDatetime(t);
+        /*
         //return ""+new Date(t*1000);
         //return t;
         var d = new Date(t*1000);
         return sprintf("%s/%s/%s %s:%s:%s",
                     d.getMonth(), d.getDate(), d.getFullYear(),
                     d.getHours(), d.getMinutes(), d.getSeconds());
+                    */
     }
 
     loadModels(opts) {
@@ -339,7 +343,7 @@ class SatTracks {
             if (!p) {
                 numErrs++;
                 if (numErrs < 2) {
-                    console.log("Problem with satellite "+satName);
+                    //console.log("Problem with satellite "+satName);
                     errName = satName;
                 }
                 continue;

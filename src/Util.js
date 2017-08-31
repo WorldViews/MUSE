@@ -10,6 +10,15 @@ export function toDate(datetimeStr) {
     return new Date(d);
 }
 
+export function formatDatetime(dt)
+{
+    if (!(dt instanceof Date))
+        dt = new Date(dt*1000);
+    return sprintf("%s/%s/%s %s:%s:%s",
+                    dt.getMonth()+1, dt.getDate(), dt.getFullYear(),
+                    dt.getHours(), dt.getMinutes(), dt.getSeconds());
+}
+
 export function getClockTime() {
     return new Date().getTime()/1000.0;
 }

@@ -72,6 +72,7 @@ class Planet {
             satOpts.parent = satOpts.parent || opts.name;
             this.satTracks = new SatTracks(this.game, satOpts);
         }
+        this.setPlayTime(game.program.playTime);
     }
 
     latLonToVector3(lat, lng, h)
