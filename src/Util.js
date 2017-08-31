@@ -3,6 +3,13 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 var toDeg = THREE.Math.radToDeg;
 
+export function toDate(datetimeStr) {
+//    const [day, month, year] = dateStr.split("-");
+//    return new Date(year, month - 1, day);
+    var d = Date.parse(datetimeStr);
+    return new Date(d);
+}
+
 export function getClockTime() {
     return new Date().getTime()/1000.0;
 }

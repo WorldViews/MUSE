@@ -75,6 +75,9 @@ class SatTracks {
         this.game = game;
         this.models = {};
         this.t = new Date().getTime()/1000.0;
+        this.filterHack = 0;
+        if (opts.filterHack != null)
+            this.filterHack = opts.filterHack;
         //this.satrecs = [];
         this.sats = {};
         this.loader = new Loader(game, []);
@@ -83,11 +86,21 @@ class SatTracks {
         this._playSpeed = 60.0;
         this.setPlayTime(getClockTime());
         var inst = this;
+        this.game.program.formatTime = t => inst.formatTime(t);
         //DATA_SETS.forEach(name => inst.loadSats(name));
         this.loadAllSats(opts.dataSet);
         if (opts.models) {
             this.loadModels(opts);
         }
+    }
+
+    formatTime(t) {
+        //return ""+new Date(t*1000);
+        //return t;
+        var d = new Date(t*1000);
+        return sprintf("%s/%s/%s %s:%s:%s",
+                    d.getMonth(), d.getDate(), d.getFullYear(),
+                    d.getHours(), d.getMinutes(), d.getSeconds());
     }
 
     loadModels(opts) {
@@ -312,6 +325,8 @@ class SatTracks {
         }
         var i=0;
         //this.checkProximities();
+        var numErrs = 0;
+        var errName = "";
         var nsats = this.geometry.vertices.length;
         for (var satName in this.sats) {
             var sat = this.sats[satName];
@@ -322,12 +337,16 @@ class SatTracks {
             //showPosVel(pv, this.t);
             var p = pv.position;
             if (!p) {
-                console.log("Problem with satellite "+satName);
+                numErrs++;
+                if (numErrs < 2) {
+                    console.log("Problem with satellite "+satName);
+                    errName = satName;
+                }
                 continue;
             }
             var v3 = this.geometry.vertices[i];
             v3.set(p.x, p.z, -p.y);
-            if (this._fraction != null) {
+            if (this.filterHack && this._fraction != null) {
                 var f = i/(nsats+0.0);
                 if (f > this._fraction)
                     v3.set(0,0,0);
@@ -343,6 +362,9 @@ class SatTracks {
                 }
             }
             i++;
+        }
+        if (numErrs) {
+            console.log(sprintf("Num sat errors: %d - %s", numErrs, errName));
         }
         this.geometry.verticesNeedUpdate = true;
     }

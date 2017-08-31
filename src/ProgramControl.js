@@ -9,6 +9,7 @@
   the displays, which objects are on stage, etc.
 */
 import {sprintf} from "sprintf-js";
+import * as Util from './Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -21,7 +22,11 @@ class ProgramControl
         this.gss = null;
         if (options.gss)
             this.gss = new GSS.SpreadSheet(options.gss);
-        this.startTime = options.startTime || 0;
+        this.startTime = 0;
+        if (options.startTime) {
+            var date = Util.toDate(options.startTime);
+            this.startTime = date.getTime()/1000.0;
+        }
         this.duration = options.duration || 60;
         this.players = {};
         this._playTime = 0;
@@ -44,9 +49,16 @@ class ProgramControl
         this.displayTime(t);
     }
 
+    formatTime(t) {
+        return sprintf("%8.1f", t);
+    }
+
     displayTime(t) {
         //console.log("displayTime "+t);
-        var tStr = sprintf("%8.1f", t);
+        var tStr = this.formatTime(t);
+        if (this.formatTime) {
+
+        }
         this.game.events.dispatchEvent({
             type: 'valueChange',
             message: {

@@ -2,7 +2,13 @@
 CONFIG = {
     'cameraControls': 'Orbit',
     'program': {
-       duration: 100000
+       //duration: 100000,
+       duration: 20*365*24*60*60,
+       //duration: 100*3600,
+       //startTime: 1504131722.726 - 100*24*3600
+       //startTime: 1504131722.726
+       startTime: '2/8/2000'
+       //startTime: '6/1/2005 10:30'
     },
     'specs': [
         {  type: 'JQControls' },
@@ -15,7 +21,9 @@ CONFIG = {
            //satTracks: {dataSet: 'historicalSats.json'},
            satTracks: {models: [
                'models/satellites/ComSat/model.dae',
-               'models/satellites/ComSat2/model.dae']},
+               'models/satellites/ComSat2/model.dae'],
+               filterHack: 1
+           },
            //satTracks: 1,
            dataViz: 0,
            atmosphere: {'name': 'CO2Viz', opacity: .1}
