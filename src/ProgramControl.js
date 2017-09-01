@@ -24,14 +24,19 @@ class ProgramControl
             this.gss = new GSS.SpreadSheet(options.gss);
         this.startTime = 0;
         if (options.startTime) {
-            var date = Util.toDate(options.startTime);
-            this.startTime = date.getTime()/1000.0;
+            //var date = Util.toDate(options.startTime);
+            //this.startTime = date.getTime()/1000.0;
+            this.startTime = Util.toTime(options.startTime);
         }
         this.duration = options.duration || 60;
         this.players = {};
         this._playTime = 0;
         this._playSpeed = 1.0;
-        this.setPlayTime(0);
+        var t = 0;
+        if (options.playTime) {
+            t = Util.toTime(options.playTime);
+        }
+        this.setPlayTime(t);
         var inst = this;
         setInterval(()=>inst.tick(), 200);
     }
@@ -56,9 +61,6 @@ class ProgramControl
     displayTime(t) {
         //console.log("displayTime "+t);
         var tStr = this.formatTime(t);
-        if (this.formatTime) {
-
-        }
         this.game.events.dispatchEvent({
             type: 'valueChange',
             message: {
@@ -67,7 +69,7 @@ class ProgramControl
             }
         });
         var dur = this.duration;
-    	let value = (t/(0.0+dur));
+    	let value = ((t-this.startTime)/(0.0+dur));
         if (game.controllers.ui && game.controllers.ui.slider) {
             try {
 	               game.controllers.ui.slider.value = value;
@@ -78,8 +80,10 @@ class ProgramControl
         }
         //console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
         try {
-	           let timeline = $('#timeLine');
-    	       timeline.slider('value', value);
+              // console.log(">>>>>>>>>>>> setting uiTimeLine.val "+value);
+               $("#uiTimeSlider").val(value);
+	           //let timeline = $('#uiTimeLine');
+    	       //timeline.val(value);
         }
         catch (e) {
         }

@@ -7,7 +7,8 @@ CONFIG = {
        //duration: 100*3600,
        //startTime: 1504131722.726 - 100*24*3600
        //startTime: 1504131722.726
-       startTime: '10/4/1957'
+       startTime: '10/4/1957',
+       playTime: 'now'
        //startTime: '6/1/2005 10:30'
     },
     'specs': [

@@ -3,11 +3,34 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 var toDeg = THREE.Math.radToDeg;
 
-export function toDate(datetimeStr) {
+// take a string, a float (seconds since epoch) or date
+// and return date.
+export function toDate(datetime) {
 //    const [day, month, year] = dateStr.split("-");
 //    return new Date(year, month - 1, day);
-    var d = Date.parse(datetimeStr);
-    return new Date(d);
+    if (datetime instanceof Date)
+        return datetime;
+    if (datetime == 'now')
+        return new Date();
+    if (typeof datetime == 'string') {
+        var d = Date.parse(datetime);
+        return new Date(d);
+    }
+    return new Date(datetime*1000);
+}
+
+export function toTime(datetime) {
+//    const [day, month, year] = dateStr.split("-");
+//    return new Date(year, month - 1, day);
+    if (datetime instanceof Date)
+        return datetime.getTime()/1000.0;
+    if (datetime == 'now')
+        return getClockTime();
+    if (typeof datetime == 'string') {
+        var d = Date.parse(datetime);
+        return new Date(d).getTime()/1000.0;
+    }
+    return datetime;
 }
 
 export function formatDatetime(dt)
