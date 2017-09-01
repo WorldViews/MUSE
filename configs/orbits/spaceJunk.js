@@ -3,11 +3,11 @@ CONFIG = {
     'cameraControls': 'Orbit',
     'program': {
        //duration: 100000,
-       duration: 20*365*24*60*60,
+       duration: 65*365*24*60*60,
        //duration: 100*3600,
        //startTime: 1504131722.726 - 100*24*3600
        //startTime: 1504131722.726
-       startTime: '2/8/2000'
+       startTime: '10/4/1957'
        //startTime: '6/1/2005 10:30'
     },
     'specs': [
@@ -19,9 +19,10 @@ CONFIG = {
         {  type: 'VirtualEarth', name: 'vEarth',
            radius: 1.25, rot: [0,0,0],
            //satTracks: {dataSet: 'historicalSats.json'},
-           satTracks: {models: [
-               'models/satellites/ComSat/model.dae',
-               'models/satellites/ComSat2/model.dae'],
+           satTracks: {
+               //models: [
+                //   'models/satellites/ComSat/model.dae',
+                //   'models/satellites/ComSat2/model.dae'],
                filterHack: 1
            },
            //satTracks: 1,
