@@ -111,5 +111,8 @@ export default {
     getCameraParams,
     getParameterByName,
     randomIntFromInterval,
-    randomFromInterval
+    randomFromInterval,
+    toTime,
+    toDate,
+    formatDatetime
 };

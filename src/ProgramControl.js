@@ -31,7 +31,7 @@ class ProgramControl
         this.duration = options.duration || 60;
         this.players = {};
         this._playTime = 0;
-        this._playSpeed = 1.0;
+        this._playSpeed = options.playSpeed || 1.0;
         var t = 0;
         if (options.playTime) {
             t = Util.toTime(options.playTime);
@@ -89,6 +89,14 @@ class ProgramControl
         }
     }
 
+    getPlaySpeed() {
+        return this._playSpeed;
+    }
+    
+    setPlaySpeed(s) {
+        this._playSpeed = s;
+        return s;
+    }
     get playTime() {
         var t = getClockTime();
         var dt = t - this._prevClockTime;

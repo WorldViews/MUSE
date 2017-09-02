@@ -27,6 +27,7 @@ import { Hurricane } from './lib/Hurricane';
 import { VirtualEarth } from './lib/VirtualEarth';
 import { Kessler } from './KesslerNode';
 
+
 let {degToRad} = THREE.Math;
 let CONFIG = null;
 let SPECS = null;
@@ -137,6 +138,7 @@ function start(config) {
     console.log("loading specs", specs);
     game.load(specs);
     console.log("loaded specs", specs);
+    game.config = config;
     if (config.onStart) {
         config.onStart(game);
     }

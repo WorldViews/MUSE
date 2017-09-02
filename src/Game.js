@@ -4,7 +4,7 @@ import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
 import {Loader} from './Loader';
 import { NetLink } from './NetLink';
-import Util from './Util'
+import Util from './Util';
 
 let {degToRad} = THREE.Math;
 
@@ -195,6 +195,10 @@ class Game {
     }
 
     animate(msTime) {
+        if (this.config && this.config.onUpdate) {
+            this.config.onUpdate(game);
+        }
+
         if (this.controls) {
             this.controls.update(msTime);
         }

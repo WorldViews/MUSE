@@ -6,6 +6,7 @@ import satellite from 'satellite.js';
 import {Loader} from './Loader';
 import {getJSON} from './Util';
 import * as Util from './Util';
+import {Kepler,$V} from './lib/KeplerMUSE';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -85,30 +86,25 @@ class SatTracks {
         this.initGraphics(opts);
         this.radiusEarthKm = 6378.1;
         this._playSpeed = 60.0;
+        this.startTime = game.program.playTime;
         this.setPlayTime(getClockTime());
         var inst = this;
-        this.game.program.formatTime = t => inst.formatTime(t);
+        this.game.program.formatTime = t => Util.formatDatetime(t);
         //DATA_SETS.forEach(name => inst.loadSats(name));
         this.loadAllSats(opts.dataSet);
         if (opts.models) {
             this.loadModels(opts);
         }
-    }
-
-    formatTime(t) {
-        return Util.formatDatetime(t);
-        /*
-        //return ""+new Date(t*1000);
-        //return t;
-        var d = new Date(t*1000);
-        return sprintf("%s/%s/%s %s:%s:%s",
-                    d.getMonth(), d.getDate(), d.getFullYear(),
-                    d.getHours(), d.getMinutes(), d.getSeconds());
-                    */
+        window.KEPLER = Kepler;
+        //var r = Vector([-6045, -3490, 2500]);
+        //var v = Vector([-3.457, 6.618, 2.533]);
+        var r = $V([-6045, -3490, 2500]);
+        var v = $V([-3.457, 6.618, 2.533]);
+        window.ORBIT = new Kepler.Orbit(r,v);
     }
 
     loadModels(opts) {
-        console.log(">>>>>>>>>>>>>>>>>> SatTracks loading "+opts.models);
+        console.log("SatTracks loading "+opts.models);
         //var obj = {type: 'Model', path: opts.models, name:'satMod1', scale: 1.0};
         //var obj = {type: 'Model', path: opts.models, scale: [0.5,0.5,0.5]};
         var s = 0.001;
@@ -273,6 +269,9 @@ class SatTracks {
         }
         this.particles = new THREE.Points( this.geometry, this.material );
         this.game.addToGame(this.particles, 'satellites', this.opts.parent);
+        if (this.filterHack) {
+            this.setupFakeTimes();
+        }
     }
 
     setPlayTime(t, f) {
@@ -317,9 +316,29 @@ class SatTracks {
         console.log("d2min: "+d2min+"  i: "+i+"  j: "+j);
     }
 
+    setupFakeTimes() {
+        console.log("****************************** FAKE TIMES ***************************")
+        var program = this.game.program;
+        var i = 0;
+        var nsats = Object.keys(this.sats).length;
+        console.log("Num sats: "+nsats);
+        for (var satName in this.sats) {
+            var sat = this.sats[satName];
+            var f = i/(nsats+0.0);
+            var startTime = program.startTime + f*program.duration;
+            sat.startTime = startTime;
+            //console.log("sat "+satName+" "+Util.toDate(startTime));
+            i++;
+        }
+    }
+
     updateSats() {
         this.t = this.getPlayTime();
-        var time = new Date(1000*this.t);
+        var orbitTime = this.t;
+        //var dt = this.t - this.startTime;
+        //orbitTime = this.startTime + 0.001*dt;
+        //console.log("orbitTime: "+orbitTime);
+        var time = new Date(1000*orbitTime);
         //console.log("playTime "+this.t+"  "+time);
         //var nsats = this.satrecs.length;
         var n = Object.keys(this.sats).length;
@@ -332,30 +351,32 @@ class SatTracks {
         var numErrs = 0;
         var errName = "";
         var nsats = this.geometry.vertices.length;
+        var i = -1;
         for (var satName in this.sats) {
+            i++;
             var sat = this.sats[satName];
             var satrec = sat.satrec;
-            if (i==0)
-                window.SATREC0 = satrec;
-            var pv = satellite.propagate(satrec, time);
-            //showPosVel(pv, this.t);
-            var p = pv.position;
-            if (!p) {
-                numErrs++;
-                if (numErrs < 2) {
-                    //console.log("Problem with satellite "+satName);
-                    errName = satName;
-                }
-                continue;
-            }
             var v3 = this.geometry.vertices[i];
-            v3.set(p.x, p.z, -p.y);
-            if (this.filterHack && this._fraction != null) {
-                var f = i/(nsats+0.0);
-                if (f > this._fraction)
-                    v3.set(0,0,0);
+            if (sat.bad || (sat.startTime && sat.startTime >= this.t)) {
+                v3.set(0,0,0);
             }
-            //v3.normalize();
+            else {
+                var pv = satellite.propagate(satrec, time);
+                //showPosVel(pv, this.t);
+                var p = pv.position;
+                if (p) {
+                    v3.set(p.x, p.z, -p.y);
+                }
+                else {
+                    sat.bad = true;
+                    v3.set(0,0,0);
+                    numErrs++;
+                    if (numErrs < 2) {
+                        //console.log("Problem with satellite "+satName);
+                        errName = satName;
+                    }
+                }
+            }
             v3.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
             if (this.models[i]) {
                 var m = this.game.models[this.models[i]];
@@ -365,7 +386,6 @@ class SatTracks {
                     m.position.set(v3.x, v3.y,v3.z);
                 }
             }
-            i++;
         }
         if (numErrs) {
             console.log(sprintf("Num sat errors: %d - %s", numErrs, errName));
