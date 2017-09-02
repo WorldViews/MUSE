@@ -12,6 +12,7 @@ function onStart(game)
         var ft = tStart + f*dur;
         return game.Util.formatDatetime(ft);
     }
+    game.camera.position.z = 10;
 }
 
 function onUpdate(game)
