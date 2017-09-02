@@ -137,6 +137,9 @@ function start(config) {
     console.log("loading specs", specs);
     game.load(specs);
     console.log("loaded specs", specs);
+    if (config.onStart) {
+        config.onStart(game);
+    }
     game.animate(0);
 }
 

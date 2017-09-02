@@ -103,7 +103,8 @@ class Glow {
 			material.uniforms.coeficient.value	= 0.32
 			material.uniforms.power.value		= 2.5
 			var mesh	= new THREE.Mesh(geometry, material );
-			mesh.scale.multiplyScalar(1.05);
+			//mesh.scale.multiplyScalar(1.05);
+			mesh.scale.multiplyScalar(1.1);
 			mesh.name = "atmosphere2"
 			container.add( mesh );
 		}
@@ -156,8 +157,9 @@ class BasicAtmosphere {
 		opts = opts || {};
 		this.planet = planet;
 		this.radius = opts.radius || planet.radius || 1.0;
-		this.haze = new Haze(obj3d, this, this.radius*1.02, opts);
-		this.glow = new Glow(obj3d, this, this.radius*1.05, opts);
+		this.haze = new Haze(obj3d, this, this.radius*1.009, opts);
+		//this.glow = new Glow(obj3d, this, this.radius*1.05, opts);
+		this.glow = new Glow(obj3d, this, this.radius*1.0, opts);
 	}
 
 	setHSL(h,s,l) {

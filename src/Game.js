@@ -27,6 +27,7 @@ class Game {
             let netLink = new NetLink(this);
             this.registerController("netLink", netLink);
         }
+        this.Util = Util;
     }
 
     init(domElementId) {
