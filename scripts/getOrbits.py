@@ -19,14 +19,14 @@ class TLEFetch:
         self.cacheDir = cacheDir
         if indexPath:
             self.getUrls(indexPath)
-            
+
     def dump(self, outPath=None):
         print "Num TLE's:", self.numTLEs
         print "Num sats:", len(self.sats)
         if not outPath:
             outPath = OUTPUT_PATH
         file(outPath, "w").write(json.dumps(self.sats, indent=3, sort_keys=True))
-        
+
     def getUrls(self, indexPath):
         self.urls = []
         str = file(indexPath).read()
@@ -35,15 +35,43 @@ class TLEFetch:
             if url.endswith(".txt"):
                 self.urls.append(url)
 
-    def getFiles(self, urls=None):
+    def getFiles(self, urls=None, linesPerEntry=3):
         self.sats = {}
         self.numTLEs = 0
         if urls == None:
             urls = self.urls
         for url in urls:
-            self.handleFile(url)
+            if linesPerEntry == 2:
+                self.handleFile2(url)
+            elif linesPerEntry == 3:
+                self.handleFile3(url)
+            else:
+                print "Bad linesPerEntry: ", linesPerEntry
+                raise ValueError
 
-    def handleFile(self, url):
+    def handleFile2(self, url):
+        ret = self.getFile(url)
+        if not ret:
+            print "Cannot get", url
+            return
+        fileName, buf = ret
+        buf = buf.replace("\r", "").strip()
+        lines = buf.split("\n")
+        lines = map(lambda s: s.strip(), lines)
+        n = len(lines)
+        if n % 2 != 0:
+            print "Bad file", url
+            return
+        print "%d  (= %d mod 2)" % (n, n % 2)
+        for i in range(n/2):
+            line1 = lines[2*i+0].strip()
+            line2 = lines[2*i+1].strip()
+            name = "sat%d" % (i+1)
+            self.numTLEs += 1
+            self.addEntry(name, fileName, line1, line2)
+        print
+
+    def handleFile3(self, url):
         ret = self.getFile(url)
         if not ret:
             print "Cannot get", url
@@ -71,20 +99,31 @@ class TLEFetch:
                         if name not in self.sats:
                             break
                         id += 1
-            if name in self.sats:
-                obj = self.sats[name]
-            else:
-                obj = {'TLEs': [], 'name': name}
-                self.sats[name] = obj
-            obj['TLEs'].append([fileName, (line1, line2)])
-            print name
+            self.addEntry(name, fileName, line1, line2)
         print
-        
+
+    def addEntry(self, name, fileName, line1, line2):
+        if name in self.sats:
+            obj = self.sats[name]
+        else:
+            obj = {'TLEs': [], 'name': name}
+            self.sats[name] = obj
+        obj['TLEs'].append([fileName, (line1, line2)])
+        print name
+
     def getFile(self, url):
         i = url.rindex("/")
         if i < 0:
+            print "Bad URL", url
             return None
         name = url[i+1:]
+        if url.startswith("file:"):
+            path = url[5:]
+            print "Getting file", path
+            return name, file(path).read()
+        i = url.rindex("/")
+        if i < 0:
+            return None
         cachePath = os.path.join(self.cacheDir, name)
         cachePath = cachePath.replace("\\","/")
         print "name: %s  url: %s" % (name, url)
@@ -104,7 +143,7 @@ def getAll():
     tlef = TLEFetch()
     tlef.getUrls(indexPath)
     tlef.getFiles()
-    tlef.dump()
+    tlef.dump("allSats.json")
 
 def getCollision():
     indexPath = "../data/satellites/CelesTrak_ Master TLE Index.html"
@@ -114,6 +153,13 @@ def getCollision():
     tlef.getFiles(urls)
     tlef.dump("irid-cosmos.json")
 
+def getCatalog():
+    tlef = TLEFetch()
+    urls = ["file:C:/GitHub/WorldViews/MUSE/data/satellites/tle-9-1-2017.txt"]
+    tlef.getFiles(urls, linesPerEntry=2)
+    tlef.dump("tle-9-1-2017.json")
+
 if __name__ == '__main__':
     #getAll()
-    getCollision()
+    #getCollision()
+    getCatalog()

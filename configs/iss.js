@@ -27,6 +27,8 @@ CONFIG = {
     //},
     'specs': [
         ISS_MODEL,
+        {  type: 'SolarSystem' },
+        {  type: 'Stars' },
         LIGHTS
     ]
 };

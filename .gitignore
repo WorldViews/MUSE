@@ -2,9 +2,11 @@ node_modules/*
 assets/*
 *~
 *#
+*pyc
 museServer/node_modules/*
 data/bookmarks.edited.json
 data/satellites/cache
+scripts/SPACE_TRACK_AUTH.py
 dist/*
 local/*
 models/*

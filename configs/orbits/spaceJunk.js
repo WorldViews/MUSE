@@ -21,6 +21,8 @@ CONFIG = {
            radius: 1.25, rot: [0,0,0],
            //satTracks: {dataSet: 'historicalSats.json'},
            satTracks: {
+               //dataSet: 'allSats.json',
+               dataSet: 'tle-9-1-2017.json',
                //models: [
                 //   'models/satellites/ComSat/model.dae',
                 //   'models/satellites/ComSat2/model.dae'],
