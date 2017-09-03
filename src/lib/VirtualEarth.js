@@ -4,6 +4,8 @@ import {Game} from '../Game'
 import {SatTracks} from '../SatTracks'
 import {Atmosphere} from './Atmosphere'
 import {CMPDataViz2} from './CMPDataViz2'
+import ImageSource from './ImageSource';
+
 
 // convert the positions from a lat, lon to a position on a sphere.
 // http://www.smartjava.org/content/render-open-data-3d-world-globe-threejs
@@ -35,26 +37,28 @@ class Planet {
         this.satTracks = null;
         this.group = new THREE.Group();
         this.group.earth = this;
+        this.material = null;
         var loader = new THREE.TextureLoader();
         //var texPath = opts.texture || 'textures/land_ocean_ice_cloud_2048.jpg';
         var texPath = opts.texture;
+        this.imageSource = null;
         console.log("*** Planet.loading "+texPath);
         this.geometry = new THREE.SphereGeometry( radius, 30, 30 );
-        if (texPath) {
+        if (opts.videoTexture) {
+            this.imageSource = new ImageSource({
+                type: ImageSource.TYPE.VIDEO,
+                url: opts.videoTexture
+            });
+            let texture = this.imageSource.createTexture();
+            inst._addBody(texture);
+        }
+        else if (texPath) {
             loader.load( texPath, function ( texture ) {
-                var material = new THREE.MeshPhongMaterial( { map: texture, overdraw: 0.5 } );
-                inst.mesh = new THREE.Mesh( inst.geometry, material );
-                inst.mesh.name = inst.name;
-                inst.group.add(inst.mesh);
-                inst.loaded = true;
+                inst._addBody(texture);
             });
         }
         else {
-            var material = new THREE.MeshPhongMaterial( { overdraw: 0.5 } );
-            inst.mesh = new THREE.Mesh( inst.geometry, material );
-            inst.mesh.name = inst.name;
-            inst.group.add(inst.mesh);
-            inst.loaded = true;
+            inst._addBody();
         }
         if (opts.atmosphere) {
             this.atmosphere = new Atmosphere(game.scene, this, opts.atmosphere);
@@ -73,6 +77,14 @@ class Planet {
             this.satTracks = new SatTracks(this.game, satOpts);
         }
         this.setPlayTime(game.program.playTime);
+    }
+
+    _addBody(texture) {
+        this.material = new THREE.MeshPhongMaterial( { map: texture, overdraw: 0.5 } );
+        this.mesh = new THREE.Mesh( this.geometry, this.material );
+        this.mesh.name = this.name;
+        this.group.add(this.mesh);
+        this.loaded = true;
     }
 
     latLonToVector3(lat, lng, h)
@@ -161,14 +173,48 @@ class Planet {
         }
     }
 
+    updateSurfaceImage(url) {
+        console.log("Getting ImageSource "+url);
+        this.imageSource = new ImageSource({
+            //type: ImageSource.TYPE.VIDEO,
+            type: ImageSource.TYPE.IMAGE,
+            url: url
+        });
+        let texture = this.imageSource.createTexture();
+        this.material.map = texture;
+        this.texture = texture;
+        /*
+        let videoMaterial = new THREE.MeshBasicMaterial({
+            map: videoTexture,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        */
+    }
+
+    updateSurfaceVideo(videoUrl) {
+        console.log("Getting ImageSource "+videoUrl);
+        this.imageSource = new ImageSource({
+            type: ImageSource.TYPE.VIDEO,
+            url: videoUrl
+        });
+        let texture = this.imageSource.createTexture();
+        this.material.map = texture;
+    }
+
+    testVideo() {
+        var url = "videos/GlobalWeather2013.mp4";
+        this.updateSurfaceVideo(url);
+    }
 };
 
 
 class VirtualEarth extends Planet
 {
     constructor(game, opts) {
-        if (!opts.texture)
-        opts.texture = 'textures/land_ocean_ice_cloud_2048.jpg';
+        if (!opts.texture) {
+            opts.texture = 'textures/land_ocean_ice_cloud_2048.jpg';
+        }
         super(game, opts);
     }
 }
