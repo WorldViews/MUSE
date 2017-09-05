@@ -7,6 +7,7 @@ museServer/node_modules/*
 data/bookmarks.edited.json
 data/satellites/cache
 scripts/SPACE_TRACK_AUTH.py
+scripts/STDB/*
 dist/*
 local/*
 models/*
