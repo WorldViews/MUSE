@@ -16,7 +16,13 @@ CONFIG = {
         {  type: 'PointLight', name: 'sun', position: [3000, -1000, 0], distance: 5000},
         {  type: 'VirtualEarth', name: 'vEarth',
            radius: 1.25, rot: [0,0,0],
-           satTracks: {dataSet: 'joelOrbits.3le'},
+           satTracks: {dataSet: 'joelOrbits.3le',
+                        models: {
+                            'COSMOS2251': {path:'models/satellites/ComSat/model.dae',
+                                           scale: .001},
+                            'IRIDIUM33': {path:'models/satellites/Iridium/model.dae',
+                                          scale: .00005}
+                        }},
            //satTracks: {dataSet: 'iridCosmosColl.json'},
            //satTracks: {models: [
            //    'models/satellites/ComSat/model.dae',

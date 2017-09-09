@@ -108,23 +108,29 @@ class SatTracks {
     }
 
     loadModels(opts) {
-        console.log("SatTracks loading "+opts.models);
+        console.log("******** SatTracks loading ", opts.models);
         //var obj = {type: 'Model', path: opts.models, name:'satMod1', scale: 1.0};
         //var obj = {type: 'Model', path: opts.models, scale: [0.5,0.5,0.5]};
-        var s = 0.001;
-        var ids = [0,50,100,200, 300, 302];
-        ids = [];
-        for (var k=0; k<10; k++) { ids.push(k)};
-        var j=0;
-        var n = opts.models.length;
-        ids.forEach(id => {
-            var modelPath = opts.models[j % n];
+        var s = 0.005;
+        //var ids = [0,50,100,200, 300, 302];
+        //ids = [];
+        //for (var k=0; k<10; k++) { ids.push(k)};
+        //var j=0;
+        //var n = opts.models.length;
+        for (var id in opts.models) {
+            var obj = opts.models[id];
             var satName = "satMod_"+id;
-            var obj = {type: 'Model', path: modelPath, name: satName, scale: s};
+            if (typeof obj === "string") {
+                obj = {path: model, scale: s};
+            }
+            obj.type = 'Model';
+            obj.name = satName;
+            //var modelPath = model.path;
+            console.log("************** model id"+id, obj);
+            //var obj = {type: 'Model', path: modelPath, name: satName, scale: s};
             this.loader.load([obj]);
             this.models[id] = satName;
-            j++;
-        })
+        }
     }
 
     loadSatsData(dataSetName) {
@@ -261,7 +267,6 @@ class SatTracks {
                 //console.log(" prev dataSet "+this.sats[name].dataSet);
                 //console.log(" new  dataSet "+sat.dataSet);
                 name = this.getUniqueSatName(name);
-                //console.log("using new name "+name);
             }
             if (!this.sats[name]) {
                 this.geometry.vertices.push(new THREE.Vector3());
@@ -395,8 +400,8 @@ class SatTracks {
                 }
             }
             v3.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
-            if (this.models[i]) {
-                var m = this.game.models[this.models[i]];
+            if (this.models[satName]) {
+                var m = this.game.models[this.models[satName]];
                 if (m) {
                     window.SATMOD = m;
                     //console.log("set position "+this.models[i]+" "+v3.x+" "+v3.y+" "+v3.z);
