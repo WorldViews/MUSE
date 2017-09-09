@@ -63,6 +63,10 @@ function showPosVel(pv, t)
     //console.log("positionAndVelocity: "+JSON.stringify(pv));
     var p = pv.position;
     var v = pv.velocity;
+    if (!p) {
+        console.log("no position available");
+        return;
+    }
     if (!t)
         t= 0;
     console.log(sprintf("%12.2f   %10.2f %10.2f %10.2f   %10.2f %10.2f %10.2f",
@@ -91,7 +95,7 @@ class SatTracks {
         var inst = this;
         this.game.program.formatTime = t => Util.formatDatetime(t);
         //DATA_SETS.forEach(name => inst.loadSats(name));
-        this.loadAllSats(opts.dataSet);
+        this.loadSatsData(opts.dataSet);
         if (opts.models) {
             this.loadModels(opts);
         }
@@ -122,21 +126,32 @@ class SatTracks {
             j++;
         })
     }
-    loadSats(dataSetName) {
-        var url = DATA_URL_PREFIX+dataSetName+".txt";
+
+    loadSatsData(dataSetName) {
+        if (dataSetName.endsWith(".txt") || dataSetName.endsWith(".3le")) {
+            this.loadTLEFileData(dataSetName);
+        }
+        else {
+            this.loadJSONSatsData(dataSetName);
+        }
+    }
+
+    loadTLEFileData(dataSetName) {
+        //var url = DATA_URL_PREFIX+dataSetName+".txt";
+        var url = DATA_URL_PREFIX+dataSetName;
         console.log("Getting Satellite data for "+name+" url:"+url);
         var inst = this;
         $.get(url)
             .done(function(data, status) {
                 //console.log("loaded:\n"+data);
-                inst.handleSatsData(data, dataSetName, url);
+                inst.handleTLEFileData(data, dataSetName, url);
             })
             .fail(function(jqxhr, settings, ex) {
                 console.log("error: ", ex);
             });
     }
 
-    loadAllSats(dataSet) {
+    loadJSONSatsData(dataSet) {
         dataSet = dataSet || "allSats.json";
         var url = DATA_URL_PREFIX+dataSet;
         console.log("Getting All Satellite data from: " + url);
@@ -150,7 +165,7 @@ class SatTracks {
                 console.log("error: ", ex);
             });
             */
-        getJSON(url, data => inst.handleAllSatsData(data, url));
+        getJSON(url, data => inst.handleJSONSatsData(data, url));
     }
 
     initGraphics(opts) {
@@ -171,7 +186,7 @@ class SatTracks {
         //this.game.addToGame(this.particles);
     }
 
-    handleSatsData(data, dataSetName, url) {
+    handleTLEFileData(data, dataSetName, url) {
         data = data || defaultSatData;
         var lines = data.split('\n');
         lines = lines.map(s => s.trim());
@@ -190,7 +205,7 @@ class SatTracks {
         this.addSats(satList);
     }
 
-    handleAllSatsData(data,url) {
+    handleJSONSatsData(data,url) {
         console.log("***** handleAllSatsData "+url);
         var satList = [];
         var j = 0;
@@ -353,8 +368,10 @@ class SatTracks {
         var nsats = this.geometry.vertices.length;
         var i = -1;
         for (var satName in this.sats) {
+            //console.log("satName: "+satName);
             i++;
             var sat = this.sats[satName];
+            //console.log("sat:", sat);
             var satrec = sat.satrec;
             var v3 = this.geometry.vertices[i];
             if (sat.bad || (sat.startTime && sat.startTime >= this.t)) {

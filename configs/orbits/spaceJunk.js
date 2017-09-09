@@ -58,6 +58,7 @@ CONFIG = {
            satTracks: {
                //dataSet: 'allSats.json',
                dataSet: 'tle-9-1-2017.json',
+               //dataSet: '2017-01-01.muse.json',
                //models: [
                 //   'models/satellites/ComSat/model.dae',
                 //   'models/satellites/ComSat2/model.dae'],
