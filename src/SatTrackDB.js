@@ -28,13 +28,20 @@ class SatTrackDB {
     constructor(dataSet, onLoadedFun) {
         window.satDB = this;
         this.onLoadedFun = onLoadedFun;
+        this.catalog = null;
+        this.dataSets = null;
         this.sats = {};
+        this.tzo = new Date().getTimezoneOffset();
+        this._t = new Date()/1000.0;
         if (dataSet)
             this.loadData(dataSet);
     }
 
     loadData(dataSetName) {
-        if (dataSetName.endsWith(".txt") || dataSetName.endsWith(".3le")) {
+        if (dataSetName.endsWith("stdb.json")) {
+            this.loadSTDB(dataSetName);
+        }
+        else if (dataSetName.endsWith(".txt") || dataSetName.endsWith(".3le")) {
             this.loadTLEFileData(dataSetName);
         }
         else {
@@ -65,6 +72,14 @@ class SatTrackDB {
         getJSON(url, data => inst.handleJSONSatsData(data, url));
     }
 
+    loadSTDB(dataSet) {
+        dataSet = dataSet || "all_stdb.json";
+        var url = DATA_URL_PREFIX+dataSet;
+        console.log("Getting SpaceTrackDB from: " + url);
+        var inst = this;
+        getJSON(url, data => inst.handleSTDBData(data, url));
+    }
+
     handleTLEFileData(data, dataSetName, url) {
         data = data || defaultSatData;
         var lines = data.split('\n');
@@ -76,15 +91,18 @@ class SatTrackDB {
         var satList = [];
         for (var i=0; i<m; i++) {
             var name = lines[3*i].trim();
-            var tle = [lines[3*i+1], lines[3*i+2]];
+            var tle1 = lines[3*i+1];
+            var tle2 = lines[3*i+2];
+            var tle = [tle1, tle2];
+            var id = tle1.slice(2,7);
             //console.log("name: "+name);
             //console.log("tle: "+tle+"\n");
-            satList.push({name: name, tle: tle, dataSet: dataSetName});
+            satList.push({id: id, name: name, tle: tle, dataSet: dataSetName});
         };
         this.addSats(satList);
     }
 
-    handleJSONSatsData(data,url) {
+    handleJSONSatsData(data, url) {
         console.log("***** handleAllSatsData "+url);
         var satList = [];
         var j = 0;
@@ -115,14 +133,48 @@ class SatTrackDB {
         this.addSats(satList);
     }
 
-    getUniqueSatName(baseName) {
-        var i=1;
-        var name = baseName;
-        while (this.sats[name] != null) {
-            name = baseName+"_"+i;
-            i += 1;
+    handleSTDBData(stdb, url) {
+        window.STDB = stdb;
+        console.log("***** handleSTDBData "+url);
+        var satList = [];
+        var j = 0;
+        this.dataSets = stdb.dataSets;
+        this.catalog = stdb.catalog;
+        var dataSet = null;
+        for (var epoch in this.dataSets) {
+            dataSet = this.dataSets[epoch];
         }
-        return name;
+        if (dataSet == null) {
+            console.log("No dataSets available");
+            return;
+        }
+        var dataObjects = dataSet.objects;
+        for (var id in dataObjects) {
+            var obj = this.catalog.objects[id];
+            if (obj == null) {
+                console.log("No catalog entry for "+id);
+                continue;
+            }
+            var dObj = dataObjects[id];
+            var tleObj = dObj.TLEs[0];
+            var name = obj.OBJECT_NAME;
+            //console.log("name: "+name);
+            var tle = [tleObj.TLE_LINE1, tleObj.TLE_LINE2];
+            //var sat = {id: tleObj.id, tle: tle, dataSet: epoch};
+            var sat = {id: id, name: name, tle: tle, dataSet: epoch, catalogEntry: obj};
+            sat.startTime = obj.startTime;
+            if (j < 10) {
+                console.log("id: "+id);
+                console.log("name: "+name);
+                console.log("sat "+j, sat);
+            }
+            satList.push(sat);
+            j++;
+            //console.log("name: "+name+" "+sat);
+        };
+        console.log("created satList");
+        this.addSats(satList);
+        console.log("added satellites");
     }
 
     addSats(sats) {
@@ -134,12 +186,12 @@ class SatTrackDB {
                 console.log("tle-1: "+tle[0]);
                 console.log("tle-2: "+tle[1]);
             }
+            var id = sat.id;
             var name = sat.name;
-            if (this.sats[name]) {
-                //console.log("***** Warning -- replacing record for satellite "+name);
-                name = this.getUniqueSatName(name);
+            if (this.sats[id]) {
+                console.log("***** Warning -- replacing record for satellite "+id);
             }
-            this.sats[name] = sat;
+            this.sats[id] = sat;
             sat.satrec = satellite.twoline2satrec(tle[0], tle[1]);
             sat.stateVec = satellite.propagate(sat.satrec, now);
             //showPosVel(pv);
@@ -149,7 +201,7 @@ class SatTrackDB {
     }
 
     setTime(t) {
-        console.log("SatTrackDB.setTime "+t);
+        //console.log("SatTrackDB.setTime "+t);
         this._t = t;
         this._update(t);
     }
@@ -159,16 +211,14 @@ class SatTrackDB {
     }
 
     _update(t) {
-        var db = this;
         var time = new Date(1000*t);
-        //this.checkProximities();
         var numErrs = 0;
         var errName = "";
         var i = -1;
-        for (var satName in db.sats) {
+        for (var satName in this.sats) {
             //console.log("satName: "+satName);
             i++;
-            var sat = db.sats[satName];
+            var sat = this.sats[satName];
             //console.log("sat:", sat);
             if (sat.bad || (sat.startTime && sat.startTime >= t)) {
                 sat.stateVec = null;
@@ -176,7 +226,7 @@ class SatTrackDB {
             }
             sat.stateVec = satellite.propagate(sat.satrec, time);
             if (!sat.stateVec.position) {
-                sat.bad = true;
+                //sat.bad = true;
                 numErrs++;
                 if (numErrs < 2) {
                     //console.log("Problem with satellite "+satName);
@@ -203,6 +253,54 @@ class SatTrackDB {
             sat.startTime = startTime + f*duration;
             //console.log("sat "+satName+" "+Util.toDate(startTime));
             i++;
+        }
+    }
+
+    timeToJulian(t) {
+        // t should be in seconds.
+        if (t == null)
+            t = new Date().getTime()/1000.0;
+        //var jt = (t / 86400000) - this.tzo / 1440 + 2440587.5;
+        var jt = (t / 86400) - this.tzo/1440 + 2440587.5;
+        return jt;
+    }
+
+    julianToTime(jt) {
+        //var t = 8640000 * (jt + this.tzo/1440 - 2440587.5);
+        var t = 86400 * (jt + this.tzo/1440 - 2440587.5);
+        return t;
+    }
+
+    dump() {
+        this.dumpCatalog();
+        this.dumpSats();
+    }
+
+    dumpCatalog() {
+        if (!this.catalog) {
+            console.log("No catalog available");
+            return;
+        }
+        for (var id in this.catalog.objects) {
+            var obj = this.catalog.objects[id];
+            console.log("id: "+id+" name: "+obj.name);
+        }
+    }
+
+    dumpSats() {
+        for (var id in this.sats) {
+            var obj = this.sats[id];
+            console.log("id: "+id+" name: "+obj.name);
+            var satrec = obj.satrec;
+            if (satrec.satnum != id) {
+                console.log("*** inconsistency..."+id+" != "+satrec.satnum);
+            }
+            var jdepoch = satrec.jdsatepoch;
+            var et = this.julianToTime(jdepoch);
+            var dt = et - this._t;
+            console.log(sprintf(" TLE epoch  jdate: %10s utc: %12.3f  %s",
+                        jdepoch, et, new Date(et*1000)));
+            console.log(sprintf(" delta: %s  %s", dt, dt/(24*60*60)));
         }
     }
 }
