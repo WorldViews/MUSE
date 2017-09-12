@@ -218,7 +218,7 @@ def test1():
 
 def makeDB_JSON():
     stdb = SpaceTrackDB()
-    path = "../data/satellites/all2_stdb.json"
+    path = "../data/satellites/all_stdb.json"
     stdb.agglomerate(path)
 
 if __name__ == '__main__':

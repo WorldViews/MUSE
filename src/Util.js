@@ -108,6 +108,7 @@ export function randomFromInterval(min,max)
 
 export default {
     getJSON,
+    getClockTime,
     getCameraParams,
     getParameterByName,
     randomIntFromInterval,

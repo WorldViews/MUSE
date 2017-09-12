@@ -9,6 +9,9 @@ function getClockTime() { return new Date().getTime()/1000.0; }
 
 var DATA_URL_PREFIX = "data/satellites/";
 
+const SecsPerDay = 86400;
+const MinsPerDay = 1440;
+
 function showPosVel(pv, t)
 {
     //console.log("positionAndVelocity: "+JSON.stringify(pv));
@@ -193,6 +196,10 @@ class SatTrackDB {
             }
             this.sats[id] = sat;
             sat.satrec = satellite.twoline2satrec(tle[0], tle[1]);
+            var jdepoch = sat.satrec.jdsatepoch;
+            sat.epochUTC = this.julianToTime(jdepoch);
+            var meanMotion = sat.satrec.no; // in radians per minute;
+            sat.period = 60*2*Math.PI/meanMotion; // secs per orbit
             sat.stateVec = satellite.propagate(sat.satrec, now);
             //showPosVel(pv);
         });
@@ -215,6 +222,11 @@ class SatTrackDB {
         var numErrs = 0;
         var errName = "";
         var i = -1;
+        var worstSat = null;
+        var worstDelta = 0;
+        var maxDiff = 0;
+        this.numActive = 0;
+
         for (var satName in this.sats) {
             //console.log("satName: "+satName);
             i++;
@@ -223,6 +235,14 @@ class SatTrackDB {
             if (sat.bad || (sat.startTime && sat.startTime >= t)) {
                 sat.stateVec = null;
                 continue;
+            }
+            this.numActive++;
+            var deltaT = t - sat.epochUTC;
+            var diff = Math.abs(deltaT);
+            if (diff > maxDiff) {
+                worstSat = sat.id;
+                worstDelta = deltaT;
+                maxDiff = diff;
             }
             sat.stateVec = satellite.propagate(sat.satrec, time);
             if (!sat.stateVec.position) {
@@ -238,6 +258,9 @@ class SatTrackDB {
         if (numErrs) {
             console.log(sprintf("Num sat errors: %d - %s", numErrs, errName));
         }
+        this.worstSat = worstSat;
+        this.worstDelta = worstDelta;
+        //console.log(sprintf("Worst sat: %d  deltaT: %s", worstSat, worstDelta/SecsPerDay))
     }
 
     setupFakeTimes(startTime, duration) {
@@ -260,20 +283,18 @@ class SatTrackDB {
         // t should be in seconds.
         if (t == null)
             t = new Date().getTime()/1000.0;
-        //var jt = (t / 86400000) - this.tzo / 1440 + 2440587.5;
-        var jt = (t / 86400) - this.tzo/1440 + 2440587.5;
+        var jt = (t / SecsPerDay) - this.tzo/MinsPerDay + 2440587.5;
         return jt;
     }
 
     julianToTime(jt) {
-        //var t = 8640000 * (jt + this.tzo/1440 - 2440587.5);
-        var t = 86400 * (jt + this.tzo/1440 - 2440587.5);
+        var t = SecsPerDay * (jt + this.tzo/MinsPerDay - 2440587.5);
         return t;
     }
 
-    dump() {
-        this.dumpCatalog();
-        this.dumpSats();
+    dump(pat) {
+        //this.dumpCatalog();
+        this.dumpSats(pat);
     }
 
     dumpCatalog() {
@@ -287,20 +308,24 @@ class SatTrackDB {
         }
     }
 
-    dumpSats() {
+    dumpSats(pat) {
         for (var id in this.sats) {
             var obj = this.sats[id];
-            console.log("id: "+id+" name: "+obj.name);
+            var name = obj.name;
+            if (pat && name.indexOf(pat) < 0)
+                continue;
+            console.log(sprintf("id: %6s name: %20s  startTime: %12s %s",
+                    id, name, obj.startTime, Util.formatDatetime(obj.startTime)));
             var satrec = obj.satrec;
             if (satrec.satnum != id) {
                 console.log("*** inconsistency..."+id+" != "+satrec.satnum);
             }
-            var jdepoch = satrec.jdsatepoch;
-            var et = this.julianToTime(jdepoch);
-            var dt = et - this._t;
+            var dt = this._t - obj.epochUTC;
+            var et = obj.epochUTC;
             console.log(sprintf(" TLE epoch  jdate: %10s utc: %12.3f  %s",
-                        jdepoch, et, new Date(et*1000)));
-            console.log(sprintf(" delta: %s  %s", dt, dt/(24*60*60)));
+                        obj.satrec.jdsatepoch, et, Util.formatDatetime(et)));
+            console.log(sprintf(" period: %6.2fhours  delta: %s  %s days",
+                        obj.period/3600.0, dt, dt/(24*60*60)));
         }
     }
 }

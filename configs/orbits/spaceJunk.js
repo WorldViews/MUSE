@@ -31,17 +31,15 @@ function onUpdate(game)
 
 CONFIG = {
     'cameraControls': 'Orbit',
-    onStart: onStart,
+    //onStart: onStart,
     onUpdate: onUpdate,
     'program': {
        //duration: 100000,
-       //duration: 65*365*24*60*60,
-       duration: 10*24*60*60,
+       duration: 65*365*24*60*60,
+       //duration: 10*24*60*60,
        //duration: 100*3600,
-       //startTime: 1504131722.726 - 100*24*3600
-       //startTime: 1504131722.726
-       startTime: 'now',
-       //startTime: '10/4/1957',
+       //startTime: 'now',
+       startTime: '10/4/1957',
        playTime: 'now',
        playSpeed: 100
        //startTime: '6/1/2005 10:30'
@@ -57,12 +55,12 @@ CONFIG = {
            //satTracks: {dataSet: 'historicalSats.json'},
            satTracks: {
                //dataSet: 'allSats.json',
-               dataSet: 'tle-9-1-2017.json',
+               //dataSet: 'tle-9-1-2017.json',
+               dataSet: 'all_stdb.json',
                //dataSet: '2017-01-01.muse.json',
                //models: [
                 //   'models/satellites/ComSat/model.dae',
                 //   'models/satellites/ComSat2/model.dae'],
-               filterHack: 1
            },
            //satTracks: 1,
            dataViz: 0,
