@@ -29,7 +29,7 @@ class JQControls extends UIControls {
     }
 
     setupElements() {
-        this.textFields = ["time", "year", "narrative"];
+        this.textFields = ["time", "year", "narrative", "spaceStatus"];
         var inst = this;
         var uiDiv = $("#uiDiv");
         uiDiv.append("<button id='uiToggle'>&nbsp;</button>");
