@@ -271,6 +271,10 @@ class SatTrackDB {
         this.worstSat = worstSat;
         this.worstDelta = worstDelta;
         //console.log(sprintf("Worst sat: %d  deltaT: %s", worstSat, worstDelta/SecsPerDay))
+        this.statusStr = sprintf("Num: %d Delta: %.0f(days)",
+                            this.numActive, this.worstDelta/(24*3600));
+        $("#spaceStatusText").html(this.statusStr);
+
     }
 
     setupFakeTimes(startTime, duration) {
