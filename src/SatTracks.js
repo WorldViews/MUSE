@@ -34,9 +34,11 @@ class SatTracks {
         this.game = game;
         this.models = {};
         this.t = new Date().getTime()/1000.0;
-        this.filterHack = 0;
-        if (opts.filterHack != null)
-            this.filterHack = opts.filterHack;
+        //this.filterHack = 0;
+        if (opts.filterHack != null) {
+            alert("FilterHack no longer supported");
+            //this.filterHack = opts.filterHack;
+        }
         //this.satrecs = [];
         this.loader = new Loader(game, []);
         this.initGraphics(opts);
@@ -73,9 +75,9 @@ class SatTracks {
 
     onLoaded(sats) {
         console.log(">>> SatTracks.onLoaded...");
-        if (this.filterHack) {
-            this.db.setupFakeTimes(this.game.program.startTime, this.game.program.duration);
-        }
+        //if (this.filterHack) {
+        //    this.db.setupFakeTimes(this.game.program.startTime, this.game.program.duration);
+        //}
         var now = new Date();
         var geometry = new THREE.Geometry();
         this.geometry = geometry;

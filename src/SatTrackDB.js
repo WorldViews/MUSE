@@ -226,6 +226,8 @@ class SatTrackDB {
         var worstDelta = 0;
         var maxDiff = 0;
         this.numActive = 0;
+        this.numFakes = 0;
+        var FAKE_PROP_TIME = 5*365*24*3600; // 5 years
 
         for (var satName in this.sats) {
             //console.log("satName: "+satName);
@@ -244,7 +246,15 @@ class SatTrackDB {
                 worstDelta = deltaT;
                 maxDiff = diff;
             }
-            sat.stateVec = satellite.propagate(sat.satrec, time);
+            if (FAKE_PROP_TIME && diff > FAKE_PROP_TIME) {
+                this.numFakes++;
+                var deltaT_mod_period = deltaT % sat.period;
+                var t2 = sat.epochUTC + deltaT_mod_period;
+                sat.stateVec = satellite.propagate(sat.satrec, new Date(t2*1000));
+            }
+            else {
+                sat.stateVec = satellite.propagate(sat.satrec, time);
+            }
             if (!sat.stateVec.position) {
                 //sat.bad = true;
                 numErrs++;
