@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
 import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
+import {JoelControls} from './lib/controls/JoelControls';
 import {Loader} from './Loader';
 import { NetLink } from './NetLink';
 import Util from './Util';
@@ -98,11 +99,27 @@ class Game {
         return renderer;
     }
 
-    addControls() {
-        this.addOrbitControls();
+    addControls(cameraControlsType, options) {
+        if (cameraControlsType == null)
+            cameraControlsType = "Orbit";
+        if (cameraControlsType == 'Orbit') {
+            console.log("**** Using OrbitControls ****");
+            this.addOrbitControls(options);
+        }
+        else if (cameraControlsType == "JoelControls") {
+            console.log("**** Using JoelControls ****");
+            this.addJoelControls(options);
+        }
+        else if (cameraControlsType == "MultiControls") {
+            console.log("**** Using MultiControls ****");
+            this.addMultiControls(options);
+        }
+        else {
+            alert("Unrecognized Control Type: "+cameraControlsType);
+        }
     }
 
-    addOrbitControls() {
+    addOrbitControls(opts) {
         this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
         this.orbitControls.addEventListener('change', this.render.bind(this));
         this.orbitControls.keys = [65, 83, 68];
@@ -111,7 +128,7 @@ class Game {
         this.controls = this.orbitControls;
     }
 
-    addLookControls() {
+    addLookControls(opts) {
         this.lookControls = new LookControls(this.camera, this.renderer.domElement);
         //this.cmpControls.addEventListener('change', this.render.bind(this));
         this.lookControls.keys = [65, 83, 68];
@@ -119,9 +136,13 @@ class Game {
         this.controls = this.lookControls;
     }
 
-    addMultiControls() {
-        //var mc = new MultiControls(this, this.camera, this.renderer.domElement);
+    addMultiControls(opts) {
         var mc = new MultiControls(this, this.renderer.domElement);
+        this.controls = mc;
+    }
+
+    addJoelControls(opts) {
+        var mc = new JoelControls(this, this.renderer.domElement, opts);
         this.controls = mc;
     }
 
