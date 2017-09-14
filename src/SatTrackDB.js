@@ -27,13 +27,54 @@ function showPosVel(pv, t)
         t, p.x, p.y, p.z, v.x, v.y, v.z));
 }
 
+class DataSet {
+    constructor(epoch, data) {
+        this.epoch = epoch;
+        this.epochUTC = Util.toTime(epoch);
+        this.objects = null;
+        this.requestTime = 0;
+        if (data)
+            this.addData(data);
+    }
+
+    addData(data) {
+        this.objects = data.objects;
+        if (!data.objects) {
+            console("empty data set");
+        }
+    }
+
+    requestData(data) {
+        //console.log("dataSet request data "+this.epoch);
+        if (this.objects) {
+            console.log("Already have data");
+            return;
+        }
+        if (this.requestTime) {
+            return;
+        }
+        this.requestTime = Util.getClockTime();
+        var url = DATA_URL_PREFIX+"stdb/"+this.epoch+".json";
+        var inst = this;
+        console.log("******** requestData "+this.epoch+" url: "+url)
+        getJSON(url, data => inst.handleLoadedData(data, url));
+    }
+
+    handleLoadedData(data, url) {
+        console.log("*********** HALLELUJAH ********** "+url);
+        this.addData(data);
+    }
+}
+
 class SatTrackDB {
     constructor(dataSet, onLoadedFun) {
         window.satDB = this;
         this.onLoadedFun = onLoadedFun;
         this.catalog = null;
-        this.dataSets = null;
+        this.dataSets = {};
+        this.epochs = [];
         this.sats = {};
+        this.currentDataSet = null;
         this.tzo = new Date().getTimezoneOffset();
         this._t = new Date()/1000.0;
         if (dataSet)
@@ -139,19 +180,32 @@ class SatTrackDB {
     handleSTDBData(stdb, url) {
         window.STDB = stdb;
         console.log("***** handleSTDBData "+url);
-        var satList = [];
-        var j = 0;
-        this.dataSets = stdb.dataSets;
+        this.dataSets = {};
         this.catalog = stdb.catalog;
+        console.log("epochs:");
+        stdb.epochs.forEach(epoch => {
+            this.dataSets[epoch] = new DataSet(epoch);
+        });
+        this.epochs = Object.keys(this.dataSets);
+        this.epochs.sort();
         var dataSet = null;
-        for (var epoch in this.dataSets) {
+        for (var epoch in stdb.dataSets) {
             dataSet = this.dataSets[epoch];
+            dataSet.addData(stdb.dataSets[epoch]);
         }
         if (dataSet == null) {
             console.log("No dataSets available");
             return;
         }
+        this.setDataSet(dataSet);
+    }
+
+    setDataSet(dataSet) {
+        this.currentDataSet = dataSet;
         var dataObjects = dataSet.objects;
+        var epoch = dataSet.epoch;
+        var j=0;
+        var satList = [];
         for (var id in dataObjects) {
             var obj = this.catalog.objects[id];
             if (obj == null) {
@@ -167,9 +221,7 @@ class SatTrackDB {
             var sat = {id: id, name: name, tle: tle, dataSet: epoch, catalogEntry: obj};
             sat.startTime = obj.startTime;
             if (j < 10) {
-                console.log("id: "+id);
-                console.log("name: "+name);
-                console.log("sat "+j, sat);
+                console.log(sprintf("id: %5s  name: %20s", id, name));
             }
             satList.push(sat);
             j++;
@@ -207,8 +259,27 @@ class SatTrackDB {
             this.onLoadedFun();
     }
 
+    findNearestDataSet(t) {
+        for (var i=0; i<this.epochs.length; i++) {
+            var epoch = this.epochs[i];
+            var dataSet = this.dataSets[epoch];
+            if (dataSet.epochUTC > t)
+                return dataSet;
+        }
+        return null;
+    }
+
     setTime(t) {
         //console.log("SatTrackDB.setTime "+t);
+        var dataSet = this.findNearestDataSet(t);
+        if (dataSet && dataSet != this.currentDataSet) {
+            if (dataSet.objects) {
+                // Should install new data now...
+            }
+            else {
+                dataSet.requestData();
+            }
+        }
         this._t = t;
         this._update(t);
     }
@@ -277,21 +348,6 @@ class SatTrackDB {
 
     }
 
-    setupFakeTimes(startTime, duration) {
-        console.log("****************************** FAKE TIMES ***************************");
-        console.log("startTime: "+startTime);
-        console.log("duration: "+duration);
-        var i = 0;
-        var nsats = Object.keys(this.sats).length;
-        console.log("Num sats: "+nsats);
-        for (var satName in this.sats) {
-            var sat = this.sats[satName];
-            var f = i/(nsats+0.0);
-            sat.startTime = startTime + f*duration;
-            //console.log("sat "+satName+" "+Util.toDate(startTime));
-            i++;
-        }
-    }
 
     timeToJulian(t) {
         // t should be in seconds.
