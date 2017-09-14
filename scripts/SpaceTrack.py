@@ -119,6 +119,7 @@ class DataSet:
         for id in self.objects:
             objs[id] = self.objects[id].toJSONObj(summary)
         dataSet = {'type': 'dataSet',
+                   'epoch': self.epoch,
                    'objects': objs}
         return dataSet
 
@@ -147,9 +148,12 @@ class SpaceTrackDB:
     def fetch(self):
         #years = [1950, 1960, 1970, 1980, 1990, 2000, 2010]
         years = [1960, 1970, 1980, 1990, 2000, 2010, 2015, 2017]
+        years = [1965, 1975, 1985, 1995, 2005, 2014, 2016, 2017]
         #years = [2010]
-        #years = range(1959,2019,2)
-        months = [1]
+        #years = range(1958,2018,2)
+        years = range(1958,1990,2)
+        years = range(1959,1991,2)
+        months = [1,6]
         days = [1]
         for year in years:
             for month in months:
@@ -158,7 +162,7 @@ class SpaceTrackDB:
                     self.getEpochData_API(epoch)
 
     def getEpochData_API(self, epoch="2010-03-01", format='json'):
-        print "Getting data for", epoch
+        print "Getting data for", epoch, format
         epoch0 = epoch
         epoch1 = nextEpoch(epoch)
         path = os.path.join(self.dir, "%s.%s" % (epoch, format))
@@ -169,7 +173,11 @@ class SpaceTrackDB:
                 return json.loads(buf)
             return buf
         st = SpaceTrackClient(identity=STA.identity, password=STA.password)
-        buf = self.st.tle(orderby='epoch desc', format=format, epoch=epoch0+"--"+epoch1,distinct=True)
+        epochPat = epoch0+"--"+epoch1
+        print "query epoch range:", epochPat
+        #buf = self.st.tle(orderby='epoch desc', format=format, epoch=epochPat,distinct=True)
+        buf = self.st.tle(format=format, epoch=epochPat)
+        print "returned buffer of length", len(buf)
         obj = None
         if format == 'json':
             obj = json.loads(buf)
@@ -179,7 +187,7 @@ class SpaceTrackDB:
         return obj
 
 
-    def agglomerate(self, outPath="all_stdb.json", epochs=None):
+    def agglomerate(self, outPath="all_stdb.json", epochs=None, dataSetsDir=None):
         if epochs == None:
             epochs = self.getSavedEpochs()
             #epochs = [epochs[0], epochs[15], epochs[30], epochs[-1]]
@@ -194,6 +202,11 @@ class SpaceTrackDB:
             for tleObj in data:
                 dataSet.observeTLEObj(tleObj)
                 allData.observeTLEObj(tleObj)
+            if dataSetsDir:
+                dataSetPath = "%s/%s.json" % (dataSetsDir, epoch)
+                print "saving dataSet to", dataSetPath
+                dsObj = dataSet.toJSONObj()
+                file(dataSetPath,"w").write(json.dumps(dsObj, indent=3, sort_keys=True))
         dataSets[epoch] = dataSet.toJSONObj()
         dbObj = {
             'type': 'SpaceTrackDB',
@@ -219,16 +232,16 @@ def test1():
 def makeDB_JSON():
     stdb = SpaceTrackDB()
     path = "../data/satellites/all_stdb.json"
-    stdb.agglomerate(path)
+    dataSetsDir = "../data/satellites/stdb"
+    stdb.agglomerate(path, dataSetsDir=dataSetsDir)
 
 if __name__ == '__main__':
     makeDB_JSON()
-    #test1()
-    #getJSON()
-    #getTLE()
-    #getTLE_latest()
     #stdb = SpaceTrackDB()
     #stdb.fetch()
+    #stdb.getEpochData_API("1964-01-01", "tle")
+    #stdb.getEpochData_API("1962-01-01")
+    #getTLE()
     #stdb.getEpochData('2010-03-01')
     #stdb.agglomerate()
     #stdb.fetch()
