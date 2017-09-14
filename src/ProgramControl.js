@@ -37,6 +37,8 @@ class ProgramControl
             t = Util.toTime(options.playTime);
         }
         this.setPlayTime(t);
+        this.channels = options.channels || [];
+        console.log("channels:", this.channels);
         var inst = this;
         setInterval(()=>inst.tick(), 200);
     }
@@ -92,7 +94,7 @@ class ProgramControl
     getPlaySpeed() {
         return this._playSpeed;
     }
-    
+
     setPlaySpeed(s) {
         this._playSpeed = s;
         return s;
