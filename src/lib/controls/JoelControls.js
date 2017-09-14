@@ -6,7 +6,7 @@ import { sprintf } from "sprintf-js";
 import { getCameraParams } from '../../Util';
 
 // The four arrow keys
-var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, B: 66};
+var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, B: 66, W: 87, S: 83, A: 65, D: 68 };
 
 var toDeg = THREE.Math.radToDeg;
 
@@ -43,6 +43,7 @@ class JoelControls
         this.prevView = null;
         this.speedRight = 0;
         this.speedForward = 0;
+        this.speedRotateY = 0;
         this.raycaster = new THREE.Raycaster();
         this.raycastPt = new THREE.Vector2()
 
@@ -279,6 +280,34 @@ class JoelControls
         //event.preventDefault();
         switch ( event.keyCode ) {
 
+        case KEYS.W:
+            this.speedForward = 1;
+            this.speedRight = 0;
+            break;
+
+        case KEYS.S:
+            this.speedForward = -1;
+            this.speedRight = 0;
+            break;
+
+        case KEYS.A:
+            if (event.shiftKey){
+                this.speedForward = 0;
+                this.speedRight = -1;
+            }else{
+                this.speedRotateY = 1;
+            }
+            break;
+
+        case KEYS.D:
+            if(event.shiftKey){
+                this.speedForward = 0;
+                this.speedRight = 1;
+            }else{
+                this.speedRotateY = -1;
+            }
+            break;
+
         case KEYS.UP:
             this.speedForward = 1;
             this.speedRight = 0;
@@ -290,13 +319,21 @@ class JoelControls
             break;
 
         case KEYS.LEFT:
-            this.speedForward = 0;
-            this.speedRight = -1;
+            if (event.shiftKey){
+                this.speedForward = 0;
+                this.speedRight = -1;
+            }else{
+                this.speedRotateY = 1;
+            }
             break;
 
         case KEYS.RIGHT:
+        if (event.shiftKey){
             this.speedForward = 0;
             this.speedRight = 1;
+        }else{
+            this.speedRotateY = -1;
+        }
             break;
 
         case KEYS.B:
@@ -311,6 +348,7 @@ class JoelControls
         var kc = event.keyCode;
         this.speedForward = 0;
         this.speedRight = 0;
+        this.speedRotateY = 0;
         console.log("onKeyUp "+kc);
     };
 
@@ -328,6 +366,10 @@ class JoelControls
             var v = this.getCamRight();
             var ds = 0.06*this.speedRight;
             camPos.addScaledVector(v, ds);
+        }
+        if (this.speedRotateY) {
+            var ds = 0.08*this.speedRotateY;
+            this.object.rotateY(ds);
         }
     }
 
