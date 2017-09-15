@@ -32,6 +32,7 @@ class JoelControls
         this.enabled = true;
         console.log("domElement "+this.domElement);
 
+        this.keyPanSpeed = opts.keyPanSpeed || 0.01;
         this.whichButton = null;
         this.mouseDragOn = false;
         this.mousePtDown = null;
@@ -368,7 +369,7 @@ class JoelControls
             camPos.addScaledVector(v, ds);
         }
         if (this.speedRotateY) {
-            var ds = 0.08*this.speedRotateY;
+            var ds = this.keyPanSpeed*this.speedRotateY;
             this.object.rotateY(ds);
         }
     }
