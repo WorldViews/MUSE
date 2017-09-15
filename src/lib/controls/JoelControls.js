@@ -282,17 +282,14 @@ class JoelControls
 
         case KEYS.W:
             this.speedForward = 1;
-            this.speedRight = 0;
             break;
 
         case KEYS.S:
             this.speedForward = -1;
-            this.speedRight = 0;
             break;
 
         case KEYS.A:
             if (event.shiftKey){
-                this.speedForward = 0;
                 this.speedRight = -1;
             }else{
                 this.speedRotateY = 1;
@@ -301,7 +298,6 @@ class JoelControls
 
         case KEYS.D:
             if(event.shiftKey){
-                this.speedForward = 0;
                 this.speedRight = 1;
             }else{
                 this.speedRotateY = -1;
@@ -310,17 +306,14 @@ class JoelControls
 
         case KEYS.UP:
             this.speedForward = 1;
-            this.speedRight = 0;
             break;
 
         case KEYS.BOTTOM:
             this.speedForward = -1;
-            this.speedRight = 0;
             break;
 
         case KEYS.LEFT:
             if (event.shiftKey){
-                this.speedForward = 0;
                 this.speedRight = -1;
             }else{
                 this.speedRotateY = 1;
@@ -329,7 +322,6 @@ class JoelControls
 
         case KEYS.RIGHT:
         if (event.shiftKey){
-            this.speedForward = 0;
             this.speedRight = 1;
         }else{
             this.speedRotateY = -1;
@@ -346,10 +338,45 @@ class JoelControls
 
     onKeyUp( event ) {
         var kc = event.keyCode;
-        this.speedForward = 0;
-        this.speedRight = 0;
-        this.speedRotateY = 0;
         console.log("onKeyUp "+kc);
+        switch ( event.keyCode ){
+
+        case KEYS.W:
+            this.speedForward = 0;
+            break;
+
+        case KEYS.S:
+            this.speedForward = 0;
+            break;
+
+        case KEYS.A:
+                this.speedRight = 0;
+                this.speedRotateY = 0;
+            break;
+
+        case KEYS.D:
+                this.speedRight = 0;
+                this.speedRotateY = 0;
+            break;
+
+        case KEYS.UP:
+            this.speedForward = 0;
+            break;
+
+        case KEYS.BOTTOM:
+            this.speedForward = 0;
+            break;
+
+        case KEYS.LEFT:
+                this.speedRight = 0;
+                this.speedRotateY = 0;
+            break;
+
+        case KEYS.RIGHT:
+            this.speedRight = 0;
+            this.speedRotateY = 0;
+            break;
+        }
     };
 
     update()
@@ -368,7 +395,7 @@ class JoelControls
             camPos.addScaledVector(v, ds);
         }
         if (this.speedRotateY) {
-            var ds = 0.08*this.speedRotateY;
+            var ds = 0.01*this.speedRotateY;
             this.object.rotateY(ds);
         }
     }
