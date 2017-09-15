@@ -166,7 +166,7 @@ class Planet {
 
     setPlayTime(t) {
         var f = (t - game.program.startTime) / game.program.duration;
-        console.log("VirtualEarth.setPlayTime "+t+" "+f);
+        //console.log("VirtualEarth.setPlayTime "+t+" "+f);
         if (this.satTracks) {
             //var st = this.startTime + 10*t;
             this.satTracks.setPlayTime(t, f);

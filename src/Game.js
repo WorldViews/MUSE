@@ -120,11 +120,12 @@ class Game {
     }
 
     addOrbitControls(opts) {
+        opts = opts || {};
         this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
         this.orbitControls.addEventListener('change', this.render.bind(this));
         this.orbitControls.keys = [65, 83, 68];
         this.camera.lookAt(new THREE.Vector3());
-        this.camera.position.z = 1;
+        this.camera.position.z = opts.distance || 1;
         this.controls = this.orbitControls;
     }
 

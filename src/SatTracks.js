@@ -99,11 +99,11 @@ class SatTracks {
     }
 
     setPlayTime(t, f) {
-        console.log("SatTracks.setPlayTime "+t);
+        //console.log("SatTracks.setPlayTime "+t);
         this._fraction = f;
         this._prevPlayTime = t;
         this._prevClockTime = getClockTime();
-        console.log("playTime "+this.t+"  "+new Date(t*1000));
+        //console.log("playTime "+this.t+"  "+new Date(t*1000));
     }
 
     getPlayTime(t) {

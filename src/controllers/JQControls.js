@@ -29,7 +29,12 @@ class JQControls extends UIControls {
     }
 
     setupElements() {
-        this.textFields = ["time", "year", "narrative", "spaceStatus"];
+        console.log("*********** JQControls.setupElements");
+        this.textFields = ["time", "year", "narrative"];
+        this.program.channels.forEach(channel => {
+            this.textFields.push(channel);
+        });
+        console.log("**********  textFields:", this.textFields);
         var inst = this;
         var uiDiv = $("#uiDiv");
         uiDiv.append("<button id='uiToggle'>&nbsp;</button>");
