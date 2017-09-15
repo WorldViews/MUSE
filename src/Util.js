@@ -37,7 +37,7 @@ export function formatDatetime(dt)
 {
     if (!(dt instanceof Date))
         dt = new Date(dt*1000);
-    return sprintf("%s/%s/%s %s:%s:%s",
+    return sprintf("%s/%s/%s %02d:%02d:%02d",
                     dt.getMonth()+1, dt.getDate(), dt.getFullYear(),
                     dt.getHours(), dt.getMinutes(), dt.getSeconds());
 }

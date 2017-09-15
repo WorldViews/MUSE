@@ -171,7 +171,7 @@ class SatTrackDB {
         };
         var data = {objects, epoch: epoch, type: 'dataSet'};
         var dataSet = new DataSet(epoch, data);
-        if (dataSetName == "joelOrbits.3le")
+        if (dataSetName == "iridiumCosmos.3le")
             this.handleCollisionHacks(dataSet);
         this.setDataSet(dataSet);
     }
