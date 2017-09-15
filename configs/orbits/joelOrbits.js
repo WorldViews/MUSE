@@ -18,9 +18,9 @@ CONFIG = {
            radius: 1.25, rot: [0,0,0],
            satTracks: {dataSet: 'joelOrbits.3le',
                         models: {
-                            'COSMOS2251': {path:'models/satellites/ComSat/model.dae',
+                            22675: {path:'models/satellites/ComSat/model.dae',
                                            scale: .001},
-                            'IRIDIUM33': {path:'models/satellites/Iridium/model.dae',
+                            24946: {path:'models/satellites/Iridium/model.dae',
                                           scale: .00005}
                         }},
            //satTracks: {dataSet: 'iridCosmosColl.json'},

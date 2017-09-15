@@ -27,6 +27,14 @@ function showPosVel(pv, t)
         t, p.x, p.y, p.z, v.x, v.y, v.z));
 }
 
+/*
+This class is intended for a set of TLE's at approximately the same period of time.
+It is a collection of objects records, indexed by NORAD_CAT_ID.  Each record may
+contain of list of TLE records for that object.  The TLE records contain the two
+TLE lines and the epoch for the TLE.
+There is an overall epoch associated with the dataSet but the individual
+TLE epochs are used for propogation.
+*/
 class DataSet {
     constructor(epoch, data) {
         this.epoch = epoch;
@@ -40,7 +48,7 @@ class DataSet {
     addData(data) {
         this.objects = data.objects;
         if (!data.objects) {
-            console("empty data set");
+            console.log("empty data set");
         }
     }
 
@@ -128,6 +136,8 @@ class SatTrackDB {
     }
 
     handleTLEFileData(data, dataSetName, url) {
+        console.log("handleTLEData: "+dataSetName+" from "+url);
+        var epoch;
         data = data || defaultSatData;
         var lines = data.split('\n');
         lines = lines.map(s => s.trim());
@@ -135,18 +145,33 @@ class SatTrackDB {
         var n = lines.length;
         var m = Math.floor(n/3);
         //console.log("n: "+n+"   m: "+m);
-        var satList = [];
+        var objects = {};
         for (var i=0; i<m; i++) {
             var name = lines[3*i].trim();
             var tle1 = lines[3*i+1];
             var tle2 = lines[3*i+2];
             var tle = [tle1, tle2];
             var id = tle1.slice(2,7);
-            //console.log("name: "+name);
-            //console.log("tle: "+tle+"\n");
-            satList.push({id: id, name: name, tle: tle, dataSet: dataSetName});
+            //console.log(sprintf("id: %5s name: %20s", id, name));
+            //console.log(sprintf("  line1: %s", tle1));
+            //console.log(sprintf("  line2: %s", tle2));
+            var obj = objects[id];
+            if (!obj) {
+                obj = {NORAD_CAT_ID: id, OBJECT_NAME: name, TLEs: []};
+                objects[id] = obj;
+            }
+            var tleObj = {TLE_LINE1: tle1, TLE_LINE2: tle2};
+            var satrec = satellite.twoline2satrec(tle1, tle2);
+            var jdepoch = satrec.jdsatepoch;
+            var epochUTC = this.julianToTime(jdepoch);
+            epoch = Util.formatDatetime(epochUTC);
+            tleObj.EPOCH = epoch;
+            tleObj.NORAD_CAT_ID = id;
+            obj.TLEs.push(tleObj);
         };
-        this.addSats(satList);
+        var data = {objects, epoch: epoch, type: 'dataSet'};
+        var dataSet = new DataSet(epoch, data);
+        this.setDataSet(dataSet);
     }
 
     handleJSONSatsData(data, url) {
@@ -210,20 +235,29 @@ class SatTrackDB {
         var epoch = dataSet.epoch;
         var j=0;
         var satList = [];
+        var catalog = this.catalog;
+        if (!catalog) {
+            console.log("*** no catalog");
+        }
         for (var id in dataObjects) {
-            var obj = this.catalog.objects[id];
-            if (obj == null) {
-                console.log("No catalog entry for "+id);
-                continue;
-            }
             var dObj = dataObjects[id];
             var tleObj = dObj.TLEs[0];
-            var name = obj.OBJECT_NAME;
             //console.log("name: "+name);
             var tle = [tleObj.TLE_LINE1, tleObj.TLE_LINE2];
+            var name = dObj.OBJECT_NAME;
+            var startTime = null;
+            if (catalog && catalog.objects[id]) {
+                var obj = catalog.objects[id];
+                name = obj.OBJECT_NAME;
+                startTime = obj.startTime;
+            }
+            else {
+                //console.log("No catalog entry for "+id);
+            }
+            if (!name)
+                name = "obj"+id;
             //var sat = {id: tleObj.id, tle: tle, dataSet: epoch};
-            var sat = {id: id, name: name, tle: tle, dataSet: epoch, catalogEntry: obj};
-            sat.startTime = obj.startTime;
+            var sat = {id, name, tle, startTime, dataSet: epoch};
             if (j < 10) {
                 console.log(sprintf("id: %5s  name: %20s", id, name));
             }
