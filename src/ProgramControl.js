@@ -115,13 +115,13 @@ class ProgramControl
     setPlayTime(t) {
         this._prevClockTime = getClockTime();
         this._playTime = t;
-        console.log(">>>> noticeTime "+t);
+        //console.log(">>>> noticeTime "+t);
         for (name in this.players) {
             var player = this.players[name];
-            console.log("set playTime "+name, player);
+            //console.log("set playTime "+name, player);
             //******* Get rid of this.  Change our code to not user set and get
             if (player.setPlayTime) {
-                console.log("calling setPlayTime");
+                //console.log("calling setPlayTime");
                 player.setPlayTime(t)
             }
             else

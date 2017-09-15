@@ -44,7 +44,7 @@ class DataSet {
         }
     }
 
-    requestData(data) {
+    requestData(onLoadedFun) {
         //console.log("dataSet request data "+this.epoch);
         if (this.objects) {
             console.log("Already have data");
@@ -57,12 +57,15 @@ class DataSet {
         var url = DATA_URL_PREFIX+"stdb/"+this.epoch+".json";
         var inst = this;
         console.log("******** requestData "+this.epoch+" url: "+url)
-        getJSON(url, data => inst.handleLoadedData(data, url));
+        getJSON(url, data => inst.handleLoadedData(data, url, onLoadedFun));
     }
 
-    handleLoadedData(data, url) {
-        console.log("*********** HALLELUJAH ********** "+url);
+    handleLoadedData(data, url, onLoadedFun) {
+        console.log("*** DataSet.handleLoadedData from "+url);
         this.addData(data);
+        if (onLoadedFun) {
+            onLoadedFun(this);
+        }
     }
 }
 
@@ -201,6 +204,7 @@ class SatTrackDB {
     }
 
     setDataSet(dataSet) {
+        console.log("***** setDataSet "+dataSet.epoch);
         this.currentDataSet = dataSet;
         var dataObjects = dataSet.objects;
         var epoch = dataSet.epoch;
@@ -244,7 +248,7 @@ class SatTrackDB {
             var id = sat.id;
             var name = sat.name;
             if (this.sats[id]) {
-                console.log("***** Warning -- replacing record for satellite "+id);
+                //console.log("***** Warning -- replacing record for satellite "+id);
             }
             this.sats[id] = sat;
             sat.satrec = satellite.twoline2satrec(tle[0], tle[1]);
@@ -271,13 +275,14 @@ class SatTrackDB {
 
     setTime(t) {
         //console.log("SatTrackDB.setTime "+t);
+        var inst = this;
         var dataSet = this.findNearestDataSet(t);
         if (dataSet && dataSet != this.currentDataSet) {
             if (dataSet.objects) {
                 // Should install new data now...
             }
             else {
-                dataSet.requestData();
+                dataSet.requestData(dataSet => inst.setDataSet(dataSet));
             }
         }
         this._t = t;
@@ -307,8 +312,10 @@ class SatTrackDB {
             //console.log("sat:", sat);
             if (sat.bad || (sat.startTime && sat.startTime >= t)) {
                 sat.stateVec = null;
+                sat.active = false;
                 continue;
             }
+            sat.active = true;
             this.numActive++;
             var deltaT = t - sat.epochUTC;
             var diff = Math.abs(deltaT);
@@ -339,12 +346,16 @@ class SatTrackDB {
         if (numErrs) {
             console.log(sprintf("Num sat errors: %d - %s", numErrs, errName));
         }
+        var dbEpoch = "";
+        if (this.currentDataSet)
+            dbEpoch = this.currentDataSet.epoch;
         this.worstSat = worstSat;
         this.worstDelta = worstDelta;
         //console.log(sprintf("Worst sat: %d  deltaT: %s", worstSat, worstDelta/SecsPerDay))
         this.statusStr = sprintf("Num: %d Delta: %.0f(days)",
                             this.numActive, this.worstDelta/(24*3600));
         $("#spaceStatusText").html(this.statusStr);
+        $("#dbEpochText").html("DB epoch: "+dbEpoch);
 
     }
 
@@ -379,23 +390,30 @@ class SatTrackDB {
     }
 
     dumpSats(pat) {
+        console.log("   Id            Name             startTime             Epoch         diff(days)  period");
+        console.log("----------------------------------------------------------------------------------------");
         for (var id in this.sats) {
             var obj = this.sats[id];
             var name = obj.name;
             if (pat && name.indexOf(pat) < 0)
                 continue;
-            console.log(sprintf("id: %6s name: %20s  startTime: %12s %s",
-                    id, name, obj.startTime, Util.formatDatetime(obj.startTime)));
+            if (!obj.active)
+                continue;
             var satrec = obj.satrec;
-            if (satrec.satnum != id) {
-                console.log("*** inconsistency..."+id+" != "+satrec.satnum);
-            }
-            var dt = this._t - obj.epochUTC;
+            //if (satrec.satnum != id) {
+            //    console.log("*** inconsistency..."+id+" != "+satrec.satnum);
+            //}
             var et = obj.epochUTC;
+            var dt = this._t - et;
+            console.log(sprintf("%5s %24s  %19s %19s  %8.1f %6.2f",
+                    id, name, Util.formatDatetime(obj.startTime),
+                    Util.formatDatetime(et), dt/(24*60*60), obj.period/3600.0));
+            /*
             console.log(sprintf(" TLE epoch  jdate: %10s utc: %12.3f  %s",
                         obj.satrec.jdsatepoch, et, Util.formatDatetime(et)));
             console.log(sprintf(" period: %6.2fhours  delta: %s  %s days",
                         obj.period/3600.0, dt, dt/(24*60*60)));
+            */
         }
     }
 }
