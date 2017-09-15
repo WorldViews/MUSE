@@ -30,7 +30,7 @@ function onUpdate(game)
 }
 
 CONFIG = {
-    'cameraControls': 'Orbit',
+    'cameraControls': {type: 'Orbit', distance: 4},
     //onStart: onStart,
     onUpdate: onUpdate,
     'program': {
@@ -41,8 +41,9 @@ CONFIG = {
        //startTime: 'now',
        startTime: '10/4/1957',
        playTime: 'now',
-       playSpeed: 100
+       playSpeed: 100,
        //startTime: '6/1/2005 10:30'
+       channels: ['spaceStatus', 'numSats', 'dbEpoch']
     },
     'specs': [
         {  type: 'JQControls' },
