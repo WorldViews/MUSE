@@ -171,7 +171,28 @@ class SatTrackDB {
         };
         var data = {objects, epoch: epoch, type: 'dataSet'};
         var dataSet = new DataSet(epoch, data);
+        if (dataSetName == "joelOrbits.3le")
+            this.handleCollisionHacks(dataSet);
         this.setDataSet(dataSet);
+    }
+
+    handleCollisionHacks(dataSet) {
+        console.log("*************** handleCollisionHacks **************");
+        //var t0 = 1234285388.354863;
+        //var t0 = 1234285080.354863;
+        var t0 = 1234284979.8560574;
+        var dataObjects = dataSet.objects;
+        for (var id in dataObjects) {
+            var obj = dataObjects[id];
+            var name = obj.OBJECT_NAME;
+            if (name.indexOf("DEB") >= 0) {
+                obj.startTime = t0;
+            }
+            else {
+                obj.endTime = t0;
+            }
+            console.log(sprintf("id: %5s name: %20s start: %15s end: %15s", id, name, obj.startTime));
+        }
     }
 
     handleJSONSatsData(data, url) {
@@ -245,11 +266,13 @@ class SatTrackDB {
             //console.log("name: "+name);
             var tle = [tleObj.TLE_LINE1, tleObj.TLE_LINE2];
             var name = dObj.OBJECT_NAME;
-            var startTime = null;
+            var startTime = dObj.startTime;
+            var endTime = dObj.endTime;
             if (catalog && catalog.objects[id]) {
                 var obj = catalog.objects[id];
                 name = obj.OBJECT_NAME;
                 startTime = obj.startTime;
+                endTime = obj.endTime;
             }
             else {
                 //console.log("No catalog entry for "+id);
@@ -257,7 +280,7 @@ class SatTrackDB {
             if (!name)
                 name = "obj"+id;
             //var sat = {id: tleObj.id, tle: tle, dataSet: epoch};
-            var sat = {id, name, tle, startTime, dataSet: epoch};
+            var sat = {id, name, tle, startTime, endTime, dataSet: epoch};
             if (j < 10) {
                 console.log(sprintf("id: %5s  name: %20s", id, name));
             }
@@ -344,7 +367,9 @@ class SatTrackDB {
             i++;
             var sat = this.sats[satName];
             //console.log("sat:", sat);
-            if (sat.bad || (sat.startTime && sat.startTime >= t)) {
+            if (sat.bad ||
+                (sat.startTime && sat.startTime >= t) ||
+                (sat.endTime && sat.endTime <= t)) {
                 sat.stateVec = null;
                 sat.active = false;
                 continue;
