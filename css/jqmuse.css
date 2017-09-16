@@ -10,6 +10,13 @@
     z-index: 10;
 }
 
+#uiPlayControls {
+    position: absolute; left: 30px; top: 0px;
+    padding-left: 10px; padding-right: 10px;
+    background: rgba(5,5,60,0.1);
+    width: 95%;
+}
+
 #uiPanel {
     position: absolute; left: 30px; top: 40px;
     padding-left: 10px; padding-right: 10px;
@@ -19,8 +26,10 @@
 }
 
 #uiTimeSlider {
-    position: absolute; left: 30px; top: 0px;
-    width: 98%;
+    //position: absolute; left: 50px; top: 0px;
+    padding-left: 10px; padding-right: 10px;
+    width: 92%;
+    background: rgba(20,5,60,0.0);
 }
 
 input[type=range]{

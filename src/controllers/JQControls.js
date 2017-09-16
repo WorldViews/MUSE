@@ -38,10 +38,13 @@ class JQControls extends UIControls {
         var inst = this;
         var uiDiv = $("#uiDiv");
         uiDiv.append("<button id='uiToggle'>&nbsp;</button>");
+        uiDiv.append("<div id='uiPlayControls'></div>");
         uiDiv.append("<div id='uiPanel'></div>");
+        this.playControls = $("#uiPlayControls");
         var ui = $("#uiPanel");
         this.ui = ui;
-        uiDiv.append("<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
+        this.playControls.append("<input id='uiPlayPause' type='button' value='Play' style='width:60px;'>");
+        this.playControls.append("<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
         ui.append("<span id='status'></span><br>");
         this.textFields.forEach(name => {
             ui.append(sprintf("<span id='%sText'></span><br>", name));
@@ -50,19 +53,33 @@ class JQControls extends UIControls {
         $("#uiToggle").click(e => inst.toggleUI());
         //$("#uiTimeSlider").on('change', e => inst.onSliderChange(e));
         $("#uiTimeSlider").on('input', e => inst.onSliderChange(e));
+        $("#uiPlayPause").on('click', e => inst.togglePlayPause(e));
         this._visible = true;
+    }
+
+    togglePlayPause() {
+        var $play = $("#uiPlayPause");
+        console.log("$play: "+$play.val());
+        if ($play.val() == "Play") {
+            $play.val("Pause");
+            this.program.play();
+        }
+        else {
+            $play.val("Play");
+            this.program.pause();
+        }
     }
 
     toggleUI() {
         var time=100;
         if (this.visible) {
             $("#uiPanel").hide(time);
-            $("#uiTimeSlider").hide(time);
+            this.playControls.hide(time);
             this.visible = false;
         }
         else {
             $("#uiPanel").show(time);
-            $("#uiTimeSlider").show(time);
+            this.playControls.show(time);
             this.visible = true;
         }
     }

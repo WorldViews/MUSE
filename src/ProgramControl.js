@@ -31,7 +31,8 @@ class ProgramControl
         this.duration = options.duration || 60;
         this.players = {};
         this._playTime = 0;
-        this._playSpeed = options.playSpeed || 1.0;
+        var playSpeed = options.playSpeed || 1.0;
+        this.setPlaySpeed(playSpeed);
         var t = 0;
         if (options.playTime) {
             t = Util.toTime(options.playTime);
@@ -91,14 +92,28 @@ class ProgramControl
         }
     }
 
+    play() {
+        console.log("**** play *****");
+        this.setPlaySpeed(this._savedPlaySpeed);
+    }
+
+    pause() {
+        console.log("**** pause *****");
+        this._savedPlaySpeed = this._playSpeed;
+        this._playSpeed = 0;
+        //this.setPlaySpeed(0);
+    }
+
     getPlaySpeed() {
         return this._playSpeed;
     }
 
     setPlaySpeed(s) {
         this._playSpeed = s;
+        this._savedPlaySpeed = s;
         return s;
     }
+
     get playTime() {
         var t = getClockTime();
         var dt = t - this._prevClockTime;
@@ -111,6 +126,8 @@ class ProgramControl
     set playTime(t) {
         this.setPlayTime(t)
     }
+
+    getPlayTime() { return this.playTime };
 
     setPlayTime(t) {
         this._prevClockTime = getClockTime();
