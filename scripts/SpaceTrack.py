@@ -240,13 +240,13 @@ def test1():
 def makeDB_JSON():
     stdb = SpaceTrackDB()
     path = "../data/satellites/all_stdb.json"
-    dataSetsDir = "../data/satellites/stdb"
+    dataSetsDir = "../data/satellites/stdb/dataSets/"
     stdb.agglomerate(path, dataSetsDir=dataSetsDir)
 
 def getCat():
     stdb = SpaceTrackDB()
     stdb.getCat()
-    
+
 if __name__ == '__main__':
     getCat()
     #makeDB_JSON()

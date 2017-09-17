@@ -62,7 +62,7 @@ class DataSet {
             return;
         }
         this.requestTime = Util.getClockTime();
-        var url = DATA_URL_PREFIX+"stdb/"+this.epoch+".json";
+        var url = DATA_URL_PREFIX+"stdb/dataSets/"+this.epoch+".json";
         var inst = this;
         console.log("******** requestData "+this.epoch+" url: "+url)
         getJSON(url, data => inst.handleLoadedData(data, url, onLoadedFun));
