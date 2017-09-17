@@ -29,6 +29,12 @@ function onUpdate(game)
     return new Date(t*1000);
 }
 
+function dumpSats(game)
+{
+    console.log("Hello World");
+    satDB.dump();
+}
+
 CONFIG = {
     'cameraControls': {type: 'Orbit', distance: 4},
     //onStart: onStart,
@@ -43,7 +49,10 @@ CONFIG = {
        playTime: 'now',
        playSpeed: 100,
        //startTime: '6/1/2005 10:30'
-       channels: ['spaceStatus', 'numSats', 'dbEpoch']
+       channels: ['spaceStatus', 'numSats', 'dbEpoch'],
+       scripts: {
+           'DumpSatellites': dumpSats
+       }
     },
     'specs': [
         {  type: 'JQControls' },
