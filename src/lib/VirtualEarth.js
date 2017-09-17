@@ -155,22 +155,12 @@ class Planet {
     }
 
     pause() {
-        if (this.satTracks)
-        this.satTracks.pause();
     }
 
     play() {
-        if (this.satTracks)
-        this.satTracks.play();
     }
 
     setPlayTime(t) {
-        var f = (t - game.program.startTime) / game.program.duration;
-        //console.log("VirtualEarth.setPlayTime "+t+" "+f);
-        if (this.satTracks) {
-            //var st = this.startTime + 10*t;
-            this.satTracks.setPlayTime(t, f);
-        }
     }
 
     updateSurfaceImage(url) {

@@ -50,6 +50,16 @@ class JQControls extends UIControls {
             ui.append(sprintf("<span id='%sText'></span><br>", name));
         });
         ui.append("<p></p>");
+        this.models.forEach(name => {
+            ui.append(sprintf("<span id='%sModel'>%s</span><br>", name,name));
+        });
+        ui.append("<p></p>");
+        for (var scriptName in this.program.scripts) {
+            ui.append(sprintf("<input id='%sScript' type='button' value='%s'><br>", scriptName, scriptName));
+            var sb = $(sprintf("#%sScript", scriptName));
+            sb.on('click', e => inst.program.scripts[scriptName](inst.game));
+            //$("#uiPlayPause").on('click', e => inst.togglePlayPause(e));
+        }
         $("#uiToggle").click(e => inst.toggleUI());
         //$("#uiTimeSlider").on('change', e => inst.onSliderChange(e));
         $("#uiTimeSlider").on('input', e => inst.onSliderChange(e));
