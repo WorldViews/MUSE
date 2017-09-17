@@ -104,6 +104,13 @@ var SPECS = [
     //{  type: 'Hurricane', scale: 0.01 }
     {  type: 'VirtualEarth', name: 'vEarth', satTracks: 0,
        radius: 1.25, position: [0,1.9,0],
+       satTracks: {dataSet: 'joelOrbits.3le',
+                    models: {
+                        22675: {path:'models/satellites/ComSat/model.dae',
+                                       scale: .001},
+                        24946: {path:'models/satellites/Iridium/model.dae',
+                                      scale: .00005}
+                    }},
     }
 ];
 
