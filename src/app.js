@@ -58,7 +58,9 @@ function loadConfig(path)
             console.log("Loaded CONFIG: ", CONFIG);
             if (!CONFIG) {
                 SPECS = window.SPECS;
-                console.log("**** No CONFIG defined ... using SPECS");
+                var errStr = "**** No CONFIG defined (maybe syntax error) ... using SPECS";
+                alert(errStr);
+                console.log(errStr);
                 console.log("SPECS", SPECS);
                 CONFIG = {specs: SPECS};
             }
