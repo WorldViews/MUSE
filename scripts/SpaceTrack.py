@@ -218,7 +218,15 @@ class SpaceTrackDB:
         print "Saving to", outPath
         file(outPath, "w").write(json.dumps(dbObj, indent=3, sort_keys=True))
 
-
+    def getCat(self, outPath=None):
+        low = 1
+        high = 100000
+        if outPath == None:
+            outPath = "catalog.json" % (low, high)
+        buf = self.st.satcat(norad_cat_id=op.inclusive_range(low,high),
+                             format='json')
+        obj = json.loads(buf)
+        file(outPath, "w").write(json.dumps(obj, indent=4, sort_keys=True))
 
 
 def test1():
@@ -235,8 +243,13 @@ def makeDB_JSON():
     dataSetsDir = "../data/satellites/stdb"
     stdb.agglomerate(path, dataSetsDir=dataSetsDir)
 
+def getCat():
+    stdb = SpaceTrackDB()
+    stdb.getCat()
+    
 if __name__ == '__main__':
-    makeDB_JSON()
+    getCat()
+    #makeDB_JSON()
     #stdb = SpaceTrackDB()
     #stdb.fetch()
     #stdb.getEpochData_API("1964-01-01", "tle")
