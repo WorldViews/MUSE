@@ -7,6 +7,7 @@ CONFIG = {
        //startTime: 1504131722.726 - 100*24*3600
        //startTime: 1504131722.726
         startTime: '2/9/2009',
+        playSpeed: 100,
         playTime: '2/10/2009 8:40:00'
     },
     'specs': [
