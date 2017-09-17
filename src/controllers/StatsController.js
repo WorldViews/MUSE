@@ -4,6 +4,10 @@ import {Game} from '../Game';
 export default class StatsController {
     constructor(game, options) {
         this.stats = new Stats();
+        if (options.right) {
+            this.stats.dom.style.left = '';
+            this.stats.dom.style.right = options.right;
+        }
         this.stats.showPanel(1);
         document.body.appendChild(this.stats.dom);
     }

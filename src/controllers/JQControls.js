@@ -4,6 +4,13 @@ import {Game} from '../Game';
 
 import {UIControls} from './UIControls';
 
+function append(parent, child) {
+    if (typeof child == "string")
+        child = $(child);
+    parent.append(child);
+    return child;
+}
+
 class JQControls extends UIControls {
     constructor(game, options) {
         super(game, options);
@@ -36,39 +43,36 @@ class JQControls extends UIControls {
         });
         console.log("**********  textFields:", this.textFields);
         var inst = this;
-        var uiDiv = $("#uiDiv");
-        uiDiv.append("<button id='uiToggle'>&nbsp;</button>");
-        uiDiv.append("<div id='uiPlayControls'></div>");
-        uiDiv.append("<div id='uiPanel'></div>");
-        this.playControls = $("#uiPlayControls");
-        var ui = $("#uiPanel");
-        this.ui = ui;
-        this.playControls.append("<input id='uiPlayPause' type='button' value='Play' style='width:60px;'>");
-        this.playControls.append("<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
-        ui.append("<span id='status'></span><br>");
+        var $uiDiv = $("#uiDiv");
+        this.$uiToggle = append($uiDiv, "<button id='uiToggle'>&nbsp;</button>");
+        this.$playControls = append($uiDiv, "<div id='uiPlayControls' />");
+        var $ui = append($uiDiv, "<div id='uiPanel'></div>");
+        this.$ui = $ui;
+        this.$play = append(this.$playControls, "<input type='button' value='Play' style='width:60px;'>");
+        this.$timeSlider = append(this.$playControls, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
+        this.$status = append($ui, "<span id='status' /><br>");
         this.textFields.forEach(name => {
-            ui.append(sprintf("<span id='%sText'></span><br>", name));
+            $ui.append(sprintf("<span id='%sText' /><br>", name));
         });
-        ui.append("<p></p>");
+        $ui.append("<p></p>");
         this.models.forEach(name => {
-            ui.append(sprintf("<span id='%sModel'>%s</span><br>", name,name));
+            $ui.append(sprintf("<span id='%sModel'>%s</span><br>", name,name));
         });
-        ui.append("<p></p>");
+        $ui.append("<p></p>");
+        this.$scripts = $ui.append("<div/>");
         for (var scriptName in this.program.scripts) {
-            ui.append(sprintf("<input id='%sScript' type='button' value='%s'><br>", scriptName, scriptName));
-            var sb = $(sprintf("#%sScript", scriptName));
+            var sb = this.$scripts.append(sprintf("<input type='button' value='%s'><br>", scriptName));
             sb.on('click', e => inst.program.scripts[scriptName](inst.game));
-            //$("#uiPlayPause").on('click', e => inst.togglePlayPause(e));
         }
-        $("#uiToggle").click(e => inst.toggleUI());
-        //$("#uiTimeSlider").on('change', e => inst.onSliderChange(e));
-        $("#uiTimeSlider").on('input', e => inst.onSliderChange(e));
-        $("#uiPlayPause").on('click', e => inst.togglePlayPause(e));
+        this.$uiToggle.click(e => inst.toggleUI());
+        //this.$timeSlider.on('change', e => inst.onSliderChange(e));
+        this.$timeSlider.on('input', e => inst.onSliderChange(e));
+        this.$play.on('click', e => inst.togglePlayPause(e));
         this._visible = true;
     }
 
     togglePlayPause() {
-        var $play = $("#uiPlayPause");
+        var $play = this.$play;
         console.log("$play: "+$play.val());
         if ($play.val() == "Play") {
             $play.val("Pause");
@@ -83,13 +87,13 @@ class JQControls extends UIControls {
     toggleUI() {
         var time=100;
         if (this.visible) {
-            $("#uiPanel").hide(time);
-            this.playControls.hide(time);
+            this.$ui.hide(time);
+            this.$playControls.hide(time);
             this.visible = false;
         }
         else {
-            $("#uiPanel").show(time);
-            this.playControls.show(time);
+            this.$ui.show(time);
+            this.$playControls.show(time);
             this.visible = true;
         }
     }

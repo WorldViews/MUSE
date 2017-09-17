@@ -51,7 +51,7 @@ CONFIG = {
        //startTime: '6/1/2005 10:30'
        channels: ['spaceStatus', 'numSats', 'dbEpoch'],
        scripts: {
-           'DumpSatellites': dumpSats
+           'Dump Satellites': dumpSats
        }
     },
     'specs': [

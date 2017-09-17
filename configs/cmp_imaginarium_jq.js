@@ -50,7 +50,7 @@ SATELLITE_MODEL = [
 ];
 
 var SPECS = [
-    {  type: 'Stats' },
+    {  type: 'Stats', right: '-0px' },
     {  type: 'JQControls' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     {  type: 'Scripts' },
