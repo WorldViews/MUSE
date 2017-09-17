@@ -45,7 +45,7 @@ class SatTracks {
         this.radiusEarthKm = 6378.1;
         this._playSpeed = 60.0;
         this.startTime = game.program.playTime;
-        this.setPlayTime(getClockTime());
+        //this.setPlayTime(getClockTime());
         var inst = this;
         this.game.program.formatTime = t => Util.formatDatetime(t);
         this.db = new SatTrackDB(opts.dataSet, () => inst.onLoaded());
@@ -98,27 +98,6 @@ class SatTracks {
         this.game.addToGame(this.particles, 'satellites', this.opts.parent);
     }
 
-    setPlayTime(t, f) {
-        //console.log("SatTracks.setPlayTime "+t);
-        this._fraction = f;
-        this._prevPlayTime = t;
-        this._prevClockTime = getClockTime();
-        //console.log("playTime "+this.t+"  "+new Date(t*1000));
-    }
-
-    getPlayTime(t) {
-        var t = getClockTime();
-        var dt = t - this._prevClockTime;
-        this._prevPlayTime += dt*this._playSpeed;
-        this._prevClockTime = t;
-        return this._prevPlayTime;
-    }
-
-    setPlaySpeed(s) {
-        this.getPlayTime();
-        this._playSpeed = s;
-    }
-
     checkProximities() {
         var v = this.geometry.vertices;
         var d2min = 1000000;
@@ -160,7 +139,8 @@ class SatTracks {
             console.log(sprintf("Inconsisitency: nvertices %d != nsatellites %d", nv, ns));
             return;
         }
-        this.t = this.getPlayTime();
+        this.t = this.game.program.getPlayTime();
+        //this.t = this.getPlayTime();
         db.setTime(this.t);
         var i = -1;
         for (var satName in db.sats) {
@@ -168,7 +148,7 @@ class SatTracks {
             i++;
             var sat = db.sats[satName];
             //console.log("sat:", sat);
-            var satrec = sat.satrec;
+            //var satrec = sat.satrec;
             var v3 = this.geometry.vertices[i];
             if (sat.stateVec) {
                 var p = sat.stateVec.position;
