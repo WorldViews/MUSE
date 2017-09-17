@@ -1,4 +1,7 @@
-
+"""
+This is older version of code fot getting TLE's.
+Now SpaceTrack.py should be used
+"""
 import re, os, json
 import urllib
 
@@ -146,10 +149,11 @@ def getAll():
     tlef.dump("allSats.json")
 
 def getCollision():
-    indexPath = "../data/satellites/CelesTrak_ Master TLE Index.html"
     tlef = TLEFetch()
-    urls = ["http://celestrak.com/NORAD/elements/cosmos-2251-debris.txt",
-            "http://celestrak.com/NORAD/elements/iridium-33-debris.txt"]
+    #urls = ["http://celestrak.com/NORAD/elements/cosmos-2251-debris.txt",
+    #        "http://celestrak.com/NORAD/elements/iridium-33-debris.txt"]
+    urls = ["file://data2/groups/mixed/MUSE/astrodata/cosmos2251Deb.txt",
+            "file://data2/groups/mixed/MUSE/astrodata/iridium33Deb.txt"]
     tlef.getFiles(urls)
     tlef.dump("irid-cosmos.json")
 
@@ -161,5 +165,5 @@ def getCatalog():
 
 if __name__ == '__main__':
     #getAll()
-    #getCollision()
-    getCatalog()
+    getCollision()
+    #getCatalog()
