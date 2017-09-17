@@ -40,6 +40,7 @@ class ProgramControl
         this.setPlayTime(t);
         this.channels = options.channels || [];
         this.scripts = options.scripts || {};
+        this.stageModels = options.stageModels || [];
         console.log("channels:", this.channels);
         var inst = this;
         setInterval(()=>inst.tick(), 200);

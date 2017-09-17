@@ -18,14 +18,16 @@ class JQControls extends UIControls {
         this.options = options || {};
         this.program = this.game.getProgram();
         this.root = document.createElement('div');
-        this.models = ['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
+        //this.models = ['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
+        this.models = this.program.stageModels || [];
+        //['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
         this.modelCallbacks = {};
         this.scriptCallbacks = {};
         this.viewCallbacks = {};
 
+        this.registerModel('Data Viz', () => { this.selectModel('cmp') });
         this.registerModel('Earth', () => { this.selectModel('vEarth') });
         this.registerModel('Dancer', () => { this.selectModel('dancer') });
-        this.registerModel('Data Viz', () => { this.selectModel('cmp') });
         this.registerModel('BMW', () => { this.selectModel('bmw') });
         this.registerModel('None', () => { this.selectModel(null) });
         this.selectModel('vEarth');
@@ -54,14 +56,18 @@ class JQControls extends UIControls {
         this.textFields.forEach(name => {
             $ui.append(sprintf("<span id='%sText' /><br>", name));
         });
-        $ui.append("<p></p>");
-        this.models.forEach(name => {
-            $ui.append(sprintf("<span id='%sModel'>%s</span><br>", name,name));
-        });
-        $ui.append("<p></p>");
-        this.$scripts = $ui.append("<div/>");
+        append($ui, "<p/>");
+        if (this.models.length > 0) {
+            this.$models = append($ui, "<select/>");
+            this.models.forEach(name => {
+                append(this.$models, sprintf("<option value='%s'>%s</option>", name,name));
+            });
+            this.$models.on('input', e => inst.selectModel(this.$models.val()));
+        }
+        append($ui, "<p/>");
+        this.$scripts = append($ui, "<div/>");
         for (var scriptName in this.program.scripts) {
-            var sb = this.$scripts.append(sprintf("<input type='button' value='%s'><br>", scriptName));
+            var sb = append(this.$scripts, sprintf("<input type='button' value='%s'><br>", scriptName));
             sb.on('click', e => inst.program.scripts[scriptName](inst.game));
         }
         this.$uiToggle.click(e => inst.toggleUI());
