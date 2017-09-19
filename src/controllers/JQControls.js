@@ -22,8 +22,11 @@ class JQControls extends UIControls {
         this.models = this.program.stageModels || [];
         //['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
         this.modelCallbacks = {};
-        this.scriptCallbacks = {};
-        this.viewCallbacks = {};
+        //this.$views = null;
+        this.$scripts = null;
+        this.viewControl = null;
+        this.playControl = null;
+        this.scriptControl = null;
 
         this.registerModel('Data Viz', () => { this.selectModel('cmp') });
         this.registerModel('Earth', () => { this.selectModel('vEarth') });
@@ -48,10 +51,9 @@ class JQControls extends UIControls {
         var $uiDiv = $("#uiDiv");
         this.$uiToggle = append($uiDiv, "<button id='uiToggle'>&nbsp;</button>");
         this.$playControls = append($uiDiv, "<div id='uiPlayControls' />");
+        this.pc = new PlayControls(this, this.$playControls);
         var $ui = append($uiDiv, "<div id='uiPanel'></div>");
         this.$ui = $ui;
-        this.$play = append(this.$playControls, "<input type='button' value='Play' style='width:60px;'>");
-        this.$timeSlider = append(this.$playControls, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
         this.$status = append($ui, "<span id='status' /><br>");
         this.textFields.forEach(name => {
             append($ui, sprintf("<span id='%sText' /><br>", name));
@@ -65,38 +67,10 @@ class JQControls extends UIControls {
             this.$models.on('input', e => inst.selectModel(this.$models.val()));
         }
         append($ui, "<p/>");
-        this.$scripts = append($ui, "<div/>");
-        for (var scriptName in this.program.scripts) {
-            var sb = append(this.$scripts, sprintf("<input type='button' value='%s'><br>", scriptName));
-            sb.on('click', e => inst.program.scripts[scriptName](inst.game));
-        }
-        if (1) {
-            this.$views = append($ui, "<select/>");
-            this.$views.on('input', e => inst.onViewCallback(this.$views.val()));
-        }
+        this.scriptControl = new ScriptControl(this, this.$ui);
+        this.viewControl = new ViewControl(this, this.$ui);
         this.$uiToggle.click(e => inst.toggleUI());
-        //this.$timeSlider.on('change', e => inst.onSliderChange(e));
-        this.$timeSlider.on('input', e => inst.onSliderChange(e));
-        this.$play.on('click', e => inst.togglePlayPause(e));
         this._visible = true;
-    }
-
-    addView(viewName) {
-        console.log("Add View "+viewName);
-        append(this.$views, sprintf("<option value='%s'>%s</option>", viewName,viewName));
-    }
-
-    togglePlayPause() {
-        var $play = this.$play;
-        console.log("$play: "+$play.val());
-        if ($play.val() == "Play") {
-            $play.val("Pause");
-            this.program.play();
-        }
-        else {
-            $play.val("Play");
-            this.program.pause();
-        }
     }
 
     toggleUI() {
@@ -199,49 +173,74 @@ class JQControls extends UIControls {
     /******************************************************/
     // Scripts
 
-    registerScript(name, callback) {
-        this.scriptCallbacks[name] = {
-            name: name,
-            callback: callback
-        };
-    }
-
-    removeScript(name) {
-        delete this.scriptCallbacks[name];
-    }
-
-    onScriptCallback(name) {
-        let cb = this.scriptCallbacks[name];
-        if (cb && cb.callback)
-            cb.callback();
-    }
-
-    onSliderChange(e) {
-        var newValue = $("#uiTimeSlider").val();
-        console.log('slider: ' + newValue);
-
-        var t = this.program.startTime + newValue*this.program.duration;
-        if (this.program)
-            this.program.setPlayTime(t);
-    }
-
-    onPlayerButtonClick(btnName) {
-        console.log('btn: ' + btnName);
-        switch(btnName) {
-        case "stop":
-            break;
-        case "playpause":
-            break;
-        }
-    }
+    registerScript(name, callback) { this.scriptControl.registerScript(name, callback); }
+    removeScript(name) { this.scriptControl.removeScript(name); }
 
     /**************************************************************/
     // Views
     registerView(name, callback) {
         console.log("JQControls.registerView "+name);
-        this.addView(name);
-        this.viewCallbacks[name] = {
-            name: name,
+        this.viewControl.registerView(name, callback);
+    }
+
+}
+
+class JQWidget {
+    constructor(ui, $parent) {
+        this.ui = ui;
+        this.$parent = $parent;
+    }
+}
+
+class PlayControls extends JQWidget {
+    constructor(ui, $parent) {
+        super(ui, $parent);
+        var inst = this;
+        this.$play = append($parent, "<input type='button' value='Play' style='width:60px;'>");
+        this.$timeSlider = append($parent, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
+        //this.$timeSlider.on('change', e => inst.onSliderChange(e));
+        this.$timeSlider.on('input', e => inst.onSliderChange(e));
+        this.$play.on('click', e => inst.togglePlayPause(e));
+    }
+
+    togglePlayPause() {
+        var $play = this.$play;
+        console.log("$play: "+$play.val());
+        if ($play.val() == "Play") {
+            $play.val("Pause");
+            this.ui.program.play();
+        }
+        else {
+            $play.val("Play");
+            this.ui.program.pause();
+        }
+    }
+
+    onSliderChange(e) {
+        var ui = this.ui;
+        var newValue = $("#uiTimeSlider").val();
+        console.log('slider: ' + newValue);
+        var t = ui.program.startTime + newValue*ui.program.duration;
+        if (ui.program)
+            ui.program.setPlayTime(t);
+    }
+}
+
+
+class ViewControl  extends JQWidget {
+    constructor(ui, $parent) {
+        super(ui, $parent);
+        var inst = this;
+        this.$views = append($parent, "<select/>");
+        this.$views.on('input', e => inst.onViewCallback(inst.$views.val()));
+        this.viewCallbacks = {};
+    }
+
+    registerView(viewName, viewCallback) {
+        append(this.$views, sprintf("<option value='%s'>%s</option>", viewName, viewName));
+        this.viewCallbacks[view] = viewCallback;
+        this.viewCallbacks[viewName] = {
+            name: viewName,
             callback: callback
         };
     }
@@ -258,6 +257,37 @@ class JQControls extends UIControls {
     }
 
 }
+
+class ScriptControl  extends JQWidget {
+    constructor(ui, $parent) {
+        super(ui, $parent);
+        this.scriptCallbacks = {};
+        this.$scripts = append($parent, "<div/>");
+        for (var scriptName in ui.program.scripts) {
+            var sb = append(this.$scripts, sprintf("<input type='button' value='%s'><br>", scriptName));
+            sb.on('click', e => ui.program.scripts[scriptName](ui.game));
+        }
+    }
+
+    registerScript(name, callback) {
+        this.scriptCallbacks[name] = {
+            name: name,
+            callback: callback
+        };
+    }
+
+    removeScript(name) {
+        delete this.scriptCallbacks[name];
+    }
+
+    onScriptCallback(name) {
+        let cb = this.scriptCallbacks[name];
+        if (cb && cb.callback)
+            cb.callback();
+    }
+}
+
+
 
 Game.registerNodeType("JQControls", (game, options) => {
     if (!options.name)
