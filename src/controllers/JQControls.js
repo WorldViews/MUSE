@@ -72,9 +72,6 @@ class JQControls extends UIControls {
         }
         if (1) {
             this.$views = append($ui, "<select/>");
-            //this.views.forEach(name => {
-            //    this.addView(name);
-            //});
             this.$views.on('input', e => inst.onViewCallback(this.$views.val()));
         }
         this.$uiToggle.click(e => inst.toggleUI());
