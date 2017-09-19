@@ -176,6 +176,14 @@ class Game {
         return program;
     }
 
+    setValue(name, value) {
+        //console.log("game.setValue "+name+" "+value);
+        this.events.dispatchEvent({
+            type: 'valueChange',
+            message: { name, value }
+        });
+    }
+
     registerPlayer(player) {
         if (this.program) {
             this.program.registerPlayer(player);

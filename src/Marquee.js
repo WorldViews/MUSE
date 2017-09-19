@@ -121,7 +121,7 @@ const TIMEOUT = 5000; // 30 seconds
 function setupMarquee(game, marquee) {
     var timeoutId = null;
     game.events.addEventListener('valueChange', ({message}) => {
-    	if (message.name === 'narrativeText') {
+    	if (message.name === 'narrative') {
     	    marquee.updateText(message.value);
     	    if (timeoutId) {
                 clearTimeout(timeoutId);

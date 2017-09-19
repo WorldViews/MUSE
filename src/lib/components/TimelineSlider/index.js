@@ -51,15 +51,15 @@ export default class TimelineSlider extends React.Component {
 
     onValueChange(event) {
         switch (event.message.name) {
-        case 'timeText':
+        case 'time':
             this.timeText = event.message.value;
             break;
 
-        case 'yearText':
+        case 'year':
             this.yearText = event.message.value;
             break;
 
-        case 'narrativeText':
+        case 'narrative':
             this.narrativeText = event.message.value;
             break;
         }

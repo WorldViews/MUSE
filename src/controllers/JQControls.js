@@ -54,7 +54,7 @@ class JQControls extends UIControls {
         this.$timeSlider = append(this.$playControls, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
         this.$status = append($ui, "<span id='status' /><br>");
         this.textFields.forEach(name => {
-            $ui.append(sprintf("<span id='%sText' /><br>", name));
+            append($ui, sprintf("<span id='%sText' /><br>", name));
         });
         append($ui, "<p/>");
         if (this.models.length > 0) {
@@ -116,19 +116,7 @@ class JQControls extends UIControls {
     onValueChange(event) {
         var msg = event.message;
         //console.log("onValueChange "+msg.name+" "+msg.value);
-        switch (event.message.name) {
-        case 'timeText':
-            $("#timeText").html(event.message.value);
-            break;
-
-        case 'yearText':
-            $("#yearText").html(event.message.value);
-            break;
-
-        case 'narrativeText':
-            $("#narrativeText").html(event.message.value);
-            break;
-        }
+        $("#"+event.message.name+"Text").html(event.message.value);
     }
 
     setStatus(statStr) {

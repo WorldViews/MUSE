@@ -46,6 +46,15 @@ class ProgramControl
         setInterval(()=>inst.tick(), 200);
     }
 
+    setTimeRange(startTime, endTime)
+    {
+        var startTime = Util.toTime(startTime);
+        var endTime = Util.toTime(endTime);
+        this.startTime = startTime;
+        var dur = endTime - startTime;
+        this.duration = dur;
+    }
+
     registerPlayer(player, name)
     {
         name = name || player.name;
@@ -66,13 +75,7 @@ class ProgramControl
     displayTime(t) {
         //console.log("displayTime "+t);
         var tStr = this.formatTime(t);
-        this.game.events.dispatchEvent({
-            type: 'valueChange',
-            message: {
-                'name': 'timeText',
-                'value': tStr
-            }
-        });
+        this.game.setValue("time", tStr);
         var dur = this.duration;
     	let value = ((t-this.startTime)/(0.0+dur));
         if (game.controllers.ui && game.controllers.ui.slider) {

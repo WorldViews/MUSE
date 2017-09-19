@@ -170,6 +170,12 @@ class SatTracks {
             }
         }
         this.geometry.verticesNeedUpdate = true;
+        this.game.setValue("spaceStatus", db.statusStr);
+        //$("#spaceStatusText").html(db.statusStr);
+        var dbEpoch = "none";
+        if (db.currentDataSet)
+            dbEpoch = db.currentDataSet.epoch;
+        this.game.setValue("dbEpoch", dbEpoch);
     }
 
     update() {

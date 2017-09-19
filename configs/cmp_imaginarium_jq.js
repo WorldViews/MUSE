@@ -123,7 +123,8 @@ CONFIG = {
        gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
        stageModels: [
            'vEarth', 'dancer', 'cmp', 'bmw', 'portal'
-       ]
+       ],
+       channels: ['year', 'narrative', 'spaceStatus']
     },
     'specs': SPECS
 };

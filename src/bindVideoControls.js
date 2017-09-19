@@ -16,13 +16,7 @@ export default (game, imageSource) => {
             _.set(game, 'controllers.ui.slider.value', value);
 
             var tStr = sprintf("%8.1f", e.target.currentTime);
-            game.events.dispatchEvent({
-                type: 'valueChange',
-                message: {
-                    'name': 'timeText',
-                    'value': tStr
-                }
-            });
+            game.setValue("time", tStr);
     	}
     });
 };
