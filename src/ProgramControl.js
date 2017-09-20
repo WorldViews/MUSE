@@ -135,6 +135,7 @@ class ProgramControl
     getPlayTime() { return this.playTime };
 
     setPlayTime(t) {
+        t = Util.toTime(t);
         this._prevClockTime = getClockTime();
         this._playTime = t;
         //console.log(">>>> noticeTime "+t);

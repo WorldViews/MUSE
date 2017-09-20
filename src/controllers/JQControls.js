@@ -20,7 +20,7 @@ class JQControls extends UIControls {
         this.root = document.createElement('div');
         this.viewControl = null;
         this.playControl = null;
-        this.scriptControl = new ScriptControl(this);
+        this.scriptControl = new ScriptControl(this, this.program.scripts);
         this.stageControl = null;
         if (this.program.stages.length > 0) {
             var stage = this.program.stages[0];
@@ -218,9 +218,9 @@ class ViewControl  extends JQWidget {
 
 //class ScriptControl  extends JQWidget {
 class ScriptControl {
-    constructor(ui) {
+    constructor(ui, scripts) {
         this.ui = ui;
-        this.scripts = {};
+        this.scripts = scripts || {};
     }
 
     setup($parent) {
