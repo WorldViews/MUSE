@@ -18,23 +18,14 @@ class JQControls extends UIControls {
         this.options = options || {};
         this.program = this.game.getProgram();
         this.root = document.createElement('div');
-        //this.models = ['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
-        this.models = this.program.stageModels || [];
-        //['vEarth', 'dancer', 'cmp', 'bmw', 'portal'];
-        this.modelCallbacks = {};
-        //this.$views = null;
-        this.$scripts = null;
         this.viewControl = null;
         this.playControl = null;
-        this.scriptControl = null;
-
-        this.registerModel('Data Viz', () => { this.selectModel('cmp') });
-        this.registerModel('Earth', () => { this.selectModel('vEarth') });
-        this.registerModel('Dancer', () => { this.selectModel('dancer') });
-        this.registerModel('BMW', () => { this.selectModel('bmw') });
-        this.registerModel('None', () => { this.selectModel(null) });
-        this.selectModel('vEarth');
-
+        this.scriptControl = new ScriptControl(this);
+        this.stageControl = null;
+        if (this.program.stages.length > 0) {
+            var stage = this.program.stages[0];
+            this.stageControl = new StageControl(this, stage.name, stage.models);
+        }
         var inst = this;
         $(document).ready( e => inst.setupElements());
         game.events.addEventListener('valueChange', e => inst.onValueChange(e));
@@ -59,15 +50,9 @@ class JQControls extends UIControls {
             append($ui, sprintf("<span id='%sText' /><br>", name));
         });
         append($ui, "<p/>");
-        if (this.models.length > 0) {
-            this.$models = append($ui, "<select/>");
-            this.models.forEach(name => {
-                append(this.$models, sprintf("<option value='%s'>%s</option>", name,name));
-            });
-            this.$models.on('input', e => inst.selectModel(this.$models.val()));
-        }
-        append($ui, "<p/>");
-        this.scriptControl = new ScriptControl(this, this.$ui);
+        if (this.stageControl)
+            this.stageControl.setup(this.$ui);
+        this.scriptControl.setup(this.$ui);
         this.viewControl = new ViewControl(this, this.$ui);
         this.$uiToggle.click(e => inst.toggleUI());
         this._visible = true;
@@ -104,41 +89,10 @@ class JQControls extends UIControls {
     //           onReset={this.onStateReset.bind(this)}
     //           state={State}/>
 
-    registerModel(name, callback) {
-        this.modelCallbacks[name] = {
-            name: name,
-            callback: callback
-        };
-    }
+    registerModel(name, callback) { this.stageControl.registerModel(name, callback); }
+    removeModel(name) { this.stageControl.removeModel(name); }
+    selectModel(name) { this.stageControl.selectModel(name); }
 
-    removeModel(name) {
-        delete this.modelCallbacks[name];
-    }
-
-    onModelCallback(name) {
-        let cb = this.modelCallbacks[name];
-        if (cb && cb.callback)
-            cb.callback();
-    }
-
-    selectModel(name) {
-        _.map(this.models, (n) => {
-            if (game.models[n]) {
-                game.models[n].visible = false;
-            }
-            if (game.controllers[n]) {
-                game.controllers[n].visible = false;
-            }
-        });
-
-        this.selectedModel = name;
-        if (game.models[name]) {
-            game.models[name].visible = true;
-        }
-        if (game.controllers[name]) {
-            game.controllers[name].visible = true;
-        }
-    }
 
     resetCMP() {
         // reset cmp
@@ -173,7 +127,10 @@ class JQControls extends UIControls {
     /******************************************************/
     // Scripts
 
-    registerScript(name, callback) { this.scriptControl.registerScript(name, callback); }
+    registerScript(name, callback) {
+        this.scriptControl.registerScript(name, callback);
+    }
+
     removeScript(name) { this.scriptControl.removeScript(name); }
 
     /**************************************************************/
@@ -231,18 +188,19 @@ class ViewControl  extends JQWidget {
     constructor(ui, $parent) {
         super(ui, $parent);
         var inst = this;
-        this.$views = append($parent, "<select/>");
+        this.$viewTool = append($parent, "<div>");
+        append(this.$viewTool, "<b>View Points:</b><br>");
+        this.$views = append(this.$viewTool, "<select/>");
+        this.$viewTool.hide();
+        append(this.$viewTool, "<p/>");
         this.$views.on('input', e => inst.onViewCallback(inst.$views.val()));
         this.viewCallbacks = {};
     }
 
-    registerView(viewName, viewCallback) {
-        append(this.$views, sprintf("<option value='%s'>%s</option>", viewName, viewName));
-        this.viewCallbacks[view] = viewCallback;
-        this.viewCallbacks[viewName] = {
-            name: viewName,
-            callback: callback
-        };
+    registerView(name, callback) {
+        append(this.$views, sprintf("<option value='%s'>%s</option>", name, name));
+        this.viewCallbacks[name] = { name, callback };
+        this.$viewTool.show();
     }
 
     onViewCallback(name) {
@@ -258,32 +216,122 @@ class ViewControl  extends JQWidget {
 
 }
 
-class ScriptControl  extends JQWidget {
-    constructor(ui, $parent) {
-        super(ui, $parent);
-        this.scriptCallbacks = {};
-        this.$scripts = append($parent, "<div/>");
-        for (var scriptName in ui.program.scripts) {
-            var sb = append(this.$scripts, sprintf("<input type='button' value='%s'><br>", scriptName));
-            sb.on('click', e => ui.program.scripts[scriptName](ui.game));
+//class ScriptControl  extends JQWidget {
+class ScriptControl {
+    constructor(ui) {
+        this.ui = ui;
+        this.scripts = {};
+    }
+
+    setup($parent) {
+        var ui = this.ui;
+        this.$parent = $parent;
+        this.$scripts = append(this.$parent, "<div/>");
+        append(this.$scripts, "<b>Scripts:</b><br>");
+        this.$scripts.hide();
+        //for (var name in ui.program.scripts) {
+        for (var name in this.scripts) {
+            this.addScript_(name, this.scripts[name]);
         }
+        append($parent, "<p/>");
     }
 
     registerScript(name, callback) {
-        this.scriptCallbacks[name] = {
+        this.scripts[name] = callback;
+        /*
+        this.scripts[name] = {
             name: name,
             callback: callback
         };
+        */
+        if (this.$scripts)
+            this.addScript_(name, callback);
+    }
+
+    addScript_(name, callback) {
+        var ui = this.ui;
+        var sb = append(this.$scripts, sprintf("<input type='button' value='%s'><br>", name));
+        sb.on('click', e => this.scripts[name](ui.game));
+        this.$scripts.show();
     }
 
     removeScript(name) {
-        delete this.scriptCallbacks[name];
+        delete this.scripts[name];
+        //TODO: remove from DOM
+    }
+}
+
+//class StageControl  extends JQWidget {
+class StageControl {
+    constructor(ui, stageName, models) {
+        this.name = stageName;
+        this.ui = ui;
+        this.selectedModel = null;
+        if (!models) {
+            models = {
+                'cmp': 'Data Visualization',
+                'vEarth': 'Virtual Earth',
+                'dancer': 'Dancer',
+                'bmw': 'BMW'
+            }
+        }
+        this.models = models;
+        this.$models = null;
+        this.selectModel('vEarth');
     }
 
-    onScriptCallback(name) {
-        let cb = this.scriptCallbacks[name];
-        if (cb && cb.callback)
-            cb.callback();
+    setup($parent) {
+        this.$parent = $parent;
+        var inst = this;
+        if (this.models != {}) {
+            for (var name in this.models) {
+                this.addModelEntry(name, this.models[name]);
+            }
+        }
+    }
+
+    addModelEntry(name, label) {
+        if (!this.$models) {
+            append(this.$parent, sprintf("<b>%s:</b><br>", this.name));
+            this.$models = append(this.$parent, "<select/>");
+            append(this.$parent, "<p/>");
+            var inst = this;
+            this.$models.on('input', e => inst.selectModel(inst.$models.val()));
+        }
+        append(this.$models, sprintf("<option value='%s'>%s</option>", name, label));
+    }
+
+    registerModel(name, label) {
+        if (!label)
+            label = name;
+        this.models[name] = label;
+    }
+
+    removeModel(name) {
+        delete this.models[name];
+        //TODO: remove from DOM
+    }
+
+    selectModel(name) {
+        console.log("StageControl.selectModel "+name);
+        //var game = this.ui.game;
+        var game = window.game;
+        for (var modelName in this.models) {
+            console.log(" name: "+modelName);
+            if (game.models[modelName]) {
+                game.models[modelName].visible = false;
+            }
+            if (game.controllers[modelName]) {
+                game.controllers[modelName].visible = false;
+            }
+        }
+        this.selectedModel = name;
+        if (game.models[name]) {
+            game.models[name].visible = true;
+        }
+        if (game.controllers[name]) {
+            game.controllers[name].visible = true;
+        }
     }
 }
 
