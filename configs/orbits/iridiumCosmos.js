@@ -1,4 +1,11 @@
 
+function watchCollision(game)
+{
+    console.log("Hello World");
+    game.program.setTimeRange('2/10/2009 8:40:00', '2/10/2009 12:40:00');
+    game.program.setPlayTime('2/10/2009 8:50:00');
+}
+
 CONFIG = {
     'cameraControls': 'Orbit',
     'program': {
@@ -8,7 +15,11 @@ CONFIG = {
        //startTime: 1504131722.726
         startTime: '2/9/2009',
         playSpeed: 100,
-        playTime: '2/10/2009 8:40:00'
+        playTime: '2/10/2009 8:40:00',
+        channels: ['spaceStatus', 'numSats', 'dbEpoch'],
+        scripts: {
+            'Watch Collision': watchCollision
+        }
     },
     'specs': [
         {  type: 'JQControls' },
@@ -25,12 +36,7 @@ CONFIG = {
                             24946: {path:'models/satellites/Iridium/model.dae',
                                           scale: .00005}
                         }},
-           //satTracks: {dataSet: 'iridCosmosColl.json'},
-           //satTracks: {models: [
-           //    'models/satellites/ComSat/model.dae',
-           //    'models/satellites/ComSat2/model.dae']},
-           //satTracks: 1,
-           dataViz: 0,
+           //dataViz: 0,
            atmosphere: {'name': 'CO2Viz', opacity: .1}
         }
     ]
