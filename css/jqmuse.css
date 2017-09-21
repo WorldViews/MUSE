@@ -32,6 +32,10 @@
     background: rgba(20,5,60,0.0);
 }
 
+.uiButton {
+    margin: 2px;
+}
+
 input[type=range]{
     -webkit-appearance: none;
 }

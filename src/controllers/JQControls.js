@@ -251,7 +251,7 @@ class ScriptControl {
 
     addScript_(name, callback) {
         var ui = this.ui;
-        var sb = append(this.$scripts, sprintf("<input type='button' value='%s'><br>", name));
+        var sb = append(this.$scripts, sprintf("<input type='button' value='%s' class='uiButton'><br>", name));
         sb.on('click', e => this.scripts[name](ui.game));
         this.$scripts.show();
     }
