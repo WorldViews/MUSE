@@ -91,6 +91,7 @@ class SatTrackDB {
         this.worstDelta = 0;
         this.worstSat = null;
         this.adjusting = false;
+        this.FAKE_PROP_TIME = 3*365*24*3600; // 3 years
         if (dataSet)
             this.loadData(dataSet);
     }
@@ -373,8 +374,6 @@ class SatTrackDB {
         this.worstSat = null;
         this.worstDelta = 0;
         var maxDiff = 0;
-        var FAKE_PROP_TIME = 10*365*24*3600; // 5 years
-        //var FAKE_PROP_TIME = 3*12*24*3600; // 5 years
 
         var i = -1;
         for (var satName in this.sats) {
@@ -397,7 +396,7 @@ class SatTrackDB {
                 this.worstDelta = deltaT;
                 maxDiff = diff;
             }
-            if (FAKE_PROP_TIME && (diff > FAKE_PROP_TIME)) {
+            if (this.FAKE_PROP_TIME && (diff > this.FAKE_PROP_TIME)) {
                 this.numFakes++;
                 var deltaT_mod_period = deltaT % sat.period;
                 var t2 = sat.epochUTC + deltaT_mod_period;
