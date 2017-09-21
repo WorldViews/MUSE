@@ -276,19 +276,23 @@ class SatTrackDB {
             var name = dObj.OBJECT_NAME;
             var startTime = dObj.startTime;
             var endTime = dObj.endTime;
+            var type = null;
             if (catalog && catalog.objects[id]) {
                 var obj = catalog.objects[id];
                 name = obj.OBJECT_NAME;
                 startTime = obj.startTime;
                 endTime = obj.endTime;
+                type = obj.OBJECT_TYPE;
             }
             else {
                 //console.log("No catalog entry for "+id);
             }
             if (!name)
-                name = "obj"+id;
+                name = "norad_id_"+id;
             //var sat = {id: tleObj.id, tle: tle, dataSet: epoch};
             var sat = {id, name, tle, startTime, endTime, dataSet: epoch};
+            if (type)
+                sat.type = type;
             if (j < 0) {
                 console.log(sprintf("id: %5s  name: %20s", id, name));
             }
@@ -451,8 +455,8 @@ class SatTrackDB {
     }
 
     dumpSats(pat) {
-        console.log("   Id            Name             startTime             Epoch         diff(days)  period");
-        console.log("----------------------------------------------------------------------------------------");
+        console.log("   Id            Name             startTime             Epoch         diff(days)  period  type");
+        console.log("----------------------------------------------------------------------------------------------");
         for (var id in this.sats) {
             var obj = this.sats[id];
             var name = obj.name;
@@ -466,9 +470,9 @@ class SatTrackDB {
             //}
             var et = obj.epochUTC;
             var dt = this._t - et;
-            console.log(sprintf("%5s %24s  %19s %19s  %8.1f %6.2f",
+            console.log(sprintf("%5s %24s  %19s %19s  %8.1f %6.2f %s",
                     id, name, Util.formatDatetime(obj.startTime),
-                    Util.formatDatetime(et), dt/(24*60*60), obj.period/3600.0));
+                    Util.formatDatetime(et), dt/(24*60*60), obj.period/3600.0), obj.type);
             /*
             console.log(sprintf(" TLE epoch  jdate: %10s utc: %12.3f  %s",
                         obj.satrec.jdsatepoch, et, Util.formatDatetime(et)));

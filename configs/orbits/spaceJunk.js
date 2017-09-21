@@ -15,6 +15,12 @@ function onStart(game)
     game.camera.position.z = 10;
 }
 
+function setVisibility(game, rsoType, val)
+{
+    //game.program.formatTime = t =>game.Util.toDate(t);
+    satTracks.rsoTypes[rsoType].particles.visible = val;
+}
+
 function onUpdate(game)
 {
     var t = game.program.getPlayTime();
@@ -51,7 +57,9 @@ CONFIG = {
        //startTime: '6/1/2005 10:30'
        channels: ['spaceStatus'],
        scripts: {
-           'Dump Satellites': dumpSats
+           'Dump Satellites': dumpSats,
+           'Show Debris': (game) => setVisibility(game, 'DEBRIS', true),
+           'Hide Debris': (game) => setVisibility(game, 'DEBRIS', false),
        }
     },
     'specs': [

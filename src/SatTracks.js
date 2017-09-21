@@ -33,6 +33,12 @@ class SatTracks {
         this.opts = opts;
         this.game = game;
         this.models = {};
+        this.rsoTypes = {};
+        this.rsoTypes['ROCKET BODY'] = {color: 0x00FF00};
+        this.rsoTypes['PAYLOAD'] = {color: 0x0000FF};
+        this.rsoTypes['DEBRIS'] = {color: 0xFF2222};
+        this.rsoTypes['tba'] = {color: 0x888888};
+        this.defaultType = this.rsoTypes['DEBRIS'];
         this.t = new Date().getTime()/1000.0;
         //this.filterHack = 0;
         if (opts.filterHack != null) {
@@ -79,27 +85,33 @@ class SatTracks {
         //    this.db.setupFakeTimes(this.game.program.startTime, this.game.program.duration);
         //}
         var now = new Date();
-        var geometry = new THREE.Geometry();
-        this.geometry = geometry;
-        for (var name in this.db.sats) {
-            var sat = this.db.sats[name];
-            geometry.vertices.push(new THREE.Vector3());
-        }
-        geometry.verticesNeedUpdate = true;
-        if (this.particles) {
-            var parent = this.particles.parent;
-            if (parent) {
-                console.log("Removing particles");
-                parent.remove(this.particles);
+        for (var name in this.rsoTypes) {
+            var rtype = this.rsoTypes[name];
+            var geometry = new THREE.Geometry();
+            rtype.geometry = geometry;
+            for (var id in this.db.sats) {
+                var sat = this.db.sats[id];
+                if (name == sat.type)
+                    sat.rtype = rtype;
+                geometry.vertices.push(new THREE.Vector3());
             }
+            geometry.verticesNeedUpdate = true;
+            if (rtype.particles) {
+                var parent = rtype.particles.parent;
+                if (parent) {
+                    console.log("Removing particles");
+                    parent.remove(rtype.particles);
+                }
+            }
+            rtype.particles = new THREE.Points( geometry, rtype.material );
+            console.log("Adding particles");
+            this.game.addToGame(rtype.particles, 'satellites', this.opts.parent);
         }
-        this.particles = new THREE.Points( geometry, this.material );
-        console.log("Adding particles");
-        this.game.addToGame(this.particles, 'satellites', this.opts.parent);
     }
 
     checkProximities() {
-        var v = this.geometry.vertices;
+        rtype = this.rsoTypes['satellites'];
+        var v = rtype.geometry.vertices;
         var d2min = 1000000;
         var imin = null;
         var jmin = null;
@@ -123,12 +135,15 @@ class SatTracks {
         var size = opts.size || 3;
         var color = opts.color || 0xff0000;
         var opacity = opts.opacity || 0.3;
-        this.geometry = new THREE.Geometry();
-        this.material = new THREE.PointsMaterial(
-            { size: size, sizeAttenuation: false,
-                color: color, opacity: 0.9, alphaTest: 0.1, transparent: true } );
-        this.particles = new THREE.Points( this.geometry, this.material );
-        this.game.addToGame(this.particles);
+        for (var name in this.rsoTypes) {
+            var rtype = this.rsoTypes[name];
+            rtype.geometry = new THREE.Geometry();
+            rtype.material = new THREE.PointsMaterial(
+                { size: size, sizeAttenuation: false,
+                    color: rtype.color, opacity: 0.9, alphaTest: 0.1, transparent: true } );
+            rtype.particles = new THREE.Points( rtype.geometry, rtype.material );
+            this.game.addToGame(rtype.particles);
+        }
     }
 
     setPlayTime(t, isAdjust) {
@@ -138,43 +153,46 @@ class SatTracks {
 
     updateSats() {
         var db = this.db;
-        var ns = Object.keys(db.sats).length;
-        var nv = this.geometry.vertices.length;
-        if (ns != nv) {
-            console.log(sprintf("Inconsisitency: nvertices %d != nsatellites %d", nv, ns));
-            return;
-        }
         this.t = this.game.program.getPlayTime();
-        //this.t = this.getPlayTime();
         db.setTime(this.t);
         var i = -1;
+        var rtypes = Object.values(this.rsoTypes);
+        var ntypes = rtypes.length;
+        var v = new THREE.Vector3();
         for (var satName in db.sats) {
             //console.log("satName: "+satName);
             i++;
             var sat = db.sats[satName];
+            var stype = sat.rtype || this.defaultType;
             //console.log("sat:", sat);
             //var satrec = sat.satrec;
-            var v3 = this.geometry.vertices[i];
-            if (sat.stateVec) {
+            if (sat.stateVec && sat.stateVec.position) {
                 var p = sat.stateVec.position;
-                if (p) {
-                    v3.set(p.x, p.z, -p.y);
-                }
+                v.set(p.x, p.z, -p.y);
+                v.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
             }
             else {
-                v3.set(0,0,0);
+                v.set(0,0,0);
             }
-            v3.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
+            rtypes.forEach( rtype => {
+                if (stype == rtype) {
+                    rtype.geometry.vertices[i].set(v.x, v.y, v.z);
+                }
+                else {
+                    rtype.geometry.vertices[i].set(0, 0, 0);
+                }
+            });
             if (this.models[satName]) {
                 var m = this.game.models[this.models[satName]];
                 if (m) {
                     window.SATMOD = m;
                     //console.log("set position "+this.models[i]+" "+v3.x+" "+v3.y+" "+v3.z);
-                    m.position.set(v3.x, v3.y,v3.z);
+                    m.position.set(v.x, v.y, v.z);
                 }
             }
         }
-        this.geometry.verticesNeedUpdate = true;
+        rtypes.forEach( rtype => rtype.geometry.verticesNeedUpdate = true );
+
         var dbEpoch = db.currentDataSet ? db.currentDataSet.epoch : "none";
         var statusStr = sprintf(
             `Num Active: %d<br>
@@ -188,9 +206,6 @@ class SatTracks {
             db.numErrs, db.numFakes,
             dbEpoch);
         this.game.setValue("spaceStatus", statusStr);
-        //$("#spaceStatusText").html(db.statusStr);
-        var dbEpoch = db.currentDataSet ? db.currentDataSet.epoch : "none";
-        //this.game.setValue("dbEpoch", dbEpoch);
     }
 
     update() {
