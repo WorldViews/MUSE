@@ -88,6 +88,9 @@ class SatTrackDB {
         this.currentDataSet = null;
         this.tzo = new Date().getTimezoneOffset();
         this._t = new Date()/1000.0;
+        this.worstDelta = 0;
+        this.worstSat = null;
+        this.adjusting = false;
         if (dataSet)
             this.loadData(dataSet);
     }
@@ -251,8 +254,12 @@ class SatTrackDB {
 
     setDataSet(dataSet) {
         console.log("***** setDataSet "+dataSet.epoch);
-        this.currentDataSet = dataSet;
         var dataObjects = dataSet.objects;
+        if (!dataObjects) {
+            console.log("**** No data objects");
+            return;
+        }
+        this.currentDataSet = dataSet;
         var epoch = dataSet.epoch;
         var j=0;
         var satList = [];
@@ -281,7 +288,7 @@ class SatTrackDB {
                 name = "obj"+id;
             //var sat = {id: tleObj.id, tle: tle, dataSet: epoch};
             var sat = {id, name, tle, startTime, endTime, dataSet: epoch};
-            if (j < 10) {
+            if (j < 0) {
                 console.log(sprintf("id: %5s  name: %20s", id, name));
             }
             satList.push(sat);
@@ -333,14 +340,21 @@ class SatTrackDB {
     setTime(t) {
         //console.log("SatTrackDB.setTime "+t);
         var inst = this;
-        var dataSet = this.findNearestDataSet(t);
-        if (dataSet && dataSet != this.currentDataSet) {
-            if (dataSet.objects) {
-                // Should install new data now...
+        if (!this.adjusting) {
+            var dataSet = this.findNearestDataSet(t);
+            if (dataSet && dataSet != this.currentDataSet) {
+                if (dataSet.objects) {
+                    this.setDataSet(dataSet);
+                    // Should install new data now...
+                }
+                else {
+                    //dataSet.requestData(dataSet => inst.setDataSet(dataSet));
+                    dataSet.requestData();
+                }
             }
-            else {
-                dataSet.requestData(dataSet => inst.setDataSet(dataSet));
-            }
+        }
+        else {
+            //console.log("ignoring dataSet fetches during adjustment...")
         }
         this._t = t;
         this._update(t);
@@ -352,23 +366,23 @@ class SatTrackDB {
 
     _update(t) {
         var time = new Date(1000*t);
-        var numErrs = 0;
-        var errName = "";
-        var i = -1;
-        var worstSat = null;
-        var worstDelta = 0;
-        var maxDiff = 0;
+        this.numErrs = 0;
         this.numActive = 0;
         this.numFakes = 0;
-        var FAKE_PROP_TIME = 5*365*24*3600; // 5 years
+        var errName = "";
+        this.worstSat = null;
+        this.worstDelta = 0;
+        var maxDiff = 0;
+        var FAKE_PROP_TIME = 10*365*24*3600; // 5 years
+        //var FAKE_PROP_TIME = 3*12*24*3600; // 5 years
 
+        var i = -1;
         for (var satName in this.sats) {
             //console.log("satName: "+satName);
             i++;
             var sat = this.sats[satName];
             //console.log("sat:", sat);
-            if (sat.bad ||
-                (sat.startTime && sat.startTime >= t) ||
+            if ((sat.startTime && sat.startTime >= t) ||
                 (sat.endTime && sat.endTime <= t)) {
                 sat.stateVec = null;
                 sat.active = false;
@@ -379,11 +393,11 @@ class SatTrackDB {
             var deltaT = t - sat.epochUTC;
             var diff = Math.abs(deltaT);
             if (diff > maxDiff) {
-                worstSat = sat.id;
-                worstDelta = deltaT;
+                this.worstSat = sat.id;
+                this.worstDelta = deltaT;
                 maxDiff = diff;
             }
-            if (FAKE_PROP_TIME && diff > FAKE_PROP_TIME) {
+            if (FAKE_PROP_TIME && (diff > FAKE_PROP_TIME)) {
                 this.numFakes++;
                 var deltaT_mod_period = deltaT % sat.period;
                 var t2 = sat.epochUTC + deltaT_mod_period;
@@ -393,26 +407,18 @@ class SatTrackDB {
                 sat.stateVec = satellite.propagate(sat.satrec, time);
             }
             if (!sat.stateVec.position) {
-                //sat.bad = true;
-                numErrs++;
-                if (numErrs < 2) {
+                this.numErrs++;
+                if (this.numErrs < 2) {
                     //console.log("Problem with satellite "+satName);
                     errName = satName;
                 }
                 sat.stateVec = null;
             }
         }
-        if (numErrs) {
-            console.log(sprintf("Num sat errors: %d - %s", numErrs, errName));
+        if (this.numErrs) {
+            //console.log(sprintf("Num sat errors: %d - %s", numErrs, errName));
         }
-        var dbEpoch = "";
-        if (this.currentDataSet)
-            dbEpoch = this.currentDataSet.epoch;
-        this.worstSat = worstSat;
-        this.worstDelta = worstDelta;
-        //console.log(sprintf("Worst sat: %d  deltaT: %s", worstSat, worstDelta/SecsPerDay))
-        this.statusStr = sprintf("Num: %d Delta: %.0f(days)",
-                            this.numActive, this.worstDelta/(24*3600));
+        //console.log("worstDelta: "+this.worstDelta)
     }
 
 

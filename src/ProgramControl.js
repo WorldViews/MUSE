@@ -63,7 +63,7 @@ class ProgramControl
     }
 
     tick() {
-        var t = this.playTime;
+        var t = this.getPlayTime();
         //console.log("tick "+t);
         this.displayTime(t);
     }
@@ -120,21 +120,35 @@ class ProgramControl
     }
 
     get playTime() {
+        console.log("*******************************************");
+        console.log("*********** use getPlayTime() *************");
+        return this.getPlayTime();
+    }
+
+    set playTime(t) {
+        console.log("*******************************************");
+        console.log("*******************************************");
+        console.log("*********** use setPlayTime   *************");
+        console.log("*******************************************");
+        console.log("*******************************************");
+        xxx.yyy.zzz = xxx.zzz.yyy;
+        this.setPlayTime(t)
+    }
+
+    getPlayTime() {
         var t = getClockTime();
         var dt = t - this._prevClockTime;
         this._prevClockTime = t;
         //console.log("dt: "+dt+"  "+this._playSpeed);
         this._playTime += dt*this._playSpeed;
         return this._playTime;
-    }
+    };
 
-    set playTime(t) {
-        this.setPlayTime(t)
-    }
-
-    getPlayTime() { return this.playTime };
-
-    setPlayTime(t) {
+    // isAdjust is true if this was an adjustment (e.g. scrubbing) event
+    // that should not force a heavyweight seek.  This can be ignored,
+    // but may provide a nicer user experience if expensive operations
+    // are only done when isAdjust=false.
+    setPlayTime(t, isAdjust) {
         t = Util.toTime(t);
         this._prevClockTime = getClockTime();
         this._playTime = t;
@@ -144,8 +158,8 @@ class ProgramControl
             //console.log("set playTime "+name, player);
             //******* Get rid of this.  Change our code to not user set and get
             if (player.setPlayTime) {
-                //console.log("calling setPlayTime");
-                player.setPlayTime(t)
+                //console.log("calling setPlayTime "+t+" "+isInput);
+                player.setPlayTime(t, isAdjust)
             }
             else
                 player.playTime = t;
@@ -154,7 +168,7 @@ class ProgramControl
         for (var key in this.game.screens) {
             //this.game.screens[key].imageSource.setPlayTime(t);
             var screen = this.game.screens[key];
-            screen.setPlayTime(t);
+            screen.setPlayTime(t, isAdjust);
         }
         this.displayTime(t);
     }

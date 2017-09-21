@@ -44,7 +44,7 @@ class SatTracks {
         this.initGraphics(opts);
         this.radiusEarthKm = 6378.1;
         this._playSpeed = 60.0;
-        this.startTime = game.program.playTime;
+        this.startTime = game.program.getPlayTime();
         //this.setPlayTime(getClockTime());
         var inst = this;
         this.game.program.formatTime = t => Util.formatDatetime(t);
@@ -131,6 +131,11 @@ class SatTracks {
         this.game.addToGame(this.particles);
     }
 
+    setPlayTime(t, isAdjust) {
+        //console.log("**** satTracks setPlayTime "+t+" "+(isAdjust ? "adjust" : "set"));
+        this.db.adjusting = isAdjust;
+    }
+
     updateSats() {
         var db = this.db;
         var ns = Object.keys(db.sats).length;
@@ -170,12 +175,22 @@ class SatTracks {
             }
         }
         this.geometry.verticesNeedUpdate = true;
-        this.game.setValue("spaceStatus", db.statusStr);
+        var dbEpoch = db.currentDataSet ? db.currentDataSet.epoch : "none";
+        var statusStr = sprintf(
+            `Num Active: %d<br>
+             playback speed: %.1f<br>
+             max dt: %.1f (days)<br>
+             errs: %d kep: %d<br>
+             DB epoch: %s`,
+            db.numActive,
+            this.game.program.getPlaySpeed(),
+            db.worstDelta/(24*3600),
+            db.numErrs, db.numFakes,
+            dbEpoch);
+        this.game.setValue("spaceStatus", statusStr);
         //$("#spaceStatusText").html(db.statusStr);
-        var dbEpoch = "none";
-        if (db.currentDataSet)
-            dbEpoch = db.currentDataSet.epoch;
-        this.game.setValue("dbEpoch", dbEpoch);
+        var dbEpoch = db.currentDataSet ? db.currentDataSet.epoch : "none";
+        //this.game.setValue("dbEpoch", dbEpoch);
     }
 
     update() {

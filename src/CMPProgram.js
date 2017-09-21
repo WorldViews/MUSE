@@ -34,8 +34,8 @@ class CMPProgram extends ProgramControl {
         console.log("****** CMPProgram.duration: "+this.duration)
     }
 
-    setPlayTime(t) {
-        super.setPlayTime(t);
+    setPlayTime(t, isAdjust) {
+        super.setPlayTime(t, isAdjust);
         var cmp = game.CMP || game.controllers['cmp'];
         if (cmp) {
             var nt = 0;

@@ -155,8 +155,8 @@ class PlayControls extends JQWidget {
         var inst = this;
         this.$play = append($parent, "<input type='button' value='Play' style='width:60px;'>");
         this.$timeSlider = append($parent, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
-        //this.$timeSlider.on('change', e => inst.onSliderChange(e));
-        this.$timeSlider.on('input', e => inst.onSliderChange(e));
+        this.$timeSlider.on('change', e => inst.onSliderChange(e, false));
+        this.$timeSlider.on('input',  e => inst.onSliderChange(e, true));
         this.$play.on('click', e => inst.togglePlayPause(e));
     }
 
@@ -173,13 +173,14 @@ class PlayControls extends JQWidget {
         }
     }
 
-    onSliderChange(e) {
+    onSliderChange(e, isAdjust) {
+        //console.log("***** onSlider "+ (isAdjust ? "adjust" : "set"));
         var ui = this.ui;
         var newValue = $("#uiTimeSlider").val();
-        console.log('slider: ' + newValue);
+        //console.log('slider: ' + newValue);
         var t = ui.program.startTime + newValue*ui.program.duration;
         if (ui.program)
-            ui.program.setPlayTime(t);
+            ui.program.setPlayTime(t, isAdjust);
     }
 }
 

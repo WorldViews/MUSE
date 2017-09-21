@@ -76,7 +76,7 @@ class Planet {
             satOpts.parent = satOpts.parent || opts.name;
             this.satTracks = new SatTracks(this.game, satOpts);
         }
-        this.setPlayTime(game.program.playTime);
+        this.setPlayTime(game.program.getPlayTime());
     }
 
     _addBody(texture) {
@@ -160,7 +160,11 @@ class Planet {
     play() {
     }
 
-    setPlayTime(t) {
+    setPlayTime(t, isAdjust) {
+        if (this.satTracks) {
+            //console.log("VirtualEarth.setPlayTime "+t+" isInput: "+isInput);
+            this.satTracks.setPlayTime(t, isAdjust);
+        }
     }
 
     updateSurfaceImage(url) {

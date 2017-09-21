@@ -17,7 +17,7 @@ function onStart(game)
 
 function onUpdate(game)
 {
-    var t = game.program.playTime;
+    var t = game.program.getPlayTime();
     var earth = game.controllers.vEarth;
     var atm = earth.atmosphere;
     //console.log("onUpdate t:" + t);
@@ -49,12 +49,13 @@ CONFIG = {
        playTime: 'now',
        playSpeed: 100,
        //startTime: '6/1/2005 10:30'
-       channels: ['spaceStatus', 'numSats', 'dbEpoch'],
+       channels: ['spaceStatus'],
        scripts: {
            'Dump Satellites': dumpSats
        }
     },
     'specs': [
+        {  type: 'Stats', right: '-0px' },
         {  type: 'JQControls' },
         {  type: 'Stars' },
         {  type: 'PointLight', name: 'sun', position: [-1000, 0, 0], distance: 5000},
