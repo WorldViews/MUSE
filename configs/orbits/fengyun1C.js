@@ -20,10 +20,9 @@ CONFIG = {
            radius: 1.25, rot: [0,0,0],
            satTracks: {dataSet: 'fengyun1c.3le',
                         models: {
-                            22675: {path:'models/satellites/ComSat/model.dae',
-                                           scale: .001},
-                            24946: {path:'models/satellites/Iridium/model.dae',
-                                          scale: .00005}
+                            25730: {path:'models/satellites/Fengyun/fengyun.dae',
+                                           scale: 1.0,
+                                           recenter: true},
                         }},
            //satTracks: {dataSet: 'iridCosmosColl.json'},
            //satTracks: {models: [

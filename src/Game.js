@@ -323,47 +323,54 @@ class Game {
     //
     // Takes an Object3d and sets the position, rotation and scale if they
     // are present in props.
-    setFromProps(obj3d, props) {
-        if (props.position) {
-            if (Array.isArray(props.position)) {
-                obj3d.position.fromArray(props.position);
+        setFromProps(obj3d, props) {
+            if (props.position) {
+                if (Array.isArray(props.position)) {
+                    obj3d.position.fromArray(props.position);
+                }
+                else {
+                    reportError("position should be array");
+    	        }
             }
-	    else {
-                reportError("position should be array");
-	    }
-        }
-        if (props.rot) {
-            if (Array.isArray(props.rot)) {
-                obj3d.rotation.fromArray(props.rot.map(degToRad));
+            if (props.rot) {
+                if (Array.isArray(props.rot)) {
+                    obj3d.rotation.fromArray(props.rot.map(degToRad));
+                }
+    	        else {
+                    reportError("rotations should be array");
+    	        }
             }
-	    else {
-                reportError("rotations should be array");
-	    }
-        }
-        if (props.rotation) {
-            if (Array.isArray(props.rotation)) {
-                obj3d.rotation.fromArray(props.rotation);
+            if (props.rotation) {
+                if (Array.isArray(props.rotation)) {
+                    obj3d.rotation.fromArray(props.rotation);
+                }
+    	    else {
+                    reportError("rotations should be array");
+    	    }
             }
-	    else {
-                reportError("rotations should be array");
-	    }
+            if (props.scale) {
+    	    if (Array.isArray(props.scale)) {
+                    obj3d.scale.fromArray(scaleVec(props.scale));
+    	    }
+    	    else if (typeof(props.scale) === "number") {
+                    obj3d.scale.fromArray([props.scale,props.scale,props.scale]);
+    	    }
+    	    else {
+                    reportError("rotations should be array");
+    	    }
+            }
+            if (props.visible != null) {
+    	           obj3d.visible = props.visible;
+            }
+            if (props.recenter) {
+                //TODO: fix this
+                //obj3d.updateMatrix();
+                var box = new THREE.Box3().setFromObject(obj3d);
+                var center = box.getCenter();
+                obj3d.position.sub(center);
+            }
+            obj3d.updateMatrix();
         }
-        if (props.scale) {
-	    if (Array.isArray(props.scale)) {
-                obj3d.scale.fromArray(scaleVec(props.scale));
-	    }
-	    else if (typeof(props.scale) === "number") {
-                obj3d.scale.fromArray([props.scale,props.scale,props.scale]);
-	    }
-	    else {
-                reportError("rotations should be array");
-	    }
-        }
-        if (props.visible != null) {
-	    obj3d.visible = props.visible;
-        }
-        obj3d.updateMatrix();
-    }
 
     // untested... don't use yet.
     reparent(obj, parent) {

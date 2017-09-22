@@ -14,7 +14,8 @@ CONFIG = {
             parent: 'station',
             path: 'models/satellites/Fengyun/fengyun.dae',
             //path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
-            // scale: 0.01
+            //scale: 0.01
+            recenter: true
         },
         LIGHTS
     ]
