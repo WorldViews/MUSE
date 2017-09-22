@@ -333,13 +333,18 @@ class SatTrackDB {
     }
 
     findNearestDataSet(t) {
+        var dtMin = 1E100;
+        var bestDataSet = null;
         for (var i=0; i<this.epochs.length; i++) {
             var epoch = this.epochs[i];
             var dataSet = this.dataSets[epoch];
-            if (dataSet.epochUTC > t)
-                return dataSet;
+            var dt = Math.abs(dataSet.epochUTC - t);
+            if (dt < dtMin) {
+                dtMin = dt;
+                bestDataSet = dataSet;
+            }
         }
-        return null;
+        return bestDataSet;
     }
 
     setTime(t) {
