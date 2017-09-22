@@ -10,6 +10,10 @@
     z-index: 10;
 }
 
+.jqui {
+    color: #ffffff;
+}
+
 #uiPlayControls {
     position: absolute; left: 30px; top: 0px;
     padding-left: 10px; padding-right: 10px;
@@ -34,6 +38,7 @@
 
 .uiButton {
     margin: 2px;
+    background: rgba(220,20,80,0.3);
 }
 
 input[type=range]{
