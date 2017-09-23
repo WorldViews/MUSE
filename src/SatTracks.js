@@ -25,6 +25,80 @@ function showPosVel(pv, t)
         t, p.x, p.y, p.z, v.x, v.y, v.z));
 }
 
+class Raycaster {
+    constructor(satTracks, dom) {
+        this.game = satTracks.game;
+        this.satTracks = satTracks;
+        this.dom = dom;
+        if (!dom) {
+            console.log("No domElement available");
+            alert("too bad");
+            return;
+        }
+        this.raycaster = new THREE.Raycaster();
+        this.raycastPt = new THREE.Vector2()
+        var inst = this;
+        dom.addEventListener( 'mousedown', e => inst._onMouseDown(e), false );
+        //dom.addEventListener( 'mouseup',   e => inst._onMouseUp(e), false );
+        dom.addEventListener( 'mousemove', e => inst._onMouseMove(e), false );
+    }
+
+    _onMouseDown(e) {
+        console.log("SatTracks........ mouseDown ......");
+        this.handleRaycast(e, true);
+    }
+
+    _onMouseMove(e) {
+        //console.log("SatTracks........ mouseMove ......");
+        this.handleRaycast(e, false);
+    }
+
+    handleRaycast(event, isSelect) {
+        var x = (event.pageX / window.innerWidth)*2 - 1;
+        var y = - (event.pageY / window.innerHeight)*2 + 1;
+        return this.raycast(x,y);
+    }
+
+    raycast(x,y, isSelect)
+    {
+        console.log("raycast "+x+" "+y);
+        this.satTracks.mouseOverSat = null;
+        this.raycastPt.x = x;
+        this.raycastPt.y = y;
+        this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
+        var objs = this.game.scene.children;
+        var intersects = this.raycaster.intersectObjects(objs, true);
+        //var i = 0;
+        if (intersects.length == 0)
+            return null;
+        var pickedObj = null;
+        var idx = 0;
+        for (var i=0; i<intersects.length; i++) {
+            var isect = intersects[i];
+            var obj = isect.object;
+            pickedObj = obj;
+            idx = isect.index;
+            break;
+        }
+        if (pickedObj && pickedObj.rtype) {
+            var rtype = pickedObj.rtype;
+            console.log("name: "+ pickedObj.name+" "+idx);
+            var id = rtype.ids[idx];
+            var sat = this.satTracks.db.sats[id];
+            if (sat) {
+                console.log(" sat "+sat.name);
+                this.satTracks.mouseOverSat = sat;
+                if (isSelect) {
+                    this.satTracks.selectedSat = sat;
+                }
+            }
+            else {
+                console.log("Unknown id: "+id);
+            }
+        }
+    }
+}
+
 class SatTracks {
     constructor(game, opts) {
         window.satTracks = this;
@@ -34,10 +108,10 @@ class SatTracks {
         this.game = game;
         this.models = {};
         this.rsoTypes = {};
-        this.rsoTypes['ROCKET BODY'] = {color: 0x00FF00};
-        this.rsoTypes['PAYLOAD'] = {color: 0x0000FF};
-        this.rsoTypes['DEBRIS'] = {color: 0xFF2222};
-        this.rsoTypes['tba'] = {color: 0x888888};
+        this.rsoTypes['ROCKET BODY'] = {color: 0x00FF00, ids: []};
+        this.rsoTypes['PAYLOAD'] = {color: 0x0000FF, ids: []};
+        this.rsoTypes['DEBRIS'] = {color: 0xFF2222, ids:[]};
+        this.rsoTypes['tba'] = {color: 0x888888, ids: []};
         this.defaultType = this.rsoTypes['DEBRIS'];
         this.t = new Date().getTime()/1000.0;
         //this.filterHack = 0;
@@ -50,6 +124,8 @@ class SatTracks {
         this.initGraphics(opts);
         this.radiusEarthKm = 6378.1;
         this._playSpeed = 60.0;
+        this.mouseOverSat = "";
+        this.selectedSat = "";
         this.startTime = game.program.getPlayTime();
         //this.setPlayTime(getClockTime());
         var inst = this;
@@ -58,6 +134,7 @@ class SatTracks {
         if (opts.models) {
             this.loadModels(opts);
         }
+        this.rayCaster = new Raycaster(this, game.renderer.domElement);
     }
 
     loadModels(opts) {
@@ -79,6 +156,22 @@ class SatTracks {
         }
     }
 
+    initGraphics(opts) {
+        var size = opts.size || 3;
+        var color = opts.color || 0xff0000;
+        var opacity = opts.opacity || 0.3;
+        for (var name in this.rsoTypes) {
+            var rtype = this.rsoTypes[name];
+            rtype.geometry = new THREE.Geometry();
+            rtype.material = new THREE.PointsMaterial(
+                { size: size, sizeAttenuation: false,
+                    color: rtype.color, opacity: 0.9, alphaTest: 0.1, transparent: true } );
+            rtype.particles = new THREE.Points( rtype.geometry, rtype.material );
+            rtype.particles.rtype = rtype;
+            this.game.addToGame(rtype.particles);
+        }
+    }
+
     onLoaded(sats) {
         console.log(">>> SatTracks.onLoaded...");
         //if (this.filterHack) {
@@ -91,8 +184,11 @@ class SatTracks {
             rtype.geometry = geometry;
             for (var id in this.db.sats) {
                 var sat = this.db.sats[id];
-                if (name == sat.type)
+                if (name == sat.type) {
                     sat.rtype = rtype;
+                }
+                var i = geometry.vertices.length;
+                rtype.ids[i] = id;
                 geometry.vertices.push(new THREE.Vector3());
             }
             geometry.verticesNeedUpdate = true;
@@ -104,8 +200,10 @@ class SatTracks {
                 }
             }
             rtype.particles = new THREE.Points( geometry, rtype.material );
+            rtype.particles.rtype = rtype;
             console.log("Adding particles");
-            this.game.addToGame(rtype.particles, 'satellites', this.opts.parent);
+            var gname = ('satellites_'+name).replace(" ", "_");
+            this.game.addToGame(rtype.particles, gname, this.opts.parent);
         }
     }
 
@@ -129,21 +227,6 @@ class SatTracks {
             }
         }
         console.log("d2min: "+d2min+"  i: "+i+"  j: "+j);
-    }
-
-    initGraphics(opts) {
-        var size = opts.size || 3;
-        var color = opts.color || 0xff0000;
-        var opacity = opts.opacity || 0.3;
-        for (var name in this.rsoTypes) {
-            var rtype = this.rsoTypes[name];
-            rtype.geometry = new THREE.Geometry();
-            rtype.material = new THREE.PointsMaterial(
-                { size: size, sizeAttenuation: false,
-                    color: rtype.color, opacity: 0.9, alphaTest: 0.1, transparent: true } );
-            rtype.particles = new THREE.Points( rtype.geometry, rtype.material );
-            this.game.addToGame(rtype.particles);
-        }
     }
 
     setPlayTime(t, isAdjust) {
@@ -194,17 +277,20 @@ class SatTracks {
         rtypes.forEach( rtype => rtype.geometry.verticesNeedUpdate = true );
 
         var dbEpoch = db.currentDataSet ? db.currentDataSet.epoch : "none";
+        var satName = this.mouseOverSat ? this.mouseOverSat.name : "none";
         var statusStr = sprintf(
             `Num Active: %d<br>
              playback speed: %.1f<br>
              max dt: %.1f (days)<br>
              errs: %d kep: %d<br>
-             DB epoch: %s`,
+             DB epoch: %s<br>
+             %s`,
             db.numActive,
             this.game.program.getPlaySpeed(),
             db.worstDelta/(24*3600),
             db.numErrs, db.numFakes,
-            dbEpoch);
+            dbEpoch,
+            satName);
         this.game.setValue("spaceStatus", statusStr);
     }
 
