@@ -58,7 +58,7 @@ class Raycaster {
     handleRaycast(event, isSelect) {
         var x = (event.pageX / window.innerWidth)*2 - 1;
         var y = - (event.pageY / window.innerHeight)*2 + 1;
-        console.log("handleRaycast "+x+" "+y+" select: "+isSelect);
+        //console.log("handleRaycast "+x+" "+y+" select: "+isSelect);
         this.satTracks.mouseOverSat = null;
         this.raycastPt.x = x;
         this.raycastPt.y = y;
@@ -85,19 +85,19 @@ class Raycaster {
             window.ISECT = isect;
             var rtype = pickedObj.rtype;
             var idx = isect.index;
-            console.log(" group: "+ pickedObj.name+" "+idx);
-            console.log(" distToRay "+isect.distanceToRay)
+            //console.log(" group: "+ pickedObj.name+" "+idx);
+            //console.log(" distToRay "+isect.distanceToRay)
             var id = rtype.ids[idx];
             var sat = this.satTracks.db.sats[id];
             if (sat) {
-                console.log(" sat "+sat.name);
+                //console.log(" sat "+sat.name);
                 this.satTracks.mouseOverSat = sat;
                 if (isSelect) {
                     this.satTracks.selectedSat = sat;
                 }
             }
             else {
-                console.log("Unknown id: "+id);
+                console.log("**** SatTracks raycast unknown id: "+id);
             }
         }
     }
@@ -282,6 +282,12 @@ class SatTracks {
 
         var dbEpoch = db.currentDataSet ? db.currentDataSet.epoch : "none";
         var satName = this.mouseOverSat ? this.mouseOverSat.name : "none";
+        var selectedInfo = "<br><br><br>";
+        if (this.selectedSat) {
+            selectedInfo = sprintf("%6d<br>%s<br>%s",
+                this.selectedSat.id, this.selectedSat.name,
+                Util.formatDatetime(this.selectedSat.epochUTC));
+        }
         var selectedSatName = this.selectedSat ? this.selectedSat.name : "";
         var statusStr = sprintf(
             `Num Active: %d<br>
@@ -296,7 +302,7 @@ class SatTracks {
             db.worstDelta/(24*3600),
             db.numErrs, db.numFakes,
             dbEpoch,
-            satName, selectedSatName);
+            satName, selectedInfo);
         this.game.setValue("spaceStatus", statusStr);
     }
 
