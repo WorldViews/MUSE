@@ -36,6 +36,8 @@ class Raycaster {
             return;
         }
         this.raycaster = new THREE.Raycaster();
+        this.threshold = 0.1;
+        this.raycaster.params.Points.threshold = this.threshold;
         this.raycastPt = new THREE.Vector2()
         var inst = this;
         dom.addEventListener( 'mousedown', e => inst._onMouseDown(e), false );
@@ -56,33 +58,35 @@ class Raycaster {
     handleRaycast(event, isSelect) {
         var x = (event.pageX / window.innerWidth)*2 - 1;
         var y = - (event.pageY / window.innerHeight)*2 + 1;
-        return this.raycast(x,y);
-    }
-
-    raycast(x,y, isSelect)
-    {
-        console.log("raycast "+x+" "+y);
+        console.log("handleRaycast "+x+" "+y+" select: "+isSelect);
         this.satTracks.mouseOverSat = null;
         this.raycastPt.x = x;
         this.raycastPt.y = y;
         this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
         var objs = this.game.scene.children;
         var intersects = this.raycaster.intersectObjects(objs, true);
-        //var i = 0;
         if (intersects.length == 0)
             return null;
+        var isect = null;
         var pickedObj = null;
-        var idx = 0;
         for (var i=0; i<intersects.length; i++) {
-            var isect = intersects[i];
-            var obj = isect.object;
-            pickedObj = obj;
-            idx = isect.index;
-            break;
+            isect = intersects[i];
+            //console.log( "dtr: "+isect.distanceToRay);
+            if (isect.distanceToRay > this.threshold)
+                continue;
+            pickedObj = isect.object;
+            if (pickedObj && pickedObj.rtype)
+                break;
         }
+
+        //var isect = intersects[0];
+        //var pickedObj = isect.object;
         if (pickedObj && pickedObj.rtype) {
+            window.ISECT = isect;
             var rtype = pickedObj.rtype;
-            console.log("name: "+ pickedObj.name+" "+idx);
+            var idx = isect.index;
+            console.log(" group: "+ pickedObj.name+" "+idx);
+            console.log(" distToRay "+isect.distanceToRay)
             var id = rtype.ids[idx];
             var sat = this.satTracks.db.sats[id];
             if (sat) {
@@ -278,19 +282,21 @@ class SatTracks {
 
         var dbEpoch = db.currentDataSet ? db.currentDataSet.epoch : "none";
         var satName = this.mouseOverSat ? this.mouseOverSat.name : "none";
+        var selectedSatName = this.selectedSat ? this.selectedSat.name : "";
         var statusStr = sprintf(
             `Num Active: %d<br>
              playback speed: %.1f<br>
              max dt: %.1f (days)<br>
              errs: %d kep: %d<br>
              DB epoch: %s<br>
-             %s`,
+             %s<br>
+             <span style="color:yellow;">%s</span><br>`,
             db.numActive,
             this.game.program.getPlaySpeed(),
             db.worstDelta/(24*3600),
             db.numErrs, db.numFakes,
             dbEpoch,
-            satName);
+            satName, selectedSatName);
         this.game.setValue("spaceStatus", statusStr);
     }
 
