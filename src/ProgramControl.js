@@ -109,6 +109,10 @@ class ProgramControl
         //this.setPlaySpeed(0);
     }
 
+    isPlaying() {
+        return this._playSpeed > 0;
+    }
+
     getPlaySpeed() {
         return this._playSpeed;
     }

@@ -42,7 +42,7 @@ class JQControls extends UIControls {
         var $uiDiv = $("#uiDiv");
         this.$uiToggle = append($uiDiv, "<button id='uiToggle'>&nbsp;</button>");
         this.$playControls = append($uiDiv, "<div id='uiPlayControls' />");
-        this.pc = new PlayControls(this, this.$playControls);
+        this.playControls = new PlayControls(this, this.$playControls);
         var $ui = append($uiDiv, "<div id='uiPanel'></div>");
         this.$ui = $ui;
         this.$status = append($ui, "<span id='status' /><br>");
@@ -56,6 +56,7 @@ class JQControls extends UIControls {
         this.viewControl = new ViewControl(this, this.$ui);
         this.$uiToggle.click(e => inst.toggleUI());
         this._visible = true;
+        this.playControls.showState(this.program.isPlaying());
     }
 
     toggleUI() {
@@ -160,7 +161,7 @@ class PlayControls extends JQWidget {
         this.$play.on('click', e => inst.togglePlayPause(e));
     }
 
-    togglePlayPause() {
+    togglePlayPause(e) {
         var $play = this.$play;
         console.log("$play: "+$play.val());
         if ($play.val() == "Play") {
@@ -171,6 +172,10 @@ class PlayControls extends JQWidget {
             $play.val("Play");
             this.ui.program.pause();
         }
+    }
+
+    showState(playing) {
+        this.$play.val(playing ? "Pause" : "Play");
     }
 
     onSliderChange(e, isAdjust) {
