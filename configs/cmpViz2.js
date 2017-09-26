@@ -49,12 +49,12 @@ function onStart(game)
             co2 = data.co2[i];
             balance = data.balance[i];
             dyear = data.year[i];
-            T = T * 5.0/9.0;
+            //T = T * 5.0/9.0;
             window.CO2 = co2;
         }
-        game.setValue("temp", "T: "+T);
+        game.setValue("temp", sprintf("T: %.1f", T));
         game.setValue("co2", "co2: "+co2);
-        game.setValue("balance", "balance: "+balance);
+        game.setValue("balance", sprintf("balance: %.1f", balance));
         game.setValue("dyear", "dyear: "+dyear);
         var f = 0;
         if (year) {
@@ -64,9 +64,16 @@ function onStart(game)
         var h = 0.6 + .4*f;
         atm.setHue(h);
         var year = GSS.timeToYear(t);
-        return sprintf("%8.2f  %5s", t, year);
+        return sprintf("%8.2f  %d", t, year);
     }
 }
+
+function setEarthVideo(game, url)
+{
+    var vEarth = game.controllers.vEarth;
+    vEarth.updateSurfaceVideo(url)
+}
+
 
 CONFIG = {
     'onStart': onStart,
@@ -77,7 +84,12 @@ CONFIG = {
        //startTime: '6/1/2005 10:30'
        duration: 32*60,
        gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
-       channels: ['year', 'temp', 'co2', 'balance', 'dyear', 'spacer', 'narrative']
+       channels: ['year', 'temp', 'co2', 'balance', 'dyear', 'spacer', 'narrative'],
+       scripts: {
+           'Show Earthquakes': (game) => setEarthVideo(game, "videos/earthquakes.mp4"),
+           'Show 2013 Weather': (game) => setEarthVideo(game, "videos/GlobalWeather2013.mp4"),
+       }
+
     },
     'cameraControls': 'Orbit',
     'specs': SPECS
