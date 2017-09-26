@@ -46,10 +46,14 @@ class JQControls extends UIControls {
         var $ui = append($uiDiv, "<div id='uiPanel'></div>");
         this.$ui = $ui;
         this.$status = append($ui, "<span id='status' /><br>");
+        /*
         this.textFields.forEach(name => {
             append($ui, sprintf("<span id='%sText' /><br>", name));
         });
         append($ui, "<p/>");
+        */
+        this.fieldsView = new FieldsView(this, $ui, this.textFields);
+
         if (this.stageControl)
             this.stageControl.setup(this.$ui);
         this.scriptControl.setup(this.$ui);
@@ -76,13 +80,18 @@ class JQControls extends UIControls {
     onValueChange(event) {
         var msg = event.message;
         //console.log("onValueChange "+msg.name+" "+msg.value);
-        $("#"+event.message.name+"Text").html(event.message.value);
+        if (this.fieldsView)
+            this.fieldsView.setValue(event.message.name, event.message.value);
     }
 
     setStatus(statStr) {
         $("#status").html(statStr);
     }
 
+    setValue(name, value) {
+        if (this.fieldsView)
+            this.fieldsView.setValue(name, value);
+    }
     // took this out for now.  it should be something that comes
     // up when invoked, not normally visible.
     //      <JSONEditor
@@ -147,6 +156,32 @@ class JQWidget {
     constructor(ui, $parent) {
         this.ui = ui;
         this.$parent = $parent;
+    }
+}
+
+class FieldsView extends JQWidget {
+    constructor(ui, $parent, fields) {
+        super(ui, $parent);
+        this.fields = fields;
+        this.$fields = {};
+        var inst = this;
+        fields.forEach(name => inst.addField(name, ""));
+        append($parent, "<p/>");
+    }
+
+    setValue(name, value) {
+        //$("#"+name+"Text").html(value);
+        if (!this.$fields[name]) {
+            this.addField(name, name)
+        }
+        this.$fields[name].html(value);
+    }
+
+    addField(name, label) {
+        if (label) {
+            append(this.$parent, sprintf("<span>%s: </span>", label));
+        }
+        this.$fields[name] = append(this.$parent, sprintf("<span id='%sText' /><br>", label, name));
     }
 }
 

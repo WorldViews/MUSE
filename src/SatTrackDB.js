@@ -429,6 +429,20 @@ class SatTrackDB {
         //console.log("worstDelta: "+this.worstDelta)
     }
 
+    getSatState(id, t) {
+        if (t == null)
+            t = this._t;
+        var sat = this.sats[id];
+        if (!sat)
+            return null;
+        var deltaT = t - sat.epochUTC;
+        if (this.FAKE_PROP_TIME && (Math.abs(deltaT) > this.FAKE_PROP_TIME)) {
+            var deltaT_mod_period = deltaT % sat.period;
+            t = sat.epochUTC + deltaT_mod_period;
+        }
+        sat.stateVec = satellite.propagate(sat.satrec, new Date(1000*t));
+        return sat;
+    }
 
     timeToJulian(t) {
         // t should be in seconds.

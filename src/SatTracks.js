@@ -103,6 +103,48 @@ class Raycaster {
     }
 }
 
+class GeoEvent
+{
+    constructor(group, t, pos, t0, r0)
+    {
+        this.group = group;
+        this.t = t;
+        this.t0 = t0 || 10*24*3600;
+        this.r0 = r0 || 1.0;
+        this.pos = pos;
+        this.mesh = new THREE.Mesh( group.geometry, group.material );
+        this.mesh.position.copy(pos);
+        group.game.addToGame(this.mesh)
+    }
+
+    update(t) {
+        var dt = Math.abs(t - this.t);
+        var s = this.r0 / (1 + dt/this.t0);
+        this.mesh.scale.set(s,s,s);
+        //console.log(sprintf("geoEvent %.1f %.1f %.3f", t, dt, s));
+    }
+}
+
+class GeoEvents {
+    constructor(game) {
+        this.game = game;
+        this.events = [];
+        var radius = 1.0;
+        this.geometry = new THREE.SphereGeometry( radius, 30, 30 );
+        this.material = new THREE.MeshBasicMaterial( { overdraw: 0.5, color: 0xFF0000, transparent: true} );
+        this.material.opacity = 0.2;
+        this.mesh = new THREE.Mesh( this.geometry, this.material );
+    }
+
+    addEvent(t, pos, t0, r) {
+        this.events.push(new GeoEvent(this, t, pos, t0, r));
+    }
+
+    update(t) {
+        this.events.forEach( ev => ev.update(t));
+    }
+}
+
 class SatTracks {
     constructor(game, opts) {
         window.satTracks = this;
@@ -112,12 +154,14 @@ class SatTracks {
         this.game = game;
         this.models = {};
         this.rsoTypes = {};
-        this.rsoTypes['ROCKET BODY'] = {color: 0x00FF00, ids: []};
-        this.rsoTypes['PAYLOAD'] = {color: 0x0000FF, ids: []};
+        this.rsoTypes['ROCKET BODY'] = {color: 0x0000FF, ids: []};
+        this.rsoTypes['PAYLOAD'] = {color: 0x00FF00, ids: []};
         this.rsoTypes['DEBRIS'] = {color: 0xFF2222, ids:[]};
         this.rsoTypes['tba'] = {color: 0x888888, ids: []};
         this.defaultType = this.rsoTypes['DEBRIS'];
-        this.t = new Date().getTime()/1000.0;
+        //this.t = new Date().getTime()/1000.0;
+        this.t = Util.getClockTime();
+        this.events = null;
         //this.filterHack = 0;
         if (opts.filterHack != null) {
             alert("FilterHack no longer supported");
@@ -131,6 +175,7 @@ class SatTracks {
         this.mouseOverSat = "";
         this.selectedSat = "";
         this.startTime = game.program.getPlayTime();
+        //this.addEvent(this.startTime+200, 2,2,2, 10);
         //this.setPlayTime(getClockTime());
         var inst = this;
         this.game.program.formatTime = t => Util.formatDatetime(t);
@@ -139,6 +184,12 @@ class SatTracks {
             this.loadModels(opts);
         }
         this.rayCaster = new Raycaster(this, game.renderer.domElement);
+    }
+
+    addEvent(t, x, y, z, t0, r) {
+        if (!this.events)
+            this.events = new GeoEvents(this.game);
+        this.events.addEvent(t, new THREE.Vector3(x,y,z), t0, r);
     }
 
     loadModels(opts) {
@@ -238,9 +289,18 @@ class SatTracks {
         this.db.adjusting = isAdjust;
     }
 
-    updateSats() {
+    getSatState(id, t) {
+        var sat = this.db.getSatState(id);
+        if (sat && sat.stateVec && sat.stateVec.position) {
+            var p = sat.stateVec.position;
+            sat.pos = new THREE.Vector3(p.x, p.z, -p.y);
+            sat.pos.multiplyScalar(this.radiusVEarth/this.radiusEarthKm);
+        }
+        return sat;
+    }
+
+    updateSats(t) {
         var db = this.db;
-        this.t = this.game.program.getPlayTime();
         db.setTime(this.t);
         var i = -1;
         var rtypes = Object.values(this.rsoTypes);
@@ -307,7 +367,10 @@ class SatTracks {
     }
 
     update() {
-        this.updateSats();
+        this.t = this.game.program.getPlayTime();
+        this.updateSats(this.t);
+        if (this.events)
+            this.events.update(this.t);
     }
 }
 

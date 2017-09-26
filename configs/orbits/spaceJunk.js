@@ -41,6 +41,25 @@ function dumpSats(game)
     satDB.dump();
 }
 
+function addCollisions(game)
+{
+    console.log("addCollsions");
+    var ids = Object.keys(satDB.sats);
+    var t0 = game.program.getPlayTime();
+    var numIds = ids.length;
+    var numCols = Math.min(100, numIds);
+    var stormDur = 100*60;
+    for (var j=0; j<numCols; j++) {
+        var i = Math.floor(numIds*Math.random());
+        var id = ids[i];
+        var t = t0 + stormDur*Math.random();
+        var sat = satTracks.getSatState(id, t);
+        var p = sat.pos;
+        console.log(sprintf("id: %s  t: %.1f", id, t), p);
+        satTracks.addEvent(t, p.x,p.y,p.z, 15, 1);
+    };
+}
+
 CONFIG = {
     'cameraControls': {type: 'Orbit', distance: 4},
     //onStart: onStart,
@@ -60,6 +79,7 @@ CONFIG = {
            'Dump Satellites': dumpSats,
            'Show Debris': (game) => setVisibility(game, 'DEBRIS', true),
            'Hide Debris': (game) => setVisibility(game, 'DEBRIS', false),
+           'Fake Collisons': addCollisions,
        }
     },
     'specs': [
