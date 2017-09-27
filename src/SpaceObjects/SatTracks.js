@@ -1,12 +1,14 @@
 
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
-import {Game} from './Game';
+import {Game} from '../Game';
 import satellite from 'satellite.js';
-import {Loader} from './Loader';
-import {getJSON} from './Util';
+import {Loader} from '../Loader';
 import {SatTrackDB} from './SatTrackDB';
-import * as Util from './Util';
+import * as Util from '../Util';
+import {GeoEvent, GeoEvents} from './GeoEvents';
+import {OrbitRaycaster} from './OrbitRaycaster'
+import {OrbitWorker} from './OrbitWorker';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -23,126 +25,6 @@ function showPosVel(pv, t)
         t= 0;
     console.log(sprintf("%12.2f   %10.2f %10.2f %10.2f   %10.2f %10.2f %10.2f",
         t, p.x, p.y, p.z, v.x, v.y, v.z));
-}
-
-class Raycaster {
-    constructor(satTracks, dom) {
-        this.game = satTracks.game;
-        this.satTracks = satTracks;
-        this.dom = dom;
-        if (!dom) {
-            console.log("No domElement available");
-            alert("too bad");
-            return;
-        }
-        this.raycaster = new THREE.Raycaster();
-        this.threshold = 0.1;
-        this.raycaster.params.Points.threshold = this.threshold;
-        this.raycastPt = new THREE.Vector2()
-        var inst = this;
-        dom.addEventListener( 'mousedown', e => inst._onMouseDown(e), false );
-        //dom.addEventListener( 'mouseup',   e => inst._onMouseUp(e), false );
-        dom.addEventListener( 'mousemove', e => inst._onMouseMove(e), false );
-    }
-
-    _onMouseDown(e) {
-        console.log("SatTracks........ mouseDown ......");
-        this.handleRaycast(e, true);
-    }
-
-    _onMouseMove(e) {
-        //console.log("SatTracks........ mouseMove ......");
-        this.handleRaycast(e, false);
-    }
-
-    handleRaycast(event, isSelect) {
-        var x = (event.pageX / window.innerWidth)*2 - 1;
-        var y = - (event.pageY / window.innerHeight)*2 + 1;
-        //console.log("handleRaycast "+x+" "+y+" select: "+isSelect);
-        this.satTracks.mouseOverSat = null;
-        this.raycastPt.x = x;
-        this.raycastPt.y = y;
-        this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
-        var objs = this.game.scene.children;
-        var intersects = this.raycaster.intersectObjects(objs, true);
-        if (intersects.length == 0)
-            return null;
-        var isect = null;
-        var pickedObj = null;
-        for (var i=0; i<intersects.length; i++) {
-            isect = intersects[i];
-            //console.log( "dtr: "+isect.distanceToRay);
-            if (isect.distanceToRay > this.threshold)
-                continue;
-            pickedObj = isect.object;
-            if (pickedObj && pickedObj.rtype)
-                break;
-        }
-
-        //var isect = intersects[0];
-        //var pickedObj = isect.object;
-        if (pickedObj && pickedObj.rtype) {
-            window.ISECT = isect;
-            var rtype = pickedObj.rtype;
-            var idx = isect.index;
-            //console.log(" group: "+ pickedObj.name+" "+idx);
-            //console.log(" distToRay "+isect.distanceToRay)
-            var id = rtype.ids[idx];
-            var sat = this.satTracks.db.sats[id];
-            if (sat) {
-                //console.log(" sat "+sat.name);
-                this.satTracks.mouseOverSat = sat;
-                if (isSelect) {
-                    this.satTracks.selectedSat = sat;
-                }
-            }
-            else {
-                console.log("**** SatTracks raycast unknown id: "+id);
-            }
-        }
-    }
-}
-
-class GeoEvent
-{
-    constructor(group, t, pos, t0, r0)
-    {
-        this.group = group;
-        this.t = t;
-        this.t0 = t0 || 10*24*3600;
-        this.r0 = r0 || 1.0;
-        this.pos = pos;
-        this.mesh = new THREE.Mesh( group.geometry, group.material );
-        this.mesh.position.copy(pos);
-        group.game.addToGame(this.mesh)
-    }
-
-    update(t) {
-        var dt = Math.abs(t - this.t);
-        var s = this.r0 / (1 + dt/this.t0);
-        this.mesh.scale.set(s,s,s);
-        //console.log(sprintf("geoEvent %.1f %.1f %.3f", t, dt, s));
-    }
-}
-
-class GeoEvents {
-    constructor(game) {
-        this.game = game;
-        this.events = [];
-        var radius = 1.0;
-        this.geometry = new THREE.SphereGeometry( radius, 30, 30 );
-        this.material = new THREE.MeshBasicMaterial( { overdraw: 0.5, color: 0xFF0000, transparent: true} );
-        this.material.opacity = 0.2;
-        this.mesh = new THREE.Mesh( this.geometry, this.material );
-    }
-
-    addEvent(t, pos, t0, r) {
-        this.events.push(new GeoEvent(this, t, pos, t0, r));
-    }
-
-    update(t) {
-        this.events.forEach( ev => ev.update(t));
-    }
 }
 
 class SatTracks {
@@ -183,7 +65,11 @@ class SatTracks {
         if (opts.models) {
             this.loadModels(opts);
         }
-        this.rayCaster = new Raycaster(this, game.renderer.domElement);
+        this.rayCaster = new OrbitRaycaster(this, game.renderer.domElement);
+        this.worker = null;
+        if (true) {
+            this.worker = new OrbitWorker(this);
+        }
     }
 
     addEvent(t, x, y, z, t0, r) {
@@ -372,6 +258,7 @@ class SatTracks {
         if (this.events)
             this.events.update(this.t);
     }
+
 }
 
 export {SatTracks};

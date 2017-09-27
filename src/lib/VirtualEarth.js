@@ -1,7 +1,7 @@
 
 import * as THREE from 'three'
 import {Game} from '../Game'
-import {SatTracks} from '../SatTracks'
+import {SatTracks} from '../SpaceObjects/SatTracks'
 import {Atmosphere} from './Atmosphere'
 import {CMPDataViz2} from './CMPDataViz2'
 import ImageSource from './ImageSource';
@@ -167,8 +167,10 @@ class Planet {
         }
     }
 
-    updateSurfaceImage(url) {
+    setSurfaceImage(url) {
         console.log("Getting ImageSource "+url);
+        if (this.imageSource)
+            this.imageSource.destroy();
         this.imageSource = new ImageSource({
             //type: ImageSource.TYPE.VIDEO,
             type: ImageSource.TYPE.IMAGE,
@@ -186,8 +188,11 @@ class Planet {
         */
     }
 
-    updateSurfaceVideo(videoUrl) {
+    setSurfaceVideo(videoUrl) {
         console.log("Getting ImageSource "+videoUrl);
+        if (this.imageSource) {
+            this.imageSource.destroy();
+        }
         this.imageSource = new ImageSource({
             type: ImageSource.TYPE.VIDEO,
             url: videoUrl
@@ -198,7 +203,7 @@ class Planet {
 
     testVideo() {
         var url = "videos/GlobalWeather2013.mp4";
-        this.updateSurfaceVideo(url);
+        this.setSurfaceVideo(url);
     }
 };
 

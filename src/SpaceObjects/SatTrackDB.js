@@ -2,8 +2,7 @@
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 import satellite from 'satellite.js';
-import {getJSON} from './Util';
-import * as Util from './Util';
+import * as Util from '../Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -65,7 +64,7 @@ class DataSet {
         var url = DATA_URL_PREFIX+"stdb/dataSets/"+this.epoch+".json";
         var inst = this;
         console.log("******** requestData "+this.epoch+" url: "+url)
-        getJSON(url, data => inst.handleLoadedData(data, url, onLoadedFun));
+        Util.getJSON(url, data => inst.handleLoadedData(data, url, onLoadedFun));
     }
 
     handleLoadedData(data, url, onLoadedFun) {
@@ -128,7 +127,7 @@ class SatTrackDB {
         var url = DATA_URL_PREFIX+dataSet;
         console.log("Getting All Satellite data from: " + url);
         var inst = this;
-        getJSON(url, data => inst.handleJSONSatsData(data, url));
+        Util.getJSON(url, data => inst.handleJSONSatsData(data, url));
     }
 
     loadSTDB(dataSet) {
@@ -136,7 +135,7 @@ class SatTrackDB {
         var url = DATA_URL_PREFIX+dataSet;
         console.log("Getting SpaceTrackDB from: " + url);
         var inst = this;
-        getJSON(url, data => inst.handleSTDBData(data, url));
+        Util.getJSON(url, data => inst.handleSTDBData(data, url));
     }
 
     handleTLEFileData(data, dataSetName, url) {
