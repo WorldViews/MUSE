@@ -3,7 +3,7 @@ import WebRTCClient from './webrtc';
 
 /**
  * Wrapper to create three.js texture from multiple different sources.
- * 
+ *
  * @class
  * @constructor
  */
@@ -35,12 +35,17 @@ export default class ImageSource {
         this.running = false;
     }
 
+    destroy() {
+        console.log("************* destroy ImageSource **************");
+        this.running = false;
+        this.video.pause();
+    }
 
     /**
      * Source types
      * @readonly
      * @enum {number}
-     */    
+     */
     static get TYPE() {
         return {
             /** No source type */
@@ -165,7 +170,7 @@ export default class ImageSource {
 
     /**
      * Get URL for fetching next image.
-     * 
+     *
      * @method
      * @return {URL} Returns a URL as string;
      */
@@ -183,7 +188,7 @@ export default class ImageSource {
 
     /**
      * Create a texture based on the source type
-     * 
+     *
      * @method
      * @return {Object} Returns a THREE.Texture object
      */
@@ -198,9 +203,11 @@ export default class ImageSource {
             var client = new WebRTCClient(this.url);
             client.on('ready', function(video) {
                 scope.video = video;
+                scope.running = true;
                 texture.image = video;
-
                 function update() {
+                    if (!scope.running)
+                        return;
                     requestAnimationFrame(update);
                     if (video.readyState >= video.HAVE_CURRENT_DATA) {
                         texture.needsUpdate = true;

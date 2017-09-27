@@ -12,7 +12,6 @@ import NavigationController from './controllers/NavigationController';
 import SolarSystemController from './controllers/SolarSystemController';
 import StarsController from './controllers/StarsController';
 import StatsController from './controllers/StatsController';
-//import {UIController} from './controllers/UIController';
 import {ReactControls} from './controllers/ReactControls';
 import {JQControls} from './controllers/JQControls';
 import VRGame from './VRGame';

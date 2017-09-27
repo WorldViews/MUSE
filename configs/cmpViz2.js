@@ -71,7 +71,7 @@ function onStart(game)
 function setEarthVideo(game, url)
 {
     var vEarth = game.controllers.vEarth;
-    vEarth.updateSurfaceVideo(url)
+    vEarth.setSurfaceVideo(url)
 }
 
 
