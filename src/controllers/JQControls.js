@@ -33,7 +33,8 @@ class JQControls extends UIControls {
 
     setupElements() {
         console.log("*********** JQControls.setupElements");
-        this.textFields = ["time", "year", "narrative"];
+        //this.textFields = ["time", "year", "narrative"];
+        this.textFields = [];
         this.program.channels.forEach(channel => {
             this.textFields.push(channel);
         });
@@ -46,12 +47,6 @@ class JQControls extends UIControls {
         var $ui = append($uiDiv, "<div id='uiPanel'></div>");
         this.$ui = $ui;
         this.$status = append($ui, "<span id='status' /><br>");
-        /*
-        this.textFields.forEach(name => {
-            append($ui, sprintf("<span id='%sText' /><br>", name));
-        });
-        append($ui, "<p/>");
-        */
         this.fieldsView = new FieldsView(this, $ui, this.textFields);
 
         if (this.stageControl)
@@ -92,12 +87,6 @@ class JQControls extends UIControls {
         if (this.fieldsView)
             this.fieldsView.setValue(name, value);
     }
-    // took this out for now.  it should be something that comes
-    // up when invoked, not normally visible.
-    //      <JSONEditor
-    //           onChange={this.onStateChange.bind(this)}
-    //           onReset={this.onStateReset.bind(this)}
-    //           state={State}/>
 
     registerModel(name, callback) { this.stageControl.registerModel(name, callback); }
     removeModel(name) { this.stageControl.removeModel(name); }
