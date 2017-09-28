@@ -67,9 +67,14 @@ class SatTracks {
         }
         this.rayCaster = new OrbitRaycaster(this, game.renderer.domElement);
         this.worker = null;
-        if (true) {
+        this.workerUpdateRate = 0;
+        this.setWorkerRate(0);
+    }
+
+    setWorkerRate(rate) {
+        this.workerUpdateRate = rate;
+        if (!this.worker)
             this.worker = new OrbitWorker(this);
-        }
     }
 
     addEvent(t, x, y, z, t0, r) {
@@ -146,6 +151,9 @@ class SatTracks {
             var gname = ('satellites_'+name).replace(" ", "_");
             this.game.addToGame(rtype.particles, gname, this.opts.parent);
         }
+        if (this.worker) {
+            this.worker.sendSatInfo();
+        }
     }
 
     checkProximities() {
@@ -187,7 +195,15 @@ class SatTracks {
 
     updateSats(t) {
         var db = this.db;
-        db.setTime(this.t);
+        if (this.workerUpdateRate) {
+            //db.setTime(this.t, true);
+            db.setTime(this.t, true);
+            this.worker.setTime(this.t);
+        }
+        else {
+            db.setTime(this.t);
+            db.updatePositions();
+        }
         var i = -1;
         var rtypes = Object.values(this.rsoTypes);
         var ntypes = rtypes.length;

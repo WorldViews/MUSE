@@ -41,6 +41,14 @@ function dumpSats(game)
     satDB.dump();
 }
 
+function useWebWorker(game)
+{
+    if (satTracks.webWorkerRate)
+        satTracks.setWorkerRate(0);
+    else
+        satTracks.setWorkerRate(10);
+}
+
 function addCollisions(game)
 {
     console.log("addCollsions");
@@ -80,6 +88,7 @@ CONFIG = {
            'Show Debris': (game) => setVisibility(game, 'DEBRIS', true),
            'Hide Debris': (game) => setVisibility(game, 'DEBRIS', false),
            'Fake Collisons': addCollisions,
+           'Web Worker': useWebWorker,
        }
     },
     'specs': [

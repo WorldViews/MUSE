@@ -87,6 +87,9 @@ class SatTrackDB {
         this.currentDataSet = null;
         this.tzo = new Date().getTimezoneOffset();
         this._t = new Date()/1000.0;
+        this.numActive = 0;
+        this.numErrs = 0;
+        this.numFakes = 0;
         this.worstDelta = 0;
         this.worstSat = null;
         this.adjusting = false;
@@ -346,7 +349,7 @@ class SatTrackDB {
         return bestDataSet;
     }
 
-    setTime(t) {
+    setTime(t, noUpdate) {
         //console.log("SatTrackDB.setTime "+t);
         var inst = this;
         if (!this.adjusting) {
@@ -366,11 +369,14 @@ class SatTrackDB {
             //console.log("ignoring dataSet fetches during adjustment...")
         }
         this._t = t;
-        this._update(t);
     }
 
     getTime(t) {
         return this._t;
+    }
+
+    updatePositions() {
+        this._update(this._t);
     }
 
     _update(t) {
