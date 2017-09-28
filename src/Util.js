@@ -3,6 +3,9 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 var toDeg = THREE.Math.radToDeg;
 
+// This is ridiculous to not have a standard language feature for this by now
+export function values(obj) { return Object.keys(obj).map( k => obj[k]) };
+
 // take a string, a float (seconds since epoch) or date
 // and return date.
 export function toDate(datetime) {
@@ -115,5 +118,6 @@ export default {
     randomFromInterval,
     toTime,
     toDate,
-    formatDatetime
+    formatDatetime,
+    values
 };
