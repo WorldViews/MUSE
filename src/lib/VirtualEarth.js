@@ -191,7 +191,7 @@ class Planet {
     setSurfaceVideo(videoUrl) {
         console.log("Getting ImageSource "+videoUrl);
         if (this.imageSource) {
-            this.imageSource.destroy();
+            this.imageSource.dispose();
         }
         this.imageSource = new ImageSource({
             type: ImageSource.TYPE.VIDEO,

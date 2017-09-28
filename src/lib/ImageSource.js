@@ -35,10 +35,12 @@ export default class ImageSource {
         this.running = false;
     }
 
-    destroy() {
+    dispose() {
         console.log("************* destroy ImageSource **************");
         this.running = false;
+        this.texture = null;
         this.video.pause();
+        this.video = null;
     }
 
     /**
@@ -141,7 +143,7 @@ export default class ImageSource {
         if (this.type == ImageSource.TYPE.VIDEO) {
             if (this.video) {
                 //this.video.seek(t);
-                console.log("*** setting video.currentTime to "+t);
+                //console.log("*** setting video.currentTime to "+t);
                 this.video.currentTime = t;
             }
             else {
