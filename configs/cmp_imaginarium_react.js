@@ -50,8 +50,8 @@ SATELLITE_MODEL = [
 ];
 
 var SPECS = [
-    {  type: 'Stats', right: '-0px' },
-    {  type: 'JQControls' },
+    {  type: 'Stats' },
+    {  type: 'ReactControls' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     {  type: 'Scripts' },
     {   type: 'Group', name: 'station'  },
@@ -104,7 +104,7 @@ var SPECS = [
     //{  type: 'Hurricane', scale: 0.01 }
     {  type: 'VirtualEarth', name: 'vEarth', satTracks: 0,
        radius: 1.25, position: [0,1.9,0],
-       satTracks: {dataSet: 'iridiumCosmos.3le',
+       satTracks: {dataSet: 'joelOrbits.3le',
                     models: {
                         22675: {path:'models/satellites/ComSat/model.dae',
                                        scale: .001},
@@ -120,21 +120,7 @@ CONFIG = {
     //'cameraControls': 'Orbit',
     'program': {
        duration: 32*60,
-       gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
-       stages: [
-           {
-               name: 'Main Stage',
-               models: {
-                   'vEarth': 'Virtual Earth',
-                   'dancer': 'Dancer',
-                   'cmp': 'Data Visualization',
-                   'portal': 'Panoramic Portal',
-                   'bmw': 'Eriks Car',
-                   'none': 'Nothing'
-               }
-           }
-       ],
-       channels: ['year', 'narrative', 'spaceStatus']
+       gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json"
     },
     'specs': SPECS
 };
