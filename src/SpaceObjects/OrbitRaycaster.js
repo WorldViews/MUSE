@@ -11,8 +11,8 @@ class OrbitRaycaster {
         this.satTracks = satTracks;
         this.dom = dom;
         if (!dom) {
-            console.log("No domElement available");
-            alert("too bad");
+            console.log("**** OrbitRaycaster: No domElement available");
+            //alert("OrbitRaycaster: No domElement available");
             return;
         }
         this.raycaster = new THREE.Raycaster();
