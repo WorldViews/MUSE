@@ -79,7 +79,9 @@ var SPECS = [
     },
     //{  type: 'Hurricane', scale: 0.01 }
     {  type: 'VirtualEarth', name: 'vEarth', satTracks: 0,
-       radius: 1.25, position: [0,1.9,0],
+       //radius: 1.25,
+       radius: 0.5,
+       position: [0,1.9,0],
        satTracks: {dataSet: 'stdb/all_stdb.json',
                     models: {
                         22675: {path:'models/satellites/ComSat/model.dae',
@@ -107,7 +109,7 @@ function onStart(game)
 
 CONFIG = {
     onStart: onStart,
-    //'cameraControls': 'Orbit',
+    'cameraControls': 'JoelControls',
     'program': {
        //duration: 32*60,
        duration: 65*365*24*60*60,
