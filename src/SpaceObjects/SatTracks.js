@@ -205,7 +205,9 @@ class SatTracks {
             db.updatePositions();
         }
         var i = -1;
-        var rtypes = Object.values(this.rsoTypes);
+        //var rtypes = Object.values(this.rsoTypes);
+        var rtypes = Util.values(this.rsoTypes);
+        Object.keys(this.rsoTypes).map( k => this.rsoTypes[k])
         var ntypes = rtypes.length;
         var v = new THREE.Vector3();
         for (var satName in db.sats) {
