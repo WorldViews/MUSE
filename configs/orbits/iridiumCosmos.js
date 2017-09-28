@@ -22,9 +22,7 @@ function addCollisions(game)
 function onStart(game)
 {
     var t = game.program.getPlayTime();
-    //satTracks.addEvent(t+10, 3,3,3, 20);
-    //satTracks.addEvent(t+30, 0,3,3, 20);
-    var t = 1234285020.0;
+    var t = 1234284990.0;
     var p = new THREE.Vector3(-1698.7030173737744, 1503.0165902867889, 6777.4862190372805);
     p.multiplyScalar(satTracks.radiusVEarth/satTracks.radiusEarthKm);
     satTracks.addEvent(t, p.x,p.z,-p.y, 3);
