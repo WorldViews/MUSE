@@ -46,14 +46,14 @@ var SPECS = [
     //VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
-        path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        path: 'videos/SpaceDebris.mp4',
         phiStart: 34, phiLength: 47,
         thetaStart: 110, thetaLength: 140
     },
     {   type: 'Screen', name: 'rightScreen',
         parent: 'station', radius: 8.8,
         //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
-        path: 'assets/images/ColabTalk/Slide1.PNG',
+        path: 'assets/images/SpaceDebrisTalk/Slide1.PNG',
         phiStart: 34, phiLength: 47,
         thetaStart: 300, thetaLength: 60
     },
@@ -70,7 +70,13 @@ var SPECS = [
     },
     {  type: 'SolarSystem' },
     {  type: 'Stars' },
-    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' },
+    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen',
+       records: { records: [
+           { id: 'slide',  t: 0,           url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
+           { id: 'slide',  t: 100000000,   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+           { id: 'slide',  t: 200000000,   url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'}
+       ]}
+    },
     //{  type: 'Hurricane', scale: 0.01 }
     {  type: 'VirtualEarth', name: 'vEarth', satTracks: 0,
        radius: 1.25, position: [0,1.9,0],
