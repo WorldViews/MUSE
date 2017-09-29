@@ -74,7 +74,13 @@ class ProgramControl
 
     displayTime(t) {
         //console.log("displayTime "+t);
-        var tStr = this.formatTime(t);
+        var tStr = "";
+        try {
+            tStr = this.formatTime(t);
+        }
+        catch (e) {
+            console.log("*** displayTime err  t: "+t);
+        }
         this.game.setValue("time", tStr);
         var dur = this.duration;
     	let value = ((t-this.startTime)/(0.0+dur));
@@ -100,13 +106,14 @@ class ProgramControl
     play() {
         console.log("**** play *****");
         this.setPlaySpeed(this._savedPlaySpeed);
+        this.propagate(player => player.play());
     }
 
     pause() {
         console.log("**** pause *****");
         this._savedPlaySpeed = this._playSpeed;
         this._playSpeed = 0;
-        //this.setPlaySpeed(0);
+        this.propagate(player => player.pause());
     }
 
     isPlaying() {
@@ -156,7 +163,9 @@ class ProgramControl
         t = Util.toTime(t);
         this._prevClockTime = getClockTime();
         this._playTime = t;
+        this.propagate(player => player.setPlayTime(t, isAdjust));
         //console.log(">>>> noticeTime "+t);
+        /*
         for (name in this.players) {
             var player = this.players[name];
             //console.log("set playTime "+name, player);
@@ -168,13 +177,30 @@ class ProgramControl
             else
                 player.playTime = t;
         }
-
         for (var key in this.game.screens) {
             //this.game.screens[key].imageSource.setPlayTime(t);
             var screen = this.game.screens[key];
             screen.setPlayTime(t, isAdjust);
         }
+        */
         this.displayTime(t);
+    }
+
+    propagate(fun) {
+        for (name in this.players) {
+            var player = this.players[name];
+            try { fun(player) }
+            catch (e) {
+                console.log("err: "+e);
+            }
+        }
+        for (var key in this.game.screens) {
+            var screen = this.game.screens[key];
+            try { fun(screen) }
+            catch (e) {
+                console.log("err: "+e);
+            }
+        }
     }
 }
 
