@@ -18,6 +18,7 @@ function toRad(v)
     return v ? Math.degToRad(v) : v;
 }
 
+
 class Screen
 {
     constructor(game, spec, path) {
@@ -38,13 +39,13 @@ class Screen
             // note that the theta and phi arguments are reversed
             // from what is described in THREE.SphereGeometry documenation.
             let geometry = new THREE.SphereGeometry(
-	        spec.radius,
-	        40,
-	        40,
-	        toRad(spec.thetaStart),
-	        toRad(spec.thetaLength),
-	        toRad(spec.phiStart),
-	        toRad(spec.phiLength)
+    	        spec.radius,
+    	        40,
+    	        40,
+    	        toRad(spec.thetaStart),
+    	        toRad(spec.thetaLength),
+    	        toRad(spec.phiStart),
+    	        toRad(spec.phiLength)
             );
             let screenObject = new THREE.Mesh(geometry, videoMaterial);
 
@@ -72,38 +73,35 @@ class Screen
             game.screens[spec.name] = this;
     }
 
+    play() {
+        this.imageSource.play();
+    }
+
+    pause() {
+        this.imageSource.pause();
+    }
+
     setPlayTime(t) {
         this.imageSource.setPlayTime(t);
     }
 
     updateImage(url) {
         console.log("Getting ImageSource "+url);
-        this.imageSource = new ImageSource({
-            //type: ImageSource.TYPE.VIDEO,
-            type: ImageSource.TYPE.IMAGE,
-            url: url
-        });
+        this.imageSource = ImageSource.getImageSource(url);
         let texture = this.imageSource.createTexture();
         this.material.map = texture;
         this.texture = texture;
-        /*
-        let videoMaterial = new THREE.MeshBasicMaterial({
-            map: videoTexture,
-            transparent: true,
-            side: THREE.DoubleSide
-        });
-        */
+        this.play();
     }
 
+/*
     updateVideo(videoUrl) {
         console.log("Getting ImageSource "+videoUrl);
-        this.imageSource = new ImageSource({
-            type: ImageSource.TYPE.VIDEO,
-            url: videoUrl
-        });
+        this.imageSource = getImageUrl(videoUrl);
         let texture = this.imageSource.createTexture();
         this.material.map = texture;
     }
+*/
 }
 
 function loadScreen(game, opts)

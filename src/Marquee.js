@@ -104,6 +104,18 @@ class Marquee extends THREE.Mesh {
         */
     }
 
+    play() {
+        this.imageSource.play();
+    }
+
+    pause() {
+        this.imageSource.pause();
+    }
+
+    setPlayTime(t) {
+        this.imageSource.setPlayTime(t);
+    }
+
     updateVideo(video) {
         console.log("Getting ImageSource "+url);
         this.imageSource = new ImageSource({

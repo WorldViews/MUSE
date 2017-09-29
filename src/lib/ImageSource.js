@@ -10,6 +10,8 @@ import WebRTCClient from './webrtc';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
+var VIDEO_EXTENTIONS = [".mp4", ".webm"];
+
 
 export default class ImageSource {
 
@@ -33,6 +35,17 @@ export default class ImageSource {
         this.playSpeed = 1.0;
         this.lastMark = null;
         this.running = false;
+    }
+
+    static getImageSource(url) {
+        console.log("getImageSource "+url);
+        var type = ImageSource.TYPE.IMAGE;
+        var URL = url.toUpperCase();
+        VIDEO_EXTENTIONS.forEach(ext => {
+            if (URL.endsWith(ext.toUpperCase()))
+                type = ImageSource.TYPE.VIDEO;
+        });
+        return new ImageSource({ type, url });
     }
 
     dispose() {
