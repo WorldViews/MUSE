@@ -89,7 +89,7 @@ class SatTrackDB {
         this._t = new Date()/1000.0;
         this.numActive = 0;
         this.numErrs = 0;
-        this.numFakes = 0;
+        this.numKepler = 0;
         this.worstDelta = 0;
         this.worstSat = null;
         this.adjusting = false;
@@ -383,7 +383,7 @@ class SatTrackDB {
         var time = new Date(1000*t);
         this.numErrs = 0;
         this.numActive = 0;
-        this.numFakes = 0;
+        this.numKepler = 0;
         var errName = "";
         this.worstSat = null;
         this.worstDelta = 0;
@@ -411,7 +411,7 @@ class SatTrackDB {
                 maxDiff = diff;
             }
             if (this.FAKE_PROP_TIME && (diff > this.FAKE_PROP_TIME)) {
-                this.numFakes++;
+                this.numKepler++;
                 var deltaT_mod_period = deltaT % sat.period;
                 var t2 = sat.epochUTC + deltaT_mod_period;
                 sat.stateVec = satellite.propagate(sat.satrec, new Date(t2*1000));

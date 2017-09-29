@@ -29,8 +29,9 @@ function tick()
 
 function updatePositions()
 {
-    if (currentTime)
-        var datetime = new Date(currentTime * 1000);
+    var t = currentTime;
+    if (t)
+        var datetime = new Date(t * 1000);
     else
         var datetime = new Date();
      var tJ = jday(datetime.getUTCFullYear(),
@@ -43,33 +44,43 @@ function updatePositions()
 
     //console.satTracks("window: "+window.satTracks);
     var num = 0;
-    var errs = 0;
     newPositions = [];
     var newPos;
+    var numErrs = 0;
+    var numKepler = 0;
+    var numActive = 0;
     for (var id in sats) {
         var sat = sats[id];
-        var satrec = sat.satrec;
-        var tle = sat.tle;
-        var tm = (tJ - satrec.jdsatepoch) * 1440.0; //in minutes
-        //var stateVec = satellite.propagate(satrec, time);
-        //var stateVec = satellite.propagate(satrec, time);
-        var stateVec = satellite.sgp4(satrec, tm);
-        if (num < 0) {
-            console.log(" id: "+id+" tle: "+tle+" satrec:", satrec, "state:", stateVec);
+        if ((sat.startTime && t < sat.startTime) || (sat.endTime && t > sat.endTime)) {
+                newPositions.push([id,0,0,0]);
+                continue;
         }
-        if (stateVec.position) {
-            var p = stateVec.position;
-            newPos = [id,p.x, p.y, p.z];
-        }
-        if (!stateVec.position) {
-            errs++;
-            newPos = [id, 0, 0, 0];
+        else {
+            numActive++;
+            var satrec = sat.satrec;
+            var tle = sat.tle;
+            var tm = (tJ - satrec.jdsatepoch) * 1440.0; //in minutes
+            //var stateVec = satellite.propagate(satrec, time);
+            //var stateVec = satellite.propagate(satrec, time);
+            var stateVec = satellite.sgp4(satrec, tm);
+            if (num < 0) {
+                console.log(" id: "+id+" tle: "+tle+" satrec:", satrec, "state:", stateVec);
+            }
+            if (stateVec.position) {
+                var p = stateVec.position;
+                newPos = [id,p.x, p.y, p.z];
+            }
+            if (!stateVec.position) {
+                numErrs++;
+                newPos = [id, 0, 0, 0];
+            }
         }
         newPositions.push(newPos);
         num++;
     }
     //console.log("num: "+num+ " errs: "+errs);
-    var msg = {type: 'newPositions', newPositions};
+    var msg = {type: 'newPositions',
+               newPositions, numActive, numErrs, numKepler};
     postMessage(msg);
 }
 
@@ -80,13 +91,13 @@ onmessage = function(e) {
         console.log("****** update sat info for worker ******");
         //var satDat = JSON.parse(msg.satDat);
         //console.log("satDat: "+msg.satDat);
-        msg.satDat.forEach(dat => {
-            //var id = dat.id;
-            var id = dat[0];
-            var tle = dat[1];
+        msg.satDat.forEach(sat => {
+            var id = sat.id;
+            var tle = sat.tle;
             //console.log("id: "+id+" tle: "+tle);
             var satrec = satellite.twoline2satrec(tle[0], tle[1]);
-            sats[id] = {id, tle, satrec};
+            sats[id] = {id, tle,
+                startTime: sat.startTime, endTime: sat.endTime, satrec};
         });
     }
     if (msg.type == 'setTime') {

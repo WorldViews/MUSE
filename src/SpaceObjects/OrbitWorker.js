@@ -26,23 +26,8 @@ class OrbitWorker {
     handleMessage(e) {
         var msg = e.data;
         if (msg.type == 'newPositions') {
-            var db = this.satTracks.db;
-            var newPositions = msg.newPositions;
-            var n = newPositions.length;
-            //console.log(sprintf("Got %d new positions", n));
-            //console.log("newPos: "+newPositions[0]);
-            var numAdjusted = 0;
-            newPositions.forEach(rec => {
-                var id = rec[0];
-                var sv = db.sats[id].stateVec;
-                if (sv && sv.position) {
-                    sv.position.x = rec[1];
-                    sv.position.y = rec[2];
-                    sv.position.z = rec[3];
-                    numAdjusted++;
-                }
-            });
-            //console.log("numAdjusted "+numAdjusted);
+            this.handleNewPositions(msg);
+            this.satTracks.copyPositionsFromDB();
         }
         else if (msg.type == 'status') {
             console.log("status: "+msg.text);
@@ -50,6 +35,34 @@ class OrbitWorker {
         else {
             console.log("Unexpected msg: ", msg);
         }
+    }
+
+    handleNewPositions(msg) {
+        console.log("handleNewPositions");
+        var db = this.satTracks.db;
+        var newPositions = msg.newPositions;
+        var n = newPositions.length;
+        //console.log(sprintf("Got %d new positions", n));
+        //console.log("newPos: "+newPositions[0]);
+        var numAdjusted = 0;
+        newPositions.forEach(rec => {
+            var id = rec[0];
+            var sv = db.sats[id].stateVec;
+            if (sv && sv.position) {
+                sv.position.x = rec[1];
+                sv.position.y = rec[2];
+                sv.position.z = rec[3];
+                numAdjusted++;
+            }
+        });
+        //console.log("numActive: "+msg.numActive);
+        //console.log("numErrs: "+msg.numErrs);
+        //console.log("numKepler: "+msg.numKepler);
+        var db = satTracks.db;
+        db.numActive = msg.numActive;
+        db.numErrs = msg.numErrs;
+        db.numActive = msg.numActive;
+        //console.log("numAdjusted "+numAdjusted);
     }
 
     sendSatInfo(id) {
@@ -60,7 +73,9 @@ class OrbitWorker {
             ids = Object.keys(db.sats);
         }
         ids.forEach(id => {
-            satDat.push([id, db.sats[id].tle]);
+            //satDat.push([id, db.sats[id].tle]);
+            var sat = db.sats[id];
+            satDat.push({id:id, tle: sat.tle, startTime: sat.startTime, endTime: sat.endTime});
         })
         var msg = {type: 'satInfo', satDat}
         this.worker.postMessage(msg);

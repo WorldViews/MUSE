@@ -73,8 +73,10 @@ class SatTracks {
 
     setWorkerRate(rate) {
         this.workerUpdateRate = rate;
-        if (!this.worker)
+        if (!this.worker && rate > 0) {
             this.worker = new OrbitWorker(this);
+            this.worker.sendSatInfo();
+        }
     }
 
     addEvent(t, x, y, z, t0, r) {
@@ -199,17 +201,23 @@ class SatTracks {
             //db.setTime(this.t, true);
             db.setTime(this.t, true);
             this.worker.setTime(this.t);
+            //this.copyPositionsFromDB();
         }
         else {
             db.setTime(this.t);
             db.updatePositions();
+            this.copyPositionsFromDB();
         }
-        var i = -1;
+    }
+
+    copyPositionsFromDB() {
+        var db = this.db;
         //var rtypes = Object.values(this.rsoTypes);
         var rtypes = Util.values(this.rsoTypes);
         Object.keys(this.rsoTypes).map( k => this.rsoTypes[k])
         var ntypes = rtypes.length;
         var v = new THREE.Vector3();
+        var i = -1;
         for (var satName in db.sats) {
             //console.log("satName: "+satName);
             i++;
@@ -264,7 +272,7 @@ class SatTracks {
             db.numActive,
             this.game.program.getPlaySpeed(),
             db.worstDelta/(24*3600),
-            db.numErrs, db.numFakes,
+            db.numErrs, db.numKepler,
             dbEpoch,
             satName, selectedInfo);
         this.game.setValue("spaceStatus", statusStr);
