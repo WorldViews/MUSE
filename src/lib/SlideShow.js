@@ -7,6 +7,7 @@
 import {DynamicObject} from './DynamicObject';
 import {DynamicObjectDB} from './DynamicObjectDB';
 import {Game} from '../Game';
+import * as Util from '../Util';
 
 function getRecs()
 {
@@ -23,6 +24,17 @@ function getRecs()
     return recs;
 }
 
+function fixRecs(recsObj)
+{
+    var recs = recsObj.records;
+    recs.forEach(rec => {
+        var t = Util.toTime(rec.t);
+        console.log("----->fixRecs "+rec.t+" "+t);
+        rec.t = t;
+    });
+    return recsObj;
+}
+
 class SlidePlayer extends DynamicObjectDB
 {
     constructor(game, options) {
@@ -34,6 +46,7 @@ class SlidePlayer extends DynamicObjectDB
         this.playTime = 0;
         console.log("Screen "+screenName, this.screen);
         var recs = options.records || getRecs();
+        recs = fixRecs(recs);
         this.addRecords(recs);
         this.dump();
     }
@@ -81,7 +94,7 @@ function runSlideShow(game)
         {name: "slideShow1",
             screenName: "mainScreen",
             records: recs});
-    /*    
+    /*
     var recs = {"records": [
       { "id": "slide", "t": 1,    "label": "one" },
       { "id": "slide", "t": 1.3,  "label": "one.three" }

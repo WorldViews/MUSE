@@ -35,12 +35,12 @@ var SPECS = [
         rot: [0, 0, 0],
         scale: 0.025
     },
-    {   type: 'Model', name: 'bmw',
+    {   type: 'Model', name: 'iridium',
         parent: 'station',
-        path: 'models/bmw/model.dae',
+        path: 'models/satellites/Iridium/model.dae',
         position: [0.2, 0, 1.6],
         rot: [0, 0, 0],
-        scale: 0.020,
+        scale: 0.001,
         visible: false
     },
     //VID_BUBBLES,
@@ -57,6 +57,13 @@ var SPECS = [
         phiStart: 34, phiLength: 47,
         thetaStart: 300, thetaLength: 60
     },
+    {   type: 'Screen', name: 'leftScreen',
+        parent: 'station', radius: 8.8,
+        //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        path: 'assets/images/SpaceDebrisTalk/Slide1.PNG',
+        phiStart: 40, phiLength: 30,
+        thetaStart: 30, thetaLength: 50
+    },
     {  type: 'Marquee',    name: 'marquee1',
        radius: 7,
        phiStart: -50, phiLength: 100,
@@ -72,9 +79,12 @@ var SPECS = [
     {  type: 'Stars' },
     {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen',
        records: { records: [
-           { id: 'slide',  t: 0,           url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
-           { id: 'slide',  t: 100000000,   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
-           { id: 'slide',  t: 200000000,   url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'}
+           { t: '1959-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
+           { t: '1980-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+           { t: '1990-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
+           { t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
+           { t: '2010-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
+           { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
        ]}
     },
     //{  type: 'Hurricane', scale: 0.01 }
@@ -113,8 +123,6 @@ CONFIG = {
     'program': {
        //duration: 32*60,
        duration: 65*365*24*60*60,
-       //duration: 10*24*60*60,
-       //duration: 100*3600,
        //startTime: 'now',
        startTime: '10/4/1957',
        playTime: 'now',
@@ -126,6 +134,7 @@ CONFIG = {
                models: {
                    'vEarth': 'Virtual Earth',
                    'cmp': 'Data Visualization',
+                   'iridium': 'Iridium',
                    'none': 'Nothing'
                }
            }
