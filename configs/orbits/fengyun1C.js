@@ -21,7 +21,7 @@ CONFIG = {
            satTracks: {dataSet: 'fengyun1c.3le',
                         models: {
                             25730: {path:'models/satellites/Fengyun/fengyun.dae',
-                                           scale: 1.0,
+                                           scale: 0.04,
                                            recenter: true},
                         }},
            //satTracks: {dataSet: 'iridCosmosColl.json'},
