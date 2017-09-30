@@ -178,24 +178,24 @@ class SatTrackDB {
         var data = {objects, epoch: epoch, type: 'dataSet'};
         var dataSet = new DataSet(epoch, data);
         if (dataSetName == "iridiumCosmos.3le")
-            this.handleCollisionHacks(dataSet);
+            this.handleCollisionHacks(dataSet, 1234284979.8560574 );
         this.setDataSet(dataSet);
     }
 
-    handleCollisionHacks(dataSet) {
+    handleCollisionHacks(dataSet, collisionTime) {
         console.log("*************** handleCollisionHacks **************");
         //var t0 = 1234285388.354863;
         //var t0 = 1234285080.354863;
-        var t0 = 1234284979.8560574;
+        //var t0 = 1234284979.8560574;
         var dataObjects = dataSet.objects;
         for (var id in dataObjects) {
             var obj = dataObjects[id];
             var name = obj.OBJECT_NAME;
             if (name.indexOf("DEB") >= 0) {
-                obj.startTime = t0;
+                obj.startTime = collisionTime;
             }
             else {
-                obj.endTime = t0;
+                obj.endTime = collisionTime;
             }
             console.log(sprintf("id: %5s name: %20s start: %15s end: %15s", id, name, obj.startTime));
         }
