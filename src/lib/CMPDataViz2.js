@@ -111,12 +111,13 @@ class CMPDataViz2 {
     addEnergy(opts) {
         var size = 6;
         var material, particles;
-        var res = this.addBlobs({n: 5000, size: size, color: 0xFF0000, opacity: 1,
+        var opacity = 0.1;
+        var res = this.addBlobs({n: 5000, size: size, color: 0xFF0000, opacity: opacity,
             rMin: this.rMin, rMax: this.rMax
         });
         this.energInMat = res.material;
         this.eInBlobs = res.particles;
-        var res = this.addBlobs({n: 5000, size: size, color: 0xFFFF00, opacity: 1,
+        var res = this.addBlobs({n: 5000, size: size, color: 0xFFFF00, opacity: opacity,
             rMin: this.rMin, rMax: this.rMax
         });
         this.energOutMat = res.material;
@@ -138,9 +139,10 @@ class CMPDataViz2 {
 
     setEnergy(n) {
         var material, particles;
+        var opacity = .2;
         this.earth.group.remove(this.eOutBlobs);
         var res = this.addBlobs({
-            n: n, size: 5, color: 0xFFFF00, opacity: 1,
+            n: n, size: 5, color: 0xFFFF00, opacity: opacity,
             rMin: this.rMin, rMax: this.rMax
         });
         this.energOutMat = res.material;
