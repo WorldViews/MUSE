@@ -82,9 +82,17 @@ var SPECS = [
            { t: '1959-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
            { t: '1980-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
            { t: '1990-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
-           { t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
+           //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
+           { t: '2000-1-1',   url: 'videos/YukiyoCompilation.mp4'},
            { t: '2010-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
            { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
+       ]}
+    },
+    {  type: 'SlidePlayer', name: 'slidePlayer2', screenName: 'leftScreen',
+       records: { records: [
+           { t: '2016-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'},
+           { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide7.PNG'},
+           { t: '2018-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide8.PNG'}
        ]}
     },
     //{  type: 'Hurricane', scale: 0.01 }
@@ -117,6 +125,14 @@ function onStart(game)
     satTracks.addEvent(t, p.x,p.z,-p.y, 3);
 }
 
+function useWebWorker(game)
+{
+    if (satTracks.webWorkerRate)
+        satTracks.setWorkerRate(0);
+    else
+        satTracks.setWorkerRate(10);
+}
+
 CONFIG = {
     onStart: onStart,
     'cameraControls': 'JoelControls',
@@ -142,6 +158,7 @@ CONFIG = {
        channels: ['time', 'year', 'narrative', 'spaceStatus'],
        scripts: {
            'Watch Collision': watchCollision,
+           'Web Worker': useWebWorker,
            //'Add Collision': addCollisions
        }
     },
