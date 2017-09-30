@@ -27,7 +27,8 @@ class JQControls extends UIControls {
             this.stageControl = new StageControl(this, stage.name, stage.models);
         }
         var inst = this;
-        $(document).ready( e => inst.setupElements());
+        //$(document).ready( e => inst.setupElements());
+        this.setupElements();
         game.events.addEventListener('valueChange', e => inst.onValueChange(e));
     }
 

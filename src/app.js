@@ -91,6 +91,10 @@ function loadModel(modelPath) {
 }
 
 function start(config) {
+    $(document).ready(e => start_(config));
+}
+
+function start_(config) {
     console.log("app.start", config);
     if (config == null && Util.getParameterByName("model")) {
         var modelPath = Util.getParameterByName("model");
@@ -129,24 +133,6 @@ function start(config) {
             cameraControlsType = cameraControlsOpts.type;
         }
         game.addControls(cameraControlsType, cameraControlsOpts);
-        /*
-        console.log("config.cameraControlsType: "+cameraControlsType);
-        if (cameraControlsType == 'Orbit') {
-            console.log("**** Using OrbitControls ****");
-            game.addOrbitControls(cameraControlOpts);
-        }
-        else if (cameraControlsType == "JoelControls") {
-            console.log("**** Using JoelControls ****");
-            game.addJoelControls(cameraControlOpts);
-        }
-        else if (cameraControlsType == "MultiControls") {
-            console.log("**** Using MultiControls ****");
-            game.addMultiControls(cameraControlOpts);
-        }
-        else {
-            alert("Unrecognized Control Type: "+cameraControlsType);
-        }
-        */
         game.camera.position.set(pos.start.x, pos.start.y, pos.start.z);
         game.camera.up = new THREE.Vector3(0,1,0);
         game.camera.lookAt(pos.lookAt);
