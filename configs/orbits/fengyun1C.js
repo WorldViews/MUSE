@@ -8,7 +8,7 @@ CONFIG = {
        //startTime: 1504131722.726
         startTime: '1/10/2007',
         playSpeed: 100,
-        playTime: '1/11/2007 14:26:03'
+        playTime: '1/11/2007 14:15:03'
     },
     'specs': [
         {  type: 'JQControls' },

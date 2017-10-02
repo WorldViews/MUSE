@@ -180,6 +180,9 @@ class SatTrackDB {
         if (dataSetName == "iridiumCosmos.3le")
             this.handleCollisionHacks(dataSet, 1234284979.8560574 );
         this.setDataSet(dataSet);
+        if (dataSetName == "fengyun1c.3le")
+            this.handleCollisionHacks(dataSet, 1168554324 );
+        this.setDataSet(dataSet);
     }
 
     handleCollisionHacks(dataSet, collisionTime) {
