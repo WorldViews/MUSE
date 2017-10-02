@@ -144,6 +144,7 @@ function start_(config) {
     game.setProgram(cmpProgram);
 
     console.log("loading specs", specs);
+    /*
     game.load(specs);
     console.log("loaded specs", specs);
     game.config = config;
@@ -151,6 +152,15 @@ function start_(config) {
         config.onStart(game);
     }
     game.animate(0);
+    */
+    game.loadSpecs(specs).then(() => {
+        console.log("loaded specs", specs);
+        game.config = config;
+        if (config.onStart) {
+            config.onStart(game);
+        }
+        game.animate(0);
+    });
 }
 
 window.start = start;

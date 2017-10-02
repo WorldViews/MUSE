@@ -428,9 +428,11 @@ class Game {
         return null;
     }
 
-    load(specs) {
-        game.loader = new Loader(this, specs);
+    loadSpecs(specs) {
+	game.loader = new Loader(this);
+	return game.loader.load(specs);
     }
+
 }
 
 export {Game};
