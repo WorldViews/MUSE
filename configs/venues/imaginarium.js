@@ -51,9 +51,9 @@ SATELLITE_MODEL = [
 
 var SPECS = [
     {  type: 'Stats', right: '-0px' },
-    {  type: 'JQControls' },
+    //{  type: 'JQControls' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
-    {  type: 'Scripts' },
+    //{  type: 'Scripts' },
     {   type: 'Group', name: 'station'  },
     {   type: 'Model', name: 'platform',
         parent: 'station',
@@ -72,19 +72,27 @@ var SPECS = [
     },
     //SATELLITE_MODEL,
     //OBJ_MODEL,
-    VID_BUBBLES,
+    //VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
-        path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        path: 'textures/DisplayNames/display1.PNG',
         phiStart: 34, phiLength: 47,
         thetaStart: 110, thetaLength: 140
     },
     {   type: 'Screen', name: 'rightScreen',
         parent: 'station', radius: 8.8,
         //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
-        path: 'assets/images/ColabTalk/Slide1.PNG',
-        phiStart: 34, phiLength: 47,
-        thetaStart: 300, thetaLength: 60
+        path: 'textures/DisplayNames/display2.PNG',
+        phiStart: 40, phiLength: 30,
+        thetaStart: 270, thetaLength: 60
+    },
+    {   type: 'Screen', name: 'leftScreen',
+        parent: 'station', radius: 8.8,
+        //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        path: 'textures/DisplayNames/display3.PNG',
+        phiStart: 40, phiLength: 30,
+        thetaStart: 40, thetaLength: 50
     },
     {  type: 'Marquee',    name: 'marquee1',
        radius: 7,
@@ -113,4 +121,3 @@ var SPECS = [
                     }},
     }
 ];
-
