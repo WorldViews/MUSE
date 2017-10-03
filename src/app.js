@@ -32,6 +32,16 @@ let CONFIG = null;
 let SPECS = null;
 let DEFAULT_SPECS = "configs/cmp_imaginarium.js";
 
+// called with string or obj containing type.
+// if string converted to obj with that string as type.
+function getTypedObj(obj)
+{
+    if (typeof obj == "string") {
+        return {'type': obj};
+    }
+    return obj;
+}
+
 function getStartPosition() {
     var lookAt = new THREE.Vector3(0,2,0);
     var start = new THREE.Vector3(4, 2,-5);
@@ -90,6 +100,11 @@ function loadModel(modelPath) {
     start(CONFIG);
 }
 
+/*
+Do this so that if JQControls UI is used, when it starts, the document is
+already complete.  That simplifies its initialization because it can build
+all its elements before it returns.
+*/
 function start(config) {
     $(document).ready(e => start_(config));
 }
@@ -126,34 +141,26 @@ function start_(config) {
         game.body.position.set(pos.start.x, 1.5, pos.start.z);
     } else {
         window.game = new Game('canvas3d');
-        var cameraControlsOpts = {};
-        var cameraControlsType = config.cameraControls || "MultiControls";
-        if (typeof cameraControlsType != "string") {
-            cameraControlsOpts = cameraControlsType;
-            cameraControlsType = cameraControlsOpts.type;
-        }
-        game.addControls(cameraControlsType, cameraControlsOpts);
+        var cameraControls = config.cameraControls || "JoelControls";
+        game.addControls(getTypedObj(cameraControls));
         game.camera.position.set(pos.start.x, pos.start.y, pos.start.z);
         game.camera.up = new THREE.Vector3(0,1,0);
         game.camera.lookAt(pos.lookAt);
     }
-
     game.defaultGroupName = 'station';
 
     let cmpProgram = new CMPProgram(game, config.program);
     game.setProgram(cmpProgram);
+    if (config.ui) {
+        game.loadSpecs(getTypedObj(config.ui));
+    }
 
     console.log("loading specs", specs);
-    /*
-    game.load(specs);
-    console.log("loaded specs", specs);
-    game.config = config;
-    if (config.onStart) {
-        config.onStart(game);
-    }
-    game.animate(0);
-    */
-    game.loadSpecs(specs).then(() => {
+    var parts = [];
+    if (config.venue)
+        parts.push(game.loadSpecs(config.venue));
+    parts.push(game.loadSpecs(specs));
+    Promise.all(parts).then(() => {
         console.log("loaded specs", specs);
         game.config = config;
         if (config.onStart) {
