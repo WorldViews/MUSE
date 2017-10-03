@@ -27,6 +27,10 @@ class Scripts {
         this.uiControl = game.controllers.ui;
         var inst = this;
         var ui = this.uiControl;
+        if (!ui) {
+            console.log("******** No UI available");
+            return;
+        }
         ui.registerScript("Toyokawa Panoramic Portal", () => inst.addPortal());
         ui.registerScript("Hide Portal", () => inst.hidePortal());
         ui.registerScript("Go to Mars", () => inst.goToMars());
