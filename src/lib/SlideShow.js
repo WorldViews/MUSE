@@ -41,10 +41,12 @@ class SlidePlayer extends DynamicObjectDB
         var name = options.name;
         var screenName = options.screenName || 'mainScreen';
         super(name);
-        this.screen = game.screens[screenName];
+        this.game = game;
+        this.screenName = screenName;
+        //this.screen = game.screens[screenName];
         this.playSpeed = 1;
         this.playTime = 0;
-        console.log("Screen "+screenName, this.screen);
+        console.log("Screen "+screenName);
         var recs = options.records || getRecs();
         recs = fixRecs(recs);
         this.addRecords(recs);
@@ -78,9 +80,12 @@ class SlidePlayer extends DynamicObjectDB
         if (msg['msgType'] != "v3d.delete") {
             //msg['imageUrl'] = "http://"+serverHost+"/"+msg['imageUrl'];
             var url = msg.url;
-            console.log("handle "+msg.msgType+" "+url, this.screen);
-            if (this.screen)
-                this.screen.updateImage(url)
+            var screen = this.game.screens[this.screenName];
+            console.log("handle "+msg.msgType+" "+url, screen);
+            if (screen)
+                screen.updateImage(url)
+            else
+                console.log("ScreenPlayer "+this.screenName+" no screen found");
         }
         console.log("*** SlidePlayer "+this.name+" postMessage: "+JSON.stringify(msg));
     }
