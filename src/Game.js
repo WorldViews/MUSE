@@ -99,7 +99,9 @@ class Game {
         return renderer;
     }
 
-    addControls(cameraControlsType, options) {
+    //addControls(cameraControlsType, options) {
+    addControls(options) {
+        var cameraControlsType = options.type;
         if (cameraControlsType == null)
             cameraControlsType = "Orbit";
         if (cameraControlsType == 'Orbit') {
