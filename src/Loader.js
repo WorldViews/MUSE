@@ -226,7 +226,7 @@ class Loader
             }
             var obj = game.createNode(spec.type, spec);
             if (!obj) {
-                reportError("Unknown loader oject type: "+spec.type);
+                reportError("Failed to create oject type: "+spec.type);
             }
         });
     }

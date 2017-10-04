@@ -427,6 +427,9 @@ class Game {
             console.log("*********************** calling factory for "+typeName);
             return ntypes[typeName](this, props);
         }
+        else {
+            reportError("Unknown Node type "+typeName);
+        }
         return null;
     }
 
