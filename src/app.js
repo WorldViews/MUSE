@@ -21,7 +21,7 @@ import { ViewManager } from './ViewManager';
 import { addLight, setupLights } from './Lights';
 import Marquee from './Marquee';
 import { DynamicObjectDB_test } from './lib/DynamicObjectDB';
-import { Slides } from './lib/Slides';
+import { SlidePlayer } from './lib/MediaControl';
 import { Hurricane } from './lib/Hurricane';
 import { VirtualEarth } from './lib/VirtualEarth';
 import { Kessler } from './KesslerNode';

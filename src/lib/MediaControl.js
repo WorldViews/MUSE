@@ -3,7 +3,6 @@
   with time.   The state at a given time is characterized by a 'record' which is
   just a JSON dictionary, which must have one field called 't', which is the time.
 */
-
 import {DynamicObject} from './DynamicObject';
 import {DynamicObjectDB} from './DynamicObjectDB';
 import {Game} from '../Game';
@@ -58,7 +57,7 @@ function fixRecs(recs)
     return recs;
 }
 
-class SlidesPlayer2 extends DynamicObjectDB
+class SlidePlayer extends DynamicObjectDB
 {
     constructor(game, options) {
         var name = options.name;
@@ -154,7 +153,7 @@ Game.registerNodeType("Slides", (game, options) => {
     }
     if (!options.name)
         options.name = "slidePlayer_"+group;
-    var slideShow = new SlidesPlayer2(game, options);
+    var slideShow = new SlidePlayer(game, options);
     game.registerController(options.name, slideShow);
     game.registerPlayer(slideShow);
     return slideShow;
@@ -162,4 +161,4 @@ Game.registerNodeType("Slides", (game, options) => {
 
 window.runSlideShow = runSlideShow;
 
-export {SlidesPlayer2, runSlideShow};
+export {SlidePlayer, runSlideShow};
