@@ -8,7 +8,7 @@ import ImageSource from './lib/ImageSource';
 window.VIDURL = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
 
 //import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
-import {screen1} from './const/screen';
+//import {screen1} from './const/screen';
 
 //var spec = screen1;
 //console.log("spec: "+spec);
@@ -18,12 +18,10 @@ function toRad(v)
     return v ? Math.degToRad(v) : v;
 }
 
-
 class Screen
 {
     constructor(game, spec, path) {
         console.log("---------------- Screen", spec);
-        spec = spec || screen1;
         this.game = game;
         this.imageSource = null;
         var name = spec.name || "movieScreen";

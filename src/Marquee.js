@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import {marquee as marqueeSpec} from './const/screen';
+//import {marquee as marqueeSpec} from './const/screen';
 import {Game} from './Game';
 import ImageSource from './lib/ImageSource';
 
@@ -19,7 +19,7 @@ class Marquee extends THREE.Mesh {
 
     constructor(spec) {
         super();
-        spec = spec || marqueeSpec;
+        //spec = spec || marqueeSpec;
         this.type = 'Marquee';
         this._prevText = null;
         this._width = window.innerWidth;
