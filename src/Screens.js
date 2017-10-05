@@ -24,6 +24,9 @@ class Screen
         console.log("---------------- Screen", spec);
         this.game = game;
         this.imageSource = null;
+        var visible = true;
+        if (spec.visible != null)
+            visible = spec.visible;
         var name = spec.name || "movieScreen";
         var scene = game.scene;
         var path = path || spec.path;
@@ -65,6 +68,7 @@ class Screen
             //scene.add(screenParent);
             this.imageSource = imageSource;
             this.material = videoMaterial;
+            screenParent.visible = visible;
             game.addToGame(screenParent, spec.name, spec.parent);
         });
         if (spec.name)

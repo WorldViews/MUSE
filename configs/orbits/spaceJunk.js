@@ -1,4 +1,11 @@
 
+var VIDEO_BUBBLES = [
+    {  type: 'Group', name: 'videoBubbles', visible: false },
+    {   type: 'Screen', name: 'vidBubble1', parent: 'videoBubbles', radius: 0.4, position: [0,3.6,0],
+        path: 'videos/YukiyoCompilation.mp4',
+    }
+];
+
 function onStart(game)
 {
     //game.program.formatTime = t =>game.Util.toDate(t);
@@ -68,8 +75,13 @@ function addCollisions(game)
     };
 }
 
+function setVideoBubblesVisibility(game, visibility) {
+    game.models.videoBubbles.visible = visibility;
+}
+
 CONFIG = {
-    'cameraControls': {type: 'Orbit', distance: 4},
+    //'cameraControls': {type: 'Orbit', distance: 4},
+    'cameraControls': {type: 'MultiControls', distance: 4},
     //onStart: onStart,
     onUpdate: onUpdate,
     'program': {
@@ -87,6 +99,7 @@ CONFIG = {
            'Dump Satellites': dumpSats,
            'Show Debris': (game) => setVisibility(game, 'DEBRIS', true),
            'Hide Debris': (game) => setVisibility(game, 'DEBRIS', false),
+           'Show Video Bubbles': (game) => setVideoBubblesVisibility(game, true),
            'Fake Collisons': addCollisions,
            'Web Worker': useWebWorker,
        }
@@ -94,6 +107,8 @@ CONFIG = {
     'specs': [
         {  type: 'Stats', right: '-0px' },
         {  type: 'JQControls' },
+        //{  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
+        {  type: 'ViewManager' },
         {  type: 'Stars' },
         {  type: 'PointLight', name: 'sun', position: [-1000, 0, 0], distance: 5000},
         {  type: 'PointLight', name: 'sun', position: [3000, 1000, 0], distance: 5000},
@@ -113,6 +128,7 @@ CONFIG = {
            //satTracks: 1,
            dataViz: 0,
            atmosphere: {'name': 'CO2Viz', opacity: .8}
-        }
+       },
+        VIDEO_BUBBLES
     ]
 };
