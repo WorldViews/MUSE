@@ -1,9 +1,17 @@
 
 var VIDEO_BUBBLES = [
     {  type: 'Group', name: 'videoBubbles', visible: false },
-    {   type: 'Screen', name: 'vidBubble1', parent: 'videoBubbles', radius: 0.4, position: [0,3.6,0],
-        path: 'videos/YukiyoCompilation.mp4',
-    }
+    {   type: 'Screen', name: 'vidBubble1', parent: 'videoBubbles', radius: 0.6, position: [0,3.6,0],
+        path: 'videos/SpaceWalk.mp4',
+    },
+    {  type: 'Group', name: 'videoBubbles', visible: false },
+    {   type: 'Screen', name: 'vidBubble2', parent: 'videoBubbles', radius: 0.6, position: [2,3,0],
+        path: 'videos/MoonWalk.mp4',
+    },
+    {  type: 'Group', name: 'videoBubbles', visible: false },
+    {   type: 'Screen', name: 'vidBubble3', parent: 'videoBubbles', radius: 0.6, position: [-2,3,0],
+        path: 'videos/ISS_tour.mp4',
+    },
 ];
 
 function onStart(game)
@@ -100,6 +108,7 @@ CONFIG = {
            'Show Debris': (game) => setVisibility(game, 'DEBRIS', true),
            'Hide Debris': (game) => setVisibility(game, 'DEBRIS', false),
            'Show Video Bubbles': (game) => setVideoBubblesVisibility(game, true),
+           'Hide Video Bubbles': (game) => setVideoBubblesVisibility(game, false),
            'Fake Collisons': addCollisions,
            'Web Worker': useWebWorker,
        }
