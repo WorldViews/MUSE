@@ -365,6 +365,12 @@ class JoelControls
             var v = this.getCamForward();
             camPos.addScaledVector(v, -moveSpeed);
         }
+
+        if (down[KEYS.B]) {
+            if (this.prevView) {
+                this.game.viewManager.goto(this.prevView, 2);
+            }
+        }
     }
 
     // This tries to find an appropriate target for trackballing
