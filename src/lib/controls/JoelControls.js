@@ -312,12 +312,14 @@ class JoelControls
             }
         }
 
-        if (down[KEYS.LEFT] && down[KEYS.SHIFT]) {
-            var camPos = cam.position;
-            var v = this.getCamRight();
-            camPos.addScaledVector(v, -moveSpeed);
-        } else if (down[KEYS.LEFT]) {
-            this.object.rotateY(panSpeed);
+        if (down[KEYS.LEFT]) {
+            if (down[KEYS.SHIFT]) {
+                var camPos = cam.position;
+                var v = this.getCamRight();
+                camPos.addScaledVector(v, -moveSpeed);
+            }else {
+                this.object.rotateY(panSpeed);
+            }
         }
 
         if (down[KEYS.UP]) {
@@ -332,20 +334,24 @@ class JoelControls
             camPos.addScaledVector(v, -moveSpeed);
         }
 
-        if (down[KEYS.D] && down[KEYS.SHIFT]){
-            var camPos = cam.position;
-            var v = this.getCamRight();
-            camPos.addScaledVector(v, moveSpeed);
-        } else if (down[KEYS.D]) {
-            this.object.rotateY(-panSpeed);
+        if (down[KEYS.D]){
+            if (down[KEYS.SHIFT]) {
+                var camPos = cam.position;
+                var v = this.getCamRight();
+                camPos.addScaledVector(v, moveSpeed);
+            }else {
+                this.object.rotateY(-panSpeed);
+            }
         }
 
-        if (down[KEYS.A] && down[KEYS.SHIFT]) {
-            var camPos = cam.position;
-            var v = this.getCamRight();
-            camPos.addScaledVector(v, -moveSpeed);
-        } else if (down[KEYS.A]) {
-            this.object.rotateY(panSpeed);
+        if (down[KEYS.A]) {
+            if (down[KEYS.SHIFT]){
+                var camPos = cam.position;
+                var v = this.getCamRight();
+                camPos.addScaledVector(v, -moveSpeed);
+            }else {
+                this.object.rotateY(panSpeed);
+            }
         }
 
         if (down[KEYS.W]) {
