@@ -89,7 +89,7 @@ function setVideoBubblesVisibility(game, visibility) {
 
 CONFIG = {
     //'cameraControls': {type: 'Orbit', distance: 4},
-    'cameraControls': {type: 'MultiControls', distance: 4},
+    'cameraControls': {type: 'JoelControls', distance: 4},
     //onStart: onStart,
     onUpdate: onUpdate,
     'program': {
