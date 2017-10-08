@@ -8,6 +8,7 @@ import {DynamicObject} from './DynamicObject';
 import {DynamicObjectDB} from './DynamicObjectDB';
 import {Game} from '../Game';
 import * as Util from '../Util';
+import {KeyFrames} from './KeyFrames';
 
 function clone(obj) { return Object.assign({},obj); }
 /*
@@ -58,116 +59,86 @@ function fixRecs(recs)
     return recs;
 }
 
-class SlidePlayer extends DynamicObjectDB
-{
+class MediaStream {
     constructor(game, options) {
-        var name = options.name;
-        var screenName = options.group;
-        super(name);
+        this.name = options.name;
         this.game = game;
-        this.screenName = screenName;
         this.playSpeed = 1;
         this.playTime = 0;
-        console.log("Screen "+screenName);
+        console.log("MediaStream "+this.name);
         var recs = options.records;
         recs = fixRecs(recs);
-        var recsObj = {records: recs};
-        this.addRecords(recsObj);
+        this.keyFrames = new KeyFrames(recs);
+        this.prevFrame = null;
         this.dump();
     }
 
-    update(dt) {}
+    dump() {
+        console.log("MediaStream: "+this.name);
+        this.keyFrames.dump();
+    }
+
+    update(dt)
+    {
+        var t = this.game.program.getPlayTime();
+        var frame = this.keyFrames.getFrameByTime(t);
+        //console.log("MediaStream "+this.screenName+" frame: "+frame);
+        if (frame != this.prevFrame) {
+            this.onChangeFrame(frame);
+            this.prevFrame = frame;
+        }
+    }
+
+    onChangeFrame(frame) {
+        console.log("MediaStream.onChangeFrame "+this.name+" frame: "+frame);
+    }
+
     play() {}
     pause() {}
     getPlayTime() { return this.playTime; }
     setPlaySpeed(s) { this.playSpeed = s; }
     getPlaySpeed() { return this.playSpeed; }
 
-    postMessage(msg)
-    {
-        msg['name'] = msg['id'];
-        if (msg['msgType'] != "v3d.delete") {
-            //msg['imageUrl'] = "http://"+serverHost+"/"+msg['imageUrl'];
-            var url = msg.url;
-            var screen = this.game.screens[this.screenName];
-            console.log("handle "+msg.msgType+" "+url, screen);
-            if (screen)
-                screen.updateImage(url)
-            else
-                console.log("ScreenPlayer "+this.screenName+" no screen found");
-        }
-        console.log("*** SlidePlayer "+this.name+" postMessage: "+JSON.stringify(msg));
+}
+
+
+class Slides extends MediaStream
+{
+    constructor(game, options) {
+        var screenName = options.group;
+        options.name = options.name || screenName;
+        super(game, options);
+        this.screenName = screenName;
+    }
+
+    onChangeFrame(frame) {
+        var url = frame.url;
+        console.log("Slides.onChangeFrame "+this.screenName+" frame: "+frame);
+        console.log("   url: "+url);
+        var screen = this.game.screens[this.screenName];
+        if (screen)
+            screen.updateImage(url)
+        else
+            console.log("ScreenPlayer "+this.screenName+" no screen found");
     }
 }
 
-class StagePlayer extends DynamicObjectDB
+class StageControl extends MediaStream
 {
     constructor(game, options) {
-        var name = options.name;
-        var screenName = options.group;
-        super(name);
-        this.game = game;
-        this.screenName = screenName;
-        this.playSpeed = 1;
-        this.playTime = 0;
-        console.log("Screen "+screenName);
-        var recs = options.records;
-        recs = fixRecs(recs);
-        var recsObj = {records: recs};
-        this.addRecords(recsObj);
-        this.dump();
+        var stageName = options.group;
+        options.name = options.name || stageName;
+        super(game, options);
+        this.stageName = stageName;
     }
 
-    update(dt) {}
-    play() {}
-    pause() {}
-    getPlayTime() { return this.playTime; }
-    setPlaySpeed(s) { this.playSpeed = s; }
-    getPlaySpeed() { return this.playSpeed; }
-
-    postMessage(msg)
-    {
+    onChangeFrame(frame) {
+        var modelName = frame.name;
+        console.log("StagePlayer.onChangeFrame "+this.stageName+" frame: "+frame);
+        console.log("   choice: "+modelName);
         var ui = game.controllers.ui;
-        //msg['name'] = msg['id'];
-        if (msg['msgType'] != "v3d.delete") {
-            //msg['imageUrl'] = "http://"+serverHost+"/"+msg['imageUrl'];
-            var name = msg.name;
-            console.log("handle "+msg.msgType+" "+name);
-            if (ui)
-                ui.stageControl.selectModel(name);
-            else
-                console.log("StagePlayer: no UI");
-        }
-    }
-}
-
-
-
-function runSlideShow(game)
-{
-    var recs = getRecs();
-    var db = new SlidePlayer(game,
-        {name: "slideShow1",
-            screenName: "mainScreen",
-            records: recs});
-    /*
-    var recs = {"records": [
-      { "id": "slide", "t": 1,    "label": "one" },
-      { "id": "slide", "t": 1.3,  "label": "one.three" }
-      ]
-    }
-*/
-    db.addRecords(recs);
-    db.dump();
-    var low = 0;
-    var high = t;
-    for (var t=low; t<high; t+= 0.1) {
-        //report("t: "+t);
-        db.setPlayTime(t);
-    }
-    for (var t=high; t>=low; t-= 0.1) {
-        //report("t: "+t);
-        db.setPlayTime(t);
+        if (ui)
+            ui.stageControl.selectModel(modelName);
     }
 }
 
@@ -181,8 +152,8 @@ Game.registerNodeType("Slides", (game, options) => {
         return null;
     }
     if (!options.name)
-        options.name = "slidePlayer_"+group;
-    var slideShow = new SlidePlayer(game, options);
+        options.name = "slides_"+group;
+    var slideShow = new Slides(game, options);
     game.registerController(options.name, slideShow);
     game.registerPlayer(slideShow);
     return slideShow;
@@ -199,12 +170,11 @@ Game.registerNodeType("Stage", (game, options) => {
     }
     if (!options.name)
         options.name = ("stagePlayer_"+stage).replace(" ","_");
-    var slideShow = new StagePlayer(game, options);
+    var slideShow = new StageControl(game, options);
     game.registerController(options.name, slideShow);
     game.registerPlayer(slideShow);
     return slideShow;
 });
 
-window.runSlideShow = runSlideShow;
 
-export {SlidePlayer, runSlideShow};
+export {Slides, StageControl};
