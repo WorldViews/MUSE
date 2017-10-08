@@ -43,6 +43,8 @@ MEDIA_SPEC = [
            { t: '1950-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
            { t: '1960-1-1',   url: 'videos/SpaceDebris.mp4'},
            { t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+           { t: '2012-1-1',   url: 'videos/YukiyoCompilation.mp4'},
+           //{ t: '2012-1-1',   url: 'http://dvr4.paldeploy.com/video/Sakura/Yukiyo/YukiyoCompilation.mp4'},
        ]
    },
     {  type: 'Slides', group: 'leftScreen',

@@ -4,8 +4,8 @@
   just a JSON dictionary, which must have one field called 't', which is the time.
 */
 
-import {DynamicObject} from './DynamicObject';
-import {DynamicObjectDB} from './DynamicObjectDB';
+//import {DynamicObject} from './DynamicObject';
+//import {DynamicObjectDB} from './DynamicObjectDB';
 import {Game} from '../Game';
 import * as Util from '../Util';
 import {KeyFrames} from './KeyFrames';
@@ -78,11 +78,12 @@ class MediaStream {
         this.keyFrames.dump();
     }
 
-    update(dt)
+    update()
     {
         var t = this.game.program.getPlayTime();
+        this.prevPlayTime = t;
         var frame = this.keyFrames.getFrameByTime(t);
-        //console.log("MediaStream "+this.screenName+" frame: "+frame);
+        //console.log("MediaStream "+this.name+" frame: "+frame);
         if (frame != this.prevFrame) {
             this.onChangeFrame(frame);
             this.prevFrame = frame;
@@ -92,12 +93,6 @@ class MediaStream {
     onChangeFrame(frame) {
         console.log("MediaStream.onChangeFrame "+this.name+" frame: "+frame);
     }
-
-    play() {}
-    pause() {}
-    getPlayTime() { return this.playTime; }
-    setPlaySpeed(s) { this.playSpeed = s; }
-    getPlaySpeed() { return this.playSpeed; }
 
 }
 
