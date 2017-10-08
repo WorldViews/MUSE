@@ -64,20 +64,20 @@ class DynamicObject {
     setPlayTime(t, dynObjDB)
     {
         if (t < this.startTime || t > this.endTime+this.slack) {
-	    //report("dynObj "+this.objectId+" t: "+t+" outside range "+this.startTime+" "+this.endTime);
-	    if (this.prevRec == null)
-	        return;
-	    dynObjDB.postMessage({'msgType': 'v3d.delete',
-		                  'id': this.objectId,
-		                  't': t});
-	    this.prevRec = null;
-	    return;
+            //report("dynObj "+this.objectId+" t: "+t+" outside range "+this.startTime+" "+this.endTime);
+            if (this.prevRec == null)
+                return;
+            dynObjDB.postMessage({'msgType': 'v3d.delete',
+                                    'id': this.objectId,
+                                    't': t});
+            this.prevRec = null;
+            return;
         }
         //var rec = this.findLastRec(t);
         var rec = this.findRecForTime(t);
         if (rec == this.prevRec) {
-	    //report("not sending duplicate messages");
-	    return;
+            //report("not sending duplicate messages");
+            return;
         }
         //report("rec: "+JSON.stringify(rec));
         var msg = cloneObject(rec);
