@@ -14,6 +14,7 @@ class Screen
     constructor(game, spec, path) {
         console.log("---------------- Screen", spec);
         this.game = game;
+        this.spec = spec;
         var name = spec.name || "movieScreen";
         var path = path || spec.path;
         console.log('****** Loading screen... video: '+path);
@@ -24,7 +25,7 @@ class Screen
             toRad(spec.phiStart),    toRad(spec.phiLength)
         );
         //let sourceSpec = getTypeFromURL(url);
-        this.imageSource = ImageSource.getImageSource(path);
+        this.imageSource = ImageSource.getImageSource(path, this.spec);
         var videoTexture = this.imageSource.createTexture();
         this.material = new THREE.MeshBasicMaterial({
             map: videoTexture,
@@ -55,12 +56,12 @@ class Screen
         this.imageSource.setPlayTime(t);
     }
 
-    updateImage(url) {
+    updateImage(url, options) {
         console.log("Getting ImageSource "+url);
         if (this.imageSource) {
             this.imageSource.dispose();
         }
-        this.imageSource = ImageSource.getImageSource(url);
+        this.imageSource = ImageSource.getImageSource(url, options);
         let texture = this.imageSource.createTexture();
         this.material.map = texture;
         this.texture = texture;
