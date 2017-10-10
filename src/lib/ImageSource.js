@@ -17,13 +17,15 @@ export default class ImageSource {
 
     constructor(options) {
         this.options = options;
-
+        var autoPlay = true;
+        if (options.autoPlay != null)
+            autoPlay = false;
         this.url = this.options.url;
         this.type = this.options.type || this.TYPE.NONE;
         this.startTime = this.options.startTime || 0;
         this.video = document.createElement('video');
         this.video.setAttribute('crossorigin', 'anonymous');
-        this.video.autoplay = true;
+        this.video.autoplay = autoPlay;
         this.manager = new THREE.LoadingManager();
         this.textureLoader = new THREE.TextureLoader(this.manager);
         this.prevTexture = null;
@@ -37,7 +39,7 @@ export default class ImageSource {
         this.running = false;
     }
 
-    static getImageSource(url) {
+    static getImageSource(url, options) {
         console.log("getImageSource "+url);
         var type = ImageSource.TYPE.IMAGE;
         var URL = url.toUpperCase();
@@ -45,7 +47,10 @@ export default class ImageSource {
             if (URL.endsWith(ext.toUpperCase()))
                 type = ImageSource.TYPE.VIDEO;
         });
-        return new ImageSource({ type, url });
+        var opts = {type,url};
+        if (options && options.autoPlay != null)
+            opts.autoPlay = options.autoPlay;
+        return new ImageSource(opts);
     }
 
     dispose() {

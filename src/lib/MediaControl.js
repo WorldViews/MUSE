@@ -59,6 +59,76 @@ function fixRecs(recs)
     return recs;
 }
 
+//
+// This is a set of states, which may have associated
+// media elements.
+//
+class MediaSet {
+    constructor(game, options) {
+        this.game = game;
+        this.name = options.name;
+        this.options = options;
+    }
+}
+
+// THis is a set of states with a natural order.
+class MediaSequence extends MediaSet
+{
+    constructor(game, options) {
+        super(game, options);
+        var media = options.media;
+        this.media = media;
+        this.idx = null;
+        this.setIdx(0);
+        game.program.addMediaSequence(this);
+    }
+
+    setIdx(idx) {
+        if (idx < 0 || idx >= this.media.length) {
+            console.log("MediaSequence.setIdx out of range");
+            return;
+        }
+        if (idx == this.idx)
+            return;
+        this.idx = idx;
+        this.onChangeMedia(this.media[idx]);
+    }
+
+    next() {
+        this.setIdx(this.idx + 1);
+    }
+
+    prev() {
+        this.setIdx(this.idx - 1);
+    }
+
+    onChangeMedia(media) {
+        console.log("MediaSequence: idx:" +this.idx+" media: "+media);
+    }
+}
+
+class SlideSequence extends MediaSequence {
+    constructor(game, options) {
+        super(game, options);
+    }
+
+    onChangeMedia(frame) {
+        var url = frame.url;
+        var screenName = this.name;
+        console.log("SlideSequence.onChangeFrame "+this.name+" frame: "+frame);
+        console.log("   url: "+url);
+        var screen = this.game.screens[screenName];
+        if (screen)
+            screen.updateImage(url)
+        else
+            console.log("ScreenPlayer "+screenName+" no screen found");
+    }
+}
+
+/*
+A media stream is a timed sequence of media elements, indexed by continuous
+time variable.
+*/
 class MediaStream {
     constructor(game, options) {
         this.name = options.name;
@@ -136,6 +206,22 @@ class StageControl extends MediaStream
             ui.stageControl.selectModel(modelName);
     }
 }
+
+Game.registerNodeType("SlideSequence", (game, options) => {
+    console.log("===========================")
+    console.log("slides ", options);
+    console.log("slides "+JSON.stringify(options));
+    if (!options.name) {
+        Util.reportError("SlideSequence No name specified");
+        return null;
+    }
+    var slideSequence = new SlideSequence(game, options);
+    //game.registerController(options.name, slideShow);
+    //game.registerPlayer(slideShow);
+    window.slides = slideSequence;
+    return slideSequence;
+});
+
 
 Game.registerNodeType("Slides", (game, options) => {
     console.log("===========================")

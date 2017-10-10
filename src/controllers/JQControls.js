@@ -181,9 +181,13 @@ class PlayControls extends JQWidget {
         var inst = this;
         this.$play = append($parent, "<input type='button' value='Play' style='width:60px;'>");
         this.$timeSlider = append($parent, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
+        this.$prev = append($parent, "<br><input type='button' value='<' style='width:20px;'>");
+        this.$next = append($parent, "<input type='button' value='>' style='width:20px;'>");
         this.$timeSlider.on('change', e => inst.onSliderChange(e, false));
         this.$timeSlider.on('input',  e => inst.onSliderChange(e, true));
         this.$play.on('click', e => inst.togglePlayPause(e));
+        this.$prev.on('click', e => inst.onPrev(e));
+        this.$next.on('click', e => inst.onNext(e));
     }
 
     togglePlayPause(e) {
@@ -197,6 +201,14 @@ class PlayControls extends JQWidget {
             $play.val("Play");
             this.ui.program.pause();
         }
+    }
+
+    onPrev() {
+        this.ui.program.prevState();
+    }
+
+    onNext() {
+        this.ui.program.nextState();
     }
 
     showState(playing) {
@@ -214,7 +226,10 @@ class PlayControls extends JQWidget {
     }
 }
 
-
+/*
+This deals with changes in camera position, defining
+and selecting viewpoints.
+*/
 class ViewControl  extends JQWidget {
     constructor(ui, $parent) {
         super(ui, $parent);

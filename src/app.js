@@ -32,16 +32,6 @@ let CONFIG = null;
 let SPECS = null;
 let DEFAULT_SPECS = "configs/cmp_imaginarium.js";
 
-// called with string or obj containing type.
-// if string converted to obj with that string as type.
-function getTypedObj(obj)
-{
-    if (typeof obj == "string") {
-        return {'type': obj};
-    }
-    return obj;
-}
-
 function getStartPosition() {
     var lookAt = new THREE.Vector3(0,2,0);
     var start = new THREE.Vector3(4, 2,-5);
@@ -142,17 +132,18 @@ function start_(config) {
     } else {
         window.game = new Game('canvas3d');
         var cameraControls = config.cameraControls || "JoelControls";
-        game.addControls(getTypedObj(cameraControls));
+        game.addControls(Util.getTypedObj(cameraControls));
         game.camera.position.set(pos.start.x, pos.start.y, pos.start.z);
         game.camera.up = new THREE.Vector3(0,1,0);
         game.camera.lookAt(pos.lookAt);
     }
     game.defaultGroupName = 'station';
 
-    let cmpProgram = new CMPProgram(game, config.program);
-    game.setProgram(cmpProgram);
+    let program = new CMPProgram(game, config.program);
+    //game.setProgram(program);
+
     if (config.ui) {
-        game.loadSpecs(getTypedObj(config.ui));
+        game.loadSpecs(Util.getTypedObj(config.ui));
     }
 
     console.log("loading specs", specs);

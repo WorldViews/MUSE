@@ -169,20 +169,20 @@ class Loader
     load_(specs, parent) {
         console.log("<<< load parent: "+parent+"   specs: "+JSON.stringify(specs));
         var game = this.game;
-	var inst = this;
-	if (typeof specs == "string") {
-	    var path = specs;
-	    $.getScript(path)
-                .done(function(script, textStatus) {
-                    console.log("AFTER SPECS: ", SPECS);
-                    inst.load(SPECS);
-                 })
-                 .fail(function(jqxhr, settings, ex) {
-                     console.log("error: ", ex);
-		     alert("failed to load "+path);
-                 });
-	    return;
-	}
+    	var inst = this;
+    	if (typeof specs == "string") {
+    	    var path = specs;
+    	    $.getScript(path)
+                    .done(function(script, textStatus) {
+                        console.log("AFTER SPECS: ", SPECS);
+                        inst.load(SPECS);
+                     })
+                     .fail(function(jqxhr, settings, ex) {
+                         console.log("error: ", ex);
+    		     alert("failed to load "+path);
+                     });
+    	    return;
+    	}
         if (!Array.isArray(specs))
             specs = [specs];
         var i = specs.length;

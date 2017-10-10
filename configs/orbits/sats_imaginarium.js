@@ -47,24 +47,35 @@ MEDIA_SPEC = [
            //{ t: '2012-1-1',   url: 'http://dvr4.paldeploy.com/video/Sakura/Yukiyo/YukiyoCompilation.mp4'},
        ]
    },
-    {  type: 'Slides', group: 'leftScreen',
+   {  type: 'Slides', group: 'leftScreen',
        records: [
            { t: '2016-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'},
            { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide7.PNG'},
            { t: '2018-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide8.PNG'}
        ]
    },
-    {  type: 'Slides', group: 'rightScreen',
-       records: [
-           { t: '1959-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
-           { t: '1980-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
-           { t: '1990-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
-           //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
-           { t: '2000-1-1',   url: 'videos/YukiyoCompilation.mp4'},
-           { t: '2010-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
-           { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
-       ]
-    },
+   {  type: 'Slides', group: 'rightScreen',
+      records: [
+          { t: '1959-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
+          { t: '1980-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+          { t: '1990-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
+          //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
+          { t: '2000-1-1',   url: 'videos/YukiyoCompilation.mp4'},
+          { t: '2010-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
+          { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
+      ]
+   },
+   {  type: 'SlideSequence', name: 'mainScreen',
+      media: [
+          { url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
+          { url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+          { url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
+          //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
+          { url: 'videos/YukiyoCompilation.mp4'},
+          { url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
+          { url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
+      ]
+   },
 ];
 
 
@@ -98,10 +109,9 @@ CONFIG = {
            'Web Worker': useWebWorker,
            //'Add Collision': addCollisions
        },
-       //media: MEDIA_SPEC
+       media: MEDIA_SPEC
     },
     'venue': '/configs/venues/imaginarium.js',
-    //'venue': '/configs/imaginarium.js',
-    //'specs': [VEARTH, SLIDE_PLAYERS]
-    'specs': [VEARTH, MEDIA_SPEC]
+    //'specs': [VEARTH, MEDIA_SPEC]
+    'specs': [VEARTH]
 };

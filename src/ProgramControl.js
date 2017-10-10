@@ -18,8 +18,9 @@ class ProgramControl
     constructor(game, options) {
         options = options || {};
         this.game = game;
-        game.programControl = this;
+        game.setProgram(this);
         this.gss = null;
+        this.mediaSequence = null;
         if (options.gss)
             this.gss = new GSS.SpreadSheet(options.gss);
         this.startTime = 0;
@@ -44,6 +45,9 @@ class ProgramControl
         console.log("channels:", this.channels);
         var inst = this;
         setInterval(()=>inst.tick(), 200);
+        if (options.media) {
+            this.setMedia(options.media);
+        }
     }
 
     setTimeRange(startTime, endTime)
@@ -133,17 +137,8 @@ class ProgramControl
     get playTime() {
         console.log("*******************************************");
         console.log("*********** use getPlayTime() *************");
+        xxx.yyy.zzzz=aaa.bbb;
         return this.getPlayTime();
-    }
-
-    set playTime(t) {
-        console.log("*******************************************");
-        console.log("*******************************************");
-        console.log("*********** use setPlayTime   *************");
-        console.log("*******************************************");
-        console.log("*******************************************");
-        xxx.yyy.zzz = xxx.zzz.yyy;
-        this.setPlayTime(t)
     }
 
     getPlayTime() {
@@ -164,25 +159,6 @@ class ProgramControl
         this._prevClockTime = getClockTime();
         this._playTime = t;
         this.propagate(player => player.setPlayTime(t, isAdjust));
-        //console.log(">>>> noticeTime "+t);
-        /*
-        for (name in this.players) {
-            var player = this.players[name];
-            //console.log("set playTime "+name, player);
-            //******* Get rid of this.  Change our code to not user set and get
-            if (player.setPlayTime) {
-                //console.log("calling setPlayTime "+t+" "+isInput);
-                player.setPlayTime(t, isAdjust)
-            }
-            else
-                player.playTime = t;
-        }
-        for (var key in this.game.screens) {
-            //this.game.screens[key].imageSource.setPlayTime(t);
-            var screen = this.game.screens[key];
-            screen.setPlayTime(t, isAdjust);
-        }
-        */
         this.displayTime(t);
     }
 
@@ -201,6 +177,29 @@ class ProgramControl
                 console.log("err: "+e);
             }
         }
+    }
+
+    setMedia(mediaSpec) {
+        var specs = this.game.loadSpecs(mediaSpec);
+    }
+
+    addMediaSequence(mediaSequence) {
+        if (this.mediaSequence) {
+            alert("MediaControl does not support more than one media sequence.");
+        }
+        this.mediaSequence = mediaSequence;
+    }
+
+    prevState() {
+        console.log("MediaControl.prev");
+        if (this.mediaSequence)
+            this.mediaSequence.prev();
+    }
+
+    nextState() {
+        console.log("MediaControl.next");
+        if (this.mediaSequence)
+            this.mediaSequence.next();
     }
 }
 
