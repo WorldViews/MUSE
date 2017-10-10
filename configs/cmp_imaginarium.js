@@ -3,6 +3,7 @@
 MEDIA_SPECS = [
     {  type: 'Slides', group: 'mainScreen',
        records: [
+           { t: 0,   url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
            { t: 10,   url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'},
        ]
    },
@@ -24,6 +25,14 @@ MEDIA_SPECS = [
            { t: 700,   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
        ]
     },
+    {  type: 'Stage', stage: 'Main Stage',
+       records: [
+           { t: 100,   name: 'none'},
+           { t: 200,   name: 'dancer'},
+           { t: 300,   name: 'cmp'},
+           { t: 1000,   name: 'dancer'}
+       ]
+    }
 ];
 
 SCRIPTS = {  type: 'Scripts' };
