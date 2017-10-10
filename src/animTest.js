@@ -55,10 +55,9 @@ function animTest(game)
     game = game || window.game;
     console.log("!!!! >>>>>>>>>>>>>>>>>>>>>>>>>> animTest...........");
     window.a = new Anim("anim1", game.models.station.position);
-    game.programControl.registerPlayer(a, "anim1");
+    game.program.registerPlayer(a, "anim1");
     return a;
 }
 
 window.animTest = animTest;
 export {animTest, Anim};
-
