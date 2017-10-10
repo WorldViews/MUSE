@@ -2,15 +2,16 @@
 var VIDEO_BUBBLES = [
     {  type: 'Group', name: 'videoBubbles', visible: false },
     {   type: 'Screen', name: 'vidBubble1', parent: 'videoBubbles', radius: 0.6, position: [0,3.6,0],
-        path: 'videos/SpaceWalk.mp4',
+        path: 'videos/SpaceWalk.mp4', autoPlay: false
     },
     {  type: 'Group', name: 'videoBubbles', visible: false },
     {   type: 'Screen', name: 'vidBubble2', parent: 'videoBubbles', radius: 0.6, position: [2,3,0],
-        path: 'videos/MoonWalk.mp4',
+        path: 'videos/MoonWalk.mp4', autoPlay: false
     },
     {  type: 'Group', name: 'videoBubbles', visible: false },
     {   type: 'Screen', name: 'vidBubble3', parent: 'videoBubbles', radius: 0.6, position: [-2,3,0],
-        path: 'videos/ISS_tour.mp4',
+        //path: 'videos/ISS_tour.mp4', autoPlay: false
+        path: 'videos/YukiyoCompilation.mp4', autoPlay: false
     },
 ];
 
