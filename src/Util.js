@@ -4,7 +4,18 @@ import { sprintf } from "sprintf-js";
 var toDeg = THREE.Math.radToDeg;
 
 // This is ridiculous to not have a standard language feature for this by now
-export function values(obj) { return Object.keys(obj).map( k => obj[k]) };
+function cloneObject(obj) { return Object.assign({}, obj); }
+function values(obj) { return Object.keys(obj).map( k => obj[k]) };
+
+// called with string or obj containing type.
+// if string converted to obj with that string as type.
+function getTypedObj(obj)
+{
+    if (typeof obj == "string") {
+        return {'type': obj};
+    }
+    return obj;
+}
 
 // take a string, a float (seconds since epoch) or date
 // and return date.
@@ -110,10 +121,12 @@ export function randomFromInterval(min,max)
 }
 
 export default {
+    cloneObject,
     getJSON,
     getClockTime,
     getCameraParams,
     getParameterByName,
+    getTypedObj,
     randomIntFromInterval,
     randomFromInterval,
     toTime,
