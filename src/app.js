@@ -140,7 +140,6 @@ function start_(config) {
     game.defaultGroupName = 'station';
 
     let program = new CMPProgram(game, config.program);
-    //game.setProgram(program);
 
     if (config.ui) {
         game.loadSpecs(Util.getTypedObj(config.ui));

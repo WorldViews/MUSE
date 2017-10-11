@@ -4,8 +4,8 @@ import { sprintf } from "sprintf-js";
 var toDeg = THREE.Math.radToDeg;
 
 // This is ridiculous to not have a standard language feature for this by now
-function cloneObject(obj) { return Object.assign({}, obj); }
-function values(obj) { return Object.keys(obj).map( k => obj[k]) };
+export function cloneObject(obj) { return Object.assign({}, obj); }
+export function values(obj) { return Object.keys(obj).map( k => obj[k]) };
 
 // called with string or obj containing type.
 // if string converted to obj with that string as type.

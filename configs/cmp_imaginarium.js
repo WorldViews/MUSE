@@ -25,7 +25,7 @@ MEDIA_SPECS = [
            { t: 700,   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
        ]
     },
-    {  type: 'Stage', stage: 'Main Stage',
+    {  type: 'StageStream', stage: 'Main Stage',
        records: [
            { t: 100,   name: 'none'},
            { t: 200,   name: 'dancer'},
@@ -58,8 +58,9 @@ CONFIG = {
                }
            }
        ],
-       channels: ['time', 'year', 'narrative', 'spaceStatus']
+       channels: ['time', 'year', 'narrative', 'spaceStatus'],
+       media: MEDIA_SPECS
     },
     'venue': '/configs/venues/imaginarium.js',
-    'specs': [SCRIPTS, MEDIA_SPECS]
+    'specs': [SCRIPTS]
 };

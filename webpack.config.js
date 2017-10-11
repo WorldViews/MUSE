@@ -13,6 +13,7 @@ module.exports = (env) => {
     devtool: "source-map",
     entry: {
       app: './app.js',
+      museConfigs: './config/muse.js',
       vendor: ['yuki-createjs/lib/tweenjs-0.6.2.combined', 'brace', 'react-dom', 'react', 'lodash',
         'jsoneditor', 'material-ui', 'html2canvas', 'papaparse', 'sprintf-js', 'react-icons-kit', 'no-case',
         'react-tap-event-plugin'

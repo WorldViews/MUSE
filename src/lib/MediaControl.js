@@ -188,7 +188,7 @@ class Slides extends MediaStream
     }
 }
 
-class StageControl extends MediaStream
+class StageStream extends MediaStream
 {
     constructor(game, options) {
         var stageName = options.group;
@@ -240,7 +240,7 @@ Game.registerNodeType("Slides", (game, options) => {
     return slideShow;
 });
 
-Game.registerNodeType("Stage", (game, options) => {
+Game.registerNodeType("StageStream", (game, options) => {
     console.log("===========================")
     console.log("slides ", options);
     console.log("slides "+JSON.stringify(options));
@@ -251,11 +251,11 @@ Game.registerNodeType("Stage", (game, options) => {
     }
     if (!options.name)
         options.name = ("stagePlayer_"+stage).replace(" ","_");
-    var slideShow = new StageControl(game, options);
+    var slideShow = new StageStream(game, options);
     game.registerController(options.name, slideShow);
     game.registerPlayer(slideShow);
     return slideShow;
 });
 
 
-export {Slides, StageControl};
+export {Slides, StageStream};

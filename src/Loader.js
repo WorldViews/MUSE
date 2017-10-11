@@ -10,12 +10,21 @@ import {getJSON} from './Util';
   Loader class.  This loads models or creates nodes corresponding to
   things in the scene, or functionality.
 
-  specs is an array of objects, each with the following fields
+  This is traversed recursively, with each item being:
+
+    an object - handled directly (as below)
+    a list - each element of the list is loaded
+    a string - used to load a JSON or JS file returning an object to load
+
+  The objects may be a primitive type of: Model, Group, Inline, Axes
+  or an extended type registered by the registerType system.
+  The objects may have the fields:
+
   type   -   Which type of node to be loaded or created
   path   -   The URL of the model to be loaded
   name   -   A named to be assigned to the loaded
-  model that can be used to access it
-  from game.models
+             model that can be used to access it
+             from game.models
   position   Optional position to place it at
   rotation   Optional rotation (array in radians)
   scale      Optional scale, if scalar, uniform scalling
@@ -34,6 +43,190 @@ function reportError(str)
 }
 
 var numGroups = 0;
+
+
+class Loader
+{
+    constructor(game, specs, onCompleted)
+    {
+        console.log("======================== Loader ========================");
+        this.game = game;
+        this.numPending = 0;
+        this.onCompleted = onCompleted;
+        if (specs)
+            this.load(specs);
+    }
+
+    newGroupName() {
+        numGroups++;
+        return "_group_"+numGroups;
+    }
+
+    load(specs, parent) {
+	    try {
+		    this.load_(specs, parent);
+	    }
+    	catch (e) {
+            reportError("error in load: "+e);
+            throw(e);
+    	}
+    }
+
+    load_(specs, parent) {
+        console.log("<<< load parent: "+parent+"   specs: "+JSON.stringify(specs));
+        var game = this.game;
+    	var inst = this;
+        if (!Array.isArray(specs))
+            specs = [specs];
+        var i = specs.length;
+        specs.forEach(spec => {
+            if (typeof spec === "string") {
+                this.loadFile(spec);
+                return;
+            }
+            if (Array.isArray(spec)) {
+                this.load(spec, parent);
+                return;
+            }
+            if (parent && !spec.parent) {
+                console.log("Assigning parent to spec");
+                spec.parent = parent;
+            }
+            //TODO: check for type and call appropriate loader
+            // for now we just do collada
+            if (spec.type == "Group") {
+                this.loadGroup(spec);
+                return;
+            }
+            if (spec.type == "Inline") {
+                // for now just use Group.  This may have its own
+                // code later, such as for loading from a path.
+                this.loadGroup(spec);
+                return;
+            }
+            if (spec.type == "Axes") {
+                this.addAxes(spec);
+                return;
+            }
+            if (spec.type == "Model") {
+                this.loadModel(spec);
+                return;
+            }
+            if (!spec.type) {
+                reportError("Groups should have type: Group");
+                this.loadGroup(spec);
+                return;
+            }
+            var obj = game.createNode(spec.type, spec);
+            if (!obj) {
+                reportError("Failed to create oject type: "+spec.type);
+            }
+        });
+    }
+
+    loadFile(path) {
+        console.log("Loader.loadFile "+path);
+        if (path.endsWith(".js")) {
+            return this.loadJS(path);
+        }
+        if (path.endsWith(".json")) {
+            return this.loadJSON(path);
+        }
+        reportError("Loader: Don't know how to load: "+path);
+    }
+
+    loadJS(path) {
+        console.log("Loading JS file "+path);
+        //alert("loadJS path: "+path);
+        var inst = this;
+        $.getScript(path)
+            .done(function(script, textStatus) {
+                console.log("AFTER SPECS: ", SPECS);
+                inst.load(SPECS);
+            })
+            .fail(function(jqxhr, settings, ex) {
+                console.log("error: ", ex);
+            });
+    }
+
+    loadJSON(path) {
+        console.log("Loading JSON specs "+path);
+        return this.loadJS(path);
+        var inst = this;
+        getJSON(path, specs => { inst.load(specs); });
+    }
+
+    loadModel(spec) {
+        if (spec.type != 'Model') {
+            reportWarning("Model specs should have type: Model");
+        }
+        var path = spec.path;
+        if (path.endsWith(".dae")) {
+            this.numPending++;
+            loadCollada(spec.path, spec).then((collada) => {
+                game.setFromProps(collada.scene, spec);
+                game.addToGame(collada.scene, spec.name, spec.parent);
+                this.numPending--;
+                if (this.numPending === 0) {
+                    this.handleCompletion();
+                }
+            });
+            return;
+        }
+        if (path.endsWith(".fbx")) {
+            this.numPending++;
+            loadFBXModel(path, spec, (obj) => {
+                console.log("***** Loaded fbx "+path);
+                game.setFromProps(obj, spec);
+                game.addToGame(obj, spec.name, spec.parent);
+                this.numPending--;
+                if (this.numPending === 0) {
+                    this.handleCompletion();
+                }
+            });
+        }
+        if (path.endsWith(".obj")) {
+            this.numPending++;
+            loadOBJModel(path, spec, (obj) => {
+                //loadOBJModel0(path, spec, (obj) => {
+                game.setFromProps(obj, spec);
+                game.addToGame(obj, spec.name, spec.parent);
+                this.numPending--;
+                if (this.numPending === 0) {
+                    this.handleCompletion();
+                }
+            });
+        }
+    }
+
+    handleCompletion() {
+        console.log("****************** MODELS ALL LOADED ******************");
+        if (this.onCompleted)
+            this.onCompleted();
+        //alert("All Models Loaded");
+    }
+
+    loadGroup(groupSpec) {
+        if (!groupSpec.name) {
+            console.log("**** new groups must have name ****");
+            reportError("**** new groups must have name ****");
+            groupSpec.name = newGroupName();
+        }
+        var group = this.game.getGroup(groupSpec.name, groupSpec);
+        this.game.setFromProps(group, groupSpec);
+        if (groupSpec.children) {
+            console.log("**** loading group children ****");
+            this.load(groupSpec.children, groupSpec.name);
+        }
+    }
+
+    addAxes(spec) {
+        var size = 100;
+        var axisHelper = new THREE.AxisHelper(size);
+        game.setFromProps(axisHelper, spec);
+        game.addToGame(axisHelper, spec.name, spec.parent);
+    }
+}
 
 function loadFBXModel(path, opts, afterFun)
 {
@@ -133,205 +326,6 @@ function loadOBJModel(path, opts, afterFun)
             }
         }, onProgress, onError );
     });
-}
-
-class Loader
-{
-    constructor(game, specs, onCompleted)
-    {
-        console.log("======================== Loader ========================");
-        this.game = game;
-        this.numPending = 0;
-        this.onCompleted;
-        if (specs)
-            this.load_(specs);
-    }
-
-    newGroupName() {
-        numGroups++;
-        return "_group_"+numGroups;
-    }
-
-    load(specs, parent) {
-	var inst = this;
-	return new Promise((fulfill, reject) => {
-	    try {
-		inst.load_(specs, parent);
-		fulfill();
-	    }
-	    catch (e) {
-		console.log("error in load: "+e);
-		reject(e);
-	    }
-        });
-    }
-
-    load_(specs, parent) {
-        console.log("<<< load parent: "+parent+"   specs: "+JSON.stringify(specs));
-        var game = this.game;
-    	var inst = this;
-    	if (typeof specs == "string") {
-    	    var path = specs;
-    	    $.getScript(path)
-                    .done(function(script, textStatus) {
-                        console.log("AFTER SPECS: ", SPECS);
-                        inst.load(SPECS);
-                     })
-                     .fail(function(jqxhr, settings, ex) {
-                         console.log("error: ", ex);
-    		     alert("failed to load "+path);
-                     });
-    	    return;
-    	}
-        if (!Array.isArray(specs))
-            specs = [specs];
-        var i = specs.length;
-        specs.forEach(spec => {
-            if (typeof spec === "string") {
-                this.loadFile(spec);
-                return;
-            }
-            if (Array.isArray(spec)) {
-                this.load(spec, parent);
-                return;
-            }
-            if (parent && !spec.parent) {
-                console.log("Assigning parent to spec");
-                spec.parent = parent;
-            }
-            //TODO: check for type and call appropriate loader
-            // for now we just do collada
-            if (spec.type == "Group") {
-                this.loadGroup(spec);
-                return;
-            }
-            if (spec.type == "Inline") {
-                // for now just use Group.  This may have its own
-                // code later, such as for loading from a path.
-                this.loadGroup(spec);
-                return;
-            }
-            if (spec.type == "Axes") {
-                this.addAxes(spec);
-                return;
-            }
-            if (spec.type == "Model") {
-                this.loadModel(spec);
-                return;
-            }
-            if (!spec.type) {
-                reportError("Groups should have type: Group");
-                this.loadGroup(spec);
-                return;
-            }
-            var obj = game.createNode(spec.type, spec);
-            if (!obj) {
-                reportError("Failed to create oject type: "+spec.type);
-            }
-        });
-    }
-
-    loadFile(path) {
-        console.log("Loader.loadFile "+path);
-        if (path.endsWith(".js")) {
-            return this.loadJS(path);
-        }
-        if (path.endsWith(".json")) {
-            return this.loadJSON(path);
-        }
-        reportError("Loader: Don't know how to load: "+path);
-    }
-
-    loadJS(path) {
-        console.log("Loading JS file "+path);
-        var inst = this;
-        $.getScript(path)
-            .done(function(script, textStatus) {
-                console.log("AFTER SPECS: ", SPECS);
-                inst.load(SPECS);
-            })
-            .fail(function(jqxhr, settings, ex) {
-                console.log("error: ", ex);
-            });
-    }
-
-    loadJSON(path) {
-        console.log("Loading JSON specs "+path);
-        return this.loadJS(path);
-        var inst = this;
-        getJSON(path, specs => { inst.load(specs); });
-    }
-
-    loadModel(spec) {
-        if (spec.type != 'Model') {
-            reportWarning("Model specs should have type: Model");
-        }
-        var path = spec.path;
-        if (path.endsWith(".dae")) {
-            this.numPending++;
-            loadCollada(spec.path, spec).then((collada) => {
-                game.setFromProps(collada.scene, spec);
-                game.addToGame(collada.scene, spec.name, spec.parent);
-                this.numPending--;
-                if (this.numPending === 0) {
-                    this.handleCompletion();
-                }
-            });
-            return;
-        }
-        if (path.endsWith(".fbx")) {
-            this.numPending++;
-            loadFBXModel(path, spec, (obj) => {
-                console.log("***** Loaded fbx "+path);
-                game.setFromProps(obj, spec);
-                game.addToGame(obj, spec.name, spec.parent);
-                this.numPending--;
-                if (this.numPending === 0) {
-                    this.handleCompletion();
-                }
-            });
-        }
-        if (path.endsWith(".obj")) {
-            this.numPending++;
-            loadOBJModel(path, spec, (obj) => {
-                //loadOBJModel0(path, spec, (obj) => {
-                game.setFromProps(obj, spec);
-                game.addToGame(obj, spec.name, spec.parent);
-                this.numPending--;
-                if (this.numPending === 0) {
-                    this.handleCompletion();
-                }
-            });
-        }
-    }
-
-    handleCompletion() {
-        console.log("****************** MODELS ALL LOADED ******************");
-        if (this.onCompleted)
-            this.onCompleted();
-        //alert("All Models Loaded");
-    }
-
-    loadGroup(groupSpec) {
-        if (!groupSpec.name) {
-            console.log("**** new groups must have name ****");
-            reportError("**** new groups must have name ****");
-            groupSpec.name = newGroupName();
-        }
-        var group = this.game.getGroup(groupSpec.name, groupSpec);
-        this.game.setFromProps(group, groupSpec);
-        if (groupSpec.children) {
-            console.log("**** loading group children ****");
-            this.load(groupSpec.children, groupSpec.name);
-        }
-    }
-
-    addAxes(spec) {
-        var size = 100;
-        var axisHelper = new THREE.AxisHelper(size);
-        game.setFromProps(axisHelper, spec);
-        game.addToGame(axisHelper, spec.name, spec.parent);
-    }
 }
 
 export {Loader};
