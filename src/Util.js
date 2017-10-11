@@ -3,6 +3,15 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 var toDeg = THREE.Math.radToDeg;
 
+if (!window.MUSE)
+    window.MUSE = {};
+
+window.MUSE.returnValue = function(val)
+{
+    console.log("MUSE.returnValue "+val);
+    window.MUSE.RETURN = val;
+}
+
 // This is ridiculous to not have a standard language feature for this by now
 export function cloneObject(obj) { return Object.assign({}, obj); }
 export function values(obj) { return Object.keys(obj).map( k => obj[k]) };
@@ -71,6 +80,23 @@ export function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+
+export function getScriptJSON(path, handler, err)
+{
+    $.getScript(path)
+        .done(function(script, textStatus) {
+            var RETURN = window.MUSE.RETURN;
+            if (!RETURN) {
+                alert("No RETURN specified in script "+path);
+            }
+            handler(RETURN);
+        })
+        .fail(function(jqxhr, settings, ex) {
+            console.log("error: ", ex);
+            alert("Cannot load "+path);
+        });
+}
+
 export function getJSON(url, handler)
 {
     console.log("Util.getJSON: "+url);
@@ -123,6 +149,7 @@ export function randomFromInterval(min,max)
 export default {
     cloneObject,
     getJSON,
+    getScriptJSON,
     getClockTime,
     getCameraParams,
     getParameterByName,
