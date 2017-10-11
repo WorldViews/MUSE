@@ -140,7 +140,7 @@ class Game {
     }
 
     addMultiControls(opts) {
-        var mc = new MultiControls(this, this.renderer.domElement);
+        var mc = new MultiControls(this, this.renderer.domElement, opts);
         this.controls = mc;
     }
 
