@@ -33,13 +33,14 @@ class Screen
             side: THREE.DoubleSide
         });
         let screenObject = new THREE.Mesh(this.geometry, this.material);
+        screenObject.name = spec.name+"_mesh";
         var s = spec.screenScale || 1.0;
         screenObject.scale.set(-s, s, s);
         let screenParent = new THREE.Object3D();
         screenParent.add(screenObject);
         game.setFromProps(screenParent, spec);
         game.addToGame(screenParent, spec.name, spec.parent);
-
+        screenParent.userData = {doubleClick: "FOO"};
         if (spec.name)
             game.screens[spec.name] = this;
     }
