@@ -6,7 +6,8 @@ import { sprintf } from "sprintf-js";
 import { getCameraParams } from '../../Util';
 
 // The four arrow keys
-var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, B: 66};
+var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40,
+             B: 66, W: 87, S: 83, A: 65, D: 68, SHIFT: 16, CTL: 17};
 
 var toDeg = THREE.Math.radToDeg;
 
@@ -19,8 +20,8 @@ function bind( scope, fn ) {
 class MultiControls
 {
 
-    constructor(game, domElement) {
-        console.log("******************** MultiControls.constructor()");
+    constructor(game, domElement, opts) {
+        console.log("****** MultiControls.constructor()", opts);
         var inst = this;
         this.ignoredModels = ["stars"];
         this.game = game;
@@ -32,6 +33,9 @@ class MultiControls
         this.enabled = true;
         console.log("domElement "+this.domElement);
 
+        this.downKeys = {};
+        this.keyPanSpeed = opts.keyPanSpeed || 0.01;
+        this.keyMoveSpeed = opts.keyMoveSpeed || 0.06;
         this.whichButton = null;
         this.mouseDragOn = false;
         this.mousePtDown = null;
@@ -41,8 +45,10 @@ class MultiControls
         this.pitchRatio = 0.005;
         this.lookSense = 1;
         this.prevView = null;
+        this.prevScreen = null;
         this.speedRight = 0;
         this.speedForward = 0;
+        this.speedRotateY = 0;
         this.raycaster = new THREE.Raycaster();
         this.raycastPt = new THREE.Vector2()
 
@@ -50,7 +56,7 @@ class MultiControls
         this._onMouseDown = bind( this, this.onMouseDown );
         this._onMouseWheel = bind( this, this.onMouseWheel );
         this._onMouseUp = bind( this, this.onMouseUp );
-        this._onMouseClick = bind( this, this.onMouseClick );
+        this._onDoubleClick = bind( this, this.onDoubleClick );
         this._onContextMenu = bind(this, this.onContextMenu );
 
         this._onKeyDown = bind( this, this.onKeyDown );
@@ -58,7 +64,7 @@ class MultiControls
         /*
          */
         this.domElement.addEventListener( 'contextmenu',   this._onContextMenu, false );
-        this.domElement.addEventListener( 'dblclick',         this._onMouseClick, false );
+        this.domElement.addEventListener( 'dblclick',      this._onDoubleClick, false );
         this.domElement.addEventListener( 'mousedown',     this._onMouseDown, false );
         this.domElement.addEventListener( 'mouseup',       this._onMouseUp, false );
         this.domElement.addEventListener( 'mousemove',     this._onMouseMove, false );
@@ -94,20 +100,38 @@ class MultiControls
         this.mouseDragOn = false;
     };
 
-    onMouseClick( event ) {
-        this.handleRaycast(event);
-        var obj = this.pickedObj;
-        console.log("click", obj);
+    dispatchDoubleClick(obj) {
+        console.log("MultiControl.dispatchDoubleClick");
+        while (obj) {
+            var userData = obj.userData;
+            if (userData && userData.doubleClick) {
+                report("******** BINGO Double Click!!!! *******");
+                break;
+            }
+            obj = obj.parent;
+        }
         if (!obj)
-            return;
-        if (obj.name && obj.name.startsWith("vidBub")) {
+            return null;
+            //if (obj.name && obj.name.startsWith("vidBub")) {
+        if (obj.name) {
             var position = obj.getWorldPosition();
-            console.log("************* pos: ",position);
             var rotation = new THREE.Euler(0,0,0);
             var view = {position, rotation};
             this.prevView = this.game.viewManager.getCurrentView();
+            this.prevScreen = this.game.screens[obj.name];
             this.game.viewManager.goto(view, 2);
+            this.game.screens[obj.name].play();
         }
+        return obj;
+    }
+
+    onDoubleClick( event ) {
+        console.log("MultiControl.onDoubleClick");
+        this.handleRaycast(event, 1);
+        var obj = this.pickedObj;
+        console.log("MultiControl.onDoubleClick pickedObj: ", obj);
+        if (obj)
+            this.dispatchDoubleClick(obj);
     }
 
     onMouseWheel(evt) {
@@ -189,13 +213,13 @@ class MultiControls
         camPos.addScaledVector(wv, ds);
     }
 
-    handleRaycast(event) {
+    handleRaycast(event, verbosity) {
         var x = (event.pageX / window.innerWidth)*2 - 1;
         var y = - (event.pageY / window.innerHeight)*2 + 1;
-        return this.raycast(x,y);
+        return this.raycast(x,y, verbosity);
     }
 
-    raycast(x,y)
+    raycast(x,y, verbosity)
     {
         //console.log("raycast "+x+" "+y);
         this.raycastPt.x = x;
@@ -215,7 +239,13 @@ class MultiControls
             //i++;
             var isect = intersects[i];
             var obj = isect.object;
+            //console.log("isect "+i+" "+obj.name);
+            if (verbosity) {
+                console.log("isect "+i+" "+obj.name, obj);
+            }
             if (this.ignoredModels.includes(obj.name))
+                continue;
+            if (obj.name && obj.name.startsWith("sat"))
                 continue;
             inst.pickedObj = obj;
             inst.pickedName = obj.name;
@@ -275,59 +305,98 @@ class MultiControls
 
     onKeyDown( event ) {
         var kc = event.keyCode;
+        this.downKeys [kc] = true;
         console.log("onKeyDown "+kc);
-        //event.preventDefault();
-        switch ( event.keyCode ) {
-
-        case KEYS.UP:
-            this.speedForward = 1;
-            this.speedRight = 0;
-            break;
-
-        case KEYS.BOTTOM:
-            this.speedForward = -1;
-            this.speedRight = 0;
-            break;
-
-        case KEYS.LEFT:
-            this.speedForward = 0;
-            this.speedRight = -1;
-            break;
-
-        case KEYS.RIGHT:
-            this.speedForward = 0;
-            this.speedRight = 1;
-            break;
-
-        case KEYS.B:
-            if (this.prevView) {
-                this.game.viewManager.goto(this.prevView, 2);
-            }
-            break;
-        }
     };
 
     onKeyUp( event ) {
         var kc = event.keyCode;
-        this.speedForward = 0;
-        this.speedRight = 0;
+        delete(this.downKeys[kc]);
         console.log("onKeyUp "+kc);
     };
 
     update()
     {
+        var down = this.downKeys;
+        var moveSpeed = this.keyMoveSpeed;
+        var panSpeed = this.keyPanSpeed;
+        if (down[KEYS.CTL]) {
+            moveSpeed *= 2;
+            panSpeed *= 2;
+        }
+        //console.log("downKeys:"+ JSON.stringify(down));
         var cam = this.game.camera;
-        if (this.speedForward) {
+
+        if (down[KEYS.RIGHT]) {
+            if (down[KEYS.SHIFT]) {
+                var camPos = cam.position;
+                var v = this.getCamRight();
+                camPos.addScaledVector(v, moveSpeed);
+            } else {
+                this.object.rotateY(-panSpeed);
+            }
+        }
+
+        if (down[KEYS.LEFT]) {
+            if (down[KEYS.SHIFT]) {
+                var camPos = cam.position;
+                var v = this.getCamRight();
+                camPos.addScaledVector(v, -moveSpeed);
+            }else {
+                this.object.rotateY(panSpeed);
+            }
+        }
+
+        if (down[KEYS.UP]) {
             var camPos = cam.position;
             var v = this.getCamForward();
-            var ds = 0.06*this.speedForward;
-            camPos.addScaledVector(v, ds);
+            camPos.addScaledVector(v, moveSpeed);
         }
-        if (this.speedRight) {
+
+        if (down[KEYS.BOTTOM]) {
             var camPos = cam.position;
-            var v = this.getCamRight();
-            var ds = 0.06*this.speedRight;
-            camPos.addScaledVector(v, ds);
+            var v = this.getCamForward();
+            camPos.addScaledVector(v, -moveSpeed);
+        }
+
+        if (down[KEYS.D]){
+            if (down[KEYS.SHIFT]) {
+                var camPos = cam.position;
+                var v = this.getCamRight();
+                camPos.addScaledVector(v, moveSpeed);
+            }else {
+                this.object.rotateY(-panSpeed);
+            }
+        }
+
+        if (down[KEYS.A]) {
+            if (down[KEYS.SHIFT]){
+                var camPos = cam.position;
+                var v = this.getCamRight();
+                camPos.addScaledVector(v, -moveSpeed);
+            }else {
+                this.object.rotateY(panSpeed);
+            }
+        }
+
+        if (down[KEYS.W]) {
+            var camPos = cam.position;
+            var v = this.getCamForward();
+            camPos.addScaledVector(v, moveSpeed);
+        }
+
+        if (down[KEYS.S]) {
+            var camPos = cam.position;
+            var v = this.getCamForward();
+            camPos.addScaledVector(v, -moveSpeed);
+        }
+
+        if (down[KEYS.B]) {
+            if (this.prevView) {
+                if (this.prevScreen)
+                    this.prevScreen.pause();
+                this.game.viewManager.goto(this.prevView, 2);
+            }
         }
     }
 

@@ -6,8 +6,7 @@ import { sprintf } from "sprintf-js";
 import { getCameraParams } from '../../Util';
 
 // The four arrow keys
-var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40,
-             B: 66, W: 87, S: 83, A: 65, D: 68, SHIFT: 16, CTL: 17};
+var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, B: 66};
 
 var toDeg = THREE.Math.radToDeg;
 
@@ -17,11 +16,11 @@ function bind( scope, fn ) {
     };
 }
 
-class JoelControls
+class MultiControlsDeprecated
 {
 
-    constructor(game, domElement, opts) {
-        console.log("****** JoelControls.constructor()", opts);
+    constructor(game, domElement) {
+        console.log("******************** MultiControls.constructor()");
         var inst = this;
         this.ignoredModels = ["stars"];
         this.game = game;
@@ -33,9 +32,6 @@ class JoelControls
         this.enabled = true;
         console.log("domElement "+this.domElement);
 
-        this.downKeys = {};
-        this.keyPanSpeed = opts.keyPanSpeed || 0.01;
-        this.keyMoveSpeed = opts.keyMoveSpeed || 0.06;
         this.whichButton = null;
         this.mouseDragOn = false;
         this.mousePtDown = null;
@@ -47,7 +43,6 @@ class JoelControls
         this.prevView = null;
         this.speedRight = 0;
         this.speedForward = 0;
-        this.speedRotateY = 0;
         this.raycaster = new THREE.Raycaster();
         this.raycastPt = new THREE.Vector2()
 
@@ -280,96 +275,59 @@ class JoelControls
 
     onKeyDown( event ) {
         var kc = event.keyCode;
-        this.downKeys [kc] = true;
         console.log("onKeyDown "+kc);
+        //event.preventDefault();
+        switch ( event.keyCode ) {
+
+        case KEYS.UP:
+            this.speedForward = 1;
+            this.speedRight = 0;
+            break;
+
+        case KEYS.BOTTOM:
+            this.speedForward = -1;
+            this.speedRight = 0;
+            break;
+
+        case KEYS.LEFT:
+            this.speedForward = 0;
+            this.speedRight = -1;
+            break;
+
+        case KEYS.RIGHT:
+            this.speedForward = 0;
+            this.speedRight = 1;
+            break;
+
+        case KEYS.B:
+            if (this.prevView) {
+                this.game.viewManager.goto(this.prevView, 2);
+            }
+            break;
+        }
     };
 
     onKeyUp( event ) {
         var kc = event.keyCode;
-        delete(this.downKeys[kc]);
+        this.speedForward = 0;
+        this.speedRight = 0;
         console.log("onKeyUp "+kc);
     };
 
     update()
     {
-        var down = this.downKeys;
-        var moveSpeed = this.keyMoveSpeed;
-        var panSpeed = this.keyPanSpeed;
-        if (down[KEYS.CTL]) {
-            moveSpeed *= 2;
-            panSpeed *= 2;
-        }
-        //console.log("downKeys:"+ JSON.stringify(down));
         var cam = this.game.camera;
-
-        if (down[KEYS.RIGHT]) {
-            if (down[KEYS.SHIFT]) {
-                var camPos = cam.position;
-                var v = this.getCamRight();
-                camPos.addScaledVector(v, moveSpeed);
-            } else {
-                this.object.rotateY(-panSpeed);
-            }
-        }
-
-        if (down[KEYS.LEFT]) {
-            if (down[KEYS.SHIFT]) {
-                var camPos = cam.position;
-                var v = this.getCamRight();
-                camPos.addScaledVector(v, -moveSpeed);
-            }else {
-                this.object.rotateY(panSpeed);
-            }
-        }
-
-        if (down[KEYS.UP]) {
+        if (this.speedForward) {
             var camPos = cam.position;
             var v = this.getCamForward();
-            camPos.addScaledVector(v, moveSpeed);
+            var ds = 0.06*this.speedForward;
+            camPos.addScaledVector(v, ds);
         }
-
-        if (down[KEYS.BOTTOM]) {
+        if (this.speedRight) {
             var camPos = cam.position;
-            var v = this.getCamForward();
-            camPos.addScaledVector(v, -moveSpeed);
-        }
-
-        if (down[KEYS.D]){
-            if (down[KEYS.SHIFT]) {
-                var camPos = cam.position;
-                var v = this.getCamRight();
-                camPos.addScaledVector(v, moveSpeed);
-            }else {
-                this.object.rotateY(-panSpeed);
-            }
-        }
-
-        if (down[KEYS.A]) {
-            if (down[KEYS.SHIFT]){
-                var camPos = cam.position;
-                var v = this.getCamRight();
-                camPos.addScaledVector(v, -moveSpeed);
-            }else {
-                this.object.rotateY(panSpeed);
-            }
-        }
-
-        if (down[KEYS.W]) {
-            var camPos = cam.position;
-            var v = this.getCamForward();
-            camPos.addScaledVector(v, moveSpeed);
-        }
-
-        if (down[KEYS.S]) {
-            var camPos = cam.position;
-            var v = this.getCamForward();
-            camPos.addScaledVector(v, -moveSpeed);
-        }
-
-        if (down[KEYS.B]) {
-            if (this.prevView) {
-                this.game.viewManager.goto(this.prevView, 2);
-            }
+            var v = this.getCamRight();
+            var ds = 0.06*this.speedRight;
+            camPos.addScaledVector(v, ds);
         }
     }
 
@@ -472,4 +430,4 @@ class JoelControls
 
 };
 
-export {JoelControls};
+export {MultiControlsDeprecated};

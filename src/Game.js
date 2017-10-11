@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
 import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
-import {JoelControls} from './lib/controls/JoelControls';
+import {MultiControlsDeprecated} from './lib/controls/MultiControlsDeprecated';
 import {Loader} from './Loader';
 import { NetLink } from './NetLink';
 import Util from './Util';
@@ -145,7 +145,8 @@ class Game {
     }
 
     addJoelControls(opts) {
-        var mc = new JoelControls(this, this.renderer.domElement, opts);
+        alert("JoelControls deprecated - use MultiControls");
+        var mc = new MultiControls(this, this.renderer.domElement, opts);
         this.controls = mc;
     }
 
