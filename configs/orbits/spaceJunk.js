@@ -1,19 +1,19 @@
 
+
 var VIDEO_BUBBLES = [
     {  type: 'Group', name: 'videoBubbles', visible: false },
     {   type: 'Screen', name: 'vidBubble1', parent: 'videoBubbles', radius: 0.6, position: [0,3.6,0],
         path: 'videos/SpaceWalk.mp4', autoPlay: false
     },
-    {  type: 'Group', name: 'videoBubbles', visible: false },
     {   type: 'Screen', name: 'vidBubble2', parent: 'videoBubbles', radius: 0.6, position: [2,3,0],
         path: 'videos/MoonWalk.mp4', autoPlay: false
     },
-    {  type: 'Group', name: 'videoBubbles', visible: false },
     {   type: 'Screen', name: 'vidBubble3', parent: 'videoBubbles', radius: 0.6, position: [-2,3,0],
         //path: 'videos/ISS_tour.mp4', autoPlay: false
         path: 'videos/YukiyoCompilation.mp4', autoPlay: false
     },
 ];
+
 
 function onStart(game)
 {
@@ -90,7 +90,7 @@ function setVideoBubblesVisibility(game, visibility) {
 
 CONFIG = {
     //'cameraControls': {type: 'Orbit', distance: 4},
-    'cameraControls': {type: 'JoelControls', distance: 4},
+    'cameraControls': {type: 'MultiControls', distance: 4},
     //onStart: onStart,
     onUpdate: onUpdate,
     'program': {
@@ -142,3 +142,5 @@ CONFIG = {
         VIDEO_BUBBLES
     ]
 };
+
+MUSE.RETURN = CONFIG;

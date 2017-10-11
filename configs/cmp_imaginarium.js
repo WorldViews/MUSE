@@ -39,7 +39,7 @@ SCRIPTS = {  type: 'Scripts' };
 
 CONFIG = {
     //'cameraControls': 'Orbit',
-    'cameraControls': {type: 'JoelControls', movementSpeed: .15, keyPanSpeed: .02},
+    'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .02},
     //'cameraControls': 'JoelControls',
     'ui': 'JQControls',
     'program': {
@@ -64,3 +64,5 @@ CONFIG = {
     'venue': '/configs/venues/imaginarium.js',
     'specs': [SCRIPTS]
 };
+
+MUSE.returnValue(CONFIG);
