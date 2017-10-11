@@ -28,9 +28,6 @@ import { Kessler } from './KesslerNode';
 
 
 let {degToRad} = THREE.Math;
-let CONFIG = null;
-let SPECS = null;
-let DEFAULT_SPECS = "configs/cmp_imaginarium.js";
 
 function getStartPosition() {
     var lookAt = new THREE.Vector3(0,2,0);
@@ -51,30 +48,31 @@ function getStartPosition() {
 function loadConfig(path)
 {
     console.log("Loading config file "+path);
-    $.getScript(path)
-        .done(function(script, textStatus) {
-            CONFIG = window.CONFIG;
-            console.log("Loaded CONFIG: ", CONFIG);
-            if (!CONFIG) {
-                SPECS = window.SPECS;
-                var errStr = "**** No CONFIG defined (maybe syntax error) ... using SPECS";
-                alert(errStr);
-                console.log(errStr);
-                console.log("SPECS", SPECS);
-                CONFIG = {specs: SPECS};
+    Util.getScriptJSON(path,
+        function(obj) {
+                if (!obj) {
+                    alert("No value from config -- please fix file "+path);
+                    obj = window.CONFIG;
+                }
+                console.log("Loaded CONFIG: ", obj);
+                if (!obj) {
+                    var errStr = "**** No CONFIG defined (maybe syntax error)";
+                    alert(errStr);
+                    return;
+                }
+                start(obj);
+            },
+            function(jqxhr, settings, ex) {
+                console.log("error: ", ex);
+                alert("Cannot load "+path);
             }
-            console.log("CONFIG", CONFIG);
-            start(CONFIG);
-        })
-        .fail(function(jqxhr, settings, ex) {
-            console.log("error: ", ex);
-            alert("Cannot load "+path);
-        });
+        );
 }
+
 
 function loadModel(modelPath) {
     console.log("***** loadModel "+modelPath);
-    CONFIG = {
+    var config = {
         cameraControls: 'Orbit',
         specs: [
             {type: 'PointLight', position: [100,0,0], distance: 1000},
@@ -86,8 +84,8 @@ function loadModel(modelPath) {
             {type: 'Model', 'name': 'model', 'path': modelPath, scale: 0.01}
         ]
     };
-    console.log("CONFIG: "+JSON.stringify(CONFIG));
-    start(CONFIG);
+    console.log("CONFIG: "+JSON.stringify(config));
+    start(config);
 }
 
 /*
@@ -101,26 +99,23 @@ function start(config) {
 
 function start_(config) {
     console.log("app.start", config);
+    // this provides a way to view a model by constructiong
+    // a default config for viewing it.
     if (config == null && Util.getParameterByName("model")) {
         var modelPath = Util.getParameterByName("model");
         loadModel(modelPath);
         return;
     }
     if (config == null && Util.getParameterByName("config")) {
-        var configName = Util.getParameterByName("config");
-        var configPath = "configs/"+configName+".js";
+        var configPath = Util.getParameterByName("config");
+        if (!configPath.endsWith(".js")) {
+            var configPath = "configs/"+configPath+".js";
+        }
         loadConfig(configPath);
         return;
     }
     config = config || {};
-    var specs = config.specs;
-    console.log("specs: ", specs);
-//    if (Util.getParameterByName("specs"))
-//        specs = Util.getParameterByName("specs");
-    if (!specs)
-        specs = DEFAULT_SPECS;
     let vr = config.vr || Util.getParameterByName("vr");
-    console.log("specs: ", specs);
 
     let pos = getStartPosition();
 
@@ -145,13 +140,13 @@ function start_(config) {
         game.loadSpecs(Util.getTypedObj(config.ui));
     }
 
-    console.log("loading specs", specs);
     var parts = [];
     if (config.venue)
         parts.push(game.loadSpecs(config.venue));
-    parts.push(game.loadSpecs(specs));
+    if (config.specs)
+        parts.push(game.loadSpecs(config.specs));
     Promise.all(parts).then(() => {
-        console.log("loaded specs", specs);
+        console.log("loaded elements");
         game.config = config;
         if (config.onStart) {
             config.onStart(game);
