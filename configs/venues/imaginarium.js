@@ -120,3 +120,5 @@ var SPECS = [
                     }},
     }
 ];
+
+MUSE.returnValue(SPECS);

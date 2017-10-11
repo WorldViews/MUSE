@@ -83,6 +83,7 @@ export function getParameterByName(name, url) {
 
 export function getScriptJSON(path, handler, err)
 {
+    window.MUSE.RETURN = null;
     $.getScript(path)
         .done(function(script, textStatus) {
             var RETURN = window.MUSE.RETURN;
