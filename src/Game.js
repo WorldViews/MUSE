@@ -6,6 +6,7 @@ import {MultiControlsDeprecated} from './lib/controls/MultiControlsDeprecated';
 import {Loader} from './Loader';
 import { NetLink } from './NetLink';
 import Util from './Util';
+import AppState from './AppState';
 
 let {degToRad} = THREE.Math;
 
@@ -24,6 +25,7 @@ class Game {
         this.user = Util.getParameterByName("user");
         this.viewManager = null;
         this.program = null;
+        this.state = new AppState();
         if (this.user) {
             let netLink = new NetLink(this);
             this.registerController("netLink", netLink);
