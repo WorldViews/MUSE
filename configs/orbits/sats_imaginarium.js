@@ -67,8 +67,11 @@ MEDIA_SPEC = [
    },
    {  type: 'SlideSequence', name: 'mainScreen',
       media: [
-          { url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
-          { url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+          [{ url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
+           { name: 'leftScreen', url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
+          ],
+          [{ url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+           { name: 'leftScreen', url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'}],
           { url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
           //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
           { url: 'videos/YukiyoCompilation.mp4'},

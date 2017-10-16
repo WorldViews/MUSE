@@ -4,7 +4,7 @@ import OBJLoader from './lib/loaders/OBJLoader';
 import MTLLoader from './lib/loaders/MTLLoader';
 import DDSLoader from './lib/loaders/DDSLoader';
 import {FBXLoader} from './lib/loaders/FBXLoader';
-import {getJSON} from './Util';
+import Util from './Util';
 
 /*
   Loader class.  This loads models or creates nodes corresponding to
@@ -122,6 +122,9 @@ class Loader
                 reportError("Failed to create oject type: "+spec.type);
             }
         });
+        console.log("**** Loader finished specs  numPending: "+this.numPending);
+        if (this.numPending == 0)
+            this.handleCompletion();
     }
 
     loadFile(path) {
@@ -139,21 +142,23 @@ class Loader
         console.log("Loading JS file "+path);
         //alert("loadJS path: "+path);
         var inst = this;
-        $.getScript(path)
-            .done(function(script, textStatus) {
-                console.log("AFTER SPECS: ", SPECS);
-                inst.load(SPECS);
-            })
-            .fail(function(jqxhr, settings, ex) {
-                console.log("error: ", ex);
-            });
+        Util.getScriptJSON(path,
+                function(obj) {
+                    var specs = obj;
+                    console.log("Loaded specs: ", specs);
+                    inst.load(specs);
+                },
+                function(jqxhr, settings, ex) {
+                    console.log("error: ", ex);
+                    alert("Cannot load "+path);
+                }
+        );
     }
 
     loadJSON(path) {
         console.log("Loading JSON specs "+path);
-        return this.loadJS(path);
         var inst = this;
-        getJSON(path, specs => { inst.load(specs); });
+        Util.getJSON(path, specs => { inst.load(specs); });
     }
 
     loadModel(spec) {
@@ -164,6 +169,7 @@ class Loader
         if (path.endsWith(".dae")) {
             this.numPending++;
             loadCollada(spec.path, spec).then((collada) => {
+                console.log("****** resolved collada load "+spec.path);
                 game.setFromProps(collada.scene, spec);
                 game.addToGame(collada.scene, spec.name, spec.parent);
                 this.numPending--;

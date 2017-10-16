@@ -43,6 +43,17 @@ class Screen
         screenParent.userData = {doubleClick: "FOO"};
         if (spec.name)
             game.screens[spec.name] = this;
+        var inst = this;
+        console.log("******************** registerWatcher: "+spec.name);
+        game.watchProperties(spec.name, props => inst.watchProperties(props));
+    }
+
+    //watchProperties(evt) {
+    //    var props = evt.message;
+    watchProperties(props) {
+        console.log("Screen.watchProperties"+JSON.stringify(props));
+        if (props.url)
+            this.updateImage(props.url, props);
     }
 
     play() {

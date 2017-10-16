@@ -26,3 +26,5 @@ var CONFIG = {
         }
     ]
 }
+
+MUSE.returnValue(CONFIG);
