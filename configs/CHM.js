@@ -5,13 +5,13 @@ var positions = [
     [-d, 0, 0],
     [0, -d, 0],
     [0,  0, -d],
- [d,0,0],
- [0,d,0],
- [0,0,d]];
+    [d,  0,  0],
+    [0,  d,  0],
+    [0,  0,  d]];
 
 
 var LIGHTS = positions.map( pos =>
-       ({  type: 'PointLight', color: 0xffffff, position: pos,  distance: 2000})
+       ({  type: 'PointLight', color: 0xffffff, position: pos,  distance: 1500})
    );
 
 window. hide = function()
