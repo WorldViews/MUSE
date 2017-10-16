@@ -2,16 +2,24 @@ import _ from 'lodash';
 
 export default class AppState {
 
-    constructor() {
+    constructor(events) {
         this.state = {};
-        this.callback = {};
+        this.callbacks = {};
+        this.events = events;
     }
 
     set(name, newValue) {
         let oldValue = _.get(this.state, name);
         _.set(this.state, name, newValue);
         // dispatch change
-        this.dispatch(name, oldValue, newValue);
+        //this.dispatch(name, oldValue, newValue);
+        let eventType = "setProperties." + name;
+        this.events.dispatchEvent({
+            type: eventType,
+            name,
+            oldValue,
+            newValue
+        });
     }
 
     get(name, value) {
@@ -19,29 +27,15 @@ export default class AppState {
     }
 
     on(name, callback) {
-        var cb = this.getCallbacks(name);
-        cb.push(callback);
+        let eventType = "setProperties." + name;
+        let cb = this.callbacks[callback] = (e) => callback(e.name, e.oldValue, e.newValue);
+        this.events.addEventListener(eventType, cb);
     }
 
     off(name, callback) {
-        var cb = this.getCallbacks(name);
-        _.remove(cb, (c) => callback === c);
+        let cb = this.callbacks[callback];
+        delete this.callbacks[callback];
+        this.events.removeEventListener(eventType, cb)
     }
 
-    dispatch(name, oldValue, newValue) {
-        var cb = this.getCallbacks(name);
-        _.forEach(cb, (fn) => {
-            if (typeof fn == 'function') {
-                fn(name, oldValue, newValue);
-            }
-        });
-    }
-
-    getCallbacks(name) {
-        let key = name + '.callback';
-        if (!_.has(this.callback, key)) {
-            _.set(this.callback, key, []);
-        }
-        return _.get(this.callback, key, []);
-    }
 }

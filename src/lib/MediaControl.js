@@ -121,7 +121,7 @@ class SlideSequence extends MediaSequence {
             var name = frame.name || this.name;
             console.log("SlideSequence.onChangeFrame "+this.name+" frame: "+frame);
             console.log("   url: "+url);
-            this.game.setProperties(name, {url});
+            this.game.state.set(name, {url});
         });
     }
 }
@@ -181,7 +181,7 @@ class Slides extends MediaStream
         var url = frame.url;
         console.log("Slides.onChangeFrame "+this.screenName+" frame: "+frame);
         console.log("   url: "+url);
-        this.game.setProperties(this.screenName, {url});
+        this.game.state.set(this.screenName, {url});
     }
 }
 
