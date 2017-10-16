@@ -126,7 +126,7 @@ function start_(config) {
         game.body.position.set(pos.start.x, 1.5, pos.start.z);
     } else {
         window.game = new Game('canvas3d');
-        var cameraControls = config.cameraControls || "JoelControls";
+        var cameraControls = config.cameraControls || "MultiControls";
         game.addControls(Util.getTypedObj(cameraControls));
         game.camera.position.set(pos.start.x, pos.start.y, pos.start.z);
         game.camera.up = new THREE.Vector3(0,1,0);

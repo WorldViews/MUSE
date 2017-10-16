@@ -112,16 +112,17 @@ class SlideSequence extends MediaSequence {
         super(game, options);
     }
 
-    onChangeMedia(frame) {
-        var url = frame.url;
-        var screenName = this.name;
-        console.log("SlideSequence.onChangeFrame "+this.name+" frame: "+frame);
-        console.log("   url: "+url);
-        var screen = this.game.screens[screenName];
-        if (screen)
-            screen.updateImage(url)
-        else
-            console.log("ScreenPlayer "+screenName+" no screen found");
+    onChangeMedia(frames) {
+        if (!Array.isArray(frames)) {
+            frames = [frames]
+        }
+        frames.forEach( frame => {
+            var url = frame.url;
+            var name = frame.name || this.name;
+            console.log("SlideSequence.onChangeFrame "+this.name+" frame: "+frame);
+            console.log("   url: "+url);
+            this.game.setProperties(name, {url});
+        });
     }
 }
 
@@ -180,11 +181,7 @@ class Slides extends MediaStream
         var url = frame.url;
         console.log("Slides.onChangeFrame "+this.screenName+" frame: "+frame);
         console.log("   url: "+url);
-        var screen = this.game.screens[this.screenName];
-        if (screen)
-            screen.updateImage(url)
-        else
-            console.log("ScreenPlayer "+this.screenName+" no screen found");
+        this.game.setProperties(this.screenName, {url});
     }
 }
 

@@ -1,23 +1,39 @@
 
-var LIGHTS = [
-    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2]},
-    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0]},
-    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2]},
-    {  type: 'PointLight', name: 'light4', color: 0xffffff, position: [50, 25, 20]},
-    {  type: 'PointLight', name: 'light5', color: 0xffffff, position: [20, 25,50]},
-    {  type: 'PointLight', name: 'light6', color: 0xffffff, position: [ 50, 5, 50], distance: 500},
-    {  type: 'PointLight', name: 'light6', color: 0xffffff, position: [-50, 5, 50], distance: 500},
-    {  type: 'PointLight', name: 'light6', color: 0xffffff, position: [ 50, 5,-50], distance: 500},
-    {  type: 'PointLight', name: 'light6', color: 0xffffff, position: [-50, 5,-50], distance: 500},
-    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
-];
+(function () {
+var d = 1000;
+var positions = [
+    [-d, 0, 0],
+    [0, -d, 0],
+    [0,  0, -d],
+ [d,0,0],
+ [0,d,0],
+ [0,0,d]];
+
+
+var LIGHTS = positions.map( pos =>
+       ({  type: 'PointLight', color: 0xffffff, position: pos,  distance: 2000})
+   );
+
+window. hide = function()
+{
+    var m = game.models.CHM;
+    var g = m.getChildByName("RoofGroup");
+    g.visible = false;
+}
+
+function onStart(game)
+{
+    console.log("onStart");
+    hide();
+}
 
 CONFIG = {
-    'specs': [
+    'onStart': onStart,
+    'venue': [
         {   type: 'Group', name: 'station'  },
-        {   type: 'Model', name: 'platform',
+        {   type: 'Model', name: 'CHM',
             parent: 'station',
-            path: 'models/CHM/ComputerHistoryMuseum3.dae',
+            path: 'models/CHM/CHM_ACM_latest.dae',
             position: [0, 0, 0],
             rot: [0, 0, 0],
             scale: 0.001
@@ -27,5 +43,6 @@ CONFIG = {
     ]
 };
 
-
-
+MUSE.returnValue(CONFIG);
+})
+();

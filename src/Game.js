@@ -179,12 +179,27 @@ class Game {
         return program;
     }
 
+    // These methods could be moved to a state object.
     setValue(name, value) {
         //console.log("game.setValue "+name+" "+value);
         this.events.dispatchEvent({
             type: 'valueChange',
-            message: { name, value }
+            message: value
         });
+    }
+
+    setProperties(name, value) {
+        //console.log("game.setValue "+name+" "+value);
+        var evType = "setProperties."+name;
+        this.events.dispatchEvent({
+            type: evType,
+            message: value
+        });
+    }
+
+    watchProperties(name, handler) {
+        var evType = "setProperties."+name;
+        this.events.addEventListener(evType, evt => handler(evt.message, evt));
     }
 
     registerPlayer(player) {
@@ -434,11 +449,21 @@ class Game {
         return null;
     }
 
-    loadSpecs(specs) {
-	game.loader = new Loader(this);
-	return game.loader.load(specs);
-    }
+    //loadSpecs0(specs) {
+    //    game.loader = new Loader(this);
+    //    return game.loader.load(specs);
+    //}
 
+    loadSpecs(specs) {
+        var inst = this;
+        console.log("***** game.loadSpecs creating promise");
+        return new Promise((resolve, reject) => {
+            new Loader(inst, specs, () => {
+                console.log("*****  game.loadSpecs resolving promise...");
+                resolve();
+            });
+        });
+    }
 }
 
 export {Game};
