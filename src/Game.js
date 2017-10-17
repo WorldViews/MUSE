@@ -6,6 +6,7 @@ import {MultiControlsDeprecated} from './lib/controls/MultiControlsDeprecated';
 import {Loader} from './Loader';
 import { NetLink } from './NetLink';
 import Util from './Util';
+import AppState from './AppState';
 
 let {degToRad} = THREE.Math;
 
@@ -24,6 +25,7 @@ class Game {
         this.user = Util.getParameterByName("user");
         this.viewManager = null;
         this.program = null;
+        this.state = new AppState(this.events);
         if (this.user) {
             let netLink = new NetLink(this);
             this.registerController("netLink", netLink);
@@ -188,19 +190,19 @@ class Game {
         });
     }
 
-    setProperties(name, value) {
-        //console.log("game.setValue "+name+" "+value);
-        var evType = "setProperties."+name;
-        this.events.dispatchEvent({
-            type: evType,
-            message: value
-        });
-    }
+    // setProperties(name, value) {
+    //     //console.log("game.setValue "+name+" "+value);
+    //     var evType = "setProperties."+name;
+    //     this.events.dispatchEvent({
+    //         type: evType,
+    //         message: value
+    //     });
+    // }
 
-    watchProperties(name, handler) {
-        var evType = "setProperties."+name;
-        this.events.addEventListener(evType, evt => handler(evt.message, evt));
-    }
+    // watchProperties(name, handler) {
+    //     var evType = "setProperties."+name;
+    //     this.events.addEventListener(evType, evt => handler(evt.message, evt));
+    // }
 
     registerPlayer(player) {
         if (this.program) {

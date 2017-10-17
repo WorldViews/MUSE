@@ -45,7 +45,7 @@ class Screen
             game.screens[spec.name] = this;
         var inst = this;
         console.log("******************** registerWatcher: "+spec.name);
-        game.watchProperties(spec.name, props => inst.watchProperties(props));
+        game.state.on(spec.name, (name, oldProps, newProps) => inst.watchProperties(newProps));
     }
 
     //watchProperties(evt) {
