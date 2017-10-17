@@ -21,6 +21,9 @@ class Marquee extends THREE.Mesh {
         super();
         //spec = spec || marqueeSpec;
         this.type = 'Marquee';
+        this.name = spec.name || "marquee";
+        this.timeout = spec.timeout;
+        this.channel = spec.channel || this.name;
         this._prevText = null;
         this._width = window.innerWidth;
         this._height = window.innerHeight;
@@ -54,6 +57,22 @@ class Marquee extends THREE.Mesh {
             degToRad(spec.thetaStart),
             degToRad(spec.thetaLength)
         );
+        this.timeoutId = null;
+        var inst = this;
+        game.state.on(this.channel, (name, oldVal, newVal) => inst.onChange(newVal));
+    }
+
+    //watchProperties(evt) {
+    //    var props = evt.message;
+    onChange(value) {
+        var inst = this;
+        this.updateText(value);
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+        }
+        if (this.timeout) {
+            this.timeoutId = setTimeout( () => inst.updateText(''), this.timeout);
+        }
     }
 
     handleRender(canvas) {
@@ -127,31 +146,11 @@ class Marquee extends THREE.Mesh {
     }
 }
 
-//const TIMEOUT = 30000; // 30 seconds
-const TIMEOUT = 5000; // 30 seconds
-
-function setupMarquee(game, marquee) {
-    var timeoutId = null;
-    game.events.addEventListener('valueChange', ({message}) => {
-    	if (message.name === 'narrative') {
-    	    marquee.updateText(message.value);
-    	    if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-    	    timeoutId = setTimeout(
-    		() => marquee.updateText(''),
-    		TIMEOUT
-    	    );
-    	}
-    });
-};
-
 function addMarquee(game, opts)
 {
     console.log("******************* add Marquee opts: ", opts);
     var marquee = new Marquee(opts);
     game.addToGame(marquee, opts.name, opts.parent);
-    setupMarquee(game, marquee);
     return marquee;
 }
 

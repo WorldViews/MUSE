@@ -275,7 +275,9 @@ class SatTracks {
             db.numErrs, db.numKepler,
             dbEpoch,
             satName, selectedInfo);
-        this.game.setValue("spaceStatus", statusStr);
+        //console.log("status: "+statusStr);
+        //this.game.setValue("spaceStatus", statusStr);
+        this.game.state.set("spaceStatus", statusStr);
     }
 
     update() {

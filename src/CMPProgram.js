@@ -64,9 +64,11 @@ class CMPProgram extends ProgramControl {
                 var nar = this.gss.getFieldByYear(year, "narrative") || "";
                 //console.log("va: " + va + "  narrative: " + nar);
                 yearStr = Math.floor(year);
-                this.game.setValue('narrative', nar);
+                this.game.state.set('narrative', nar);
+                //this.game.setValue('narrative', nar);
             }
-            this.game.setValue('year', yearStr);
+            //this.game.setValue('year', yearStr);
+            this.game.state.set('year', yearStr);
         }
     }
 }

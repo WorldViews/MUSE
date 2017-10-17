@@ -29,7 +29,12 @@ class JQControls extends UIControls {
         var inst = this;
         //$(document).ready( e => inst.setupElements());
         this.setupElements();
-        game.events.addEventListener('valueChange', e => inst.onValueChange(e));
+        //game.events.addEventListener('valueChange', e => inst.onValueChange(e));
+        //var fieldNames = ["spaceStatus"]
+        this.textFields.forEach(name => {
+            //game.state.on('spaceStatus', (name, oldVal, newVal) => inst.showValue(name, newVal));
+            game.state.on(name, (name, oldVal, newVal) => inst.showValue(name, newVal));
+        });
     }
 
     setupElements() {
@@ -73,11 +78,9 @@ class JQControls extends UIControls {
         }
     }
 
-    onValueChange(event) {
-        var msg = event.message;
-        //console.log("onValueChange "+msg.name+" "+msg.value);
+    showValue(name, value) {
         if (this.fieldsView)
-            this.fieldsView.setValue(event.message.name, event.message.value);
+            this.fieldsView.setValue(name, value);
     }
 
     setStatus(statStr) {

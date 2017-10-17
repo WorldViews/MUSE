@@ -16,6 +16,7 @@ class Screen
         this.game = game;
         this.spec = spec;
         var name = spec.name || "movieScreen";
+        this.channel = spec.channel || name;
         var path = path || spec.path;
         console.log('****** Loading screen... video: '+path);
         console.log("spec: "+JSON.stringify(spec));
@@ -45,13 +46,13 @@ class Screen
             game.screens[spec.name] = this;
         var inst = this;
         console.log("******************** registerWatcher: "+spec.name);
-        game.state.on(spec.name, (name, oldProps, newProps) => inst.watchProperties(newProps));
+        game.state.on(this.channel, (name, oldProps, newProps) => inst.onChange(newProps));
     }
 
     //watchProperties(evt) {
     //    var props = evt.message;
-    watchProperties(props) {
-        console.log("Screen.watchProperties"+JSON.stringify(props));
+    onChange(props) {
+        console.log("Screen.onChange"+JSON.stringify(props));
         if (props.url)
             this.updateImage(props.url, props);
     }

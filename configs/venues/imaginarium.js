@@ -94,7 +94,7 @@ var SPECS = [
         phiStart: 40, phiLength: 30,
         thetaStart: 40, thetaLength: 50
     },
-    {  type: 'Marquee',    name: 'marquee1',
+    {  type: 'Marquee',    name: 'marquee1', channel: 'narrative',
        radius: 7,
        phiStart: -50, phiLength: 100,
        thetaStart: 65, thetaLength: 20
