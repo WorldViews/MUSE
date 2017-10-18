@@ -41,7 +41,9 @@ CONFIG = {
     //'cameraControls': 'Orbit',
     'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .02},
     //'cameraControls': 'JoelControls',
-    'ui': 'JQControls',
+    'ui': {type: 'JQControls',
+           screens: ["mainScreen"],
+          },
     'program': {
        duration: 32*60,
        gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",

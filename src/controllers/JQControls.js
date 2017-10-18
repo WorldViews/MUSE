@@ -16,6 +16,7 @@ class JQControls extends UIControls {
         super(game, options);
         this._visible = false;
         this.options = options || {};
+        this.screens = this.options.screens || [];
         this.program = this.game.getProgram();
         this.root = document.createElement('div');
         this.viewControl = null;
@@ -62,6 +63,12 @@ class JQControls extends UIControls {
         this.$uiToggle.click(e => inst.toggleUI());
         this._visible = true;
         this.playControls.showState(this.program.isPlaying());
+
+        //this.screens = ["mainScreen", "rightScreen"];
+        this.screens.forEach(screen => {
+            this.videoView = new VideoView(this, $uiDiv, screen);
+            this.videoView.setup($uiDiv);
+        });
     }
 
     toggleUI() {
@@ -384,6 +391,52 @@ class StageControl {
     }
 }
 
+class VideoView extends JQWidget {
+    constructor(ui, $parent, name) {
+        super(ui, $parent);
+        var inst = this;
+        this.name = name;
+        this.game = window.game;
+        game.state.on(this.name, (name, oldProps, newProps) => inst.onChange(newProps));
+    }
+
+    setup($parent) {
+        this.$parent = $parent;
+        var inst = this;
+        append(this.$parent, sprintf("<b>This is video view for :</b><br>", this.name));
+        append(this.$parent, sprintf("<b>This is video view2 for :</b><br>", this.name));
+        //this.$video = append(this.$parent, sprintf("<video width="320" height="240" controls/>", this.name));
+        this.$video = append(this.$parent, '<video width="320" height="240" controls/>');
+    }
+
+    onChange(props) {
+        console.log("******* VideoView: "+this.name+" props:", props)
+        if (this.$video.length == 0) {
+            console.log("********* JQ.VideoView No video ");
+            return;
+        }
+        var v = this.$video[0];
+        if (props.url) {
+            this.$video.attr('src', props.url);
+        }
+        if (props.requestedPlayTime) {
+            var t = props.requestedPlayTime;
+            console.log("VideoView.requestedPlayTime: "+t);
+            //this.$video.attr('currentTime', t);
+            v.currentTime = t;
+        }
+        if (props.playState) {
+            if (props.playState == "play") {
+                //this.$video.play();
+                v.play();
+            }
+            else if (props.playState == "pause") {
+                //this.$video.pause();
+                v.pause();
+            }
+        }
+    }
+}
 
 
 Game.registerNodeType("JQControls", (game, options) => {

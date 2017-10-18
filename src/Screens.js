@@ -55,6 +55,19 @@ class Screen
         console.log("Screen.onChange"+JSON.stringify(props));
         if (props.url)
             this.updateImage(props.url, props);
+        if (props.requestedPlayTime) {
+            var t = props.requestedPlayTime;
+            console.log("requestedPlayTime: "+t);
+            this.setPlayTime(t);
+        }
+        if (props.playState) {
+            if (props.playState == "play") {
+                this.play();
+            }
+            else if (props.playState == "pause") {
+                this.pause();
+            }
+        }
     }
 
     play() {
