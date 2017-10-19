@@ -59,7 +59,7 @@ class Marquee extends THREE.Mesh {
         );
         this.timeoutId = null;
         var inst = this;
-        game.state.on(this.channel, (name, oldVal, newVal) => inst.onChange(newVal));
+        game.state.on(this.channel, (newVal) => inst.onChange(newVal));
     }
 
     //watchProperties(evt) {

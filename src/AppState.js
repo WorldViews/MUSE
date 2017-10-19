@@ -28,7 +28,7 @@ export default class AppState {
 
     on(name, callback) {
         let eventType = "setProperties." + name;
-        let cb = this.callbacks[callback] = (e) => callback(e.name, e.oldValue, e.newValue);
+        let cb = this.callbacks[callback] = (e) => callback(e.newValue, e.oldValue, e.name);
         this.events.addEventListener(eventType, cb);
     }
 

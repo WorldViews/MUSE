@@ -46,7 +46,7 @@ class Screen
             game.screens[spec.name] = this;
         var inst = this;
         console.log("******************** registerWatcher: "+spec.name);
-        game.state.on(this.channel, (name, oldProps, newProps) => inst.onChange(newProps));
+        game.state.on(this.channel, (newProps) => inst.onChange(newProps));
     }
 
     //watchProperties(evt) {

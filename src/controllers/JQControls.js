@@ -33,8 +33,7 @@ class JQControls extends UIControls {
         //game.events.addEventListener('valueChange', e => inst.onValueChange(e));
         //var fieldNames = ["spaceStatus"]
         this.textFields.forEach(name => {
-            //game.state.on('spaceStatus', (name, oldVal, newVal) => inst.showValue(name, newVal));
-            game.state.on(name, (name, oldVal, newVal) => inst.showValue(name, newVal));
+            game.state.on(name, (newVal, oldVal, name) => inst.showValue(name, newVal));
         });
     }
 
@@ -397,7 +396,7 @@ class VideoView extends JQWidget {
         var inst = this;
         this.name = name;
         this.game = window.game;
-        game.state.on(this.name, (name, oldProps, newProps) => inst.onChange(newProps));
+        game.state.on(this.name, (newProps) => inst.onChange(newProps));
     }
 
     setup($parent) {
