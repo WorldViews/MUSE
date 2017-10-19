@@ -9,16 +9,41 @@ export default class AppState {
     }
 
     set(name, newValue) {
-        let oldValue = _.get(this.state, name);
+        // let oldValue = _.get(this.state, name);
+        // _.set(this.state, name, newValue);
+        // // dispatch change
+        // //this.dispatch(name, oldValue, newValue);
+        // let eventType = "setProperties." + name;
+        // this.events.dispatchEvent({
+        //     type: eventType,
+        //     name,
+        //     oldValue,
+        //     newValue
+        // });
+
+        let oldValues = [];
+        let path = name.split('.');
+        while (path.length > 0) {
+            let joinedPath = path.join('.');
+            oldValues[joinedPath] = _.cloneDeep(_.get(this.state, joinedPath));
+            path.pop()
+        }
+
         _.set(this.state, name, newValue);
-        // dispatch change
-        //this.dispatch(name, oldValue, newValue);
-        let eventType = "setProperties." + name;
-        this.events.dispatchEvent({
-            type: eventType,
-            name,
-            oldValue,
-            newValue
+
+        // dispatch callbacks
+        let self = this;
+        Object.keys(oldValues).forEach(function(p) {
+            let name = p;
+            let oldValue = oldValues[name];
+            let newValue = _.get(self.state, name);
+            let eventType = "setProperties." + name;
+            self.events.dispatchEvent({
+                type: eventType,
+                name,
+                oldValue,
+                newValue
+            });
         });
     }
 

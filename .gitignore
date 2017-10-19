@@ -17,4 +17,5 @@ junk/*
 */junk/*
 */*/junk/*
 .DS_Store
+.tmp
 npm-debug.log
