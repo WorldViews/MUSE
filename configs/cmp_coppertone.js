@@ -39,10 +39,10 @@ var SPECS = [
         phiStart: 34, phiLength: 47,
         thetaStart: 300, thetaLength: 60
     },
-    {  type: 'Marquee',    name: 'marquee1',
+    {  type: 'Screen',    name: 'marquee1',
        radius: 7,
-       phiStart: -50, phiLength: 100,
-       thetaStart: 65, thetaLength: 20
+       phiStart: 65, phiLength: 20,
+       thetaStart: -50, thetaLength: 100
     },
     LIGHTS,
     {  type: 'CMPDataViz', name: 'cmp',
