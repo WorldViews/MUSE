@@ -25,7 +25,7 @@ export default class AppState {
         Object.keys(oldValues).forEach(function(p) {
             let name = p;
             let oldValue = oldValues[name];
-            let newValue = _.get(self.state, name);
+            let newValue = _.cloneDeep(_.get(self.state, name));
             let eventType = "setProperties." + name;
             self.events.dispatchEvent({
                 type: eventType,
@@ -45,7 +45,7 @@ export default class AppState {
     }
 
     get(name, value) {
-        return _.get(this.state, name);
+        return _.cloneDeep(_.get(this.state, name));
     }
 
     on(name, callback) {

@@ -88,4 +88,13 @@ describe('AppState Module', function() {
         });
         state.dispatch('foo.bar', 1);
     });
+
+    it('state should not be able to be modified from get()', function(done) {
+        let state = getState();
+        state.set('foo.bar', {baz:1});
+        let val = state.get('foo.bar');
+        val.baz = 2
+        assert.equal(state.get('foo.bar.baz'), 1);
+        done();
+    });
 });
