@@ -4,7 +4,7 @@ import { CMPDataVizController } from './controllers/CMPDataVizController';
 import { Scripts } from './Scripts';
 import { PanoPortal } from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
-import { Screens } from './Screens';
+import './Screens';
 import { Game } from './Game';
 import Util from './Util';
 import { Dancer } from './controllers/DanceController';
@@ -19,7 +19,6 @@ import WebVR from './lib/vr/WebVR';
 
 import { ViewManager } from './ViewManager';
 import { addLight, setupLights } from './Lights';
-import Marquee from './Marquee';
 import { DynamicObjectDB_test } from './lib/DynamicObjectDB';
 import { SlidePlayer } from './lib/MediaControl';
 import { Hurricane } from './lib/Hurricane';

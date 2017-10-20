@@ -8,18 +8,7 @@ export default class AppState {
         this.events = events;
     }
 
-    set(name, newValue) {
-        // let oldValue = _.get(this.state, name);
-        // _.set(this.state, name, newValue);
-        // // dispatch change
-        // //this.dispatch(name, oldValue, newValue);
-        // let eventType = "setProperties." + name;
-        // this.events.dispatchEvent({
-        //     type: eventType,
-        //     name,
-        //     oldValue,
-        //     newValue
-        // });
+    dispatch(name, newValue) {
 
         let oldValues = [];
         let path = name.split('.');
@@ -45,6 +34,14 @@ export default class AppState {
                 newValue
             });
         });
+    }
+
+    set(name, newValue) {
+        if (_.isEqual(_.get(this.state, name), newValue)) {
+            return;
+        }
+
+        this.dispatch(name, newValue);
     }
 
     get(name, value) {
