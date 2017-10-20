@@ -21,37 +21,49 @@ window. hide = function()
     g.visible = false;
 }
 
-function controlScript(val)
+function sceneControl(props)
 {
     var m = game.models.CHM;
-    if (val.hide) {
-        var g = m.getChildByName(val.hide);
+    if (props.hide) {
+        var g = m.getChildByName(props.hide);
         g.visible = false;
     }
-    if (val.show) {
-        var g = m.getChildByName(val.show);
+    if (props.show) {
+        var g = m.getChildByName(props.show);
         g.visible = true;
+    }
+    if (props.view) {
+        game.viewManager.gotoView(props.view);
     }
 }
 
 function onStart(game)
 {
     console.log("onStart");
-    game.state.on('controlScript', controlScript);
+    game.state.on('sceneControl', sceneControl);
     hide();
 }
 
 MEDIA = [
     {  type: 'MediaSequence', name: 'mainScreen',
        media: [
-           [{ name: 'controlScript', note: "This is a note", hide: 'RoofGroup'},
+           [{ name: 'sceneControl', hide: 'RoofGroup', view: "Home"},
             { name: 'day', text: "Monday"}
            ],
-           [{ name: 'controlScript', note: "This is a note", show: 'RoofGroup'},
+           [{ name: 'sceneControl', show: 'RoofGroup', view: "Left Rear"},
             { name: 'day', text: "Tuesday"}
            ],
-           [{ name: 'controlScript', note: "This is a note", n: 5},
+           [{ name: 'sceneControl'},
             { name: 'day', text: "Wednesday"}
+           ],
+           [{ name: 'sceneControl', note: "This is a note", view: "Left Rear"},
+            { name: 'day', text: "Wednesday Banquet"}
+           ],
+           [{ name: 'sceneControl', note: "This is a note", view: "Home"},
+            { name: 'day', text: "Thursday"}
+           ],
+           [{ name: 'sceneControl', note: "This is a note", view: "Home"},
+            { name: 'day', text: "Friday"}
            ],
        ]
    }
@@ -62,7 +74,7 @@ CONFIG = {
     'ui': {'type': 'JQControls'},
     'program': {
         media: MEDIA,
-        channels: ["day"]
+        channels: ["day", "view"]
     },
     'venue': [
         {   type: 'Group', name: 'station'  },
