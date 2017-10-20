@@ -65,4 +65,27 @@ describe('AppState Module', function() {
         state.set('foo.bar', 1);
         Promise.all([p1,p2]).then(() => done());
     });
+
+    it('should not get called if state.set(foo.bar,1) multiple times', function(done) {
+        let state = getState();
+        var called = false;
+        state.set('foo.bar', 1);
+        state.on('foo.bar', function(newValue, oldValue, name) {
+            assert.fail('foo.bar callback called');
+        });
+        state.set('foo.bar', 1);
+        setTimeout(function() {
+            done();
+        }, 10)
+    });
+
+    it('should be get called if state.dispatch(foo.bar,1)', function(done) {
+        let state = getState();
+        state.set('foo.bar', 1);
+        state.on('foo.bar', function(newValue, oldValue, name) {
+            assert.equal(newValue, oldValue);
+            done();
+        });
+        state.dispatch('foo.bar', 1);
+    });
 });
