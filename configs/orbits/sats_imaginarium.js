@@ -6,8 +6,17 @@ function watchCollision(game)
     game.program.setPlayTime('2/10/2009 8:50:00');
 }
 
+function controlScript(props)
+{
+    console.log("****************************************************************");
+    console.log("******** controlScript got :"+JSON.stringify(props));
+    console.log("****************************************************************");
+}
+window.controlScript = controlScript;
+
 function onStart(game)
 {
+    game.state.on("controlScript", controlScript)
     return;
     var t = game.program.getPlayTime();
     var t = 1234284990.0;
@@ -65,18 +74,23 @@ MEDIA_SPEC = [
           { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
       ]
    },
-   {  type: 'SlideSequence', name: 'mainScreen',
+   {  type: 'MediaSequence', name: 'mainScreen',
       media: [
           [{ url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
            { name: 'leftScreen', url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
+           { name: 'controlScript', note: "This is a note", n: 5},
+           { name: 'year', text: 1969}
           ],
           [{ url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
-           { name: 'leftScreen', url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'}],
+           { name: 'leftScreen', url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
+           { name: 'controlScript', note: "This is a second note", n: 25},
+           { name: 'year', text: 1973}
+       ],
           { url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
           //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
           { url: 'videos/YukiyoCompilation.mp4'},
           { url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
-          { url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
+          { url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'},
       ]
    },
 ];

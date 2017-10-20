@@ -85,6 +85,8 @@ class JQControls extends UIControls {
     }
 
     showValue(name, value) {
+        if (typeof value != "string")
+            value = value.text;
         if (this.fieldsView)
             this.fieldsView.setValue(name, value);
     }

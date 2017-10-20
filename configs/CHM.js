@@ -21,14 +21,49 @@ window. hide = function()
     g.visible = false;
 }
 
+function controlScript(val)
+{
+    var m = game.models.CHM;
+    if (val.hide) {
+        var g = m.getChildByName(val.hide);
+        g.visible = false;
+    }
+    if (val.show) {
+        var g = m.getChildByName(val.show);
+        g.visible = true;
+    }
+}
+
 function onStart(game)
 {
     console.log("onStart");
+    game.state.on('controlScript', controlScript);
     hide();
 }
 
+MEDIA = [
+    {  type: 'MediaSequence', name: 'mainScreen',
+       media: [
+           [{ name: 'controlScript', note: "This is a note", hide: 'RoofGroup'},
+            { name: 'day', text: "Monday"}
+           ],
+           [{ name: 'controlScript', note: "This is a note", show: 'RoofGroup'},
+            { name: 'day', text: "Tuesday"}
+           ],
+           [{ name: 'controlScript', note: "This is a note", n: 5},
+            { name: 'day', text: "Wednesday"}
+           ],
+       ]
+   }
+];
+
 CONFIG = {
     'onStart': onStart,
+    'ui': {'type': 'JQControls'},
+    'program': {
+        media: MEDIA,
+        channels: ["day"]
+    },
     'venue': [
         {   type: 'Group', name: 'station'  },
         {   type: 'Model', name: 'CHM',

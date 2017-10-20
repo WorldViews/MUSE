@@ -101,30 +101,20 @@ class MediaSequence extends MediaSet
     prev() {
         this.setIdx(this.idx - 1);
     }
-
-    onChangeMedia(media) {
-        console.log("MediaSequence: idx:" +this.idx+" media: "+media);
-    }
-}
-
-class SlideSequence extends MediaSequence {
-    constructor(game, options) {
-        super(game, options);
-    }
-
     onChangeMedia(frames) {
         if (!Array.isArray(frames)) {
             frames = [frames]
         }
         frames.forEach( frame => {
-            var url = frame.url;
             var name = frame.name || this.name;
             console.log("SlideSequence.onChangeFrame "+this.name+" frame: "+frame);
-            console.log("   url: "+url);
-            this.game.state.set(name, {url});
+            console.log("   name: "+name);
+            console.log("   url: "+frame.url);
+            this.game.state.set(name, frame);
         });
     }
 }
+
 
 /*
 A media stream is a timed sequence of media elements, indexed by continuous
@@ -204,19 +194,17 @@ class StageStream extends MediaStream
     }
 }
 
-Game.registerNodeType("SlideSequence", (game, options) => {
+Game.registerNodeType("MediaSequence", (game, options) => {
     console.log("===========================")
     console.log("slides ", options);
     console.log("slides "+JSON.stringify(options));
     if (!options.name) {
-        Util.reportError("SlideSequence No name specified");
+        Util.reportError("MediaSequence No name specified");
         return null;
     }
-    var slideSequence = new SlideSequence(game, options);
-    //game.registerController(options.name, slideShow);
-    //game.registerPlayer(slideShow);
-    window.slides = slideSequence;
-    return slideSequence;
+    var mediaSequence = new MediaSequence(game, options);
+    window.mediaSequence = mediaSequence;
+    return mediaSequence;
 });
 
 
