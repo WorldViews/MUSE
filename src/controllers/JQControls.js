@@ -65,8 +65,10 @@ class JQControls extends UIControls {
 
         //this.screens = ["mainScreen", "rightScreen"];
         this.screens.forEach(screen => {
-            this.videoView = new VideoView(this, $uiDiv, screen);
-            this.videoView.setup($uiDiv);
+            //this.videoView = new VideoView(this, $uiDiv, screen);
+            //this.videoView.setup($uiDiv);
+            this.videoView = new VideoView(this, $ui, screen);
+            this.videoView.setup($ui);
         });
     }
 
