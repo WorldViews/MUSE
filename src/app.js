@@ -25,6 +25,7 @@ import { Hurricane } from './lib/Hurricane';
 import { VirtualEarth } from './lib/VirtualEarth';
 import { Kessler } from './KesslerNode';
 
+import { Player0 } from './interfaces/PlayerInterface';
 
 let {degToRad} = THREE.Math;
 
