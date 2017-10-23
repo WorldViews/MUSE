@@ -44,7 +44,7 @@ export default class AppState {
         this.dispatch(name, newValue);
     }
 
-    get(name, value) {
+    get(name) {
         return _.cloneDeep(_.get(this.state, name));
     }
 
