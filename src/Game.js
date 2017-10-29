@@ -6,14 +6,11 @@ import {MultiControlsDeprecated} from './lib/controls/MultiControlsDeprecated';
 import {Loader} from './Loader';
 import { NetLink } from './NetLink';
 import Util from './Util';
+import {reportError} from './Util';
+
 import AppState from './AppState';
 
 let {degToRad} = THREE.Math;
-
-function reportError(str)
-{
-    alert(str);
-}
 
 var ntypes = {};
 
@@ -443,18 +440,20 @@ class Game {
     createNode(typeName, props) {
         if (ntypes[typeName]) {
             console.log("*********************** calling factory for "+typeName);
-            return ntypes[typeName](this, props);
+            var val = ntypes[typeName](this, props);
+            if (val instanceof Promise) {
+                console.log("**** node type "+typeName+" returns a promise");
+                return val;
+            }
+            console.log("**** wrapping createNode "+typeName+" in promise");
+            return new Promise((resolve, reject) => { resolve(val); });
         }
         else {
             reportError("Unknown Node type "+typeName);
         }
-        return null;
+        //return null;
+        return new Promise((resolve,reject) => { reject(); });
     }
-
-    //loadSpecs0(specs) {
-    //    game.loader = new Loader(this);
-    //    return game.loader.load(specs);
-    //}
 
     loadSpecs(specs) {
         var inst = this;
