@@ -41,7 +41,7 @@ CONFIG = {
     //'cameraControls': 'Orbit',
     'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .02},
     //'cameraControls': 'JoelControls',
-    'ui': {type: 'JQControls',
+    'webUI': {type: 'JQControls',
            screens: ["mainScreen"],
           },
     'program': {
