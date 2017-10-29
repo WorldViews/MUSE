@@ -5,6 +5,8 @@ import MTLLoader from './lib/loaders/MTLLoader';
 import DDSLoader from './lib/loaders/DDSLoader';
 import {FBXLoader} from './lib/loaders/FBXLoader';
 import Util from './Util';
+import {reportError} from './Util';
+
 
 /*
   Loader class.  This loads models or creates nodes corresponding to
@@ -30,6 +32,7 @@ import Util from './Util';
   scale      Optional scale, if scalar, uniform scalling
 */
 
+/*
 function reportWarning(str)
 {
     console.log("Warning: "+str);
@@ -41,6 +44,7 @@ function reportError(str)
     console.log("Error: "+str);
     alert(str);
 }
+*/
 
 var numGroups = 0;
 
@@ -124,7 +128,7 @@ class Loader
         });
         console.log("**** Loader finished specs  numPending: "+this.numPending);
         if (this.numPending == 0)
-            this.handleCompletion();
+            this.complete();
     }
 
     loadFile(path) {
@@ -142,15 +146,18 @@ class Loader
         console.log("Loading JS file "+path);
         //alert("loadJS path: "+path);
         var inst = this;
-        Util.getScriptJSON(path,
+        this.numPending++;
+        Util.getJSONFromScript(path,
                 function(obj) {
                     var specs = obj;
                     console.log("Loaded specs: ", specs);
                     inst.load(specs);
+                    inst.handleCompletion();
                 },
                 function(jqxhr, settings, ex) {
                     console.log("error: ", ex);
                     alert("Cannot load "+path);
+                    inst.handleCompletion();
                 }
         );
     }
@@ -158,12 +165,16 @@ class Loader
     loadJSON(path) {
         console.log("Loading JSON specs "+path);
         var inst = this;
-        Util.getJSON(path, specs => { inst.load(specs); });
+        this.numPending++;
+        Util.getJSON(path, specs => {
+            inst.load(specs);
+            inst.handleCompletion();
+        });
     }
 
     loadModel(spec) {
         if (spec.type != 'Model') {
-            reportWarning("Model specs should have type: Model");
+            Util.reportWarning("Model specs should have type: Model");
         }
         var path = spec.path;
         if (path.endsWith(".dae")) {
@@ -172,10 +183,7 @@ class Loader
                 console.log("****** resolved collada load "+spec.path);
                 game.setFromProps(collada.scene, spec);
                 game.addToGame(collada.scene, spec.name, spec.parent);
-                this.numPending--;
-                if (this.numPending === 0) {
-                    this.handleCompletion();
-                }
+                this.handleCompletion();
             });
             return;
         }
@@ -185,10 +193,7 @@ class Loader
                 console.log("***** Loaded fbx "+path);
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
-                this.numPending--;
-                if (this.numPending === 0) {
-                    this.handleCompletion();
-                }
+                this.handleCompletion();
             });
         }
         if (path.endsWith(".obj")) {
@@ -197,19 +202,24 @@ class Loader
                 //loadOBJModel0(path, spec, (obj) => {
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
-                this.numPending--;
-                if (this.numPending === 0) {
-                    this.handleCompletion();
-                }
+                this.handleCompletion();
             });
         }
     }
 
     handleCompletion() {
+        this.numPending--;
+        console.log("handleCompletion "+this.numPending);
+        if (this.numPending === 0) {
+            this.complete();
+        }
+        //alert("All Models Loaded");
+    }
+
+    complete() {
         console.log("****************** MODELS ALL LOADED ******************");
         if (this.onCompleted)
             this.onCompleted();
-        //alert("All Models Loaded");
     }
 
     loadGroup(groupSpec) {
