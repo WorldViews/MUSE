@@ -100,3 +100,5 @@ CONFIG = {
     'cameraControls': 'Orbit',
     'specs': SPECS
 };
+
+MUSE.returnValue(CONFIG);

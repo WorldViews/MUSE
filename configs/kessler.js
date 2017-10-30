@@ -124,3 +124,4 @@ CONFIG = {
     'specs': SPECS
 };
 
+MUSE.returnValue(CONFIG);
