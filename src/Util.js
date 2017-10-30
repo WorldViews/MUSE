@@ -12,6 +12,29 @@ window.MUSE.returnValue = function(val)
     window.MUSE.RETURN = val;
 }
 
+/*
+window.MUSE.returnValueDep = function(deps, val)
+{
+    console.log("MUSE.returnValueDep "+deps+" "+val);
+    var path = deps;
+    // need to load deps, then
+    window.MUSE.RETURN = val;
+}
+*/
+window.MUSE.require = function(deps, done) {
+    if (typeof deps == "string") {
+        deps = [deps];
+    }
+    var promises = deps.map(url => $.getScript(url));
+    window.PROMISES = promises;
+    MUSE.RETURN_PROMISE = Promise.all(promises).then(() => {
+        console.log("***************>>>>>>>>>>>>>>>>>>> Loaded all of "+deps);
+        done();
+        console.log("got value "+MUSE.RETURN);
+        //MUSE.RETURN = val;
+    });
+}
+
 // This is ridiculous to not have a standard language feature for this by now
 export function cloneObject(obj) { return Object.assign({}, obj); }
 export function values(obj) { return Object.keys(obj).map( k => obj[k]) };
@@ -69,6 +92,16 @@ export function getClockTime() {
     return new Date().getTime()/1000.0;
 }
 
+export function reportError(str) {
+    console.log("Error: "+str);
+    alert(str);
+}
+
+export function reportWarning(str) {
+    console.log("Error: "+str);
+    alert(str);
+}
+
 // http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
 export function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -80,17 +113,32 @@ export function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-
-export function getScriptJSON(path, handler, err)
+/*
+This gets a JavaScript Object from a script.  It can be more
+convenient for human authoring, since it can support comments
+and scripting.  The script should return a JavaScript Object
+by calling the function MUSE.returnValue(obj);
+*/
+//TODO: make this "attomic" by getting the text of the script
+// and then adding a script tag.
+export function getJSONFromScript(path, handler, err)
 {
     window.MUSE.RETURN = null;
+    window.MUSE.RETURN_PROMISE = null;
     $.getScript(path)
         .done(function(script, textStatus) {
-            var RETURN = window.MUSE.RETURN;
-            if (!RETURN) {
-                alert("No RETURN specified in script "+path);
+            if (window.MUSE.RETURN_PROMISE) {
+                window.MUSE.RETURN_PROMISE.then(() => {
+                    console.log("*************** USING RETURN PROMISE ************");
+                    console.log("calling handler with "+window.MUSE.RETURN)
+                    handler(window.MUSE.RETURN)
+                });
+                return;
             }
-            handler(RETURN);
+            if (!window.MUSE.RETURN) {
+                reportError("No RETURN specified in script "+path);
+            }
+            handler(window.MUSE.RETURN);
         })
         .fail(function(jqxhr, settings, ex) {
             console.log("error: ", ex);
@@ -115,6 +163,9 @@ export function getJSON(url, handler)
                 return;
             }
             handler(data);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reportError("Failed to get JSON for "+url);
         }
     });
 }
@@ -150,7 +201,7 @@ export function randomFromInterval(min,max)
 export default {
     cloneObject,
     getJSON,
-    getScriptJSON,
+    getJSONFromScript,
     getClockTime,
     getCameraParams,
     getParameterByName,
@@ -159,6 +210,8 @@ export default {
     randomFromInterval,
     toTime,
     toDate,
+    reportError,
+    reportWarning,
     formatDatetime,
     values
 };

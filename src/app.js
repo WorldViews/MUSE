@@ -48,7 +48,7 @@ function getStartPosition() {
 function loadConfig(path)
 {
     console.log("Loading config file "+path);
-    Util.getScriptJSON(path,
+    Util.getJSONFromScript(path,
         function(obj) {
                 if (!obj) {
                     alert("No value from config -- please fix file "+path);
@@ -61,12 +61,12 @@ function loadConfig(path)
                     return;
                 }
                 start(obj);
-            },
-            function(jqxhr, settings, ex) {
+        },
+        function(jqxhr, settings, ex) {
                 console.log("error: ", ex);
                 alert("Cannot load "+path);
-            }
-        );
+        }
+    );
 }
 
 
@@ -137,7 +137,11 @@ function start_(config) {
     let program = new CMPProgram(game, config.program);
 
     if (config.ui) {
-        game.loadSpecs(Util.getTypedObj(config.ui));
+        alert("config.ui deprecated - please use config.webUI");
+        config.webUI = config.ui;
+    }
+    if (config.webUI) {
+        game.loadSpecs(Util.getTypedObj(config.webUI));
     }
 
     var parts = [];
