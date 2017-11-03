@@ -12,15 +12,8 @@ window.MUSE.returnValue = function(val)
     window.MUSE.RETURN = val;
 }
 
-/*
-window.MUSE.returnValueDep = function(deps, val)
-{
-    console.log("MUSE.returnValueDep "+deps+" "+val);
-    var path = deps;
-    // need to load deps, then
-    window.MUSE.RETURN = val;
-}
-*/
+// This can be used to ensure that some other scripts are loaded before
+// a function is called and returns a value.
 window.MUSE.require = function(deps, done) {
     if (typeof deps == "string") {
         deps = [deps];
