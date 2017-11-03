@@ -93,9 +93,10 @@ CONFIG = {
        scripts: {
            'Show Earthquakes': (game) => setEarthVideo(game, "videos/earthquakes.mp4"),
            'Show 2013 Weather': (game) => setEarthVideo(game, "videos/GlobalWeather2013.mp4"),
+           //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "videos/tas_Amon_CCSM4_1850_2300.mp4"),
+           'Show surface temp 1850-2300': (game) => setEarthVideo(game, "videos/tas_1850_2300.mp4"),
            'Climate Model Clouds': (game) => setEarthVideo(game, "videos/CloudTruth.mp4"),
        }
-
     },
     'cameraControls': 'Orbit',
     'specs': SPECS
