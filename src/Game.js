@@ -252,7 +252,13 @@ class Game {
 
         this.pre(msTime);
 
-        this.updateHandlers.forEach(h => h(msTime));
+        //this.updateHandlers.forEach(h => h(msTime));
+        this.updateHandlers.forEach(h => {
+            try {h(msTime)}
+            catch (e) {
+                console.log("err: "+e);
+            }
+        });
         this.render();
 
         this.post(msTime);
