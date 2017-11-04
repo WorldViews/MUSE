@@ -96,6 +96,7 @@ CONFIG = {
            //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "videos/tas_Amon_CCSM4_1850_2300.mp4"),
            'Show surface temp 1850-2300': (game) => setEarthVideo(game, "videos/tas_1850_2300.mp4"),
            'Climate Model Clouds': (game) => setEarthVideo(game, "videos/CloudTruth.mp4"),
+           'CO2 flow for 2006': (game) => setEarthVideo(game, "videos/2006_co2_flow_1024x512.mp4"),
        }
     },
     'cameraControls': 'Orbit',
