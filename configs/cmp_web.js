@@ -6,14 +6,6 @@ MEDIA_SPECS = [
            { t: 500,   url: 'videos/tas_1850_2300.mp4'},
        ]
    },
-   {  type: 'StageStream', stage: 'Main Stage',
-       records: [
-           { t: 100,   name: 'none'},
-           { t: 200,   name: 'dancer'},
-           { t: 300,   name: 'cmp'},
-           { t: 1000,   name: 'dancer'}
-       ]
-    }
 ];
 
 VEARTH = [
@@ -99,11 +91,11 @@ function setEarthVideo(game, url)
 
 CONFIG = {
     'onStart': onStart,
+    //'gameOptions': {transparent: true},
     'webUI': {type: 'JQControls',
-           screens: ["mainScreen"],
+          // screens: ["mainScreen"],
           },
     'program': {
-       //duration: 400*365*24*60*60,
        //startTime: '1/1/1800',
        //playTime: 'now'
        //startTime: '6/1/2005 10:30'
