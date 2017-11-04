@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>MUSE Virtual World</title>
+    <link rel="stylesheet" type="text/css" href="css/jqmuse.css"></link>
+    <style>
+      html {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #ffffff;
+        margin: 0px;
+        overflow: hidden;
+        font-family:Monospace;
+        font-size:13px;
+        text-align:center;
+        cursor: pointer;
+      }
+      div.textViewer {
+         color: rgba(240,240,240, .9);
+         background: rgba(200,200,0,0.0);
+         position: absolute;
+         top: 15px;
+         left: 200px;
+         width: 700px;
+         align-items: center;
+         horizontal-align: center;
+      }
+      #canvas3d {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top:0;
+      }
+    </style>
+
+    <link rel="stylesheet" href="./css/jquery-ui.css">
+    <style>
+      .ui-slider {
+          height: 20px;
+          width: 100%;
+          align-items: center;
+          //padding-left: 50px;
+      }
+
+      .ui-slider-handle {
+         color: rgba(240,40,40, .9);
+         background: rgba(200,0,0,0.0);
+         height: 20px;
+         width: 5px;
+         //padding-left: 50px;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div id="uiDiv"></div>
+    <canvas id="canvas3d"></canvas>
+    <div class="vid" id="bgvideo">
+        <video playsinline autoplay loop id="bgvid" style="position:absolute;left:0;top:0;z-index:-100;width:100%;height:100%;">
+            <source src="./videos/Climate-Music-V3-Distortion_HD_540.webm" type="video/mp4">
+        </video>
+    </div>
+
+    <script src="dist/vendor.bundle.js"></script>
+    <script src="dist/mathbox-bundle.min.js"></script>
+    <script src="src/legacy/jquery-3.1.1.min.js"></script>
+    <script src="src/legacy/jquery-ui.js"></script>
+    <script src="src/lib/GSpreadSheet.js"></script>
+    <script src="dist/app.bundle.js"></script>
+
+    <script>
+      MUSE_TRANSPARENT = true;
+      start();
+    </script>
+  </body>
+</html>
