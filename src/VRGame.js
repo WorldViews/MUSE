@@ -10,8 +10,8 @@ import attachPointerLock from './attachPointerLock';
 
 class VRGame extends Game {
 
-    constructor(domElementId) {
-        super(domElementId);
+    constructor(domElementId, options) {
+        super(domElementId, options);
         this.vrDisplay = null;
         this.vrControls = null;
         this.plControls = null;
@@ -62,7 +62,7 @@ class VRGame extends Game {
         this.plControls = new PointerLockControls(this.camera);
 
         // Allow the PointerLockControls to create the body,
-        // even if we do not use the controls for movement. 
+        // even if we do not use the controls for movement.
         this.body = this.plControls.getObject();
         this.scene.add(this.body);
 

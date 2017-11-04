@@ -10,12 +10,15 @@ import {reportError} from './Util';
 
 import AppState from './AppState';
 
+window.MUSE_TRANSPARENT = false;
+
 let {degToRad} = THREE.Math;
 
 var ntypes = {};
 
 class Game {
-    constructor(domElementId) {
+    constructor(domElementId, options) {
+        this.options = options || {};
         this.updateHandlers = [];
         this.init(domElementId);
         this.ntypes = ntypes;
@@ -75,10 +78,19 @@ class Game {
             canvas3d.height = window.innerHeight;
             canvas3d.width = window.innerWidth;
 
+            var opts = {canvas: canvas3d, antialias: true};
+            if (this.options.transparent)
+                opts.alpha = true;
+            if (MUSE_TRANSPARENT)
+                opts.alpha = true;
+            renderer = new THREE.WebGLRenderer(opts);
+            /*
             renderer = new THREE.WebGLRenderer({
                 canvas: canvas3d,
-                antialias: true
+                antialias: true,
+                alpha: true
             });
+            */
             //renderer.shadowMapEnabled	= true
             renderer.setSize(canvas3d.width, canvas3d.height);
 
