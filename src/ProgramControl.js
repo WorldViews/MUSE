@@ -73,6 +73,10 @@ class ProgramControl
     }
 
     formatTime(t) {
+        if (t == undefined) {
+            console.log("yikes formatTime got bad t");
+            return "*** null ***";
+        }
         return sprintf("%8.1f", t);
     }
 
@@ -83,9 +87,10 @@ class ProgramControl
             tStr = this.formatTime(t);
         }
         catch (e) {
+            console.log("err: ", e);
             console.log("*** displayTime err  t: "+t);
         }
-        this.game.setValue("time", tStr);
+        this.game.state.set("time", tStr);
         var dur = this.duration;
     	let value = ((t-this.startTime)/(0.0+dur));
         if (game.controllers.ui && game.controllers.ui.slider) {
@@ -158,8 +163,10 @@ class ProgramControl
         t = Util.toTime(t);
         this._prevClockTime = getClockTime();
         this._playTime = t;
-        this.propagate(player => player.setPlayTime(t, isAdjust));
+        //this.propagate(player => player.setPlayTime(t, isAdjust));
+        this.propagate(player => player.setPlayTime && player.setPlayTime(t, isAdjust));
         this.displayTime(t);
+        //this.game.state.set("mainScreen.playTime", t);
     }
 
     propagate(fun) {
@@ -167,14 +174,14 @@ class ProgramControl
             var player = this.players[name];
             try { fun(player) }
             catch (e) {
-                console.log("err: "+e);
+                console.log("err: ", e);
             }
         }
         for (var key in this.game.screens) {
             var screen = this.game.screens[key];
             try { fun(screen) }
             catch (e) {
-                console.log("err: "+e);
+                console.log("err: ", e);
             }
         }
     }
