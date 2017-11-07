@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 
+import { CMPDataUpdater } from './controllers/CMPData';
 import { CMPDataVizController } from './controllers/CMPDataVizController';
 import { Scripts } from './Scripts';
 import { PanoPortal } from './lib/PanoPortal';

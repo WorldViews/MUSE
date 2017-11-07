@@ -3,7 +3,7 @@ MEDIA_SPECS = [
     {  type: 'Slides', group: 'mainScreen',
        records: [
            { t: 0,   url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'},
-           { t: 500,   url: 'videos/tas_1850_2300.mp4'},
+          // { t: 500,   url: 'videos/tas_1850_2300.mp4'},
        ]
    },
 ];
@@ -23,73 +23,45 @@ var SPECS = [
     {  type: 'Group', name: 'station'  },
     {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [-1000, 0, 0], distance: 5000},
     {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [3000, 0, 0], distance: 5000},
+    {  type: 'CMPData' },
     {  type: 'CMPDataViz', name: 'cmp',
         //position: [0, 0, 0],
         position: [-10, 0, 0],
-       rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
-       visible: true
+        rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
+        visible: true
     },
     //{  type: 'Stars' },
     VEARTH
 ];
 
-function updateFields(game, t)
+
+function updateCMPViz2(year)
 {
+    if (!year)
+        return;
     var earth = game.controllers.vEarth;
     var atm = earth.atmosphere;
     var startYear = 1800;
     var endYear = 2300;
-
-    var year = GSS.timeToYear(t);
-    var data = game.controllers.cmp.loader.data;
-    if (data)
-        data = data.rcp8p5;
-    window.DATA = data;
-    if (data && year) {
-        yearf = Math.floor(year);
-        i = Math.floor(yearf - 1850);
-        if (i < 0) {
-            console.log("updateFields i:"+i);
-            return;
-        }
-        T = data.temperature[i];
-        co2 = data.co2[i];
-        balance = data.balance[i];
-        dyear = data.year[i];
-        window.CO2 = co2;
-        //console.log("i:", i);
-        //console.log("T:",t);
-        //console.log("co2", co2);
-        //console.log("balance", balance);
-        //console.log("dyear", dyear);
-        game.state.set("temp", sprintf("T: %.1f", T));
-        game.state.set("co2", sprintf("CO2: %6.1f", co2));
-        game.state.set("balance", sprintf("balance: %6.1f", balance));
-        game.state.set("dyear", "dyear: "+dyear)
-        var f = 0;
-        if (year) {
-            f = (year - 1800)/(2300 - 1800);
-        }
-        atm.setOpacity(0.9*f);
-        var h = 0.6 + .4*f;
-        atm.setHue(h);
-    }
-    else {
-        game.state.set("temp", "");
-        game.state.set("co2", "");
-        game.state.set("balance", "");
-        game.state.set("dyear", "");
-    }
+    var co2Min = 280;
+    var co2Max = 1970;
+    var TMin = 13.0;
+    var TMax = 33.0;
+    var co2 = game.state.get("co2");
+    var T = game.state.get("temp");
+    var balance = game.state.get("balance");
+    var co2f = (co2 - co2Min)/(co2Max - co2Min);
+    var Tf = (T - TMin)/(TMax - TMin);
+    console.log(sprintf("year: %s co2: %6.2f T: %6.2f balance: %6.2f  Tf: %4.2f   co2f: %4.2f",
+            year, co2, T, balance, Tf, co2f));
+    atm.setOpacity(0.9*co2f);
+    var h = 0.6 + .6*Tf;
+    atm.setHue(h);
 }
 
 function onStart(game)
 {
-    //game.program.formatTime = t =>game.Util.toDate(t);
-    game.program.formatTime = t => {
-        //console.log("cmp_web.formatTime: "+t);
-        updateFields(game, t);
-        return sprintf("%8.2f", t);
-    }
+    game.state.on("year", updateCMPViz2);
 }
 
 function setEarthVideo(game, url)
@@ -111,7 +83,14 @@ CONFIG = {
        //startTime: '6/1/2005 10:30'
        duration: 32*60,
        gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
-       channels: ['time', 'year', 'temp', 'co2', 'balance', 'dyear', 'spacer', 'narrative'],
+       channels: ['time',
+       'year',
+        {name: 'temp', label: "T", format: v => sprintf("%6.2f", v)},
+        {name: 'co2', label: "CO2"},
+        {name: 'balance', label: "Balance", format: v => sprintf("%8.1f", v)},
+          'dyear',
+          'spacer',
+          'narrative'],
        scripts: {
            'Show Earthquakes': (game) => setEarthVideo(game, "videos/earthquakes.mp4"),
            'Show 2013 Weather': (game) => setEarthVideo(game, "videos/GlobalWeather2013.mp4"),
