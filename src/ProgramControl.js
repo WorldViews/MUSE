@@ -93,22 +93,8 @@ class ProgramControl
         this.game.state.set("time", tStr);
         var dur = this.duration;
     	let value = ((t-this.startTime)/(0.0+dur));
-        if (game.controllers.ui && game.controllers.ui.slider) {
-            try {
-	               game.controllers.ui.slider.value = value;
-            }
-            catch (e) {
-	               console.log("exception setting slider");
-            }
-        }
-        //console.log("slider t: "+t+"  dur: "+dur+"  value: "+value);
-        try {
-              // console.log(">>>>>>>>>>>> setting uiTimeLine.val "+value);
-               $("#uiTimeSlider").val(value);
-	           //let timeline = $('#uiTimeLine');
-    	       //timeline.val(value);
-        }
-        catch (e) {
+        if (game.controllers.ui) {
+            game.controllers.ui.setTimeSlider(value);
         }
     }
 

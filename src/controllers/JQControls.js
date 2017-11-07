@@ -84,6 +84,10 @@ class JQControls extends UIControls {
         });
     }
 
+    setTimeSlider(val) {
+        this.playControls.setSlider(val);
+    }
+
     toggleUI() {
         var time=100;
         if (this.visible) {
@@ -243,6 +247,11 @@ class PlayControls extends JQWidget {
 
     showState(playing) {
         this.$play.val(playing ? "Pause" : "Play");
+    }
+
+    setSlider(val) {
+        //console.log("JQControl.playControls setSlider "+val);
+        $("#uiTimeSlider").val(val);
     }
 
     onSliderChange(e, isAdjust) {
