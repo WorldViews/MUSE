@@ -65,9 +65,8 @@ class CMPProgram extends ProgramControl {
                 //console.log("va: " + va + "  narrative: " + nar);
                 yearStr = Math.floor(year);
                 this.game.state.set('narrative', nar);
-                //this.game.setValue('narrative', nar);
             }
-            //this.game.setValue('year', yearStr);
+            //console.log("yearStr:"+yearStr);
             this.game.state.set('year', yearStr);
         }
     }

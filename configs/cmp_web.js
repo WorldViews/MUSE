@@ -48,15 +48,24 @@ function updateFields(game, t)
     if (data && year) {
         yearf = Math.floor(year);
         i = Math.floor(yearf - 1850);
+        if (i < 0) {
+            console.log("updateFields i:"+i);
+            return;
+        }
         T = data.temperature[i];
         co2 = data.co2[i];
         balance = data.balance[i];
         dyear = data.year[i];
         window.CO2 = co2;
-        game.setValue("temp", sprintf("T: %.1f", T));
-        game.setValue("co2", "co2: "+co2);
-        game.setValue("balance", sprintf("balance: %.1f", balance));
-        game.setValue("dyear", "dyear: "+dyear);
+        //console.log("i:", i);
+        //console.log("T:",t);
+        //console.log("co2", co2);
+        //console.log("balance", balance);
+        //console.log("dyear", dyear);
+        game.state.set("temp", sprintf("T: %.1f", T));
+        game.state.set("co2", sprintf("CO2: %6.1f", co2));
+        game.state.set("balance", sprintf("balance: %6.1f", balance));
+        game.state.set("dyear", "dyear: "+dyear)
         var f = 0;
         if (year) {
             f = (year - 1800)/(2300 - 1800);
@@ -66,10 +75,10 @@ function updateFields(game, t)
         atm.setHue(h);
     }
     else {
-        game.setValue("temp", "");
-        game.setValue("co2", "");
-        game.setValue("balance", "");
-        game.setValue("dyear", "");
+        game.state.set("temp", "");
+        game.state.set("co2", "");
+        game.state.set("balance", "");
+        game.state.set("dyear", "");
     }
 }
 
@@ -77,6 +86,7 @@ function onStart(game)
 {
     //game.program.formatTime = t =>game.Util.toDate(t);
     game.program.formatTime = t => {
+        //console.log("cmp_web.formatTime: "+t);
         updateFields(game, t);
         return sprintf("%8.2f", t);
     }
@@ -93,7 +103,7 @@ CONFIG = {
     'onStart': onStart,
     //'gameOptions': {transparent: true},
     'webUI': {type: 'JQControls',
-          // screens: ["mainScreen"],
+           screens: ["mainScreen"],
           },
     'program': {
        //startTime: '1/1/1800',
