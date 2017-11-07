@@ -11,6 +11,17 @@ function append(parent, child) {
     return child;
 }
 
+class Field
+{
+    constructor(opts) {
+        if (typeof opts == "string")
+            opts = {name: opts};
+        this.name = opts.name;
+        this.format = opts.format;
+        this.label = opts.label;
+    }
+}
+
 class JQControls extends UIControls {
     constructor(game, options) {
         super(game, options);
@@ -32,7 +43,8 @@ class JQControls extends UIControls {
         this.setupElements();
         //game.events.addEventListener('valueChange', e => inst.onValueChange(e));
         //var fieldNames = ["spaceStatus"]
-        this.textFields.forEach(name => {
+        this.textFields.forEach(field => {
+            var name = field.name;
             game.state.on(name, (newVal, oldVal, name) => inst.showValue(name, newVal));
         });
     }
@@ -42,7 +54,7 @@ class JQControls extends UIControls {
         //this.textFields = ["time", "year", "narrative"];
         this.textFields = [];
         this.program.channels.forEach(channel => {
-            this.textFields.push(channel);
+            this.textFields.push(new Field(channel));
         });
         console.log("**********  textFields:", this.textFields);
         var inst = this;
@@ -87,7 +99,7 @@ class JQControls extends UIControls {
     }
 
     showValue(name, value) {
-        if (typeof value != "string")
+        if (typeof value == "object")
             value = value.text;
         if (this.fieldsView)
             this.fieldsView.setValue(name, value);
@@ -106,7 +118,7 @@ class JQControls extends UIControls {
     removeModel(name) { this.stageControl.removeModel(name); }
     selectModel(name) { this.stageControl.selectModel(name); }
 
-
+/*
     resetCMP() {
         // reset cmp
         let self = this;
@@ -116,7 +128,7 @@ class JQControls extends UIControls {
             self.changeTimeout = null;
         }, 2000);
     }
-
+*/
     dispose() {
         document.body.removeChild(this.root);
     }
@@ -163,27 +175,32 @@ class JQWidget {
 }
 
 class FieldsView extends JQWidget {
-    constructor(ui, $parent, fields) {
+    constructor(ui, $parent, fieldList) {
         super(ui, $parent);
-        this.fields = fields;
+        this.fields = {};
         this.$fields = {};
         var inst = this;
-        fields.forEach(name => inst.addField(name, ""));
+        fieldList.forEach(field => inst.addField(field, ""));
         append($parent, "<p/>");
     }
 
     setValue(name, value) {
         //$("#"+name+"Text").html(value);
         if (!this.$fields[name]) {
-            this.addField(name, name)
+            this.addField(new Field(name), name)
         }
+        if (this.fields[name].format)
+            value = this.fields[name].format(value);
         this.$fields[name].html(value);
     }
 
-    addField(name, label) {
+    addField(field, label) {
+        var name = field.name;
+        label = label || field.label;
         if (label) {
             append(this.$parent, sprintf("<span>%s: </span>", label));
         }
+        this.fields[name] = field;
         this.$fields[name] = append(this.$parent, sprintf("<span id='%sText' /><br>", label, name));
     }
 }
