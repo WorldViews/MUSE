@@ -139,13 +139,6 @@ class ProgramControl
         return s;
     }
 
-    get playTime() {
-        console.log("*******************************************");
-        console.log("*********** use getPlayTime() *************");
-        xxx.yyy.zzzz=aaa.bbb;
-        return this.getPlayTime();
-    }
-
     getPlayTime() {
         var t = getClockTime();
         var dt = t - this._prevClockTime;
