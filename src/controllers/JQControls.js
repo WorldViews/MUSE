@@ -401,15 +401,24 @@ class VideoView extends JQWidget {
         this.name = name;
         this.game = window.game;
         game.state.on(this.name, (newProps) => inst.onChange(newProps));
+        this.game.program.registerPlayer(this);
     }
 
     setup($parent) {
         this.$parent = $parent;
         var inst = this;
-        append(this.$parent, sprintf("<b>This is video view for :</b><br>", this.name));
-        append(this.$parent, sprintf("<b>This is video view2 for :</b><br>", this.name));
+        //append(this.$parent, sprintf("<b>This is video view2 for :</b><br>", this.name));
         //this.$video = append(this.$parent, sprintf("<video width="320" height="240" controls/>", this.name));
-        this.$video = append(this.$parent, '<video width="320" height="240" controls/>');
+        var id = this.name+"Video";
+        var elem = $("#"+id);
+        if (elem.length > 0) {
+            this.$video = elem;
+        }
+        else {
+            console.log("*** couldn't find existing video - creating one")
+            append(this.$parent, sprintf("<b>This is video view for: %s</b><br>", this.name));
+            this.$video = append(this.$parent, '<video width="320" height="240" controls/>');
+        }
     }
 
     onChange(props) {
@@ -426,18 +435,31 @@ class VideoView extends JQWidget {
             var t = props.requestedPlayTime;
             console.log("VideoView.requestedPlayTime: "+t);
             //this.$video.attr('currentTime', t);
-            v.currentTime = t;
+            this.setPlayTime(t);
         }
         if (props.playState) {
             if (props.playState == "play") {
-                //this.$video.play();
-                v.play();
+                this.play();
             }
             else if (props.playState == "pause") {
-                //this.$video.pause();
-                v.pause();
+                this.pause();
             }
         }
+    }
+
+    play() {
+        var v = this.$video[0];
+        v.play();
+    }
+
+    pause() {
+        var v = this.$video[0];
+        v.pause();
+    }
+
+    setPlayTime(t) {
+        var v = this.$video[0];
+        v.currentTime = t;
     }
 }
 

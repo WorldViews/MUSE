@@ -42,7 +42,7 @@ CONFIG = {
     'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .02},
     //'cameraControls': 'JoelControls',
     'webUI': {type: 'JQControls',
-           screens: ["mainScreen"],
+           //screens: ["mainScreen"],
           },
     'program': {
        duration: 32*60,
