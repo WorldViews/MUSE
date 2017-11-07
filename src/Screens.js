@@ -23,6 +23,7 @@ class Screen extends THREE.Object3D
         console.log("---------------- Screen", spec);
         this.game = game;
         this.spec = spec;
+        this.imageSource = null;
         var name = spec.name || "movieScreen";
         this.channel = spec.channel || name;
         var path = path || spec.path;
@@ -87,7 +88,6 @@ class Screen extends THREE.Object3D
                 this.updateSource(props.url, props);
             if (props.html)
                 this.updateHtml(props.html, props);
-
             if (props.requestedPlayTime) {
                 var t = props.requestedPlayTime;
                 console.log("requestedPlayTime: "+t);
@@ -137,14 +137,26 @@ class Screen extends THREE.Object3D
     }
 
     play() {
+        if (!this.imageSource) {
+            //console.log("No imageSource");
+            return;
+        }
         this.imageSource.play();
     }
 
     pause() {
+        if (!this.imageSource) {
+            //console.log("No imageSource");
+            return;
+        }
         this.imageSource.pause();
     }
 
     setPlayTime(t) {
+        if (!this.imageSource) {
+            //console.log("No imageSource");
+            return;
+        }
         this.imageSource.setPlayTime(t);
     }
 
