@@ -12,6 +12,13 @@ const TEXTURE_NAME = 'onepointfive_texture.png';
 const SPEC_MAP_NAME = 'onepointfive_spec.png';
 const SPEED = 1 / 500; // one unit per sec
 
+const OCULUS_PATH = 'models/oculus-controller/';
+const OCULUS_LEFT_OBJ = 'oculus_cv1_controller_left.obj';
+const OCULUS_RIGHT_OBJ = 'oculus_cv1_controller_right.obj';
+const OCULUS_TEXTURE_NAME = 'external_controller01_col.png';
+const OCULUS_SPEC_MAP_NAME = 'external_controller01_spec.png';
+
+
 function loadAll(loaderFilePairs) {
     return Promise.all(
         loaderFilePairs.map(
@@ -57,6 +64,32 @@ export default class ViveControllerController {
 
         this.controller0.add(this.line.clone());
 
+        //this.loadViveControllerModel();
+        this.loadOculusControllerModel();
+    }
+
+    loadControllerModel() {
+        var gamepadModel = 'vive';
+        var gamepads = navigator.getGamepads();
+        for (var i = 0; i < gamepads.length; i++) {
+            if (gamepad.id === 'Oculus Touch (Left)' || gamepad.id === 'Oculus Touch (Right)') {
+                gamepadModel = 'oculus';
+                break;
+            }
+        }
+
+        switch (gamepadModel) {
+            case 'vive':
+                this.loadViveControllerModel();
+                break;
+
+            case 'oculus':
+                this.loadOculusControllerModel();
+                break;
+        }
+    }
+
+    loadViveControllerModel() {
         let objLoader = new OBJLoader();
         objLoader.setPath(VIVE_PATH);
 
@@ -74,6 +107,36 @@ export default class ViveControllerController {
 
             this.controller0.add(controller.clone());
             this.controller1.add(controller.clone());
+        });
+    }
+
+    loadOculusControllerModel() {
+        let objLoader = new OBJLoader();
+        objLoader.setPath(OCULUS_PATH);
+
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.setPath(OCULUS_PATH);
+
+        loadAll([
+            {loader: objLoader, file: OCULUS_LEFT_OBJ},
+            {loader: objLoader, file: OCULUS_RIGHT_OBJ},
+            {loader: textureLoader, file: OCULUS_TEXTURE_NAME},
+            {loader: textureLoader, file: OCULUS_SPEC_MAP_NAME}
+        ]).then(([objectLeft, objectRight, texture, specMap]) => {
+            let left = objectLeft.children[0];
+            left.rotation.x = 45;
+            left.position.y = 0.05;
+            left.material.map = texture;
+            left.material.specularMap = specMap;
+
+            let right = objectRight.children[0];
+            right.rotation.x = 45;
+            right.position.y = 0.05;
+            right.material.map = texture;
+            right.material.specularMap = specMap;
+
+            this.controller0.add(left);
+            this.controller1.add(right);
         });
     }
 
