@@ -190,29 +190,6 @@ class Game {
         return program;
     }
 
-    // These methods could be moved to a state object.
-    setValue(name, value) {
-        //console.log("game.setValue "+name+" "+value);
-        this.events.dispatchEvent({
-            type: 'valueChange',
-            message: value
-        });
-    }
-
-    // setProperties(name, value) {
-    //     //console.log("game.setValue "+name+" "+value);
-    //     var evType = "setProperties."+name;
-    //     this.events.dispatchEvent({
-    //         type: evType,
-    //         message: value
-    //     });
-    // }
-
-    // watchProperties(name, handler) {
-    //     var evType = "setProperties."+name;
-    //     this.events.addEventListener(evType, evt => handler(evt.message, evt));
-    // }
-
     registerPlayer(player) {
         if (this.program) {
             this.program.registerPlayer(player);
