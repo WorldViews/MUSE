@@ -55,7 +55,8 @@ var SPECS = [
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     //{  type: 'Scripts' },
     {   type: 'Group', name: 'station'  },
-    {   type: 'Model', name: 'platform',
+    // 'Floor' is a special name used for VR Controller raycast
+    {   type: 'Model', name: 'Floor',
         parent: 'station',
         path: 'models/PlayDomeSkp_v1.dae',
         position: [0, 0, 0],
