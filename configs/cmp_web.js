@@ -83,14 +83,16 @@ CONFIG = {
        //startTime: '6/1/2005 10:30'
        duration: 32*60,
        gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
-       channels: ['time',
-       'year',
-        {name: 'temp', label: "T", format: v => sprintf("%6.2f", v)},
-        {name: 'co2', label: "CO2"},
-        {name: 'balance', label: "Balance", format: v => sprintf("%8.1f", v)},
+       channels: [
+          'time',
+          'year',
+          {name: 'temp', label: "T", format: v => sprintf("%6.2f", v)},
+          {name: 'co2', label: "CO2"},
+          {name: 'balance', label: "Balance", format: v => sprintf("%8.1f", v)},
           'dyear',
           'spacer',
-          'narrative'],
+          'narrative'
+      ],
        scripts: {
            'Show Earthquakes': (game) => setEarthVideo(game, "videos/earthquakes.mp4"),
            'Show 2013 Weather': (game) => setEarthVideo(game, "videos/GlobalWeather2013.mp4"),

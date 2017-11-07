@@ -17,8 +17,10 @@ class CMPData {
         var year = GSS.timeToYear(t);
         //console.log("year: "+year);
         var data = game.controllers.cmp.loader.data;
-        if (data)
-            data = data.rcp8p5;
+        if (data) {
+            //data = data.rcp8p5;
+            data = data.active;
+        }
         window.DATA = data;
         if (data && year) {
             var yearf = Math.floor(year);
