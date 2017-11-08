@@ -175,6 +175,32 @@ class Slides extends MediaStream
     }
 }
 
+class StateStream extends MediaStream
+{
+    constructor(game, options) {
+//        if (!options.group) {
+//            Util.reportError("StateStream - No group specified");
+//            options.group = null;
+//        }
+        options.name = options.name || "stateStream_"+options.group;
+        super(game, options);
+        this.group = options.group;
+    }
+
+    onChangeFrame(frame) {
+        console.log("StateStream.onChangeFrame "+this.screenName+" frame: "+frame);
+        console.log("   frame: "+JSON.stringify(frame));
+        if (this.group) {
+            this.game.state.set(this.group, frame);
+        }
+        else {
+            for (var key in frame) {
+                this.game.state.set(key, frame[key]);
+            }
+        }
+    }
+}
+
 class StageStream extends MediaStream
 {
     constructor(game, options) {
@@ -223,6 +249,14 @@ Game.registerNodeType("Slides", (game, options) => {
     game.registerController(options.name, slideShow);
     game.registerPlayer(slideShow);
     return slideShow;
+});
+
+Game.registerNodeType("StateStream", (game, options) => {
+    console.log("===========================")
+    console.log("StateStream options ", options);
+    var stateStream = new StateStream(game, options);
+    game.registerPlayer(stateStream);
+    return game.registerController(options.name, stateStream);
 });
 
 Game.registerNodeType("StageStream", (game, options) => {
