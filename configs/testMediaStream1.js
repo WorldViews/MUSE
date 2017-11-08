@@ -16,7 +16,7 @@ MEDIA_SPEC = [
 function onStart(game) {
     game.state.on('time', t => game.state.set("timeStr", sprintf("T_%.2f", t)));
     game.state.on('time', t => game.state.set("f1", t-1));
-    game.state.on('f1', f1 => game.state.set('f2', 2*f1));
+    game.state.on('f1',  f1 => game.state.set('f2', 2*f1));
     //game.state.on('f2', v => game.state.set('f1', v+2)); // This causes stack overflows.
 }
 
