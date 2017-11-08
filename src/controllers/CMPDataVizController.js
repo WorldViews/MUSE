@@ -39,6 +39,12 @@ class CMPDataVizController {
         this.scale = options.scale || chartScale;
         this.state = state;
 
+        if (options.duration) {
+            this.state.yearPerMinute = (endYear - startYear)/(options.duration/60);
+        }
+        this.state.startTime = options.startTime || 0;
+        this.state.duration = options.duration || 18*60;
+
         let self = this;
         this.renderer = renderer;
         this.scene = scene;
@@ -53,6 +59,10 @@ class CMPDataVizController {
         });
         this.currRot = [0, 0, 0];
         this.visible = visible;
+
+        this._updateTime = this._updateTime.bind(this);
+
+        game.state.on('time', this._updateTime);
     }
 
     reset() {
@@ -422,6 +432,25 @@ class CMPDataVizController {
                 .set('position', this._position)
                 .set('scale', this._scale);
         }
+    }
+
+    _updateTime(t) {
+        // check if seek changed
+        if (game.state.get('seek')) {
+            if (t > this.state.startTime) {
+                var dt = t - this.state.startTime;
+                var normalizedTime = dt/this.state.duration;
+                this.seekNormalize(normalizedTime);
+            } else {
+                this.stop();
+            }
+        }
+
+        if (t > this.state.startTime && this.lastTime < this.state.startTime) {
+            this.play();
+        }
+
+        this.lastTS = t;
     }
 }
 

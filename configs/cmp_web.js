@@ -28,7 +28,9 @@ var SPECS = [
         //position: [0, 0, 0],
         position: [-10, 0, 0],
         rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
-        visible: true
+        visible: true,
+        startTime: 10*60, // 10 minutes before starting
+        duration: 20*60   // 20 minutes duration time
     },
     //{  type: 'Stars' },
     VEARTH
@@ -52,8 +54,12 @@ function updateCMPViz2(year)
     var balance = game.state.get("balance");
     var co2f = (co2 - co2Min)/(co2Max - co2Min);
     var Tf = (T - TMin)/(TMax - TMin);
-    console.log(sprintf("year: %s co2: %6.2f T: %6.2f balance: %6.2f  Tf: %4.2f   co2f: %4.2f",
-            year, co2, T, balance, Tf, co2f));
+    try {
+        console.log(sprintf("year: %s co2: %6.2f T: %6.2f balance: %6.2f  Tf: %4.2f   co2f: %4.2f",
+                year, co2, T, balance, Tf, co2f));
+    } catch(e) {
+        console.log(e);
+    }
     atm.setOpacity(0.9*co2f);
     var h = 0.6 + .6*Tf;
     atm.setHue(h);
@@ -70,6 +76,19 @@ function setEarthVideo(game, url)
     vEarth.setSurfaceVideo(url)
 }
 
+function toHHMMSS(t) {
+    var sec_num = parseInt(t, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours > 0) {
+        return sprintf("%02d:%02d:%02d", hours, minutes, seconds);
+    } else {
+        return sprintf("%02d:%02d", minutes, seconds);
+    }
+}
+
 
 CONFIG = {
     'onStart': onStart,
@@ -84,8 +103,8 @@ CONFIG = {
        duration: 32*60,
        gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
        channels: [
-          'time',
-          'year',
+          {name: 'time', label: "Time", format: toHHMMSS },
+          {name: 'year', label: "Year" },
           {name: 'temp', label: "T", format: v => sprintf("%6.2f", v)},
           {name: 'co2', label: "CO2"},
           {name: 'balance', label: "Balance", format: v => sprintf("%8.1f", v)},

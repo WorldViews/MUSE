@@ -34,27 +34,15 @@ class CMPProgram extends ProgramControl {
         console.log("****** CMPProgram.duration: "+this.duration)
     }
 
-    setPlayTime(t, isAdjust) {
-        super.setPlayTime(t, isAdjust);
-        var cmp = game.CMP || game.controllers['cmp'];
-        if (cmp) {
-            var nt = 0;
-            if (t > 10 * 60) {
-                nt = t / (32 * 60.0);
-            }
-            if (nt > 1)
-                nt = 1;
-            cmp.seekNormalize(nt);
-        }
-    }
+
 
     // This should just update UI elements with playtime information.
     // this may get called with every tick, so the things it causes
     // should be lightweight. (E.g. not seeking videos or redrawing
     // animations.)
-    displayTime(t) {
+    displayTime(t, isAdjust) {
         //console.log("CMPProgram.displayTime "+t);
-        super.displayTime(t);
+        super.displayTime(t, isAdjust);
         if (this.gss) {
             var year = GSS.timeToYear(t);
             //console.log("year: " + year);
