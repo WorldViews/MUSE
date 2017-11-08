@@ -80,7 +80,7 @@ class ProgramControl
         return sprintf("%8.1f", t);
     }
 
-    displayTime(t) {
+    displayTime(t, isAdjust) {
         //console.log("displayTime "+t);
         var tStr = "";
         try {
@@ -90,7 +90,8 @@ class ProgramControl
             console.log("err: ", e);
             console.log("*** displayTime err  t: "+t);
         }
-        this.game.state.set("time", tStr);
+        this.game.state.set("time", t);
+        this.game.state.set('seek', isAdjust ? true : false);
         var dur = this.duration;
     	let value = ((t-this.startTime)/(0.0+dur));
         if (game.controllers.ui) {
@@ -144,7 +145,7 @@ class ProgramControl
         this._playTime = t;
         //this.propagate(player => player.setPlayTime(t, isAdjust));
         this.propagate(player => player.setPlayTime && player.setPlayTime(t, isAdjust));
-        this.displayTime(t);
+        this.displayTime(t, isAdjust);
         //this.game.state.set("mainScreen.playTime", t);
     }
 
