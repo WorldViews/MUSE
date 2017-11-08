@@ -27,24 +27,24 @@ MEDIA_SPEC = [
           { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
       ]
    },
-   {  type: 'MediaSequence', name: 'mainScreen',
-      media: [
-          [{ url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
-           { name: 'leftScreen', url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
-           { name: 'controlScript', note: "This is a note", n: 5},
-           { name: 'year', text: 1969}
-          ],
-          [{ url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
-           { name: 'leftScreen', url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
-           { name: 'controlScript', note: "This is a second note", n: 25},
-           { name: 'year', text: 1973}
-          ],
-          { url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
-          //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
-          { url: 'videos/YukiyoCompilation.mp4'},
-          { url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
-          { url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'},
-      ]
+   {  type: 'MediaSeq', name: 'mainScreen',
+      records: [
+          { mainScreen: {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
+            leftScreen: {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
+            controlScript: {note: "This is a note", n: 5},
+            year: {text: 1969}
+          },
+          { 'mainScreen': { url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+            'leftScreen': { url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
+            'controlScript': {note: "This is a second note", n: 25},
+            'year': { text: 1973}
+          },
+          { mainScreen: {url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'}},
+        //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
+          { mainScreen: { url: 'videos/YukiyoCompilation.mp4'}},
+          { mainScreen: { url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'}},
+          { mainScreen: { url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}}
+    ]
    },
 ];
 

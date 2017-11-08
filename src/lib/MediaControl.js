@@ -101,6 +101,7 @@ class MediaSequence extends MediaSet
     prev() {
         this.setIdx(this.idx - 1);
     }
+    
     onChangeMedia(frames) {
         if (!Array.isArray(frames)) {
             frames = [frames]
@@ -112,6 +113,62 @@ class MediaSequence extends MediaSet
             console.log("   url: "+frame.url);
             this.game.state.set(name, frame);
         });
+    }
+}
+
+// THis is a set of states with a natural order.
+class MediaSeq extends MediaSet
+{
+    constructor(game, options) {
+        super(game, options);
+        this.records = [];
+        this.addRecords(options.records);
+        this.idx = null;
+        this.setIdx(0);
+        game.program.addMediaSequence(this);
+    }
+
+    addRecords(records) {
+        var inst = this;
+        records.forEach(rec => {
+            if (!rec.type) {
+                rec = {type: 'mediaState',
+                       values: rec};
+            }
+            else if (rec.type != "mediaState") {
+                Util.reportError("Unexpected type in MediaSeq");
+                return;
+            }
+            inst.records.push(rec);
+        })
+    }
+
+    setIdx(idx) {
+        if (idx < 0 || idx >= this.records.length) {
+            console.log("MediaSeq.setIdx out of range");
+            return;
+        }
+        if (idx == this.idx)
+            return;
+        this.idx = idx;
+        this.onChangeMedia(this.records[idx]);
+    }
+
+    next() {
+        this.setIdx(this.idx + 1);
+    }
+
+    prev() {
+        this.setIdx(this.idx - 1);
+    }
+
+    onChangeMedia(record) {
+        console.log("MediaSeq.onChangeMedia "+this.name);
+        for (var name in record.values) {
+            var val = record.values[name];
+            console.log("state.set "+name+" "+JSON.stringify(val));
+            this.game.state.set(name, val);
+        }
     }
 }
 
@@ -231,6 +288,16 @@ Game.registerNodeType("MediaSequence", (game, options) => {
     var mediaSequence = new MediaSequence(game, options);
     window.mediaSequence = mediaSequence;
     return mediaSequence;
+});
+
+Game.registerNodeType("MediaSeq", (game, options) => {
+    console.log("===========================")
+    console.log("MediaSeq ", options);
+    console.log("MediaSeq "+JSON.stringify(options));
+    options.name = options.name || "mediaSeq";
+    var mediaSeq = new MediaSeq(game, options);
+    window.mediaSeq = mediaSeq;
+    return mediaSeq;
 });
 
 

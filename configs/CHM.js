@@ -45,26 +45,26 @@ function onStart(game)
 }
 
 MEDIA = [
-    {  type: 'MediaSequence', name: 'mainScreen',
-       media: [
-           [{ name: 'sceneControl', hide: 'RoofGroup', view: "Home"},
-            { name: 'day', text: "Monday"}
-           ],
-           [{ name: 'sceneControl', show: 'RoofGroup', view: "Left Rear"},
-            { name: 'day', text: "Tuesday"}
-           ],
-           [{ name: 'sceneControl'},
-            { name: 'day', text: "Wednesday"}
-           ],
-           [{ name: 'sceneControl', note: "This is a note", view: "Left Rear"},
-            { name: 'day', text: "Wednesday Banquet"}
-           ],
-           [{ name: 'sceneControl', note: "This is a note", view: "Home"},
-            { name: 'day', text: "Thursday"}
-           ],
-           [{ name: 'sceneControl', note: "This is a note", view: "Home"},
-            { name: 'day', text: "Friday"}
-           ],
+    {  type: 'MediaSeq', name: 'mainScreen',
+       records: [
+           { 'sceneControl': {hide: 'RoofGroup', view: "Home"},
+              'day': {text: "Monday"}
+           },
+           { 'sceneControl': {show: 'RoofGroup', view: "Left Rear"},
+             'day': {text: "Tuesday"}
+           },
+           { 'sceneControl': {},
+             'day': {text: "Wednesday"}
+           },
+           { 'sceneControl': {note: "This is a note", view: "Left Rear"},
+             'day': {text: "Wednesday Banquet"}
+           },
+           { 'sceneControl': {note: "This is a note", view: "Home"},
+             'day': {text: "Thursday"}
+           },
+           { 'sceneControl': {note: "This is a note", view: "Home"},
+             'day': {text: "Friday"}
+           },
        ]
    }
 ];

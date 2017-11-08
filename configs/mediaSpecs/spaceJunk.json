@@ -43,4 +43,22 @@
           { "url": "assets/images/SpaceDebrisTalk/Slide6.PNG"}
       ]
    }
+   {  "type": "MediaSeq",
+      "records": [
+          { "mainScreen": {"url": "assets/images/SpaceDebrisTalk/Slide1.PNG"},
+            "leftScreen": {"url": "assets/images/SpaceDebrisTalk/Slide1.PNG"},
+            "controlScript": {"note": "This is a note", "n": 5},
+            "year": {"text": 1969}
+          },
+          { "mainScreen": { "url": "assets/images/SpaceDebrisTalk/Slide2.PNG"},
+            "leftScreen": { "url": "assets/images/SpaceDebrisTalk/Slide3.PNG"},
+            "controlScript": {"note": "This is a second note", n: 25},
+            "year": { "text": 1973}
+          },
+          { "mainScreen": { "url": "assets/images/SpaceDebrisTalk/Slide3.PNG"}},
+          { "mainScreen": { "url": "videos/YukiyoCompilation.mp4"}},
+          { "mainScreen": { "url": "assets/images/SpaceDebrisTalk/Slide5.PNG"}},
+          { "mainScreen": { "url": "assets/images/SpaceDebrisTalk/Slide6.PNG"}}
+    ]
+   },
 ]
