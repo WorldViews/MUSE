@@ -38,7 +38,7 @@ MEDIA_SPEC = [
            { name: 'leftScreen', url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
            { name: 'controlScript', note: "This is a second note", n: 25},
            { name: 'year', text: 1973}
-       ],
+          ],
           { url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
           //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
           { url: 'videos/YukiyoCompilation.mp4'},
