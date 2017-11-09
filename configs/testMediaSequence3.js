@@ -1,6 +1,6 @@
 
 MEDIA_SPEC = [
-    {  type: 'MediaSeq',
+    {  type: 'MediaSequence',
        records: [
             {   type: 'mediaState',
                 values: {

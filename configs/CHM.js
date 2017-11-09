@@ -45,7 +45,7 @@ function onStart(game)
 }
 
 MEDIA = [
-    {  type: 'MediaSeq', name: 'mainScreen',
+    {  type: 'MediaSequence', name: 'mainScreen',
        records: [
            { 'sceneControl': {hide: 'RoofGroup', view: "Home"},
               'day': {text: "Monday"}
@@ -71,7 +71,7 @@ MEDIA = [
 
 CONFIG = {
     'onStart': onStart,
-    'ui': {'type': 'JQControls'},
+    'webUI': {'type': 'JQControls'},
     'program': {
         media: MEDIA,
         channels: ["day", "view"]

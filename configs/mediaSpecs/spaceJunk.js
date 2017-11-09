@@ -27,7 +27,7 @@ MEDIA_SPEC = [
           { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
       ]
    },
-   {  type: 'MediaSeq', name: 'mainScreen',
+   {  type: 'MediaSequence', name: 'mainScreen',
       records: [
           { mainScreen: {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
             leftScreen: {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},

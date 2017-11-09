@@ -72,7 +72,8 @@ class MediaSet {
 }
 
 // THis is a set of states with a natural order.
-class MediaSequence extends MediaSet
+/*
+class MediaSequenceOLD extends MediaSet
 {
     constructor(game, options) {
         super(game, options);
@@ -101,7 +102,7 @@ class MediaSequence extends MediaSet
     prev() {
         this.setIdx(this.idx - 1);
     }
-    
+
     onChangeMedia(frames) {
         if (!Array.isArray(frames)) {
             frames = [frames]
@@ -115,9 +116,10 @@ class MediaSequence extends MediaSet
         });
     }
 }
+*/
 
 // THis is a set of states with a natural order.
-class MediaSeq extends MediaSet
+class MediaSequence extends MediaSet
 {
     constructor(game, options) {
         super(game, options);
@@ -277,7 +279,8 @@ class StageStream extends MediaStream
     }
 }
 
-Game.registerNodeType("MediaSequence", (game, options) => {
+/*
+Game.registerNodeType("MediaSequenceOLD", (game, options) => {
     console.log("===========================")
     console.log("slides ", options);
     console.log("slides "+JSON.stringify(options));
@@ -289,13 +292,14 @@ Game.registerNodeType("MediaSequence", (game, options) => {
     window.mediaSequence = mediaSequence;
     return mediaSequence;
 });
+*/
 
-Game.registerNodeType("MediaSeq", (game, options) => {
+Game.registerNodeType("MediaSequence", (game, options) => {
     console.log("===========================")
-    console.log("MediaSeq ", options);
-    console.log("MediaSeq "+JSON.stringify(options));
+    console.log("MediaSequence ", options);
+    console.log("MediaSequence "+JSON.stringify(options));
     options.name = options.name || "mediaSeq";
-    var mediaSeq = new MediaSeq(game, options);
+    var mediaSeq = new MediaSequence(game, options);
     window.mediaSeq = mediaSeq;
     return mediaSeq;
 });
