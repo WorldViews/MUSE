@@ -1,6 +1,6 @@
 
 MEDIA_SPECS = [
-    { type : 'MediaSequences',
+    { type : 'MediaSequence',
       records: [
           { t: 0,    mainScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
           { t: 10,   mainScreen:  {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},

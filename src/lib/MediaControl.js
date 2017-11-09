@@ -72,7 +72,18 @@ class MediaSet {
 }
 
 
-// THis is a set of states with a natural order.
+/*
+This is a sequence of media states with a well defined order.
+For each state there is a prev and next.
+
+This may be used as a stream, in which case a time and duration
+are computed for each record.  In the input, each record may
+have a specified time or duration, or both, and this will
+find a compatible set of times and durations.
+
+Note that if this is used as a stream, the records are
+treated as contiguous, and can not "overlap".
+*/
 class MediaSequence extends MediaSet
 {
     constructor(game, options) {
