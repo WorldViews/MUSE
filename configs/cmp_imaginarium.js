@@ -1,29 +1,18 @@
 
-
 MEDIA_SPECS = [
-    {  type: 'Slides', group: 'mainScreen',
-       records: [
-           { t: 0,   url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
-           { t: 10,   url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'},
-       ]
-   },
-   {  type: 'Slides', group: 'leftScreen',
-       records: [
-           { t: 50,   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'},
-           { t: 200,   url: 'assets/images/SpaceDebrisTalk/Slide7.PNG'},
-           { t: 400,   url: 'assets/images/SpaceDebrisTalk/Slide8.PNG'}
-       ]
-   },
-   {  type: 'Slides', group: 'rightScreen',
-       records: [
-           { t: 100,   url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
-           { t: 200,   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
-           { t: 300,   url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
-           //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
-           { t: 500,   url: 'videos/YukiyoCompilation.mp4'},
-           { t: 600,   url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
-           { t: 700,   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
-       ]
+    { type : 'MediaSequences',
+      records: [
+          { t: 0,    mainScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
+          { t: 10,   mainScreen:  {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
+          { t: 50,   leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}},
+          { t: 100,  rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
+          { t: 200,  leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide7.PNG'},
+                     rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'}},
+          { t: 400,  leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide8.PNG'}},
+          { t: 500,  rightScreen: {url: 'videos/YukiyoCompilation.mp4'}},
+          { t: 600,  rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'}},
+          { t: 700,  rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}}
+      ]
     },
     {  type: 'StageStream', stage: 'Main Stage',
        records: [

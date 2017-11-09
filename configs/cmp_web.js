@@ -1,11 +1,11 @@
 
 MEDIA_SPECS = [
-    {  type: 'Slides', group: 'mainScreen',
+    {  type: 'MediaSequence', defaultDuration: 1,
        records: [
-           { t: 0,   url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'},
-          // { t: 500,   url: 'videos/tas_1850_2300.mp4'},
+           { t: 0,   mainScreen: {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
+           { t: 1,   mainScreen: {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
        ]
-   },
+   }
 ];
 
 VEARTH = [
