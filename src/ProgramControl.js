@@ -146,20 +146,12 @@ class ProgramControl
         //this.propagate(player => player.setPlayTime(t, isAdjust));
         this.propagate(player => player.setPlayTime && player.setPlayTime(t, isAdjust));
         this.displayTime(t, isAdjust);
-        //this.game.state.set("mainScreen.playTime", t);
     }
 
     propagate(fun) {
         for (name in this.players) {
             var player = this.players[name];
             try { fun(player) }
-            catch (e) {
-                console.log("err: ", e);
-            }
-        }
-        for (var key in this.game.screens) {
-            var screen = this.game.screens[key];
-            try { fun(screen) }
             catch (e) {
                 console.log("err: ", e);
             }

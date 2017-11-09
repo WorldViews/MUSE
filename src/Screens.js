@@ -56,8 +56,10 @@ class Screen extends THREE.Object3D
         game.setFromProps(this, spec);
         game.addToGame(this, spec.name, spec.parent);
         this.userData = {doubleClick: "FOO"};
-        if (spec.name)
+        if (spec.name) {
             game.screens[spec.name] = this;
+            game.program.registerPlayer(this, spec.name);
+        }
         var inst = this;
         console.log("******************** registerWatcher: "+spec.name);
         game.state.on(this.channel, (newProps) => inst.onChange(newProps));
