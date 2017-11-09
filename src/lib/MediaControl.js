@@ -71,63 +71,29 @@ class MediaSet {
     }
 }
 
-// THis is a set of states with a natural order.
-/*
-class MediaSequenceOLD extends MediaSet
-{
-    constructor(game, options) {
-        super(game, options);
-        var media = options.media;
-        this.media = media;
-        this.idx = null;
-        this.setIdx(0);
-        game.program.addMediaSequence(this);
-    }
-
-    setIdx(idx) {
-        if (idx < 0 || idx >= this.media.length) {
-            console.log("MediaSequence.setIdx out of range");
-            return;
-        }
-        if (idx == this.idx)
-            return;
-        this.idx = idx;
-        this.onChangeMedia(this.media[idx]);
-    }
-
-    next() {
-        this.setIdx(this.idx + 1);
-    }
-
-    prev() {
-        this.setIdx(this.idx - 1);
-    }
-
-    onChangeMedia(frames) {
-        if (!Array.isArray(frames)) {
-            frames = [frames]
-        }
-        frames.forEach( frame => {
-            var name = frame.name || this.name;
-            console.log("SlideSequence.onChangeFrame "+this.name+" frame: "+frame);
-            console.log("   name: "+name);
-            console.log("   url: "+frame.url);
-            this.game.state.set(name, frame);
-        });
-    }
-}
-*/
 
 // THis is a set of states with a natural order.
 class MediaSequence extends MediaSet
 {
     constructor(game, options) {
         super(game, options);
+        this.isStream = true;
+        if (options.isStream != undefined)
+            this.isStream = options.isStream;
+        this.defaultDuration = options.defaultDuration;
         this.records = [];
         this.addRecords(options.records);
+        if (this.isStream) {
+            this.defaultDuration = this.defaultDuration || 10;
+            this.computeTimes();
+            this.records = fixRecs(this.records);
+            this.keyFrames = new KeyFrames(this.records);
+            this.prevFrame = null;
+        }
         this.idx = null;
         this.setIdx(0);
         game.program.addMediaSequence(this);
+        this.dump();
     }
 
     addRecords(records) {
@@ -141,8 +107,44 @@ class MediaSequence extends MediaSet
                 Util.reportError("Unexpected type in MediaSeq");
                 return;
             }
+            if (rec.values.t != undefined) {
+                rec.t = rec.values.t;
+                delete rec.values.t;
+            }
+            if (rec.values.duration != undefined) {
+                rec.duration = rec.values.duration;
+                delete rec.values.duration;
+            }
             inst.records.push(rec);
         })
+    }
+
+    computeTimes() {
+        var t = 0;
+        this.records.forEach(rec => {
+            if (!rec.duration)
+                rec.duration = this.estimateDuration(rec);
+            if (rec.t != undefined) {
+                if (rec.t < t) {
+                    Util.reportWarning("Squeezed value of t");
+                }
+                t = rec.t;
+            }
+            rec.t = t;
+            t += rec.duration;
+        });
+        this.duration = t;
+    }
+
+    estimateDuration(rec) {
+        if (rec.duration)
+            return rec.duration;
+        var dur = this.defaultDuration;
+        for (var name in rec) {
+            if (rec[name].duration)
+                dur = Math.max(dur, rec[name].duration);
+        }
+        return dur;
     }
 
     setIdx(idx) {
@@ -164,6 +166,19 @@ class MediaSequence extends MediaSet
         this.setIdx(this.idx - 1);
     }
 
+    update() {
+        if (!this.isStream)
+            return;
+        var t = this.game.program.getPlayTime();
+        this.prevPlayTime = t;
+        var frame = this.keyFrames.getFrameByTime(t);
+        //console.log("MediaStream "+this.name+" frame: "+frame);
+        if (frame != this.prevFrame) {
+            this.onChangeMedia(frame);
+            this.prevFrame = frame;
+        }
+    }
+
     onChangeMedia(record) {
         console.log("MediaSeq.onChangeMedia "+this.name);
         for (var name in record.values) {
@@ -171,6 +186,15 @@ class MediaSequence extends MediaSet
             console.log("state.set "+name+" "+JSON.stringify(val));
             this.game.state.set(name, val);
         }
+    }
+
+    getJSON() {
+        var obj = {'type': 'MediaSequence', records: this.records};
+        return obj;
+    }
+
+    dump() {
+        console.log(JSON.stringify(this.getJSON(), null, 3));
     }
 }
 
@@ -301,7 +325,7 @@ Game.registerNodeType("MediaSequence", (game, options) => {
     options.name = options.name || "mediaSeq";
     var mediaSeq = new MediaSequence(game, options);
     window.mediaSeq = mediaSeq;
-    return mediaSeq;
+    return game.registerController(options.name, mediaSeq);
 });
 
 
