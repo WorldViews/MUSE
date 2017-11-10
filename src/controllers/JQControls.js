@@ -455,7 +455,7 @@ class VideoView extends JQWidget {
         }
         var v = this.$video[0];
         if (props.url) {
-            this.$video.attr('src', props.url);
+            this.setUrl(props.url);
         }
         if (props.requestedPlayTime) {
             var t = props.requestedPlayTime;
@@ -473,6 +473,11 @@ class VideoView extends JQWidget {
         }
     }
 
+    setUrl(url) {
+        console.log("JQ.videoView.setUrl "+this.name+" "+url);
+        this.$video.attr('src', url);
+    }
+
     play() {
         var v = this.$video[0];
         v.play();
@@ -484,6 +489,7 @@ class VideoView extends JQWidget {
     }
 
     setPlayTime(t) {
+        //console.log("JQ setPlayTime "+this.name+" t: "+t+" playTime: "+game.program.getPlayTime());
         var v = this.$video[0];
         v.currentTime = t;
     }

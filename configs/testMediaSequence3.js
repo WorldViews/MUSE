@@ -28,6 +28,17 @@ MEDIA_SPEC = [
                narrative: "Old age",
                f1: 50
             },
+            {  duration: 20,
+               leftScreen: {url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
+               population: 30,
+               narrative: "decrepid"
+            },
+            {  leftScreen: {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'},
+               duration: 600,
+               population: 40,
+               narrative: "deceased",
+               f1: 50
+            },
        ]
    }
 ]

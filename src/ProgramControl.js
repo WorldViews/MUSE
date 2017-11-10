@@ -63,6 +63,11 @@ class ProgramControl
     {
         name = name || player.name;
         //TODO: flag error if no name or name collision.
+        // Note... this should probably be changed so that players can have the same name
+        // or the players have unique names but specify channel names.
+        if (this.players[name]) {
+            Util.reportError("Reregistering player named "+name);
+        }
         this.players[name] = player;
     }
 
@@ -135,6 +140,14 @@ class ProgramControl
         return this._playTime;
     };
 
+    getRelativeTime(name) {
+        var t = this.getPlayTime();
+        var t0 = game.state.get(name+"._t");
+        if (t0)
+            return t - t0;
+        return t;
+    }
+
     // isAdjust is true if this was an adjustment (e.g. scrubbing) event
     // that should not force a heavyweight seek.  This can be ignored,
     // but may provide a nicer user experience if expensive operations
@@ -143,8 +156,13 @@ class ProgramControl
         t = Util.toTime(t);
         this._prevClockTime = getClockTime();
         this._playTime = t;
-        //this.propagate(player => player.setPlayTime(t, isAdjust));
-        this.propagate(player => player.setPlayTime && player.setPlayTime(t, isAdjust));
+        //this.propagate(player => player.setPlayTime && player.setPlayTime(t, isAdjust));
+        for (name in this.players) {
+            var rt = this.getRelativeTime(name);
+            var player = this.players[name];
+            if (player.setPlayTime)
+                player.setPlayTime(rt);
+        }
         this.displayTime(t, isAdjust);
     }
 

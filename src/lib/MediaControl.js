@@ -192,10 +192,17 @@ class MediaSequence extends MediaSet
 
     onChangeMedia(record) {
         console.log("MediaSeq.onChangeMedia "+this.name);
+        var t = this.game.program.getPlayTime();
+        var t0 = t;
+        if (record.t != null) {
+            this.game.program.setPlayTime(record.t);
+            t0 = record.t;
+        }
         for (var name in record.values) {
             var val = record.values[name];
             console.log("state.set "+name+" "+JSON.stringify(val));
             this.game.state.set(name, val);
+            this.game.state.set(name+"._t", t0);
         }
     }
 
@@ -239,6 +246,11 @@ class MediaStream {
         this.prevPlayTime = t;
         var frame = this.keyFrames.getFrameByTime(t);
         //console.log("MediaStream "+this.name+" frame: "+frame);
+        var tRelative = t;
+        if (frame.t != undefined) {
+            tRelative = t - frame.t;
+            //console.log(sprintf("t: %.2f tRel: %.2f", t, tRelative));
+        }
         if (frame != this.prevFrame) {
             this.onChangeFrame(frame);
             this.prevFrame = frame;
@@ -313,21 +325,6 @@ class StageStream extends MediaStream
             ui.stageControl.selectModel(modelName);
     }
 }
-
-/*
-Game.registerNodeType("MediaSequenceOLD", (game, options) => {
-    console.log("===========================")
-    console.log("slides ", options);
-    console.log("slides "+JSON.stringify(options));
-    if (!options.name) {
-        Util.reportError("MediaSequence No name specified");
-        return null;
-    }
-    var mediaSequence = new MediaSequence(game, options);
-    window.mediaSequence = mediaSequence;
-    return mediaSequence;
-});
-*/
 
 Game.registerNodeType("MediaSequence", (game, options) => {
     console.log("===========================")
