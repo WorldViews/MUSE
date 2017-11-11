@@ -322,7 +322,7 @@ class StageStream extends MediaStream
         console.log("   choice: "+modelName);
         var ui = game.controllers.ui;
         if (ui)
-            ui.stageControl.selectModel(modelName);
+            ui.selectModel(modelName);
     }
 }
 
