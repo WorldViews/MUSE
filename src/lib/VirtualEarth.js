@@ -1,6 +1,8 @@
 
 import * as THREE from 'three'
 import {Game} from '../Game'
+import {Node} from '../Node';
+import {Node3D} from '../Node3D';
 import {SatTracks} from '../SpaceObjects/SatTracks'
 import {Atmosphere} from './Atmosphere'
 import {CMPDataViz2} from './CMPDataViz2'
@@ -19,9 +21,10 @@ function latLonToVector3(lat, lon, radius, height) {
 }
 
 
-class Planet {
+class Planet extends Node3D {
 
     constructor(game, opts) {
+        super(game,opts);
         console.log("Planet this: "+this);
         this.startTime = new Date().getTime()/1000.0;
         this.game = game;

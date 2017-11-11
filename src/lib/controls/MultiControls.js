@@ -4,6 +4,7 @@
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 import { getCameraParams } from '../../Util';
+import {Node} from '../../Node';
 
 // The four arrow keys
 var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40,
@@ -17,10 +18,11 @@ function bind( scope, fn ) {
     };
 }
 
-class MultiControls
+class MultiControls extends Node
 {
-
     constructor(game, domElement, opts) {
+        super(game, opts);
+        this.checkOptions(opts);
         console.log("****** MultiControls.constructor()", opts);
         var inst = this;
         this.ignoredModels = ["stars"];
@@ -498,5 +500,12 @@ class MultiControls
     };
 
 };
+
+Node.defineFields(MultiControls, [
+    "movementSpeed",
+    "keyPanSpeed",
+    "keyMoveSpeed",
+    "distance"
+]);
 
 export {MultiControls};
