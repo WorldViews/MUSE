@@ -29,6 +29,7 @@ import { Kessler } from './KesslerNode';
 
 import { Player0 } from './interfaces/PlayerInterface';
 import {Route} from './Route';
+import '../test/testNode';
 
 let {degToRad} = THREE.Math;
 

@@ -1,16 +1,26 @@
 
 import * as THREE from 'three';
 import * as Util from './Util';
+//import {testNode} from '../test/testNode'
+//import '../test/testNode'
 
-var NodeTypes = {};
+var REGISTER_NODES = true;
+var nodeTypes = {};
+var nodesByType = {};
+
+var numObjs = 0;
+
+function getUniqueId(class_) {
+    return (class_+'_'+numObjs);
+}
 
 class Node {
     static getAllNodeTypes() {
-        return NodeTypes;
+        return nodeTypes;
     }
 
     static defineFields(class_, fields) {
-        NodeTypes[class_.name] = class_;
+        nodeTypes[class_.name] = class_;
         var FIELDS = {};
         fields.forEach(field => {
             FIELDS[field] = field;
@@ -20,7 +30,16 @@ class Node {
 
     constructor(game, opts)
     {
+        opts = opts || {};
         this.game = game;
+        var class_ = this.getClassName();
+        if (REGISTER_NODES) {
+            if (!nodesByType[class_])
+                nodesByType[class_] = [];
+            nodesByType[class_].push(this);
+        }
+        this.id = opts.id || getUniqueId(class_);
+        this.name = opts.name || this.id;
         //this.checkOpts(opts);
     }
 
@@ -72,72 +91,12 @@ Node.defineFields(Node, [
     "name"
 ]);
 
-/*
-class Node3D extends Node {
-}
 
-Node.defineFields(Node3D, [
-    "position",
-    "scale",
-    "rotation",
-    "visible"
-]);
-*/
 
-//Node.constructor.FIELDS = ["name"];
-
-class Thing extends Node {
-    constructor (x, opts) {
-        super(x,opts);
-    }
-}
-
-//Thing.FIELDS = ["home", "color"];
-Node.defineFields(Thing, [
-    "home",
-    "color"]
-);
-
-class Animal extends Thing {
-    constructor(x, opts) {
-        super(x, opts);
-        this.checkOptions(opts);
-    }
-}
-
-Node.defineFields(Animal, [
-        "type"
-    ]
-);
-
-class Cat extends Animal {
-    constructor(x, opts) {
-        super(x, opts);
-    }
-}
-
-Node.defineFields(Cat, [
-        "furColor"
-    ]
-);
-
-class Tiger extends Cat {
-    constructor(game, opts) {
-        super(game, opts);
-    }
-}
-
-Node.defineFields(Tiger, [
-    "toothSize"
-]);
-
-function testNode()
-{
-    var foo = new Foo();
-}
-
-window.testNode = testNode;
+//window.testNode = testNode;
 window.Node = Node;
-window.Tiger = Tiger;
+window.nodeTypes = nodeTypes;
+window.nodesByType = nodesByType;
+//window.Tiger = Tiger;
 
 export {Node};
