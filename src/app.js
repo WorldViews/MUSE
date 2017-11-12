@@ -6,6 +6,7 @@ import { Scripts } from './Scripts';
 import { PanoPortal } from './lib/PanoPortal';
 import { CMPProgram } from './CMPProgram';
 import './Screens';
+import './Screens2';
 import { Game } from './Game';
 import Util from './Util';
 import { Dancer } from './controllers/DanceController';
