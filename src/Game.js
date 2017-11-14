@@ -245,7 +245,7 @@ class Game {
         this.updateHandlers.forEach(h => {
             try {h(msTime)}
             catch (e) {
-                console.log("err: "+e);
+                console.log("err: "+e,e);
             }
         });
         this.render();
@@ -450,14 +450,15 @@ class Game {
         return new Promise((resolve,reject) => { reject(); });
     }
 
-    loadSpecs(specs) {
+    // load a given set of specs.  name is just for debugging.
+    loadSpecs(specs, name) {
         var inst = this;
         console.log("***** game.loadSpecs creating promise");
         return new Promise((resolve, reject) => {
             new Loader(inst, specs, () => {
                 console.log("*****  game.loadSpecs resolving promise...");
                 resolve();
-            });
+            }, name);
         });
     }
 }

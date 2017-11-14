@@ -145,16 +145,17 @@ function start_(config) {
         config.webUI = config.ui;
     }
     if (config.webUI) {
-        game.loadSpecs(Util.getTypedObj(config.webUI));
+        game.loadSpecs(Util.getTypedObj(config.webUI), "webUI");
     }
 
     var parts = [];
     if (config.venue)
-        parts.push(game.loadSpecs(config.venue));
+        parts.push(game.loadSpecs(config.venue, "venue"));
     if (config.specs)
-        parts.push(game.loadSpecs(config.specs));
+        parts.push(game.loadSpecs(config.specs, "specs"));
     Promise.all(parts).then(() => {
         console.log("loaded elements");
+        console.log("****************** Starting game ******************");
         game.config = config;
         if (config.onStart) {
             config.onStart(game);

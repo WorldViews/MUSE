@@ -46,14 +46,17 @@ function reportError(str)
 }
 */
 
+var numLoaders = 0; // just for debugging purposes
 var numGroups = 0;
 
 
 class Loader
 {
-    constructor(game, specs, onCompleted)
+    constructor(game, specs, onCompleted, name)
     {
-        console.log("======================== Loader ========================");
+        console.log("======================== Loader ==================== " + name);
+        numLoaders++;
+        this.name = name || "Loader"+numLoaders; // just for debugging
         this.game = game;
         this.numPending = 0;
         this.onCompleted = onCompleted;
@@ -122,7 +125,11 @@ class Loader
                 return;
             }
             var obj = game.createNode(spec.type, spec);
-            if (!obj) {
+            if (obj) {
+                this.numPending++;
+                obj.then(() => { inst.handleCompletion(); });
+            }
+            else {
                 reportError("Failed to create oject type: "+spec.type);
             }
         });
@@ -217,7 +224,7 @@ class Loader
     }
 
     complete() {
-        console.log("****************** MODELS ALL LOADED ******************");
+        console.log("****************** Loader Completed: "+this.name);
         if (this.onCompleted)
             this.onCompleted();
     }
