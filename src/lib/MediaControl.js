@@ -102,6 +102,7 @@ class MediaSequence extends MediaSet
             this.prevFrame = null;
         }
         this.idx = null;
+        this.numFrames = 0;
         this.setIdx(0);
         game.program.addMediaSequence(this);
         this.dump();
@@ -180,6 +181,11 @@ class MediaSequence extends MediaSet
     update() {
         if (!this.isStream)
             return;
+        if (this.numFrames == 0) {
+            console.log("****** Initializing media sequence *****");
+            this.prevFrame = null;
+        }
+        this.numFrames++;
         var t = this.game.program.getPlayTime();
         this.prevPlayTime = t;
         var frame = this.keyFrames.getFrameByTime(t);
@@ -201,8 +207,9 @@ class MediaSequence extends MediaSet
         for (var name in record.values) {
             var val = record.values[name];
             console.log("state.set "+name+" "+JSON.stringify(val));
-            this.game.state.set(name, val);
-            this.game.state.set(name+"._t", t0);
+            //this.game.state.set(name, val);
+            this.game.state.dispatch(name, val);
+            this.game.state.dispatch(name+"._t", t0);
         }
     }
 
@@ -263,7 +270,7 @@ class MediaStream {
 
 }
 
-
+/*
 class Slides extends MediaStream
 {
     constructor(game, options) {
@@ -280,6 +287,7 @@ class Slides extends MediaStream
         this.game.state.set(this.screenName, {url});
     }
 }
+*/
 
 class StateStream extends MediaStream
 {
@@ -338,6 +346,8 @@ Game.registerNodeType("MediaSequence", (game, options) => {
 
 
 Game.registerNodeType("Slides", (game, options) => {
+    alert("Slides no longer supported - use MediaSequence");
+    return;
     console.log("===========================")
     console.log("slides ", options);
     console.log("slides "+JSON.stringify(options));
@@ -380,4 +390,5 @@ Game.registerNodeType("StageStream", (game, options) => {
 });
 
 
-export {Slides, StageStream};
+//export {Slides, StageStream};
+export {StageStream};
