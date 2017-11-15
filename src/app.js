@@ -16,6 +16,7 @@ import StarsController from './controllers/StarsController';
 import StatsController from './controllers/StatsController';
 import {ReactControls} from './controllers/ReactControls';
 import {JQControls} from './controllers/JQControls';
+import DATGUIControls from './controllers/DATGUIControls';
 import VRGame from './VRGame';
 import WebVR from './lib/vr/WebVR';
 

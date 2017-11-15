@@ -30,7 +30,8 @@ CONFIG = {
     //'cameraControls': 'Orbit',
     'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .02},
     //'cameraControls': 'JoelControls',
-    'webUI': {type: 'JQControls',
+    'webUI': {type: 'DATGUIControls',
+    // 'webUI': {type: 'JQControls',
            //screens: ["mainScreen"],
           },
     'program': {
@@ -57,3 +58,4 @@ CONFIG = {
 };
 
 MUSE.returnValue(CONFIG);
+// 
