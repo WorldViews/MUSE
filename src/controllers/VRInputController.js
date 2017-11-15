@@ -1,6 +1,6 @@
 import OBJLoader from '../lib/loaders/OBJLoader';
 import * as THREE from 'three';
-import ViveController from '../lib/vr/ViveController';
+import VRController from '../lib/vr/VRController';
 
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 
@@ -31,14 +31,17 @@ function loadAll(loaderFilePairs) {
     );
 }
 
-export default class ViveControllerController {
+export default class VRInputController {
 
-    constructor(scene, body) {
+    constructor(scene, body, camera, vrType) {
         this.scene = scene;
         this.body = body;
+        this.camera = camera;
+        this.type = vrType;
+        this.direction = new THREE.Vector3();
 
-        this.controller0 = new ViveController(0);
-        this.controller1 = new ViveController(1);
+        this.controller0 = new VRController(0);
+        this.controller1 = new VRController(1);
 
         this.body.add(this.controller0);
         this.body.add(this.controller1);
@@ -64,18 +67,13 @@ export default class ViveControllerController {
 
         this.controller0.add(this.line.clone());
 
-        //this.loadViveControllerModel();
-        this.loadOculusControllerModel();
+        this.loadControllerModel();
     }
 
     loadControllerModel() {
         var gamepadModel = 'vive';
-        var gamepads = navigator.getGamepads();
-        for (var i = 0; i < gamepads.length; i++) {
-            if (gamepad.id === 'Oculus Touch (Left)' || gamepad.id === 'Oculus Touch (Right)') {
-                gamepadModel = 'oculus';
-                break;
-            }
+        if (this.type === 'Oculus VR HMD') {
+            gamepadModel = 'oculus';
         }
 
         switch (gamepadModel) {
@@ -154,15 +152,13 @@ export default class ViveControllerController {
         }
     }
 
-    update(timestamp) {
-        let diff = timestamp - this._last || timestamp;
-        this._last = timestamp;
+    handleRaycast(dt) {
         let intersections = this.getIntersections(this.controller0);
 
         if (this.tween) {
             let {position} = this.body;
             let {dx, dz, x, z, duration} = this.tween;
-            let proportion = diff / duration;
+            let proportion = dt / duration;
             let moveXBy = dx * proportion;
             let moveZBy = dz * proportion;
 
@@ -202,6 +198,54 @@ export default class ViveControllerController {
             this.selector.visible = true;
             this.line.scale.z = 5;
         }
+    }
+
+    handleJoystickMovement(dt) {
+        let axes = this.controller0.getAxes();
+        let axisX = axes[0];
+        let axisY = axes[1];
+
+        this.camera.getWorldDirection(this.direction);
+
+        if (axisY < -0.5) {
+            this.body.translateX(0.02 * this.direction.x);
+            this.body.translateZ(0.02 * this.direction.z);
+        } else if (axisY > 0.5) {
+            this.body.translateX(-0.02 * this.direction.x);
+            this.body.translateZ(-0.02 * this.direction.z);
+        }
+
+        if (axisX > 0.5) {
+            // TODO: refactor into function
+            let right = this.direction.clone().applyAxisAngle(Y_AXIS, -NINETY);
+            this.body.translateX(0.02 * right.x);
+            this.body.translateZ(0.02 * right.z);
+        } else if (axisX < -0.5) {
+            // TODO: refactor into function
+            let left = this.direction.clone().applyAxisAngle(Y_AXIS, NINETY);
+            this.body.translateX(0.02 * left.x);
+            this.body.translateZ(0.02 * left.z);
+        }
+
+        let rotAxes = this.controller1.getAxes();
+        let rotAxisX = rotAxes[0];
+        let rotAxisY = rotAxes[1];
+        let oldRot = this.body.rotation.y;
+        let rotMagnitude = (Math.PI/400);
+        if (rotAxisX > 0.3) {
+            oldRot -= rotMagnitude*Math.abs(rotAxisX);
+            this.body.rotation.set(0, oldRot, 0)
+        } else if (rotAxisX < -0.3) {
+            oldRot += rotMagnitude*Math.abs(rotAxisX);
+            this.body.rotation.set(0, oldRot, 0)
+        }
+    }
+
+    update(timestamp) {
+        let dt = timestamp - this._last || timestamp;
+        this._last = timestamp;
+        this.handleRaycast(dt);
+        this.handleJoystickMovement(dt);
 
         this.controller0.update();
         this.controller1.update();

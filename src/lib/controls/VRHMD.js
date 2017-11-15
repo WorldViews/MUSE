@@ -5,7 +5,7 @@
 
 import * as THREE from 'three';
 
-let VRControls = function ( object, onError ) {
+let VRHMD = function ( object, onError ) {
 
     var scope = this;
 
@@ -152,4 +152,4 @@ let VRControls = function ( object, onError ) {
 
 };
 
-export default VRControls;
+export default VRHMD;

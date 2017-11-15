@@ -1,8 +1,8 @@
 import {Game} from './Game';
 import * as THREE from 'three';
 import PointerLockControls from './lib/controls/PointerLockControls';
-import ViveControllerController from './controllers/ViveControllerController';
-import VRControls from './lib/controls/VRControls';
+import VRInputController from './controllers/VRInputController';
+import VRHMD from './lib/controls/VRHMD';
 import VREffect from './lib/effects/VREffect';
 import WebVR from './lib/vr/WebVR';
 
@@ -12,20 +12,26 @@ class VRGame extends Game {
 
     constructor(domElementId, options) {
         super(domElementId, options);
-        this.vrDisplay = null;
-        this.vrControls = null;
-        this.plControls = null;
-
-        this.addControls();
+        this.vr = {};
+        this.vr.display = null;
+        this.vr.hmd = null;
+        this.vr.controllers = null;
 
         if (WebVR.isAvailable())  {
             WebVR.getVRDisplay((display) => {
                 let {domElement} = this.renderer.getUnderlyingRenderer();
                 let button = WebVR.getButton(display, domElement);
                 document.body.appendChild(button);
-                this.vrDisplay = display;
+                this.vr.display = display;
+                this.displayName = display.displayName;
+                this.addControls();
             });
         }
+
+        // create the VR body
+        this.body = new THREE.Object3D();
+        this.scene.add(this.body);
+        this.body.add(this.camera);
     }
 
     /**
@@ -47,26 +53,22 @@ class VRGame extends Game {
     }
 
     addVRControls() {
-        this.vrControls = new VRControls(this.camera);
-        this.registerController('vr', this.vrControls);
+        this.vr.hmd = new VRHMD(this.camera);
+        this.registerController('vrHMD', this.vr.hmd);
 
-        this.body = new THREE.Object3D();
-        this.scene.add(this.body);
-        this.body.add(this.camera);
-
-        this.viveControllerController = new ViveControllerController(this.scene, this.body);
-        this.registerController('viveControls', this.viveControllerController);
+        this.vr.controllers = new VRInputController(this.scene, this.body, this.camera, this.displayName);
+        this.registerController('vrController', this.vr.controllers);
     }
 
     addPointlockControls() {
-        this.plControls = new PointerLockControls(this.camera);
+        this.vr.controls = new PointerLockControls(this.camera);
 
         // Allow the PointerLockControls to create the body,
         // even if we do not use the controls for movement.
         this.body = this.plControls.getObject();
         this.scene.add(this.body);
 
-        attachPointerLock(this.plControls);
+        attachPointerLock(this.vr.controls);
     }
 
     /**
@@ -83,8 +85,8 @@ class VRGame extends Game {
     render() {
         super.render();
 
-        if (this.vrDisplay && this.vrDisplay.isPresenting) {
-            this.vrDisplay.submitFrame();
+        if (this.vr.display && this.vr.display.isPresenting) {
+            this.vr.display.submitFrame();
         }
     }
 }

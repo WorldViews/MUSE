@@ -5,7 +5,7 @@
 
 import * as THREE from 'three';
 
-let ViveController = function ( id ) {
+let VRController = function ( id ) {
 
     THREE.Object3D.call( this );
 
@@ -58,6 +58,15 @@ let ViveController = function ( id ) {
         if ( button === 'menu' ) return menuIsPressed;
 
     };
+
+    this.getAxes = function() {
+        gamepad = findGamepad( id );
+        if (gamepad) {
+            return gamepad.axes;
+        } else {
+            return [0, 0];
+        }
+    }
 
     this.update = function () {
 
@@ -126,7 +135,7 @@ let ViveController = function ( id ) {
 
 };
 
-ViveController.prototype = Object.create( THREE.Object3D.prototype );
-ViveController.prototype.constructor = ViveController;
+VRController.prototype = Object.create( THREE.Object3D.prototype );
+VRController.prototype.constructor = VRController;
 
-export default ViveController;
+export default VRController;

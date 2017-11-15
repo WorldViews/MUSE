@@ -126,8 +126,6 @@ function start_(config) {
 
     if (vr) {
         window.game = new VRGame('canvas3d', config.gameOptions);
-        let navigationController = new NavigationController(game.body, game.camera, game.plControls);
-        game.registerController('navigation', navigationController);
         game.body.position.set(pos.start.x, 1.5, pos.start.z);
     } else {
         window.game = new Game('canvas3d', config.gameOptions);
