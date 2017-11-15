@@ -2,8 +2,8 @@
 MEDIA_SPECS = [
     { type : 'MediaSequence',
       records: [
-          { t: 0,    mainScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
-          { t: 10,   mainScreen:  {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
+          //{ t: 0,    mainScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
+          { t: 0,   mainScreen:  {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
           { t: 50,   leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}},
           { t: 100,  rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
           { t: 200,  leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide7.PNG'},
