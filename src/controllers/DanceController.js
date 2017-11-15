@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 import {BVHLoader} from '../BVHLoader';
 import {Game} from '../Game';
-import {Node} from '../Node';
+import {MUSENode} from '../Node';
 import {Node3D} from '../Node3D';
 
 let BVH_PATH1 = './models/bvh/MasterLiuPerformanceChar00.bvh';
@@ -150,7 +150,7 @@ class DanceController extends Node3D
     }
 }
 
-Node.defineFields(DanceController, [
+MUSENode.defineFields(DanceController, [
     "motionUrl"
 ]);
 

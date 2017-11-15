@@ -1,5 +1,6 @@
 
 import * as THREE from 'three';
+import {MUSE} from './MUSE';
 import * as Util from './Util';
 //import {testNode} from '../test/testNode'
 //import '../test/testNode'
@@ -14,7 +15,7 @@ function getUniqueId(class_) {
     return (class_+'_'+numObjs);
 }
 
-class Node {
+class MUSENode {
     static getAllNodeTypes() {
         return nodeTypes;
     }
@@ -85,7 +86,9 @@ class Node {
     }
 }
 
-Node.defineFields(Node, [
+MUSE.Node = MUSENode;
+
+MUSE.Node.defineFields(MUSENode, [
     "type",
     "id",
     "name"
@@ -94,9 +97,9 @@ Node.defineFields(Node, [
 
 
 //window.testNode = testNode;
-window.Node = Node;
+window.MUSENode = MUSENode;
 window.nodeTypes = nodeTypes;
 window.nodesByType = nodesByType;
 //window.Tiger = Tiger;
 
-export {Node};
+export {MUSENode};

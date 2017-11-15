@@ -3,6 +3,8 @@ import {Math} from 'three';
 import {Game} from './Game';
 import ImageSource from './lib/ImageSource';
 import html2canvas from 'html2canvas';
+import {MUSENode} from './Node';
+import {Node3D} from './Node3D';
 
 function toRad(v)
 {
@@ -16,17 +18,20 @@ let STYLE = `
     text-align: center;
 `;
 
-class Screen extends THREE.Object3D
+//class Screen2 extends THREE.Object3D
+class Screen extends Node3D
 {
-    constructor(game, spec, path) {
-        super();
+    constructor(game, spec) {
+        super(game, spec);
+        this.checkOptions(spec);
         console.log("---------------- Screen", spec);
         this.game = game;
         this.spec = spec;
         this.imageSource = null;
         var name = spec.name || "movieScreen";
+        this.name = name;
         this.channel = spec.channel || name;
-        var path = path || spec.path;
+        var path = spec.path;
         console.log('****** Loading screen... video: '+path);
         console.log("spec: "+JSON.stringify(spec));
         this.geometry = new THREE.SphereGeometry(
@@ -46,16 +51,17 @@ class Screen extends THREE.Object3D
             transparent: true,
             side: THREE.DoubleSide
         });
-        let screenObject = new THREE.Mesh(this.geometry, this.material);
-        screenObject.name = spec.name+"_mesh";
+        //this.screenObject = new THREE.Object3D();
+        this.screenMesh = new THREE.Mesh(this.geometry, this.material);
+        this.screenObject = this.screenMesh;
+        this.screenMesh.name = spec.name+"_mesh";
         var s = spec.screenScale || 1.0;
-        screenObject.scale.set(-s, s, s);
-        //let screenParent = new THREE.Object3D();
-        //screenParent.add(screenObject);
-        this.add(screenObject);
-        game.setFromProps(this, spec);
-        game.addToGame(this, spec.name, spec.parent);
-        this.userData = {doubleClick: "FOO"};
+        this.screenMesh.scale.set(-s, s, s);
+        //this.screenObject.add(this.screenMesh);
+        game.setFromProps(this.screenObject, spec);
+        game.addToGame(this.screenObject, spec.name, spec.parent);
+        //this.userData = {doubleClick: "FOO"};
+        this.screenMesh.userData = {doubleClick: "FOO"};
         if (spec.name) {
             game.screens[spec.name] = this;
             game.program.registerPlayer(this, spec.name);
@@ -170,10 +176,21 @@ class Screen extends THREE.Object3D
         this.imageSource = ImageSource.getImageSource(url, options);
         let texture = this.imageSource.createTexture();
         this.material.map = texture;
-        this.texture = texture;
+        //this.texture = texture;
+        this.screenMesh.texture = texture;
         this.play();
     }
 }
+
+MUSE.Node.defineFields(Screen, [
+  "channel",
+  "radius",
+  "phiStart",
+  "phiLength",
+  "thetaStart",
+  "thetaLength",
+  "path"
+]);
 
 function loadScreen(game, opts)
 {
@@ -182,4 +199,4 @@ function loadScreen(game, opts)
 
 Game.registerNodeType("Screen", loadScreen);
 
-export {loadScreen};
+export {Screen};

@@ -1,7 +1,8 @@
 import assert from 'assert';
 import * as THREE from 'three';
 //import Promise from 'bluebird';
-import {Node} from '../src/Node';
+import {MUSE} from '../src/MUSE';
+import {MUSENode} from '../src/Node';
 
 class Thing extends Node {
     constructor (x, opts) {
@@ -9,7 +10,7 @@ class Thing extends Node {
     }
 }
 
-Node.defineFields(Thing, [
+MUSENode.defineFields(Thing, [
     "home",
     "color"]
 );
@@ -21,7 +22,7 @@ class Animal extends Thing {
     }
 }
 
-Node.defineFields(Animal, [
+MUSENode.defineFields(Animal, [
         "type"
     ]
 );
@@ -32,7 +33,7 @@ class Cat extends Animal {
     }
 }
 
-Node.defineFields(Cat, [
+MUSENode.defineFields(Cat, [
         "furColor"
     ]
 );
@@ -43,7 +44,7 @@ class Tiger extends Cat {
     }
 }
 
-Node.defineFields(Tiger, [
+MUSENode.defineFields(Tiger, [
     "toothSize"
 ]);
 

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 
+import {MUSE} from './MUSE';
 import { CMPDataUpdater } from './controllers/CMPData';
 import { CMPDataVizController } from './controllers/CMPDataVizController';
 import { Scripts } from './Scripts';

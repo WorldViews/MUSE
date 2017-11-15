@@ -1,10 +1,11 @@
 
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
+import {MUSE} from './MUSE';
 var toDeg = THREE.Math.radToDeg;
 
 if (!window.MUSE)
-    window.MUSE = {};
+    window.MUSE = MUSE;
 
 window.MUSE.returnValue = function(val)
 {

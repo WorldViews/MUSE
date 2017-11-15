@@ -1,0 +1,4 @@
+
+var MUSE = {};
+
+export {MUSE};

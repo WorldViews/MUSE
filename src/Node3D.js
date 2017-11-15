@@ -1,12 +1,12 @@
 
 //import * as THREE from 'three';
 //import * as Util from './Util';
-import {Node} from './Node';
+import {MUSENode} from './Node';
 
-class Node3D extends Node {
+class Node3D extends MUSENode {
 }
 
-Node.defineFields(Node3D, [
+MUSENode.defineFields(Node3D, [
     "parent",
     "position",
     "scale",

@@ -10,11 +10,12 @@
 */
 import {sprintf} from "sprintf-js";
 import * as Util from './Util';
-//import {Node} from './Node';
+import {MUSE} from './MUSE';
+//import {MUSENode} from './Node';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
-class ProgramControl extends Node
+class ProgramControl extends MUSE.Node
 {
     constructor(game, options) {
         options = options || {};
@@ -208,7 +209,7 @@ class ProgramControl extends Node
     }
 }
 
-Node.defineFields(ProgramControl, [
+MUSE.Node.defineFields(ProgramControl, [
     "media",
     "startTime",
     "playTime",

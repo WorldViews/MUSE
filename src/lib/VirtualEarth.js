@@ -1,8 +1,9 @@
 
 import * as THREE from 'three'
 import {Game} from '../Game'
-import {Node} from '../Node';
-import {Node3D} from '../Node3D';
+import {MUSE} from '../MUSE'
+import {MUSENode} from '../Node'
+import {Node3D} from '../Node3D'
 import {SatTracks} from '../SpaceObjects/SatTracks'
 import {Atmosphere} from './Atmosphere'
 import {CMPDataViz2} from './CMPDataViz2'

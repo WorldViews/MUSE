@@ -4,7 +4,8 @@
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 import { getCameraParams } from '../../Util';
-import {Node} from '../../Node';
+import {MUSE} from '../../MUSE';
+import {MUSENode} from '../../Node';
 
 // The four arrow keys
 var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40,
@@ -18,7 +19,7 @@ function bind( scope, fn ) {
     };
 }
 
-class MultiControls extends Node
+class MultiControls extends MUSE.Node
 {
     constructor(game, domElement, opts) {
         super(game, opts);
@@ -501,7 +502,7 @@ class MultiControls extends Node
 
 };
 
-Node.defineFields(MultiControls, [
+MUSENode.defineFields(MultiControls, [
     "movementSpeed",
     "keyPanSpeed",
     "keyMoveSpeed",

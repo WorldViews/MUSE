@@ -3,7 +3,7 @@ import * as THREE from 'three';
 //import {Mathx} from 'three';
 import {getJSON} from './Util';
 import {Game} from './Game';
-import {Node} from './Node';
+import {MUSENode} from './Node';
 
 var toDeg = THREE.Math.radToDeg;
 var toRad = THREE.Math.degToRad;
@@ -186,7 +186,7 @@ class Animation
     }
 }
 
-class ViewManager extends Node
+class ViewManager extends MUSENode
 {
     constructor(game, options) {
         super(game,options);
@@ -471,7 +471,7 @@ class ViewManager extends Node
 
 }
 
-Node.defineFields(ViewManager, [
+MUSENode.defineFields(ViewManager, [
     "bookmarksUrl",
 ]);
 
