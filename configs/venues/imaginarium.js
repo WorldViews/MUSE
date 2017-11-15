@@ -96,9 +96,9 @@ var SPECS = [
         thetaStart: 40, thetaLength: 50
     },
     {  type: 'Screen',    name: 'marquee1', channel: 'narrative',
-       radius: 7,
-       phiStart: 65, phiLength: 20,
-       thetaStart: -50, thetaLength: 100
+       radius: 7.8,
+       phiStart: 58, phiLength: 20,
+       thetaStart: 130, thetaLength: 100,
     },
     LIGHTS,
     //{  type: 'Inline',     name: 'debugStuff', children: TEST },
