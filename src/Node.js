@@ -86,9 +86,9 @@ class MUSENode {
     }
 }
 
-MUSE.Node = MUSENode;
+//MUSE.Node = MUSENode;
 
-MUSE.Node.defineFields(MUSENode, [
+MUSENode.defineFields(MUSENode, [
     "type",
     "id",
     "name"

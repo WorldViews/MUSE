@@ -182,14 +182,15 @@ class Screen extends Node3D
     }
 }
 
-MUSE.Node.defineFields(Screen, [
+MUSENode.defineFields(Screen, [
   "channel",
   "radius",
   "phiStart",
   "phiLength",
   "thetaStart",
   "thetaLength",
-  "path"
+  "path",
+  "autoPlay"
 ]);
 
 function loadScreen(game, opts)
