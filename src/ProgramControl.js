@@ -10,7 +10,7 @@
 */
 import {sprintf} from "sprintf-js";
 import * as Util from './Util';
-import {Node} from './Node';
+//import {Node} from './Node';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
@@ -51,6 +51,11 @@ class ProgramControl extends Node
         if (options.media) {
             this.setMedia(options.media);
         }
+    }
+
+    init() {
+        var t = this.getPlayTime();
+        this.setPlayTime(t);
     }
 
     setTimeRange(startTime, endTime)
@@ -180,7 +185,7 @@ class ProgramControl extends Node
     }
 
     setMedia(mediaSpec) {
-        var specs = this.game.loadSpecs(mediaSpec);
+        var specs = this.game.loadSpecs(mediaSpec, "media");
     }
 
     addMediaSequence(mediaSequence) {
