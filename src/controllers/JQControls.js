@@ -402,21 +402,17 @@ class StageControl {
         //var game = this.ui.game;
         var game = window.game;
         for (var modelName in this.models) {
-            console.log(" name: "+modelName);
-            if (game.models[modelName]) {
-                game.models[modelName].visible = false;
-            }
-            if (game.controllers[modelName]) {
-                game.controllers[modelName].visible = false;
-            }
+            this._setVisible(modelName, false);
         }
         this.selectedModel = name;
-        if (game.models[name]) {
-            game.models[name].visible = true;
-        }
-        if (game.controllers[name]) {
-            game.controllers[name].visible = true;
-        }
+        this._setVisible(name, true);
+    }
+
+    _setVisible(name, v) {
+        if(game.models[name])
+            game.models[name].visible = v;
+        if (game.controllers[name])
+            game.controllers[name].visible = v;
     }
 }
 

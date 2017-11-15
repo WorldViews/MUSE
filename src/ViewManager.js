@@ -3,6 +3,7 @@ import * as THREE from 'three';
 //import {Mathx} from 'three';
 import {getJSON} from './Util';
 import {Game} from './Game';
+import {Node} from './Node';
 
 var toDeg = THREE.Math.radToDeg;
 var toRad = THREE.Math.degToRad;
@@ -185,9 +186,11 @@ class Animation
     }
 }
 
-class ViewManager
+class ViewManager extends Node
 {
     constructor(game, options) {
+        super(game,options);
+        this.checkOptions(options);
         if (viewManager) {
             alert("ViewManager should be singleton");
         }
@@ -195,7 +198,7 @@ class ViewManager
         viewManager = this; // singleton;
         this.easingFun = null;
         this.slerp = true;
-        this.game = game;
+        //this.game = game;
         this.defaultDuration = 5.0;
         this.viewNum = 0;
         this.views = {};
@@ -467,6 +470,10 @@ class ViewManager
     }
 
 }
+
+Node.defineFields(ViewManager, [
+    "bookmarksUrl",
+]);
 
 function addViewManager(game, options)
 {

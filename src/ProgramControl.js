@@ -10,13 +10,16 @@
 */
 import {sprintf} from "sprintf-js";
 import * as Util from './Util';
+import {Node} from './Node';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
-class ProgramControl
+class ProgramControl extends Node
 {
     constructor(game, options) {
         options = options || {};
+        super(game, options);
+        this.checkOptions(options);
         this.game = game;
         game.setProgram(this);
         this.gss = null;
@@ -199,5 +202,17 @@ class ProgramControl
             this.mediaSequence.next();
     }
 }
+
+Node.defineFields(ProgramControl, [
+    "media",
+    "startTime",
+    "playTime",
+    "playSpeed",
+    "duration",
+    "gss",
+    "stages",
+    "channels",
+    "scripts"
+])
 
 export {ProgramControl};

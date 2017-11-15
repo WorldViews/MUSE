@@ -3,21 +3,25 @@ import * as THREE from 'three';
 
 import {BVHLoader} from '../BVHLoader';
 import {Game} from '../Game';
+import {Node} from '../Node';
+import {Node3D} from '../Node3D';
 
 let BVH_PATH = './models/bvh/MasterLiuPerformanceChar00.bvh';
 
-class DanceController
+class DanceController extends Node3D
 {
     constructor(game, opts)
     {
+        super(game, opts);
         this.game = game;
         opts = opts || {};
-        var bvhPath = opts.path || BVH_PATH;
+        this.checkOptions(opts);
+        var dataUrl = opts.dataUrl || BVH_PATH;
         if (!opts.scale)
 	    opts.scale = 0.06;
         this.name = opts.name || "dancer";
         this.clock = new THREE.Clock();
-        this.loadBVH(this.name, bvhPath, opts);
+        this.loadBVH(this.name, dataUrl, opts);
         this.skeletonHelper = null;
         this.dancer = null;
         this.mixer = null;
@@ -96,6 +100,10 @@ class DanceController
         this.mixer.timeScale = s;
     }
 }
+
+Node.defineFields(DanceController, [
+    "motionUrl"
+]);
 
 function addDancer(game, opts)
 {
