@@ -20,7 +20,6 @@ CONFIG = {
            'Master Liu': (game) => setBVH(game, "Master Liu", BVH1),
            'Lauren': (game) => setBVH(game, "Lauren", BVH2)
        }
-       //media: MEDIA_SPECS
     },
     'cameraControls': 'Orbit',
     'specs': SPECS
