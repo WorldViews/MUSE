@@ -94,8 +94,6 @@ MUSE.Node.defineFields(MUSENode, [
     "name"
 ]);
 
-
-
 //window.testNode = testNode;
 window.MUSENode = MUSENode;
 window.nodeTypes = nodeTypes;
