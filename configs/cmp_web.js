@@ -25,8 +25,8 @@ var SPECS = [
     {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [3000, 0, 0], distance: 5000},
     {  type: 'CMPData' },
     {  type: 'CMPDataViz', name: 'cmp',
-        //position: [0, 0, 0],
-        position: [-10, 0, 0],
+        position: [0, 0, 0],
+        //position: [-10, 0, 0],
         rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
         visible: true,
         startTime: 10*60, // 10 minutes before starting
