@@ -52,7 +52,9 @@ class CMPProgram extends ProgramControl {
                 var nar = this.gss.getFieldByYear(year, "narrative") || "";
                 //console.log("va: " + va + "  narrative: " + nar);
                 yearStr = Math.floor(year);
-                this.game.state.set('narrative', nar);
+                if (nar) {
+                    this.game.state.set('narrative', yearStr + ':' + nar);
+                }
             }
             //console.log("yearStr:"+yearStr);
             this.game.state.set('year', yearStr);

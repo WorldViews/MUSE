@@ -48,8 +48,9 @@ class Screen extends Node3D
         }
         this.material = new THREE.MeshBasicMaterial({
             map: videoTexture,
-            depthWrite: false,
-            transparent: true,
+            //depthWrite: false,
+            alphaTest: 0.4,
+            transparent: false,
             side: THREE.DoubleSide
         });
         //this.screenObject = new THREE.Object3D();
@@ -73,8 +74,9 @@ class Screen extends Node3D
 
         // setup html renderer
         this._prevText = null;
-        this._width = window.innerWidth;
-        this._height = window.innerHeight;
+        this._width = 4096;
+        this._height = parseInt(4096*(spec.phiLength/spec.thetaLength));
+        //this._height = parseInt(2048*(spec.phiLength/spec.thetaLength));
         this.handleRender = this.handleRender.bind(this);
 
         this._element = document.createElement('div');
