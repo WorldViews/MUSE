@@ -210,6 +210,7 @@ class Game {
         }
     }
 
+/*
     pre(msTime) {
         // call pre
         Object.keys(this.controllers).forEach((k) => {
@@ -229,6 +230,7 @@ class Game {
             }
         });
     }
+*/
 
     animate(msTime) {
         if (this.config && this.config.onUpdate) {
@@ -239,7 +241,7 @@ class Game {
             this.controls.update(msTime);
         }
 
-        this.pre(msTime);
+        //this.pre(msTime);
 
         //this.updateHandlers.forEach(h => h(msTime));
         this.updateHandlers.forEach(h => {
@@ -250,7 +252,7 @@ class Game {
         });
         this.render();
 
-        this.post(msTime);
+        //this.post(msTime);
 
         // Do NOT provide params.
         this.requestAnimate();
