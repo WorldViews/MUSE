@@ -5,6 +5,8 @@ import {Game} from '../Game';
 import {UIControls} from './UIControls';
 
 function append(parent, child) {
+    if (typeof parent == "string")
+        parent = $(parent);
     if (typeof child == "string")
         child = $(child);
     parent.append(child);
@@ -16,9 +18,10 @@ class Field
     constructor(opts) {
         if (typeof opts == "string")
             opts = {name: opts};
-        this.name = opts.name;
-        this.format = opts.format;
-        this.label = opts.label;
+        Object.assign(this, opts);
+        //this.name = opts.name;
+        //this.format = opts.format;
+        //this.label = opts.label;
     }
 }
 
@@ -79,6 +82,9 @@ class JQControls extends UIControls {
         this.screens.forEach(screen => {
             //this.videoView = new VideoView(this, $uiDiv, screen);
             //this.videoView.setup($uiDiv);
+            if (typeof screen != "object") {
+                screen = {name: screen};
+            }
             this.videoView = new VideoView(this, $ui, screen);
             this.videoView.setup($ui);
         });
@@ -200,12 +206,20 @@ class FieldsView extends JQWidget {
 
     addField(field, label) {
         var name = field.name;
+        console.log("addField "+name, field);
         label = label || field.label;
         if (label) {
             append(this.$parent, sprintf("<span>%s: </span>", label));
         }
         this.fields[name] = field;
-        this.$fields[name] = append(this.$parent, sprintf("<span id='%sText' /><br>", label, name));
+        if (this.ui.options.fieldElement == "div" || field.fieldElement == "div")
+            this.$fields[name] = append(this.$parent, sprintf("<div id='%sText' />", label, name));
+        else
+            this.$fields[name] = append(this.$parent, sprintf("<span id='%sText' /><br>", label, name));
+        if (field.style) {
+            console.log("FieldsView set style: "+field.style);
+            this.$fields[name].attr('style', field.style);
+        }
     }
 }
 
@@ -417,10 +431,11 @@ class StageControl {
 }
 
 class VideoView extends JQWidget {
-    constructor(ui, $parent, name) {
+    constructor(ui, $parent, screenOpts) {
         super(ui, $parent);
         var inst = this;
-        this.name = name;
+        this.name = screenOpts.name;
+        this.opts = screenOpts;
         this.game = window.game;
         game.state.on(this.name, (newProps) => inst.onChange(newProps));
         this.game.program.registerPlayer(this);
@@ -437,9 +452,17 @@ class VideoView extends JQWidget {
             this.$video = elem;
         }
         else {
-            console.log("*** couldn't find existing video - creating one")
-            append(this.$parent, sprintf("<b>This is video view for: %s</b><br>", this.name));
-            this.$video = append(this.$parent, '<video width="320" height="240" controls/>');
+            console.log("*** couldn't find existing video - creating one");
+            var parent = this.$parent;
+            if (this.opts.parent)
+                parent = $(this.opts.parent);
+            //append(this.$parent, sprintf("<b>This is video view for: %s</b><br>", this.name));
+            append(parent, sprintf("<b>This is video view for: %s</b><br>", this.name));
+            this.$video = append(parent, '<video width="320" height="240" controls/>');
+            if (this.opts.style) {
+                console.log("VideoView set style: "+this.opts.style);
+                this.$video.attr('style', this.opts.style);
+            }
         }
     }
 

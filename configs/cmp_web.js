@@ -54,14 +54,14 @@ function updateCMPViz2(year)
     var balance = game.state.get("balance");
     var co2f = (co2 - co2Min)/(co2Max - co2Min);
     var Tf = (T - TMin)/(TMax - TMin);
+    var h = 0.6 + .6*Tf;
     try {
-        console.log(sprintf("year: %s co2: %6.2f T: %6.2f balance: %6.2f  Tf: %4.2f   co2f: %4.2f",
-                year, co2, T, balance, Tf, co2f));
+        console.log(sprintf("year: %s co2: %6.2f T: %6.2f balance: %6.2f  Tf: %4.2f h: %4.2f  co2f: %4.2f",
+                year, co2, T, balance, Tf, h, co2f));
     } catch(e) {
         console.log(e);
     }
     atm.setOpacity(0.9*co2f);
-    var h = 0.6 + .6*Tf;
     atm.setHue(h);
 }
 
@@ -70,6 +70,18 @@ function onStart(game)
     game.state.on("year", updateCMPViz2);
 }
 
+function show3DGraph(game)
+{
+    game.controllers.vEarth.visible = false;
+    game.controllers.cmp.visible = true;
+}
+
+function showVirtualEarth(game)
+{
+    game.controllers.vEarth.visible = true;
+    game.controllers.cmp.visible = false;
+
+}
 function setEarthVideo(game, url)
 {
     var vEarth = game.controllers.vEarth;
@@ -94,7 +106,12 @@ CONFIG = {
     'onStart': onStart,
     //'gameOptions': {transparent: true},
     'webUI': {type: 'JQControls',
-           screens: ["mainScreen"],
+           screens: [
+               //{name: "mainScreen", style: "position:absolute;left:0;top:0;z-index:-100;width:100%;height:100%;"},
+               //{name: "mainScreen", parent: "#uiDiv", style: "position:absolute;left:0;top:0;z-index:-100;width:100%;height:100%;"},
+               "mainScreen",
+           ],
+           fieldElement: "span",
           },
     'program': {
        //startTime: '1/1/1800',
@@ -107,12 +124,14 @@ CONFIG = {
           {name: 'year', label: "Year" },
           {name: 'temp', label: "T", format: v => sprintf("%6.2f", v)},
           {name: 'co2', label: "CO2"},
-          {name: 'balance', label: "Balance", format: v => sprintf("%8.1f", v)},
-          'dyear',
+          {name: 'balance', label: "Balance", format: v => v != undefined ? sprintf("%8.1f", v) : "None"},
+          //'dyear',
           'spacer',
-          'narrative'
+          {name: 'narrative', style: "height:110px", fieldElement: "div"}
       ],
        scripts: {
+           'Show 3D Graph': (game) => show3DGraph(game),
+           'Show Virtual Earth': (game) => showVirtualEarth(game),
            'Show Earthquakes': (game) => setEarthVideo(game, "videos/earthquakes.mp4"),
            'Show 2013 Weather': (game) => setEarthVideo(game, "videos/GlobalWeather2013.mp4"),
            //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "videos/tas_Amon_CCSM4_1850_2300.mp4"),
