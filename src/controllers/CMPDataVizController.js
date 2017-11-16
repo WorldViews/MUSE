@@ -101,7 +101,7 @@ class CMPDataVizController {
         this._drawGrid(view, origin);
         this._drawCharts(data, view, origin);
 
-        if(!state.hideLegend){
+        if (state.showYear) {
             // Draw year label
             view.array({
                 id: 'label-year',
@@ -307,7 +307,7 @@ class CMPDataVizController {
     update(t) {
         // update the year
         if (this.labelYearText) {
-            //this.labelYearText.set('data', ['Year ' + this.state.Year]);
+            this.labelYearText.set('data', ['Year ' + this.state.Year]);
         }
 
         // TWEEN.update();
