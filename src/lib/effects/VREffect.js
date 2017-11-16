@@ -109,6 +109,7 @@ let VREffect = function ( renderer, onError ) {
     // VR presentation
 
     var canvas = renderer.domElement;
+    this.domElement = renderer.domElement;
     var defaultLeftBounds = [ 0.0, 0.0, 0.5, 1.0 ];
     var defaultRightBounds = [ 0.5, 0.0, 0.5, 1.0 ];
 
