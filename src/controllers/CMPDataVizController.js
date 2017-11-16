@@ -56,6 +56,7 @@ class CMPDataVizController {
 
         this.loader = new DataLoader();
         this.loader.load().then((data) => {
+            self.data = data;
             self._drawMathbox(data);
         });
         this.currRot = [0, 0, 0];
@@ -122,6 +123,7 @@ class CMPDataVizController {
             });
 
             var labelYearText = mathbox.select("#label-year-text")
+            this.labelYearText = labelYearText;
         }
 
         this.update();
@@ -303,6 +305,11 @@ class CMPDataVizController {
 
 
     update(t) {
+        // update the year
+        if (this.labelYearText) {
+            //this.labelYearText.set('data', ['Year ' + this.state.Year]);
+        }
+
         // TWEEN.update();
         if (this.charts) {
             let data = this.loader.data.active;
