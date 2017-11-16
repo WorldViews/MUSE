@@ -65,7 +65,8 @@ class Planet extends Node3D {
             inst._addBody();
         }
         if (opts.atmosphere) {
-            this.atmosphere = new Atmosphere(game.scene, this, opts.atmosphere);
+            //this.atmosphere = new Atmosphere(game.scene, this, opts.atmosphere);
+            this.atmosphere = new Atmosphere(this.group, this, opts.atmosphere);
         }
         if (opts.dataViz) {
             this.dataViz = new CMPDataViz2(this, opts);
@@ -81,6 +82,18 @@ class Planet extends Node3D {
             this.satTracks = new SatTracks(this.game, satOpts);
         }
         this.setPlayTime(game.program.getPlayTime());
+    }
+
+    setVisible(v) {
+        this.group.visible = v;
+        if (this.atmosphere)
+            this.atmosphere.visible = v;
+        if (this.dataViz)
+            this.dataViz.visible = v;
+    }
+
+    getVisible() {
+        return this.group.visible;
     }
 
     _addBody(texture) {
