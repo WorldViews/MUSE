@@ -48,6 +48,7 @@ class Screen extends Node3D
         }
         this.material = new THREE.MeshBasicMaterial({
             map: videoTexture,
+            depthWrite: false,
             transparent: true,
             side: THREE.DoubleSide
         });
