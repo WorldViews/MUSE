@@ -94,9 +94,15 @@ function loadModel(modelPath) {
 }
 
 /*
-Do this so that if JQControls UI is used, when it starts, the document is
-already complete.  That simplifies its initialization because it can build
-all its elements before it returns.
+start processes a configuration and begins the game.  The argument can
+either be a configuation object, a URL to a .js or .json for the configuration
+object.   If no configuration is given, the query string is checked.  If a
+config option is given in the query string, that is used to get a URL for
+the config.  If a "model" option is given, a simple configuration is set
+up to display that model.
+
+Not that this first waits until document is fully loaded, which makes
+initializeion of DOM related stuff (e.g. by JQControls) simpler.
 */
 function start(config) {
     $(document).ready(e => start_(config));
@@ -117,6 +123,10 @@ function start_(config) {
             var configPath = "configs/"+configPath+".js";
         }
         loadConfig(configPath);
+        return;
+    }
+    if (typeof config == "string") {
+        loadConfig(config);
         return;
     }
     config = config || {};
