@@ -36,6 +36,7 @@ class CMPDataVizController {
         var visible = true;
         if (options.visible != null)
             visible = options.visible;
+        this.rotationSpeed = options.rotationSpeed || 0; // in degrees per second
         this.scale = options.scale || chartScale;
         this.state = state;
 
@@ -59,7 +60,6 @@ class CMPDataVizController {
         });
         this.currRot = [0, 0, 0];
         this.visible = visible;
-
         this._updateTime = this._updateTime.bind(this);
 
         game.state.on('time', this._updateTime);
@@ -314,7 +314,8 @@ class CMPDataVizController {
         }
 
         // animate the graph
-        this.currRot[1] += Math.PI*2/3600;
+        //this.currRot[1] += Math.PI*2/3600;
+        this.currRot[1] += this.rotationSpeed * (Math.PI*2 / 360) / 60.0;
         if (this.currRot[1] > Math.PI*2) {
             this.currRot[1] -= Math.PI*2;
         }
