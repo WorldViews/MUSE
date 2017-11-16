@@ -47,6 +47,7 @@ export default class DATGUIControls extends UIControls {
         datGUIVR.enableMouse(game.camera, game.renderer);
 
         game.scene.add(this.ui);
+
         // create toggle button
         let uiDiv = $("#uiDiv");
         let toggle = uiDiv.append($("<button id='uiToggle'>&nbsp;</button>"));
@@ -86,15 +87,17 @@ export default class DATGUIControls extends UIControls {
         this.controls.time.max(game.program.duration);
     }
 
-    toggleUI() {
+    toggleUI(obj, offset) {
         if (this.ui.visible) {
             this.ui.visible = false;
         } else {
             this.ui.visible = true;
 
+            obj = obj || game.camera;
+            offset = offset || new THREE.Vector3(-0.5, 0.5, -2);
             // position the controls in front of the camera
-            let pos = game.camera.localToWorld(new THREE.Vector3(-0.5, 1.0, -3));
-            let rot = game.camera.rotation;
+            let pos = obj.localToWorld(offset);
+            let rot = obj.rotation;
             this.ui.position.set(pos.x, pos.y, pos.z);
             this.ui.rotation.set(rot.x, rot.y, rot.z);
         }

@@ -1,7 +1,7 @@
 import OBJLoader from '../lib/loaders/OBJLoader';
 import * as THREE from 'three';
 import VRController from '../lib/vr/VRController';
-
+import datGUIVR from 'datguivr';
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 
 const {degToRad} = THREE.Math;
@@ -85,6 +85,14 @@ export default class VRInputController {
                 this.loadOculusControllerModel();
                 break;
         }
+
+        let controllers = navigator.getGamepads()
+        const guiInputRight = datGUIVR.addInputObject(this.controller1);
+        game.scene.add(guiInputRight);
+
+        this.controller1.addEventListener( 'triggerdown', ()=>guiInputRight.pressed( true ) );
+        this.controller1.addEventListener( 'triggerup', ()=>guiInputRight.pressed( false ) );
+        this.controller1.addEventListener( 'menudown', ()=> game.controllers.ui.toggleUI(this.controller1, new THREE.Vector3(-0.5, 0.5, -1)) );
     }
 
     loadViveControllerModel() {
