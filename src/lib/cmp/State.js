@@ -13,6 +13,7 @@ var stateDefault = {
     showPanel: true,
     showGraphics: true,
     showVideo: false,
+    showYear: true,
 
     numData: 451,
     Year: 0,
