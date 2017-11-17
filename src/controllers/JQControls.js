@@ -1,6 +1,7 @@
 
 import _ from 'lodash';
 import {Game} from '../Game';
+import Util from '../Util';
 
 import {UIControls} from './UIControls';
 
@@ -450,6 +451,10 @@ class VideoView extends JQWidget {
         var elem = $("#"+id);
         if (elem.length > 0) {
             this.$video = elem;
+            this.$image = $("#"+this.name+"Image");
+            if (this.$image.length <= 0) {
+                Util.reportError("Found video tag but no matching image tag for "+this.name);
+            }
         }
         else {
             console.log("*** couldn't find existing video - creating one");
@@ -458,6 +463,7 @@ class VideoView extends JQWidget {
                 parent = $(this.opts.parent);
             //append(this.$parent, sprintf("<b>This is video view for: %s</b><br>", this.name));
             append(parent, sprintf("<b>This is video view for: %s</b><br>", this.name));
+            this.$image = append(parent, '<img width="320" height="240"/>');
             this.$video = append(parent, '<video width="320" height="240" controls/>');
             if (this.opts.style) {
                 console.log("VideoView set style: "+this.opts.style);
@@ -494,7 +500,22 @@ class VideoView extends JQWidget {
 
     setUrl(url) {
         console.log("JQ.videoView.setUrl "+this.name+" "+url);
-        this.$video.attr('src', url);
+        if (Util.isVideoURL(url)) {
+            console.log("Setting <video> src = "+url);
+            this.$video.css('visibility', 'visible');
+            this.$video.attr('src', url);
+            this.$image.css('visibility', 'hidden');
+        }
+        else {
+            console.log("Setting <img> src = "+url);
+            try { this.pause() }
+            catch (e) {};
+            //catch (e) {
+            //}
+            this.$image.css('visibility', 'visible');
+            this.$image.attr('src', url);
+            this.$video.css('visibility', 'hidden');
+        }
     }
 
     play() {
