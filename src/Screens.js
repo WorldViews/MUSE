@@ -86,7 +86,7 @@ class Screen extends Node3D
         this._element.style.height = this._height + 'px';
 
         this._iframe = document.createElement('iframe');
-        this._iframe.display = 'none';
+        this._iframe.style.display = 'none';
         document.body.appendChild(this._iframe);
         this._iframe.contentDocument.body.appendChild(this._element);
     }
