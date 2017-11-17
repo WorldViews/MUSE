@@ -19,6 +19,7 @@ export default class DATGUIControls extends UIControls {
             'none': 'none'
         };
         this.folders = {};
+        this.status = '';
 
         this.ui = datGUIVR.create('Settings');
         this.ui.visible = false;
@@ -27,17 +28,17 @@ export default class DATGUIControls extends UIControls {
         this.time = 0;
         game.state.set('time', 0);
         game.state.set('year', 0);
-        game.state.on('narrative', this.onNarrativeChange.bind(this));
+        game.state.set('narrative', '');
 
         this.controls.time = this.ui.add(game.state.state, 'time').listen().onChange(this.onSliderChange.bind(this));
         this.ui.add(game.state.state, 'year').min(1850).max(2300).listen();
-        this.controls.status = this.ui.addCheckbox(false).name('');
-        this.controls.narrative = this.ui.addCheckbox(false).name('');
+        this.controls.status = this.ui.add(this, 'status').listen();
+        this.controls.narrative = this.ui.add(game.state.state, 'narrative').listen();
         this.controls.playPause = this.ui.add(this, 'togglePlayPause').name('Pause');
         this.ui.add(this, 'next');
         this.ui.add(this, 'prev');
 
-        this.controls.models = this.ui.addDropdown(this.models).name('Main Stage').onChange(this.selectModel.bind(this));
+        // this.controls.models = this.ui.addDropdown(this.models).name('Main Stage').onChange(this.selectModel.bind(this));
 
         this.folders.scripts = datGUIVR.create('Scripts');
         this.ui.addFolder(this.folders.scripts);
@@ -55,7 +56,8 @@ export default class DATGUIControls extends UIControls {
     }
 
     setStatus(status) {
-        this.controls.status.name(status);
+        //this.controls.status.name(status);
+        this.status = status;
     }
 
     registerModel(name, callback) {
@@ -126,12 +128,6 @@ export default class DATGUIControls extends UIControls {
 
     onSliderChange(t) {
         game.program.setPlayTime(t, true);
-    }
-
-    onNarrativeChange(str) {
-        if (str) {
-            this.controls.narrative.name(str);
-        }
     }
 
     selectModel(name) {
