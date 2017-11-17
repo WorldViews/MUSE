@@ -23,9 +23,11 @@ VEARTH = {
 
 CONFIG = {
     //cameraControls: {type: 'MultiControls', distance: 4},
+    gameOptions: {ambientLightIntensity: 0.5},
     cameraControls: {type: 'Orbit', distance: 4},
     webUI: {type: 'JQControls' },
-    specs: [LIGHTS, VEARTH]
+    //specs: [LIGHTS, VEARTH]
+    specs: [VEARTH]
 };
 
 MUSE.returnValue(CONFIG);

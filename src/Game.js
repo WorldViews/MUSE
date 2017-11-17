@@ -18,7 +18,10 @@ var ntypes = {};
 
 class Game {
     constructor(domElementId, options) {
-        this.options = options || {};
+        options = options || {};
+        if (options.ambientLightIntensity == undefined)
+            options.ambientLightIntensity = 0.5;
+        this.options = options;
         this.updateHandlers = [];
         this.init(domElementId);
         this.ntypes = ntypes;
@@ -51,6 +54,12 @@ class Game {
         //renderer.setClearColor( 0x000020 ); //NOFOG
         this.scene = new THREE.Scene();
         this.scene.add(this.camera);
+
+        this.ambientLight = null;
+        if (this.options.ambientLightIntensity) {
+            this.ambientLight = new THREE.AmbientLight(0x404040, this.options.ambientLightIntensity);
+            this.scene.add(this.ambientLight);
+        }
 
         window.addEventListener('resize', this.handleResize.bind(this));
 
