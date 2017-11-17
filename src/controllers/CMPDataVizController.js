@@ -19,7 +19,7 @@ const startYear = 1850
 const endYear = 2300
 const yearPerMinute = () => state.yearPerMinute || 25 // * 12 // 25=>18min
 const secPerYear = () => 60/yearPerMinute();
-
+const Parameters = ['temperature', 'co2', 'ice', 'balance', 'precipitation'];
 
 class CMPDataVizController {
 
@@ -33,6 +33,9 @@ class CMPDataVizController {
         options = options || {};
         this.position = options.position || [0, 0, 0];
         this.rotation = options.rotation || [0, 0, 0];
+
+        // 1 show bad graph. 0 show good graph. in between is a blend
+        this.graphRate = 1;
         var visible = true;
         if (options.visible != null)
             visible = options.visible;
@@ -57,6 +60,7 @@ class CMPDataVizController {
         this.loader = new DataLoader();
         this.loader.load().then((data) => {
             self.data = data;
+            self.numData = data.active.year.length;
             self._drawMathbox(data);
         });
         this.currRot = [0, 0, 0];
@@ -356,12 +360,54 @@ class CMPDataVizController {
         this._stopHistory();
     }
 
+    _createChartTween(initYear, startYear, endYear, showGood) {
+        let rate = { r: this.graphRate }
+        let delay = 0;
+        let duration = (endYear - startYear)*secPerYear()*1000;
+
+        let tween = createjs.Tween.get(rate);
+        let self = this;
+        tween
+            .to({r: showGood ? 0 : 1}, duration)
+            .on('change', () => {
+                self.setActiveData(rate.r);
+            });
+
+        // figure out if we need to delay the tween
+        if (initYear < startYear) {
+            let delay = (startYear - initYear)*secPerYear()*1000;
+            tween.wait(delay);
+        }
+
+        return tween;
+    }
+
+    _updateGraph(year) {
+        const goodStartYear = 2150;
+        const goodEndYear = 2155;
+        const badStartYear = 2190;
+        const badEndYear = 2195;
+        if (year >= goodStartYear && year < goodEndYear) {
+            let rate = (year - goodStartYear)/(goodEndYear - goodStartYear);
+            this.setActiveData(1 - rate);
+        } else if (year >= badStartYear) {
+            let rate = (year - badStartYear)/(badEndYear - badStartYear);
+            if (rate > 1) {
+                rate = 1;
+            }
+            this.setActiveData(rate);
+        } else {
+            this.setActiveData(1);
+        }
+    }
+
     _playHistory(_duration, _from, _to) {
         this._stopHistory()
         var duration = _duration || 120 // 2min
         var param = {y: _from}
         this.historyT1 = createjs.Tween.get(param);
         this.historyT1
+            .wait(4000)
             .to({y:_to}, duration*1000)
             .on('change', ()=>{
                 state.SandYear = Math.round(param.y)
@@ -370,14 +416,18 @@ class CMPDataVizController {
         var param1 = {y: _from}
         this.historyT2 = createjs.Tween.get(param1)
         this.historyT2
-            .wait(4000)
             .to({y:_to}, duration*1000)
             .on('change', ()=>{
+                this._updateGraph(param1.y);
                 let year = Math.round(param1.y);
                 if (year != state.Year) {
                     state.Year = year;
                 }
             })
+
+        // create tween to go from bad -> good & good -> bad
+        //this.badHistoryTween = this._createChartTween(_from, 2150, 2190, true);
+        //this.goodHistoryTween = this._createChartTween(_from, 2190, _to, false);
     }
 
     _stopHistory() {
@@ -459,6 +509,19 @@ class CMPDataVizController {
         }
 
         this.lastTS = t;
+    }
+
+    // set active = r*rcp8.5 + (1-r)*rcp2.6
+    setActiveData(r) {
+        let self = this;
+        if (self.graphRate != r) {
+            self.graphRate = r;
+            for (var i=0; i< self.numData; i++) {
+                Parameters.forEach(p=>{
+                    self.data.active[p][i] = self.data.rcp8p5[p][i] * r + self.data.rcp2p6[p][i] * (1.0-r)
+                })
+            }
+        }
     }
 }
 
