@@ -1,12 +1,4 @@
 
-
-var LIGHTS = [
-    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2]},
-    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0]},
-    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2]},
-    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
-];
-
 VEARTH = {
     type: 'VirtualEarth', name: 'vEarth',
     radius: 1.25,
@@ -23,10 +15,9 @@ VEARTH = {
 
 CONFIG = {
     //cameraControls: {type: 'MultiControls', distance: 4},
-    gameOptions: {ambientLightIntensity: 0.5},
+    gameOptions: {ambientLightIntensity: 2.0},
     cameraControls: {type: 'Orbit', distance: 4},
     webUI: {type: 'JQControls' },
-    //specs: [LIGHTS, VEARTH]
     specs: [VEARTH]
 };
 
