@@ -79,14 +79,10 @@ function loadModel(modelPath) {
     console.log("***** loadModel "+modelPath);
     var config = {
         cameraControls: 'Orbit',
+        gameOptions: {ambientLightIntensity: 2},
         specs: [
-            {type: 'PointLight', position: [100,0,0], distance: 1000},
-            {type: 'PointLight', position: [0,100,0], distance: 1000},
-            {type: 'PointLight', position: [0,0,100], distance: 1000},
-            {type: 'PointLight', position: [-100,0,0], distance: 1000},
-            {type: 'PointLight', position: [0,-100,0], distance: 1000},
-            {type: 'PointLight', position: [0,0,-100], distance: 1000},
-            {type: 'Model', 'name': 'model', 'path': modelPath, scale: 0.01}
+            {type: 'Model', 'name': 'model', 'path': modelPath,
+             fitTo: {position:[0,0,0], scale: 1}}
         ]
     };
     console.log("CONFIG: "+JSON.stringify(config));

@@ -347,6 +347,9 @@ class Game {
     // Takes an Object3d and sets the position, rotation and scale if they
     // are present in props.
         setFromProps(obj3d, props) {
+            if (props.fitTo) {
+                this.fitObjectTo(obj3d, props.fitTo);
+            }
             if (props.position) {
                 if (Array.isArray(props.position)) {
                     obj3d.position.fromArray(props.position);
@@ -415,6 +418,31 @@ class Game {
 
     attachCameraToStation() {
         this.attachCameraTo('station');
+    }
+
+    getObject3D(nameOrObj) {
+        if (nameOrObj instanceof THREE.Object3D)
+            return nameOrObj;
+        return game.models[nameOrObj];
+    }
+
+    fitObjectTo(obj3d, opts) {
+        console.log("fitObjectTo:", obj3d, opts);
+        obj3d = this.getObject3D(obj3d);
+        var bb = new THREE.Box3().setFromObject(obj3d);
+        var dim = bb.getSize();
+        var c = bb.getCenter();
+        if (opts.position) {
+            var v = opts.position;
+            v = new THREE.Vector3(v[0],v[1],v[2]);
+            obj3d.position.copy(v);
+        }
+        if (opts.scale) {
+            var prevS = obj3d.scale.x;
+            var w = dim.x;
+            var newS = opts.scale*prevS/w;
+            obj3d.scale.set(newS,newS,newS);
+        }
     }
 
     setStatus(str) {
