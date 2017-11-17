@@ -35,7 +35,8 @@ class ProgramControl extends MUSENode
             this.startTime = Util.toTime(options.startTime);
         }
         this.duration = options.duration || 60;
-        this.players = {};
+        //this.players = {};
+        this.players = [];
         this._playTime = 0;
         var playSpeed = options.playSpeed || 1.0;
         this.setPlaySpeed(playSpeed);
@@ -69,9 +70,11 @@ class ProgramControl extends MUSENode
         this.duration = dur;
     }
 
-    registerPlayer(player, name)
+    registerPlayer(player)
     {
-        name = name || player.name;
+        this.players.push(player);
+        /*
+        name = player.name;
         //TODO: flag error if no name or name collision.
         // Note... this should probably be changed so that players can have the same name
         // or the players have unique names but specify channel names.
@@ -79,6 +82,7 @@ class ProgramControl extends MUSENode
             Util.reportError("Reregistering player named "+name);
         }
         this.players[name] = player;
+        */
     }
 
     tick() {
@@ -167,16 +171,24 @@ class ProgramControl extends MUSENode
         this._prevClockTime = getClockTime();
         this._playTime = t;
         //this.propagate(player => player.setPlayTime && player.setPlayTime(t, isAdjust));
+        /*
         for (name in this.players) {
             var rt = this.getRelativeTime(name);
             var player = this.players[name];
             if (player.setPlayTime)
                 player.setPlayTime(rt);
         }
+        */
+        this.players.forEach(player => {
+            var rt = this.getRelativeTime(player.name);
+            if (player.setPlayTime)
+                player.setPlayTime(rt);
+        });
         this.displayTime(t, isAdjust);
     }
 
     propagate(fun) {
+        /*
         for (name in this.players) {
             var player = this.players[name];
             try { fun(player) }
@@ -184,6 +196,13 @@ class ProgramControl extends MUSENode
                 console.log("err: ", e);
             }
         }
+        */
+        this.players.forEach(player => {
+            try { fun(player) }
+            catch (e) {
+                console.log("err: ", e);
+            }
+        });
     }
 
     setMedia(mediaSpec) {
