@@ -163,7 +163,7 @@ class BasicAtmosphere {
 	}
 
 	setHSL(h,s,l) {
-		console.log("setHSL "+h+" "+s+" "+l);
+		//console.log("setHSL "+h+" "+s+" "+l);
 		if (this.haze.mat)
 			this.haze.mat.color.setHSL(h, s, l);
 		this.glow.material.uniforms.glowColor.value.setHSL(h, s, l);
