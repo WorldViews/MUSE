@@ -462,9 +462,13 @@ class VideoView extends JQWidget {
             if (this.opts.parent)
                 parent = $(this.opts.parent);
             //append(this.$parent, sprintf("<b>This is video view for: %s</b><br>", this.name));
-            append(parent, sprintf("<b>This is video view for: %s</b><br>", this.name));
-            this.$image = append(parent, '<img width="320" height="240"/>');
-            this.$video = append(parent, '<video width="320" height="240" controls/>');
+            append(parent, sprintf("<b>%s:</b><br>", this.name));
+            var viewerDiv = append(parent, '<div/>');
+            viewerDiv.css('position','relative');
+            this.$image = append(viewerDiv, '<img width="320px" height="240px"/>');
+            this.$video = append(viewerDiv, '<video width="320px" height="240px" />');
+            this.$image.attr('style', 'position:absolute;left:0;top:0');
+            this.$video.attr('style', 'position:absolute;left:0;top:0');
             if (this.opts.style) {
                 console.log("VideoView set style: "+this.opts.style);
                 this.$video.attr('style', this.opts.style);
