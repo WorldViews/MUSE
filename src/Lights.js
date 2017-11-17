@@ -4,7 +4,7 @@ import {Game} from "./Game";
 
 let sphere = null;
 
-function addLight(game, spec)
+export function addPointLight(game, spec)
 {
     console.log("adding light "+JSON.stringify(spec));
     var bulbRad = spec.bulbRadius || 0.2;
@@ -17,31 +17,34 @@ function addLight(game, spec)
     var intensity = spec.intensity || 2.0;
     var decay = spec.decay || 1.0;
     let light = new THREE.PointLight(color, intensity, distance, decay);
-    var g = new THREE.Group();
-    if (spec.name)
-        g.name = spec.name;
-    g.name = spec.name;
-    g.add(light);
-    var bulb = new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color }));
-    bulb.scale.x = bulbRad;
-    bulb.scale.y = bulbRad;
-    bulb.scale.z = bulbRad;
-    g.add( bulb );
-    game.addToGame(g, spec);
-    game.setFromProps(g, spec);
-    return g;
+    game.addToGame(light, spec.name);
+    game.setFromProps(light, spec);
+    return light;
+}
+
+export function addAmbientLight(game, spec) {
+    var color = spec.color || 0xffffff;
+    var intensity = spec.intensity || 2.0;
+    let light = new THREE.AmbientLight(color, intensity);
+    light.name = spec.name;
+    game.addToGame(light, spec.name);
+    game.setFromProps(light, spec);
+    return light;
 }
 
 
-function setupLights(game)
-{
-    addLight(game, {name: 'light1', color: 0xffaaaa, position: [30, 15,-10]});
-    addLight(game, {name: 'light2', color: 0xaaffaa, position: [30, 15,  5]});
-    addLight(game, {name: 'light3', color: 0xaaaaff, position: [30, 15, -5]});
-    addLight(game, {name: 'sun', color: 0xffffff, position: [0, 1000, 0], distance: 5000});
+export function addDirectionalLight(game, spec) {
+    var color = spec.color || 0xffffff;
+    var intensity = spec.intensity || 2.0;
+    var position = spec.position || [0, 0, 0]
+    let light = new THREE.DirectionalLight(color, intensity);
+    light.name = spec.name;
+    game.addToGame(light, spec.name);
+    game.setFromProps(light, spec);
+    return light;
 }
 
-Game.registerNodeType("PointLight", addLight);
-
-export {addLight, setupLights};
+Game.registerNodeType("PointLight", addPointLight);
+Game.registerNodeType("AmbientLight", addAmbientLight);
+Game.registerNodeType("DirectionalLight", addDirectionalLight);
 

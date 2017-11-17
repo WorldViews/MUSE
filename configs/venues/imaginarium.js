@@ -21,7 +21,9 @@ var LIGHTS = [
     {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2]},
     {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0]},
     {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2]},
-    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
+    {  type: 'AmbientLight', name: 'ambientLight', color: 0xffffff, intensity: 1.0 },
+    {  type: 'DirectionalLight', name: 'directionalLight', color: 0x333333, intensity: 0.7, position: [1000, 1000, 100]},
+    //{  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000, intensity: 0.6},
 ];
 
 var OBJ_MODEL = {
@@ -49,6 +51,23 @@ SATELLITE_MODEL = [
     }
 ];
 
+SHIP_OLD_MODEL = {
+    type: 'Model', name: 'Floor',
+    parent: 'station',
+    path: 'models/PlayDomeSkp_v1.dae',
+    position: [0, 0, 0],
+    rot: [0, 0, 0],
+    scale: 0.025
+};
+
+SHIP_MODEL = {
+    type: 'Model', name: 'Floor',
+    parent: 'station',
+    path: 'models/imaginarium-ship/imaginarium-ship.obj',
+    position: [9.2, 0, 0],
+    rot: [0, 0, 0],
+    scale: 0.027
+}
 var SPECS = [
     {  type: 'Stats', right: '-0px' },
     //{  type: 'JQControls' },
@@ -56,13 +75,7 @@ var SPECS = [
     //{  type: 'Scripts' },
     {   type: 'Group', name: 'station'  },
     // 'Floor' is a special name used for VR Controller raycast
-    {   type: 'Model', name: 'Floor',
-        parent: 'station',
-        path: 'models/PlayDomeSkp_v1.dae',
-        position: [0, 0, 0],
-        rot: [0, 0, 0],
-        scale: 0.025
-    },
+    SHIP_MODEL,
     {   type: 'Model', name: 'bmw',
         parent: 'station',
         path: 'models/bmw/model.dae',
