@@ -192,6 +192,18 @@ export function randomFromInterval(min,max)
     return Math.random()*(max-min+1)+min;
 }
 
+var VIDEO_EXTENSIONS = [".mp4", ".webm"];
+
+export function isVideoURL(url) {
+    var URL = url.toUpperCase();
+    var type = false;
+    VIDEO_EXTENSIONS.forEach(ext => {
+        if (URL.endsWith(ext.toUpperCase()))
+            type = true;
+    });
+    return type;
+}
+
 export default {
     cloneObject,
     getJSON,
@@ -207,5 +219,6 @@ export default {
     reportError,
     reportWarning,
     formatDatetime,
-    values
+    values,
+    isVideoURL
 };
