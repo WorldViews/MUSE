@@ -2,8 +2,9 @@
 MEDIA_SPECS = [
     {  type: 'MediaSequence', defaultDuration: 1,
        records: [
-           { t: 0,   mainScreen: {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
-           { t: 1,   mainScreen: {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
+           { duration: 4,      mainScreen: {url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'}},
+           { duration: 10,      mainScreen: {url: 'videos/GlobalWeather2013.mp4'}},
+           { duration: 32*60,   mainScreen: {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
        ]
    }
 ];
