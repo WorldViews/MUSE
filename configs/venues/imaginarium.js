@@ -18,12 +18,12 @@ var TEST = [
 ]
 
 var LIGHTS = [
-    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2]},
-    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0]},
-    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2]},
-    {  type: 'AmbientLight', name: 'ambientLight', color: 0xffffff, intensity: 1.0 },
+    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2], intensity: 0.2},
+    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0], intensity: 0.2},
+    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2], intensity: 0.2},
+    {  type: 'AmbientLight', name: 'ambientLight', color: 0xffffff, intensity: 0.1 },
     {  type: 'DirectionalLight', name: 'directionalLight', color: 0x333333, intensity: 0.7, position: [1000, 1000, 100]},
-    //{  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000, intensity: 0.6},
+    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [1000, 1000, 0], distance: 5000, intensity: 0.6},
 ];
 
 var OBJ_MODEL = {
