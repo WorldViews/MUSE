@@ -5,8 +5,7 @@ import { CMPDataUpdater } from './controllers/CMPData';
 import { CMPDataVizController } from './controllers/CMPDataVizController';
 import { Scripts } from './Scripts';
 import { PanoPortal } from './lib/PanoPortal';
-import { ProgramControl } from './ProgramControl';
-//import { CMPProgram } from './CMPProgram';
+import { Program } from './Program';
 import './Screens';
 import { Game } from './Game';
 import Util from './Util';
@@ -145,9 +144,10 @@ function start_(config) {
     game.defaultGroupName = 'station';
 
     var parts = [];
-    //let program = new CMPProgram(game, config.program);
-    //let program = new ProgramControl(game, config.program);
     console.log("****** Getting program *******");
+    var getProgram;
+    if (!config.program)
+        config.program = {type: "Program"};
     var getProgram = game.loadSpecs(config.program, "Program", "Program");
     getProgram.then(() => {
         if (config.webUI)
