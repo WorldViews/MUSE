@@ -21,7 +21,7 @@ function onStart(game)
 var CONFIG = {
     onStart: onStart,
     cameraControls: 'MultiControls',
-    ui: 'JQControls',
+    webUI: 'JQControls',
     program: CFG.SATS_PROGRAM,
     venue: CFG.IMAGINARIUM_VENUE,
     //specs: [VEARTH]
