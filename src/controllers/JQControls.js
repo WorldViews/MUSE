@@ -129,17 +129,6 @@ class JQControls extends UIControls {
     removeModel(name) { this.stageControl.removeModel(name); }
     selectModel(name) { this.stageControl.selectModel(name); }
 
-/*
-    resetCMP() {
-        // reset cmp
-        let self = this;
-        clearTimeout(self.changeTimeout);
-        self.changeTimeout = setTimeout(() => {
-            game.controllers.cmp.reset();
-            self.changeTimeout = null;
-        }, 2000);
-    }
-*/
     dispose() {
         document.body.removeChild(this.root);
     }
