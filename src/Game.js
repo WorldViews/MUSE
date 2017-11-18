@@ -20,7 +20,9 @@ class Game {
     constructor(domElementId, options) {
         options = options || {};
         if (options.ambientLightIntensity == undefined)
-            options.ambientLightIntensity = 0.5;
+            options.ambientLightIntensity = 0.2;
+            if (options.headlightIntensity == undefined)
+                options.headlightIntensity = 0.4;
         this.options = options;
         this.updateHandlers = [];
         this.init(domElementId);
@@ -55,15 +57,25 @@ class Game {
         this.scene = new THREE.Scene();
         this.scene.add(this.camera);
 
+        // Note that these lights are special - they are put direction in Scene
+        // but are not nodes, and not registered.  Perhaps they should be replaced
+        // by some nodes that are in a default set of nodes loaded in each game.
+        // Anyway, these can be disabled using gameOptions.
         this.ambientLight = null;
         if (this.options.ambientLightIntensity) {
             this.ambientLight = new THREE.AmbientLight(0x404040, this.options.ambientLightIntensity);
             this.scene.add(this.ambientLight);
         }
+        this.headlight = null;
+        if (this.options.headlightIntensity) {
+            this.headlight = new THREE.PointLight(0x404040, this.options.headlightIntensity);
+            this.scene.add(this.headlight);
+        }
 
         window.addEventListener('resize', this.handleResize.bind(this));
 
         this._defaultGroupName;
+        this.players = [];
         this.screens = {};
         this.models = {};
         this.events = new THREE.EventDispatcher();
@@ -200,12 +212,7 @@ class Game {
     }
 
     registerPlayer(player) {
-        if (this.program) {
-            this.program.registerPlayer(player);
-        }
-        else {
-            reportError("Attempt to register player with no program");
-        }
+        this.players.push(player);
     }
 
     handleResize(e) {
@@ -235,10 +242,10 @@ class Game {
         if (this.controls) {
             this.controls.update(msTime);
         }
+        if (this.headlight) {
+            this.headlight.position.copy(this.camera.position);
+        }
 
-        //this.pre(msTime);
-
-        //this.updateHandlers.forEach(h => h(msTime));
         this.updateHandlers.forEach(h => {
             try {h(msTime)}
             catch (e) {
@@ -247,9 +254,6 @@ class Game {
         });
         this.render();
 
-        //this.post(msTime);
-
-        // Do NOT provide params.
         this.requestAnimate();
     }
 
