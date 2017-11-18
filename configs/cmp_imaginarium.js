@@ -50,7 +50,12 @@ CONFIG = {
                }
            }
        ],
-       channels: ['time', 'year', 'narrative', 'spaceStatus'],
+       channels: [
+           { name: 'time', default: 0 },
+           { name: 'year', min: 1850, max: 2300, default: 1850 },
+           'narrative',
+           'spaceStatus'
+        ],
        media: MEDIA_SPECS
     },
     'venue': '/configs/venues/imaginarium.js',

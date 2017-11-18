@@ -30,23 +30,67 @@ export default class DATGUIControls extends UIControls {
         game.state.set('year', 0);
         game.state.set('narrative', '');
 
-        this.controls.time = this.ui.add(game.state.state, 'time').listen().onChange(this.onSliderChange.bind(this));
-        this.ui.add(game.state.state, 'year').min(1850).max(2300).listen();
-        this.controls.status = this.ui.add(this, 'status').listen();
-        this.controls.narrative = this.ui.add(game.state.state, 'narrative').listen();
         this.controls.playPause = this.ui.add(this, 'togglePlayPause').name('Pause');
-        this.ui.add(this, 'next');
-        this.ui.add(this, 'prev');
+        this.ui.add(this, 'next').name('Next');
+        this.ui.add(this, 'prev').name('Prev');
 
-        // this.controls.models = this.ui.addDropdown(this.models).name('Main Stage').onChange(this.selectModel.bind(this));
+        this.program = game.getProgram();
+        this.textFields = [];
+        this.program.channels.forEach(channel => {
+            var defaultValue;
+            var labelName;
+            var channelName;
+            var minValue;
+            var maxValue;
+            if (typeof channel === 'string') {
+                defaultValue = '';
+                labelName = channel;
+                channelName = channel;
+            } else if (typeof channel === 'object') {
+                defaultValue = channel.default === undefined ? '' : channel.default;
+                labelName = channel.label || channel.name;
+                channelName = channel.name;
+                minValue = channel.min;
+                maxValue = channel.max;
+            }
 
+            let param = {channel: defaultValue}
+            let ctrl = this.ui.add(param, 'channel').listen();
+            ctrl.name(labelName);
+            this.controls[channelName] = ctrl;
+            game.state.on(channelName, (v) => {
+                param.channel = v;
+            });
+            if (minValue)
+                ctrl.min(minValue);
+            if (maxValue)
+                ctrl.max(maxValue);
+        });
+
+        if (this.controls.time) {
+            this.controls.time.onChange(this.onSliderChange.bind(this));
+        }
+
+        // add stage
+        var stage = this.program.stages[0];
+        var models = {};
+        _.forEach(stage.models, (v, k) => {
+            models[v] = k;
+        });
+        let param = { model: 'none' };
+        this.controls.models = this.ui.add(param, 'model', models).name(stage.name).onChange(this.selectModel.bind(this));
+        this.models = models;
+
+        // scripts
         this.folders.scripts = datGUIVR.create('Scripts');
         this.ui.addFolder(this.folders.scripts);
 
+        // views
         this.folders.views = datGUIVR.create('Views');
         this.ui.addFolder(this.folders.views);
         datGUIVR.enableMouse(game.camera, game.renderer);
 
+        // add gui to scene
         game.scene.add(this.ui);
 
         // create toggle button
@@ -69,6 +113,23 @@ export default class DATGUIControls extends UIControls {
     }
 
     selectModel(name) {
+        for (var key in this.models) {
+            let modelName = this.models[key];
+            console.log(" name: "+modelName);
+            if (game.models[modelName]) {
+                game.models[modelName].visible = false;
+            }
+            if (game.controllers[modelName]) {
+                game.controllers[modelName].visible = false;
+            }
+        }
+        this.selectedModel = name;
+        if (game.models[name]) {
+            game.models[name].visible = true;
+        }
+        if (game.controllers[name]) {
+            game.controllers[name].visible = true;
+        }
     }
 
     registerScript(name, callback) {
@@ -86,7 +147,9 @@ export default class DATGUIControls extends UIControls {
     }
 
     setTimeSlider(t) {
-        this.controls.time.max(game.program.duration);
+        // if (this.controls.time) {
+            this.controls.time.max(game.program.duration);
+        // }
     }
 
     toggleUI(obj, offset) {
@@ -128,26 +191,6 @@ export default class DATGUIControls extends UIControls {
 
     onSliderChange(t) {
         game.program.setPlayTime(t, true);
-    }
-
-    selectModel(name) {
-        for (var key in this.models) {
-            let modelName = this.models[key];
-            console.log(" name: "+modelName);
-            if (game.models[modelName]) {
-                game.models[modelName].visible = false;
-            }
-            if (game.controllers[modelName]) {
-                game.controllers[modelName].visible = false;
-            }
-        }
-        this.selectedModel = name;
-        if (game.models[name]) {
-            game.models[name].visible = true;
-        }
-        if (game.controllers[name]) {
-            game.controllers[name].visible = true;
-        }
     }
 }
 
