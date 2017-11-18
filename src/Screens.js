@@ -66,7 +66,6 @@ class Screen extends Node3D
         this.screenMesh.userData = {doubleClick: "FOO"};
         if (spec.name) {
             game.screens[spec.name] = this;
-            //game.program.registerPlayer(this, spec.name);
             game.registerPlayer(this);
         }
         var inst = this;
