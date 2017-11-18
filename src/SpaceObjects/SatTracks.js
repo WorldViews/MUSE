@@ -41,15 +41,8 @@ class SatTracks {
         this.rsoTypes['DEBRIS'] = {color: 0xFF2222, ids:[]};
         this.rsoTypes['tba'] = {color: 0x888888, ids: []};
         this.defaultType = this.rsoTypes['DEBRIS'];
-        //this.t = new Date().getTime()/1000.0;
         this.t = Util.getClockTime();
         this.events = null;
-        //this.filterHack = 0;
-        if (opts.filterHack != null) {
-            alert("FilterHack no longer supported");
-            //this.filterHack = opts.filterHack;
-        }
-        //this.satrecs = [];
         this.loader = new Loader(game, []);
         this.initGraphics(opts);
         this.radiusEarthKm = 6378.1;
@@ -57,8 +50,6 @@ class SatTracks {
         this.mouseOverSat = "";
         this.selectedSat = "";
         this.startTime = game.program.getPlayTime();
-        //this.addEvent(this.startTime+200, 2,2,2, 10);
-        //this.setPlayTime(getClockTime());
         var inst = this;
         this.game.program.formatTime = t => Util.formatDatetime(t);
         this.db = new SatTrackDB(opts.dataSet, () => inst.onLoaded());
@@ -122,9 +113,6 @@ class SatTracks {
 
     onLoaded(sats) {
         console.log(">>> SatTracks.onLoaded...");
-        //if (this.filterHack) {
-        //    this.db.setupFakeTimes(this.game.program.startTime, this.game.program.duration);
-        //}
         var now = new Date();
         for (var name in this.rsoTypes) {
             var rtype = this.rsoTypes[name];
