@@ -219,27 +219,13 @@ class Game {
         }
     }
 
-/*
-    pre(msTime) {
-        // call pre
-        Object.keys(this.controllers).forEach((k) => {
-            let controller = this.controllers[k];
-            if (controller && controller.pre) {
-                controller.pre(msTime);
-            }
-        });
+    startGame() {
+        if (this.config && this.config.onStart) {
+            this.config.onStart(this);
+        }
+        this.program.startProgram();
+        this.animate(0);
     }
-
-    post(msTime) {
-        // call post
-        Object.keys(this.controllers).forEach((k) => {
-            let controller = this.controllers[k];
-            if (controller && controller.post) {
-                controller.post(msTime);
-            }
-        });
-    }
-*/
 
     animate(msTime) {
         if (this.config && this.config.onUpdate) {
@@ -490,14 +476,21 @@ class Game {
     }
 
     // load a given set of specs.  name is just for debugging.
-    loadSpecs(specs, name) {
+    loadSpecs(specs, name, expectedType) {
         var inst = this;
         console.log("***** game.loadSpecs creating promise");
         return new Promise((resolve, reject) => {
+            /*
             new Loader(inst, specs, () => {
                 console.log("*****  game.loadSpecs resolving promise...");
                 resolve();
             }, name);
+            */
+            var loader = new Loader(inst, null, () => {
+                console.log("*****  game.loadSpecs resolving promise...");
+                resolve();
+            }, name);
+            loader.load(specs, null, expectedType);
         });
     }
 }

@@ -10,11 +10,16 @@
 */
 import {sprintf} from "sprintf-js";
 import * as Util from './Util';
+import {Game} from './Game';
 import {MUSE} from './MUSE';
 import {MUSENode} from './Node';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
+//Note: right now ProgramControl and Program are conflated
+// and shouldn't be.   There should be just a ProgramControl
+// class, and a Program Node that should be different from it.
+//
 //class ProgramControl extends MUSE.Node
 class ProgramControl extends MUSENode
 {
@@ -45,6 +50,7 @@ class ProgramControl extends MUSENode
             t = Util.toTime(options.playTime);
         }
         this.setPlayTime(t);
+        this.onStartProgram = options.onStartProgram;
         this.channels = options.channels || [];
         this.scripts = options.scripts || {};
         this.stages = options.stages || [];
@@ -54,11 +60,16 @@ class ProgramControl extends MUSENode
         if (options.media) {
             this.setMedia(options.media);
         }
+        this.readyPromise = new Promise((resolve, reject) => {
+            resolve(this);
+        });
     }
 
-    init() {
+    startProgram() {
         var t = this.getPlayTime();
         this.setPlayTime(t);
+        if (this.onStartProgram)
+            this.onStartProgram(this.game, this);
     }
 
     setTimeRange(startTime, endTime)
@@ -73,16 +84,6 @@ class ProgramControl extends MUSENode
     registerPlayer(player)
     {
         this.players.push(player);
-        /*
-        name = player.name;
-        //TODO: flag error if no name or name collision.
-        // Note... this should probably be changed so that players can have the same name
-        // or the players have unique names but specify channel names.
-        if (this.players[name]) {
-            Util.reportError("Reregistering player named "+name);
-        }
-        this.players[name] = player;
-        */
     }
 
     tick() {
@@ -99,6 +100,10 @@ class ProgramControl extends MUSENode
         return sprintf("%8.1f", t);
     }
 
+    // This should just update UI elements with playtime information.
+    // this may get called with every tick, so the things it causes
+    // should be lightweight. (E.g. not seeking videos or redrawing
+    // animations.)
     displayTime(t, isAdjust) {
         //console.log("displayTime "+t);
         var tStr = "";
@@ -115,6 +120,25 @@ class ProgramControl extends MUSENode
     	let value = ((t-this.startTime)/(0.0+dur));
         if (game.controllers.ui) {
             game.controllers.ui.setTimeSlider(value);
+        }
+        // This bit is a hack because it is CMP specific.
+        // it was moved here from CMPProgram.  This functionality
+        // can all be moved to scripts in the config.
+        if (this.gss) {
+            var year = GSS.timeToYear(t);
+            //console.log("year: " + year);
+            var yearStr = "";
+            if (year) {
+                var va = this.gss.getFieldByYear(year, "videofade");
+                var nar = this.gss.getFieldByYear(year, "narrative") || "";
+                //console.log("va: " + va + "  narrative: " + nar);
+                yearStr = Math.floor(year);
+                if (nar) {
+                    this.game.state.set('narrative', yearStr + ':' + nar);
+                }
+            }
+            //console.log("yearStr:"+yearStr);
+            this.game.state.set('year', yearStr);
         }
     }
 
@@ -229,6 +253,14 @@ class ProgramControl extends MUSENode
     }
 }
 
+function addProgram(game, opts)
+{
+    let program = new ProgramControl(game, opts);
+    return program.readyPromise;
+}
+
+Game.registerNodeType("Program", addProgram);
+
 MUSENode.defineFields(ProgramControl, [
     "media",
     "startTime",
@@ -238,7 +270,8 @@ MUSENode.defineFields(ProgramControl, [
     "gss",
     "stages",
     "channels",
-    "scripts"
-])
+    "scripts",
+    "onStartProgram"
+]);
 
 export {ProgramControl};

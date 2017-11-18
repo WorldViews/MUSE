@@ -69,9 +69,9 @@ class Loader
         return "_group_"+numGroups;
     }
 
-    load(specs, parent) {
+    load(specs, parent, expectedType) {
 	    try {
-		    this.load_(specs, parent);
+		    this.load_(specs, parent, expectedType);
 	    }
     	catch (e) {
             reportError("error in load: "+e);
@@ -79,7 +79,7 @@ class Loader
     	}
     }
 
-    load_(specs, parent) {
+    load_(specs, parent, expectedType) {
         console.log("<<< load parent: "+parent+"   specs: "+JSON.stringify(specs));
         var game = this.game;
     	var inst = this;
@@ -119,6 +119,13 @@ class Loader
                 this.loadModel(spec);
                 return;
             }
+            if (!spec.type && expectedType) {
+                spec.type = expectedType;
+            }
+            if (expectedType && spec.type != expectedType) {
+                Util.reportError("Loader expected type "+expectedType+" found "+spec.type);
+            }
+            console.log("expectedType: "+expectedType);
             if (!spec.type) {
                 reportError("Groups should have type: Group");
                 this.loadGroup(spec);

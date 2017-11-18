@@ -5,7 +5,8 @@ import { CMPDataUpdater } from './controllers/CMPData';
 import { CMPDataVizController } from './controllers/CMPDataVizController';
 import { Scripts } from './Scripts';
 import { PanoPortal } from './lib/PanoPortal';
-import { CMPProgram } from './CMPProgram';
+import { ProgramControl } from './ProgramControl';
+//import { CMPProgram } from './CMPProgram';
 import './Screens';
 import { Game } from './Game';
 import Util from './Util';
@@ -143,29 +144,23 @@ function start_(config) {
     }
     game.defaultGroupName = 'station';
 
-    let program = new CMPProgram(game, config.program);
-
-    if (config.ui) {
-        alert("config.ui deprecated - please use config.webUI");
-        config.webUI = config.ui;
-    }
-    if (config.webUI) {
-        game.loadSpecs(Util.getTypedObj(config.webUI), "webUI");
-    }
-
     var parts = [];
-    if (config.venue)
-        parts.push(game.loadSpecs(config.venue, "venue"));
-    if (config.specs)
-        parts.push(game.loadSpecs(config.specs, "specs"));
-    Promise.all(parts).then(() => {
-        console.log("loaded elements");
-        console.log("****************** Starting game ******************");
-        game.config = config;
-        if (config.onStart) {
-            config.onStart(game);
-        }
-        game.animate(0);
+    //let program = new CMPProgram(game, config.program);
+    //let program = new ProgramControl(game, config.program);
+    console.log("****** Getting program *******");
+    var getProgram = game.loadSpecs(config.program, "Program", "Program");
+    getProgram.then(() => {
+        if (config.webUI)
+            parts.push(game.loadSpecs(Util.getTypedObj(config.webUI), "webUI"));
+        if (config.venue)
+            parts.push(game.loadSpecs(config.venue, "venue"));
+        if (config.specs)
+            parts.push(game.loadSpecs(config.specs, "specs"));
+        Promise.all(parts).then(() => {
+            console.log("****************** Starting game ******************");
+            game.config = config;
+            game.startGame();
+        });
     });
 }
 
