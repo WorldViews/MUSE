@@ -80,7 +80,7 @@ class Loader
     }
 
     load_(specs, parent, expectedType) {
-        console.log("<<< load parent: "+parent+"   specs: "+JSON.stringify(specs));
+        console.log("<<< load parent: "+parent+" expectedType: "+expectedType+"  specs: ",specs);
         var game = this.game;
     	var inst = this;
         if (!Array.isArray(specs))
