@@ -1,9 +1,6 @@
 
 var LIGHTS = [
-    {  type: 'PointLight', name: 'light1', color: 0xffaaaa, position: [0, -25,-2]},
-    {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0]},
-    {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2]},
-    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [0, 1000, 0], distance: 5000},
+    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [1000, 1000, 0], distance: 5000},
 ];
 
 ISS_MODEL = [
@@ -25,6 +22,7 @@ CONFIG = {
     //   duration: 32*60,
     //   gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json"
     //},
+    gameOptions: {headlightIntensity: 1},
     'specs': [
         ISS_MODEL,
         {  type: 'SolarSystem' },
@@ -32,3 +30,5 @@ CONFIG = {
         LIGHTS
     ]
 };
+
+MUSE.returnValue(CONFIG);
