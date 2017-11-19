@@ -428,7 +428,7 @@ class VideoView extends JQWidget {
         this.opts = screenOpts;
         this.game = window.game;
         game.state.on(this.name, (newProps) => inst.onChange(newProps));
-        this.game.program.registerPlayer(this);
+        this.game.registerPlayer(this);
     }
 
     setup($parent) {
