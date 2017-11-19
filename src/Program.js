@@ -49,18 +49,27 @@ class Program extends MUSENode
         this.stages = options.stages || [];
         console.log("channels:", this.channels);
         var inst = this;
-        setInterval(()=>inst.tick(), 200);
+        var promises = [];
         if (options.media) {
-            this.setMedia(options.media);
+            promises.push(this.game.loadSpecs(options.media, "media"));
+        }
+        if (options.nodes) {
+            promises.push(this.game.loadSpecs(options.nodes, "Program nodes"));
         }
         this.readyPromise = new Promise((resolve, reject) => {
-            resolve(this);
+            console.log("Program waiting for its promises");
+            Promise.all(promises).then(() => {
+                    console.log("All of Program's promises completed");
+                    resolve(inst);
+                }
+            );
         });
     }
 
     startProgram() {
         var t = this.getPlayTime();
         this.setPlayTime(t);
+        setInterval(()=>this.tick(), 200);
         if (this.onStartProgram)
             this.onStartProgram(this.game, this);
     }
@@ -199,10 +208,6 @@ class Program extends MUSENode
         });
     }
 
-    setMedia(mediaSpec) {
-        var specs = this.game.loadSpecs(mediaSpec, "media");
-    }
-
     addMediaSequence(mediaSequence) {
         if (this.mediaSequence) {
             alert("MediaControl does not support more than one media sequence.");
@@ -241,6 +246,7 @@ MUSENode.defineFields(Program, [
     "stages",
     "channels",
     "scripts",
+    "nodes",
     "onStartProgram"
 ]);
 

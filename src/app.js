@@ -150,6 +150,7 @@ function start_(config) {
         config.program = {type: "Program"};
     var getProgram = game.loadSpecs(config.program, "Program", "Program");
     getProgram.then(() => {
+        console.log("**************** Program Loaded ********************");
         if (config.webUI)
             parts.push(game.loadSpecs(Util.getTypedObj(config.webUI), "webUI"));
         if (config.venue)
