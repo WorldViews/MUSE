@@ -43,7 +43,7 @@ class SatTracks {
         this.defaultType = this.rsoTypes['DEBRIS'];
         this.t = Util.getClockTime();
         this.events = null;
-        this.loader = new Loader(game, []);
+        this.loader = new Loader(game, [], null, "SatTracks");
         this.initGraphics(opts);
         this.radiusEarthKm = 6378.1;
         this._playSpeed = 60.0;
