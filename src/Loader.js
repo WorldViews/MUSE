@@ -5,6 +5,7 @@ import MTLLoader from './lib/loaders/MTLLoader';
 import DDSLoader from './lib/loaders/DDSLoader';
 import {FBXLoader} from './lib/loaders/FBXLoader';
 import Util from './Util';
+import {MUSE} from './MUSE';
 import {reportError} from './Util';
 
 
@@ -49,6 +50,7 @@ function reportError(str)
 var numLoaders = 0; // just for debugging purposes
 var numGroups = 0;
 
+var PENDING_LOADERS = {};
 
 class Loader
 {
@@ -133,7 +135,7 @@ class Loader
             }
             var obj = game.createNode(spec.type, spec);
             if (obj) {
-                this.numPending++;
+                this.incrementNumPending();
                 obj.then(() => { inst.handleCompletion(); });
             }
             else {
@@ -160,7 +162,7 @@ class Loader
         console.log("Loading JS file "+path);
         //alert("loadJS path: "+path);
         var inst = this;
-        this.numPending++;
+        this.incrementNumPending();
         Util.getJSONFromScript(path,
                 function(obj) {
                     var specs = obj;
@@ -179,7 +181,7 @@ class Loader
     loadJSON(path) {
         console.log("Loading JSON specs "+path);
         var inst = this;
-        this.numPending++;
+        this.incrementNumPending();
         Util.getJSON(path, specs => {
             inst.load(specs);
             inst.handleCompletion();
@@ -192,7 +194,7 @@ class Loader
         }
         var path = spec.path;
         if (path.endsWith(".dae")) {
-            this.numPending++;
+            this.incrementNumPending();
             loadCollada(spec.path, spec).then((collada) => {
                 console.log("****** resolved collada load "+spec.path);
                 game.setFromProps(collada.scene, spec);
@@ -202,7 +204,7 @@ class Loader
             return;
         }
         if (path.endsWith(".fbx")) {
-            this.numPending++;
+            this.incrementNumPending();
             loadFBXModel(path, spec, (obj) => {
                 console.log("***** Loaded fbx "+path);
                 game.setFromProps(obj, spec);
@@ -211,7 +213,7 @@ class Loader
             });
         }
         if (path.endsWith(".obj")) {
-            this.numPending++;
+            this.incrementNumPending();
             loadOBJModel(path, spec, (obj) => {
                 //loadOBJModel0(path, spec, (obj) => {
                 game.setFromProps(obj, spec);
@@ -221,12 +223,19 @@ class Loader
         }
     }
 
+    incrementNumPending() {
+        if (this.numPending == 0)
+            PENDING_LOADERS[this.name] = this;
+        this.numPending++;
+    }
+
     handleCompletion() {
         this.numPending--;
-        console.log("handleCompletion "+this.numPending);
-        if (this.numPending === 0) {
-            this.complete();
-        }
+        console.log("handleCompletion "+this.name+" "+this.numPending);
+        if (this.numPending > 0)
+            return;
+        delete PENDING_LOADERS[this.name];
+        this.complete();
         //alert("All Models Loaded");
     }
 
@@ -357,5 +366,7 @@ function loadOBJModel(path, opts, afterFun)
         }, onProgress, onError );
     });
 }
+
+MUSE.PENDING_LOADERS = PENDING_LOADERS;
 
 export {Loader};
