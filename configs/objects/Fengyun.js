@@ -20,3 +20,5 @@ CONFIG = {
         LIGHTS
     ]
 };
+
+MUSE.returnValue(CONFIG);
