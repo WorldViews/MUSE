@@ -6,6 +6,7 @@ import { sprintf } from "sprintf-js";
 import { getCameraParams } from '../../Util';
 //import {MUSE} from '../../MUSE';
 import {MUSENode} from '../../Node';
+import Util from '../../Util';
 
 // The four arrow keys
 var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40,
@@ -42,6 +43,7 @@ class MultiControls extends MUSENode
         this.whichButton = null;
         this.mouseDragOn = false;
         this.mousePtDown = null;
+        this.mouseDownTime = 0;
         this.anglesDown = null;
         this.camPosDown = null;
         this.panRatio = 0.005;
@@ -59,6 +61,7 @@ class MultiControls extends MUSENode
         this._onMouseDown = bind( this, this.onMouseDown );
         this._onMouseWheel = bind( this, this.onMouseWheel );
         this._onMouseUp = bind( this, this.onMouseUp );
+        //this._onClick = bind( this, this.onClick ); // see comment at onClick
         this._onDoubleClick = bind( this, this.onDoubleClick );
         this._onContextMenu = bind(this, this.onContextMenu );
 
@@ -68,6 +71,7 @@ class MultiControls extends MUSENode
          */
         this.domElement.addEventListener( 'contextmenu',   this._onContextMenu, false );
         this.domElement.addEventListener( 'dblclick',      this._onDoubleClick, false );
+        //this.domElement.addEventListener( 'click',         this._onClick, false );
         this.domElement.addEventListener( 'mousedown',     this._onMouseDown, false );
         this.domElement.addEventListener( 'mouseup',       this._onMouseUp, false );
         this.domElement.addEventListener( 'mousemove',     this._onMouseMove, false );
@@ -90,6 +94,7 @@ class MultiControls extends MUSENode
         //event.stopPropagation();
         this.whichButton = event.button;
         this.mouseDragOn = true;
+        this.mouseDownTime = Util.getClockTime();
         this.mousePtDown = this.getMousePt(event);
         this.anglesDown = this.getCamAngles();
         this.camPosDown = this.game.camera.position.clone();
@@ -101,8 +106,20 @@ class MultiControls extends MUSENode
         event.preventDefault();
         //event.stopPropagation();
         this.mouseDragOn = false;
+        var mousePtUp = this.getMousePt(event);
+        if (mousePtUp.x == this.mousePtDown.x && mousePtUp.y == this.mousePtDown.y) {
+            var t = Util.getClockTime();
+            var dt = t - this.mouseDownTime;
+            if (dt < 0.6)
+                this.onClick( event );
+            else {
+                console.log("Lazy click... ignored...");
+            }
+        }
     };
 
+    // this is a dirty special hack that will be replaced by
+    // a more general event mechanism.
     dispatchDoubleClick(obj) {
         console.log("MultiControl.dispatchDoubleClick");
         while (obj) {
@@ -126,6 +143,33 @@ class MultiControls extends MUSENode
             this.game.screens[obj.name].play();
         }
         return obj;
+    }
+
+    dispatchMuseEvent(evType, obj) {
+        console.log("MultiControl.dispatchMuseEvent "+evType);
+        while (obj) {
+            var userData = obj.userData;
+            if (userData && userData[evType]) {
+                report("******** BINGO Click!!!! *******");
+                userData[evType](obj);
+                break;
+            }
+            obj = obj.parent;
+        }
+        return obj;
+    }
+
+    // Note that we did not use the 'click' event because it
+    // seems to trigger even if the mouse moved between down and up.
+    // we made our own using mouseDown and mouseUp to just call This
+    // if the mouse doesn't move, and the down and up are in rapid succession.
+    onClick( event ) {
+        console.log("MultiControl.onClick");
+        this.handleRaycast(event, 1);
+        var obj = this.pickedObj;
+        console.log("MultiControl.onClick pickedObj: ", obj);
+        if (obj)
+            this.dispatchMuseEvent('click', obj);
     }
 
     onDoubleClick( event ) {

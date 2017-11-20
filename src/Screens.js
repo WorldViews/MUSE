@@ -78,6 +78,7 @@ class Screen extends Node3D
         //this.screenObject.add(this.screenMesh);
         game.setFromProps(this.screenObject, spec);
         game.addToGame(this.screenObject, spec.name, spec.parent);
+        this.object3D = this.screenObject;
         //this.userData = {doubleClick: "FOO"};
         this.screenMesh.userData = {doubleClick: "FOO"};
         if (spec.name) {
