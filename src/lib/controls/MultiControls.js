@@ -375,23 +375,15 @@ class MultiControls extends MUSENode
         var cam = this.game.camera;
 
         if (down[KEYS.RIGHT]) {
-            if (down[KEYS.SHIFT]) {
-                var camPos = cam.position;
-                var v = this.getCamRight();
-                camPos.addScaledVector(v, moveSpeed);
-            } else {
-                this.object.rotateY(-panSpeed);
-            }
+            var camPos = cam.position;
+            var v = this.getCamRight();
+            camPos.addScaledVector(v, moveSpeed);
         }
 
         if (down[KEYS.LEFT]) {
-            if (down[KEYS.SHIFT]) {
-                var camPos = cam.position;
-                var v = this.getCamRight();
-                camPos.addScaledVector(v, -moveSpeed);
-            }else {
-                this.object.rotateY(panSpeed);
-            }
+            var camPos = cam.position;
+            var v = this.getCamRight();
+            camPos.addScaledVector(v, -moveSpeed);
         }
 
         if (down[KEYS.UP]) {
@@ -407,23 +399,15 @@ class MultiControls extends MUSENode
         }
 
         if (down[KEYS.D]){
-            if (down[KEYS.SHIFT]) {
-                var camPos = cam.position;
-                var v = this.getCamRight();
-                camPos.addScaledVector(v, moveSpeed);
-            }else {
-                this.object.rotateY(-panSpeed);
-            }
+            var camPos = cam.position;
+            var v = this.getCamRight();
+            camPos.addScaledVector(v, moveSpeed);
         }
 
         if (down[KEYS.A]) {
-            if (down[KEYS.SHIFT]){
-                var camPos = cam.position;
-                var v = this.getCamRight();
-                camPos.addScaledVector(v, -moveSpeed);
-            }else {
-                this.object.rotateY(panSpeed);
-            }
+            var camPos = cam.position;
+            var v = this.getCamRight();
+            camPos.addScaledVector(v, -moveSpeed);
         }
 
         if (down[KEYS.W]) {
