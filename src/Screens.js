@@ -5,6 +5,21 @@ import ImageSource from './lib/ImageSource';
 import html2canvas from 'html2canvas';
 import {MUSENode} from './Node';
 import {Node3D} from './Node3D';
+import Util from './Util';
+
+/*
+val should be name of property of THREE.
+options are permissible values.
+default value is returned if no val is given
+*/
+function getTHREEParam(val, options, defaultVal) {
+    if (!val)
+        return defaultVal;
+    if (options.indexOf(val) < 0) {
+        Util.reportError("Bad Value for THREE " + val )
+    }
+    return THREE[val];
+}
 
 function toRad(v)
 {
@@ -46,12 +61,13 @@ class Screen extends Node3D
         } else {
             var videoTexture = new THREE.Texture();
         }
+        var side = getTHREEParam(spec.side, ["FrontSide", "BackSide", "DoubleSide"], THREE.DoubleSide);
         this.material = new THREE.MeshBasicMaterial({
             map: videoTexture,
             //depthWrite: false,
             alphaTest: 0.4,
             transparent: false,
-            side: THREE.DoubleSide
+            side: side
         });
         //this.screenObject = new THREE.Object3D();
         this.screenMesh = new THREE.Mesh(this.geometry, this.material);
@@ -193,7 +209,8 @@ MUSENode.defineFields(Screen, [
   "thetaStart",
   "thetaLength",
   "path",
-  "autoPlay"
+  "autoPlay",
+  "side"
 ]);
 
 function loadScreen(game, opts)
