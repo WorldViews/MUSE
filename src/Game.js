@@ -24,7 +24,6 @@ class Game {
             if (options.headlightIntensity == undefined)
                 options.headlightIntensity = 0.4;
         this.options = options;
-        this.updateHandlers = [];
         this.init(domElementId);
         this.ntypes = ntypes;
         this.user = Util.getParameterByName("user");
@@ -185,21 +184,8 @@ class Game {
     // Isn't this more complicated than it needs to be?
     // we have a list and map, and functions or objects.
     registerController(name, controller) {
-        if (typeof controller === 'object' && controller.update) {
-            this.updateHandlers.push(controller.update.bind(controller));
-        } else {
-            throw 'Unsupported controller provided to `registerController`';
-        }
         this.controllers[name] = controller;
         return controller;
-    }
-
-    registerUpdateHandler(handlerOrObject) {
-        if (typeof handlerOrObject === 'function') {
-            this.updateHandlers.push(handlerOrObject);
-        } else {
-            throw 'Unsupported handler provided to `registerUpdateHandler`';
-        }
     }
 
     getProgram() {
@@ -246,12 +232,22 @@ class Game {
             this.headlight.position.copy(this.camera.position);
         }
 
-        this.updateHandlers.forEach(h => {
-            try {h(msTime)}
-            catch (e) {
-                console.log("err: "+e,e);
+        _.forEach(this.controllers, (v, k)  => {
+            if (v.pre) {
+                v.pre();
             }
         });
+
+        _.forEach(this.controllers, (v, k)  => {
+            v.update(msTime);
+        });
+
+        _.forEach(this.controllers, (v, k)  => {
+            if (v.post) {
+                v.post(msTime);
+            }
+        });
+
         this.render();
 
         this.requestAnimate();
