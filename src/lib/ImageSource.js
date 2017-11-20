@@ -18,8 +18,8 @@ export default class ImageSource {
     constructor(options) {
         this.options = options;
         var autoPlay = true;
-        if (options.autoPlay != null)
-            autoPlay = false;
+        if (options.autoPlay != undefined)
+            autoPlay = options.autoPlay;
         this.url = this.options.url;
         this.type = this.options.type || this.TYPE.NONE;
         this.startTime = this.options.startTime || 0;
