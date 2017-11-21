@@ -26,9 +26,53 @@ MEDIA_SPECS = [
 
 SCRIPTS = {  type: 'Scripts' };
 
+POSTERS = [
+    {  type: 'Screen',    name: 'Poster_EarthClock',
+       path: 'assets/images/CMPPosters/TimeToChange.jpg',
+       radius: 7.8,
+       phiStart: 70, phiLength: 12,
+       thetaStart: -8, thetaLength: 12,
+   },
+   {  type: 'Screen',    name: 'Poster_CoolEffect',
+      path: 'assets/images/PartnerLogos/CoolEffect.png',
+      radius: 7.8,
+      phiStart: 70, phiLength: 12,
+      thetaStart: 12, thetaLength: 12,
+  },
+  {  type: 'Screen',    name: 'Poster_SustainableSV',
+     path: 'assets/images/PartnerLogos/SustainableSV.png',
+     radius: 7.8,
+     phiStart: 70, phiLength: 12,
+     thetaStart: -28, thetaLength: 12,
+  }
+];
+
+// For now this just sets the video.  It should set the program
+// in a way that corresponds to that video.
+function setProgram(name, vidURL, channel) {
+    console.log("setProgram: "+name+" "+vidURL+" "+channel);
+    channel = channel || "mainScreen";
+    if (vidURL) {
+        console.log("setting state "+channel+".url: "+vidURL);
+        game.state.set(channel+".url", vidURL)
+    }
+}
+
+function setupPosterActions() {
+    //alert("Setting up poster actions");
+    var screens = game.screens;
+    screens.Poster_EarthClock.onMuseEvent('click', () =>
+        setProgram("EarthClock", "videos/Climate-Music-V3-Distortion_HD_540.webm"));
+    screens.Poster_CoolEffect.onMuseEvent('click', () =>
+        setProgram("CoolEffect", "videos/ExposingCarbonPollutionCoolEffect.mp4"));
+    screens.Poster_SustainableSV.onMuseEvent('click', () =>
+       setProgram("SustainableSV", "videos/CloudTruth.mp4"));
+}
+
 CONFIG = {
+    onStart: setupPosterActions,
     //'cameraControls': 'Orbit',
-    'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .02},
+    'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .01},
     //'cameraControls': 'JoelControls',
     'webUI': {type: 'DATGUIControls',
     // 'webUI': {type: 'JQControls',
@@ -59,8 +103,8 @@ CONFIG = {
        media: MEDIA_SPECS
     },
     'venue': '/configs/venues/imaginarium.js',
-    'specs': [SCRIPTS]
+    'specs': [SCRIPTS, POSTERS]
 };
 
 MUSE.returnValue(CONFIG);
-// 
+//

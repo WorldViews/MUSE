@@ -38,7 +38,7 @@ class MultiControls extends MUSENode
         console.log("domElement "+this.domElement);
 
         this.downKeys = {};
-        this.keyPanSpeed = opts.keyPanSpeed || 0.01;
+        this.keyPanSpeed = opts.keyPanSpeed || 0.005;
         this.keyMoveSpeed = opts.keyMoveSpeed || 0.06;
         this.whichButton = null;
         this.mouseDragOn = false;
@@ -48,7 +48,7 @@ class MultiControls extends MUSENode
         this.camPosDown = null;
         this.panRatio = 0.005;
         this.pitchRatio = 0.005;
-        this.lookSense = 1;
+        this.lookSense = 1; // if 1, cam moves with mouse, if -1 opposite of mouse
         this.prevView = null;
         this.prevScreen = null;
         this.speedRight = 0;
@@ -311,6 +311,11 @@ class MultiControls extends MUSENode
         return this.pickedIsect;
     }
 
+    rotateCamera(dTheta, dPhi) {
+        var angles = this.getCamAngles();
+        this.setCamAngles(angles.theta + dTheta, angles.phi + dPhi);
+    }
+
     handleLook(dx, dy)
     {
         //console.log("MultiControls.handleLook dx: "+dx+"  dy: "+dy);
@@ -373,7 +378,7 @@ class MultiControls extends MUSENode
         }
         //console.log("downKeys:"+ JSON.stringify(down));
         var cam = this.game.camera;
-
+/*
         if (down[KEYS.RIGHT]) {
             var camPos = cam.position;
             var v = this.getCamRight();
@@ -384,6 +389,14 @@ class MultiControls extends MUSENode
             var camPos = cam.position;
             var v = this.getCamRight();
             camPos.addScaledVector(v, -moveSpeed);
+        }
+*/
+        if (down[KEYS.RIGHT]) {
+            this.rotateCamera(-panSpeed, 0);
+        }
+
+        if (down[KEYS.LEFT]) {
+            this.rotateCamera(panSpeed, 0);
         }
 
         if (down[KEYS.UP]) {
