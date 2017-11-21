@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import OrbitControls from './lib/controls/OrbitControls';
 import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
-import {MultiControlsDeprecated} from './lib/controls/MultiControlsDeprecated';
 import {Loader} from './Loader';
 import { NetLink } from './NetLink';
 import Util from './Util';
