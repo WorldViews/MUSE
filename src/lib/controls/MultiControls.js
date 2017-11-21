@@ -191,9 +191,10 @@ class MultiControls extends MUSENode
     }
 
     onMouseMove( event ) {
-        this.handleRaycast(event);
+        //this.handleRaycast(event);
         if (!this.mouseDragOn || !this.enabled)
             return;
+        this.handleRaycast(event);
         //console.log("MultiControls.onMouseMove");
         var pt = this.getMousePt(event);
         var dx = pt.x - this.mousePtDown.x;
