@@ -168,6 +168,12 @@ export default class VRInputController {
     }
 
     handleRaycast(dt) {
+        if (!this.controller0.getButtonState('grips')) {
+            this.line.visible = false;
+            return;
+        }
+
+        this.line.visible = true;
         let intersections = this.getIntersections(this.controller0);
 
         if (this.tween) {
@@ -211,7 +217,7 @@ export default class VRInputController {
                 this.line.sprite.visible = true;
             }
         } else {
-            this.selector.visible = true;
+            //this.selector.visible = true;
             this.line.scale.x = 5;
             this.line.sprite.visible = false;
         }
