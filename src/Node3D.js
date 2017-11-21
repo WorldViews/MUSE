@@ -5,6 +5,8 @@ import Util from './Util';
 //import {MUSE} from './MUSE';
 import {MUSENode} from './Node';
 
+var EVENT_TYPES = ["click"];
+
 // This is a base class for MUSE Nodes that correspond
 // to THREE 3D objects.
 // Those Node implementations should attach an Object3D
@@ -30,7 +32,21 @@ class Node3D extends MUSENode {
         return false;
     }
 
+    setObject3D(obj3D) {
+        this.object3D = obj3D;
+        var museEvents = this.options.onMuseEvent;
+        if (museEvents) {
+            for (var evType in museEvents) {
+                this.onMuseEvent(evType, museEvents[evType]);
+            }
+        }
+    }
+
     onMuseEvent(evtType, fun) {
+        console.log("******************* setting up museEvetn "+evtType, fun);
+        if (EVENT_TYPES.indexOf(evtType) < 0) {
+            Util.reportError("Unknown Event type: "+evtType);
+        }
         var obj = this.object3D;
         if (!obj) {
             alert("Cannot add MUSE events to Nodes that don't have object3D property");
@@ -51,7 +67,8 @@ MUSENode.defineFields(Node3D, [
     "position",
     "scale",
     "rotation",
-    "visible"
+    "visible",
+    "onMuseEvent"
 ]);
 
 export {Node3D};

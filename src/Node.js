@@ -41,6 +41,7 @@ class MUSENode {
         }
         this.id = opts.id || getUniqueId(class_);
         this.name = opts.name || this.id;
+        this.options = opts;
         //this.checkOpts(opts);
     }
 
