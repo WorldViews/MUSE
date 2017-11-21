@@ -26,39 +26,43 @@ MEDIA_SPECS = [
 
 SCRIPTS = {  type: 'Scripts' };
 
-PROGRAM = {
-   duration: 32*60,
-   gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
-   stages: [
-       {
-           name: 'Main Stage',
-           models: {
-               'vEarth': 'Virtual Earth',
-               'dancer': 'Dancer',
-               'cmp': 'Data Visualization',
-               'portal': 'Panoramic Portal',
-               'bmw': 'Eriks Car',
-               'none': 'Nothing'
-           }
-       }
-   ],
-   channels: ['time', 'year', 'narrative', 'spaceStatus'],
-   media: MEDIA_SPECS
-};
+POSTERS = "configs/programs/cmp_posters.js";
 
 CONFIG = {
+    //onStart: setupPosterActions,
     //'cameraControls': 'Orbit',
-    'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .02},
+    'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .01},
     //'cameraControls': 'JoelControls',
-    //'webUI': {type: 'DATGUIControls' },
-    gameOptions: {ambientLightIntensity: 0 },
-    'webUI': {type: 'JQControls', screens: ["mainScreen"] },
-    'program': PROGRAM,
-    //'program': 'configs/programs/cmp.js',
+    //'webUI': {type: 'DATGUIControls',
+    webUI: {type: 'JQControls',
+           //screens: ["mainScreen"],
+          },
+    'program': {
+       duration: 32*60,
+       gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
+       stages: [
+           {
+               name: 'Main Stage',
+               models: {
+                   'vEarth': 'Virtual Earth',
+                   'dancer': 'Dancer',
+                   'cmp': 'Data Visualization',
+                   'portal': 'Panoramic Portal',
+                   'bmw': 'Eriks Car',
+                   'none': 'Nothing'
+               }
+           }
+       ],
+       channels: [
+           { name: 'time', default: 0 },
+           { name: 'year', min: 1850, max: 2300, default: 1850 },
+           'narrative',
+           'spaceStatus'
+        ],
+       media: MEDIA_SPECS
+    },
     'venue': '/configs/venues/imaginarium.js',
-    'specs': [SCRIPTS,
-        //{type: 'DATGUIControls'}
-    ]
+    'specs': [SCRIPTS, POSTERS]
 };
 
 MUSE.returnValue(CONFIG);
