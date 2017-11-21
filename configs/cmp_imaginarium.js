@@ -27,24 +27,44 @@ MEDIA_SPECS = [
 SCRIPTS = {  type: 'Scripts' };
 
 POSTERS = [
+    // In front
     {  type: 'Screen',    name: 'Poster_EarthClock',
        path: 'assets/images/CMPPosters/TimeToChange.jpg',
        radius: 7.8,
-       phiStart: 70, phiLength: 12,
-       thetaStart: -8, thetaLength: 12,
+       phiStart: 80, phiLength: 8,
+       thetaStart: 164, thetaLength: 8,
    },
    {  type: 'Screen',    name: 'Poster_CoolEffect',
       path: 'assets/images/PartnerLogos/CoolEffect.png',
       radius: 7.8,
-      phiStart: 70, phiLength: 12,
-      thetaStart: 12, thetaLength: 12,
+      phiStart: 80, phiLength: 8,
+      thetaStart: 176, thetaLength: 8,
   },
   {  type: 'Screen',    name: 'Poster_SustainableSV',
      path: 'assets/images/PartnerLogos/SustainableSV.png',
      radius: 7.8,
+     phiStart: 80, phiLength: 8,
+     thetaStart: 188, thetaLength: 8,
+ },
+  // IN back
+  {  type: 'Screen',    name: 'Poster_EarthClock_back',
+     path: 'assets/images/CMPPosters/TimeToChange.jpg',
+     radius: 7.8,
      phiStart: 70, phiLength: 12,
-     thetaStart: -28, thetaLength: 12,
-  }
+     thetaStart: -8, thetaLength: 12,
+ },
+ {  type: 'Screen',    name: 'Poster_CoolEffect_back',
+    path: 'assets/images/PartnerLogos/CoolEffect.png',
+    radius: 7.8,
+    phiStart: 70, phiLength: 12,
+    thetaStart: 12, thetaLength: 12,
+},
+{  type: 'Screen',    name: 'Poster_SustainableSV_back',
+   path: 'assets/images/PartnerLogos/SustainableSV.png',
+   radius: 7.8,
+   phiStart: 70, phiLength: 12,
+   thetaStart: -28, thetaLength: 12,
+}
 ];
 
 // For now this just sets the video.  It should set the program
