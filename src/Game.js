@@ -20,8 +20,8 @@ class Game {
         options = options || {};
         if (options.ambientLightIntensity == undefined)
             options.ambientLightIntensity = 0.2;
-            if (options.headlightIntensity == undefined)
-                options.headlightIntensity = 0.4;
+        if (options.headlightIntensity == undefined)
+            options.headlightIntensity = 0.4;
         this.options = options;
         this.init(domElementId);
         this.ntypes = ntypes;
