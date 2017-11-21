@@ -272,7 +272,7 @@ class MultiControls extends MUSENode
         this.raycastPt.x = x;
         this.raycastPt.y = y;
         this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
-        var objs = this.game.scene.children;
+        var objs = game.collision;
         var intersects = this.raycaster.intersectObjects(objs, true);
         //var i = 0;
         if (intersects.length == 0)

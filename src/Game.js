@@ -29,6 +29,7 @@ class Game {
         this.user = Util.getParameterByName("user");
         this.viewManager = null;
         this.program = null;
+        this.collision = [];
         this.state = new AppState(this.events);
         if (this.user) {
             let netLink = new NetLink(this);
@@ -317,15 +318,17 @@ class Game {
     addToGame(obj, name, parentName) {
         parentName = parentName || this.defaultGroupName;
         if (parentName) {
-	    var parentObj = this.getGroup(parentName);
-	    parentObj.add(obj);
+            var parentObj = this.getGroup(parentName);
+            parentObj.add(obj);
+        } else {
+            this.scene.add(obj);
         }
-        else
-	    this.scene.add(obj);
         if (name) {
             obj.name = name;
-	    //game.models[name] = obj;
-	    this.models[name] = obj;
+            this.models[name] = obj;
+            if (!obj.ignoreCollision) {
+                this.collision.push(obj);
+            }
         }
     }
 
@@ -381,6 +384,7 @@ class Game {
                 var center = box.getCenter();
                 obj3d.position.sub(center);
             }
+            obj3d.ignoreCollision = !!props.ignoreCollision;
             obj3d.updateMatrix();
         }
 
