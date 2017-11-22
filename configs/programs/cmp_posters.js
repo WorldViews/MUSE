@@ -11,6 +11,13 @@ function setProgram(name, vidURL, channel) {
     }
 }
 
+function selectStageModel(name)
+{
+    console.log("selectStageModel "+name);
+    var model = game.models[name];
+    model.visible = !model.visible;
+}
+
 POSTERS = [
     // In front
     {  type: 'Screen',    name: 'Poster_EarthClock',
@@ -62,12 +69,21 @@ POSTERS = [
    onMuseEvent: {'click': () =>
        setProgram("EarthClock", "videos/SustainableSiliconValley_BuildingSustainableRegion.mp4")}
 },
-
+/*
 {   type: 'Screen', name: 'vidBubble3', parent: 'videoBubbles', radius: 0.6, position: [2,1,-7.8],
     //path: 'videos/ISS_tour.mp4', autoPlay: false
     side: "FrontSide",
     rotation: [0,-1.6,0],
     path: 'videos/StephanAndBill_4Kx2K.mp4', autoPlay: false
+},
+*/
+{   type: 'Model', name: 'dancerToken', position: [1,0.2,-2.8],
+    parent: 'station',
+    path: 'models/tokens/dancer/model.dae',
+    position: [0.2, 0, 1.6],
+    rot: [0, 0, 0],
+    scale: 0.02,
+    onMuseEvent: {'click': () => selectStageModel("dancer") }
 },
 
 ];
