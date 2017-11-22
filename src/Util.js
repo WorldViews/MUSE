@@ -204,6 +204,19 @@ export function isVideoURL(url) {
     return type;
 }
 
+export function dispatchMuseEvent(evType, obj) {
+    while (obj) {
+        var userData = obj.userData;
+        if (userData && userData[evType]) {
+            report("******** BINGO Click!!!! *******");
+            userData[evType](obj);
+            break;
+        }
+        obj = obj.parent;
+    }
+    return obj;
+}
+
 export default {
     cloneObject,
     getJSON,
@@ -220,5 +233,6 @@ export default {
     reportWarning,
     formatDatetime,
     values,
-    isVideoURL
+    isVideoURL,
+    dispatchMuseEvent
 };

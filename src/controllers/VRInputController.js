@@ -4,6 +4,7 @@ import VRController from '../lib/vr/VRController';
 import datGUIVR from 'datguivr';
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 import LaserBeam from '../objects/LaserBeam';
+import Util from '../Util';
 
 const {degToRad} = THREE.Math;
 
@@ -73,6 +74,13 @@ export default class VRInputController {
         // this.scene.add(this.selector);
 
         this.controller0.add(this.line);
+        this.controller0.addEventListener('triggerup', () => {
+            let intersections = this.getIntersections(this.controller0);
+            if (intersections && intersections.length > 0) {
+                let intersection = intersections[0];
+                Util.dispatchMuseEvent('click', intersection.object);
+            }
+        });
 
         this.loadControllerModel();
     }
@@ -155,15 +163,17 @@ export default class VRInputController {
 
 
     getIntersections(controller) {
-        let floor = this.scene.getObjectByName('Floor');
+        //let floor = this.scene.getObjectByName('Floor');
 
-        if (floor) {
+        //if (floor) {
+        let objs = game.collision;
+        if (objs) {
             this.tempMatrix.identity().extractRotation(controller.matrixWorld);
 
             this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
             this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
 
-            return this.raycaster.intersectObjects(floor.children, true);
+            return this.raycaster.intersectObjects(objs, true);
         }
     }
 
@@ -198,26 +208,20 @@ export default class VRInputController {
         if (intersections && intersections.length > 0) {
             let isTriggerPressed = this.controller0.getButtonState('trigger');
             let intersection = intersections[0];
-
-            if (isTriggerPressed) {
+            this.selectedObject = intersection;
+            if (isTriggerPressed && intersection.object.parent.name === 'Floor') {
                 let {distance, point: {x, z}} = intersection;
                 let duration = distance / SPEED;
                 let dx = x - this.body.position.x;
                 let dz = z - this.body.position.z;
 
                 this.tween = {dx, dz, x, z, duration, ellapsed: 0, traveled: 0};
-            } else {
-                // Move the selector.
-                // this.selector.position.copy(intersection.point);
-                // this.selector.position.y += 0.05;
-                // this.selector.visible = true;
-
-                // Shorten the line to the point of intersection.
-                this.line.scale.x = intersection.distance;
-                this.line.sprite.visible = true;
             }
-        } else {
+            this.line.scale.x = intersection.distance;
+            this.line.sprite.visible = true;
+    } else {
             //this.selector.visible = true;
+            this.selectedObject = null;
             this.line.scale.x = 5;
             this.line.sprite.visible = false;
         }

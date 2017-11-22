@@ -76,7 +76,7 @@ SHIP_MODEL_COLLISION = {
     position: [0, 0, 0],
     rot: [0, 0, 0],
     scale: 1,
-    visible: false
+    hide: true
 }
 var SPECS = [
     {  type: 'Stats', right: '-0px' },

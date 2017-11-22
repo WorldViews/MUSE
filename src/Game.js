@@ -317,11 +317,13 @@ class Game {
     //
     addToGame(obj, name, parentName) {
         parentName = parentName || this.defaultGroupName;
-        if (parentName) {
-            var parentObj = this.getGroup(parentName);
-            parentObj.add(obj);
-        } else {
-            this.scene.add(obj);
+        if (!obj.hide) {
+            if (parentName) {
+                var parentObj = this.getGroup(parentName);
+                parentObj.add(obj);
+            } else {
+                this.scene.add(obj);
+            }
         }
         if (name) {
             obj.name = name;
@@ -385,6 +387,8 @@ class Game {
                 obj3d.position.sub(center);
             }
             obj3d.ignoreCollision = !!props.ignoreCollision;
+            obj3d.hide = !!props.hide;
+
             obj3d.updateMatrix();
         }
 
