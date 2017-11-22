@@ -3,7 +3,8 @@ MEDIA_SPECS = [
     { type : 'MediaSequence',
       records: [
           //{ t: 0,    mainScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
-          { t: 0,   mainScreen:  {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
+         // { t: 0,   mainScreen:  {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
+          { t: 0,   mainScreen:  {url: 'videos/ClimateMusicProj-v7-HD.mp4'}},
           { t: 50,   leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}},
           { t: 100,  rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
           { t: 200,  leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide7.PNG'},
@@ -27,6 +28,7 @@ MEDIA_SPECS = [
 SCRIPTS = {  type: 'Scripts' };
 
 POSTERS = "configs/programs/cmp_posters.js";
+BUBBLES = "configs/programs/cmp_vidBubbles.js";
 
 CONFIG = {
     //onStart: setupPosterActions,
@@ -62,7 +64,7 @@ CONFIG = {
        media: MEDIA_SPECS
     },
     'venue': '/configs/venues/imaginarium.js',
-    'specs': [SCRIPTS, POSTERS]
+    'specs': [SCRIPTS, POSTERS, BUBBLES]
 };
 
 MUSE.returnValue(CONFIG);
