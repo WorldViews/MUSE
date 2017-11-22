@@ -164,20 +164,6 @@ class MultiControls extends MUSENode
         return obj;
     }
 
-    dispatchMuseEvent(evType, obj) {
-        console.log("MultiControl.dispatchMuseEvent "+evType);
-        while (obj) {
-            var userData = obj.userData;
-            if (userData && userData[evType]) {
-                report("******** BINGO Click!!!! *******");
-                userData[evType](obj);
-                break;
-            }
-            obj = obj.parent;
-        }
-        return obj;
-    }
-
     // Note that we did not use the 'click' event because it
     // seems to trigger even if the mouse moved between down and up.
     // we made our own using mouseDown and mouseUp to just call This
@@ -188,7 +174,7 @@ class MultiControls extends MUSENode
         var obj = this.pickedObj;
         console.log("MultiControl.onClick pickedObj: ", obj);
         if (obj)
-            this.dispatchMuseEvent('click', obj);
+            Util.dispatchMuseEvent('click', obj);
     }
 
     onDoubleClick( event ) {
@@ -262,7 +248,7 @@ class MultiControls extends MUSENode
         } else if (evt.wheelDelta) {    // Opera / IE9
             dx -= evt.wheelDelta * sf;
         } else if (evt.detail) { // Firefox
-            dx += evt.detail * 1.0;
+            dx += evt.detail * sf;
         }
         //console.log(sprintf("handleDolly dx: %f", dx));
         this.dolly(dx);
@@ -292,7 +278,7 @@ class MultiControls extends MUSENode
         this.raycastPt.x = x;
         this.raycastPt.y = y;
         this.raycaster.setFromCamera(this.raycastPt, this.game.camera);
-        var objs = this.game.scene.children;
+        var objs = game.collision;
         var intersects = this.raycaster.intersectObjects(objs, true);
         //var i = 0;
         if (intersects.length == 0)

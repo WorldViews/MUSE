@@ -3,8 +3,13 @@ import * as THREE from 'three';
 import VRController from '../lib/vr/VRController';
 import datGUIVR from 'datguivr';
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
+import LaserBeam from '../objects/LaserBeam';
+import Util from '../Util';
 
 const {degToRad} = THREE.Math;
+
+const Y_AXIS = new THREE.Vector3(0, 1, 0);
+const NINETY = Math.PI / 2;
 
 const VIVE_PATH = 'models/vive-controller/';
 const OBJ_NAME = 'vr_controller_vive_1_5.obj';
@@ -49,23 +54,33 @@ export default class VRInputController {
         this.raycaster = new THREE.Raycaster();
         this.tempMatrix = new THREE.Matrix4();
 
-        let lineGeometry = new THREE.Geometry();
-        lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
-        lineGeometry.vertices.push(new THREE.Vector3(0, 0, -1));
-        let lineMaterial = new THREE.LineBasicMaterial({color: 0x000000});
+        // let lineGeometry = new THREE.Geometry();
+        // lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+        // lineGeometry.vertices.push(new THREE.Vector3(0, 0, -1));
+        // let lineMaterial = new THREE.LineBasicMaterial({color: 0x000000});
 
-        this.line = new THREE.Line(lineGeometry, lineMaterial);
+        // this.line = new THREE.Line(lineGeometry, lineMaterial);
+        // this.line.scale.z = 12;
+
+        this.line = new LaserBeam();
         this.line.name = 'line';
-        this.line.scale.z = 12;
+        this.line.rotation.y = Math.PI/2;
 
-        let circleGeometry = new THREE.CircleGeometry(0.1, 32);
-        let circleMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
-        this.selector = new THREE.Mesh(circleGeometry, circleMaterial);
-        this.selector.visible = false;
-        this.selector.rotation.x = degToRad(-90);
-        this.scene.add(this.selector);
+        // let circleGeometry = new THREE.CircleGeometry(0.1, 32);
+        // let circleMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
+        // this.selector = new THREE.Mesh(circleGeometry, circleMaterial);
+        // this.selector.visible = false;
+        // this.selector.rotation.x = degToRad(-90);
+        // this.scene.add(this.selector);
 
-        this.controller0.add(this.line.clone());
+        this.controller0.add(this.line);
+        this.controller0.addEventListener('triggerup', () => {
+            let intersections = this.getIntersections(this.controller0);
+            if (intersections && intersections.length > 0) {
+                let intersection = intersections[0];
+                Util.dispatchMuseEvent('click', intersection.object);
+            }
+        });
 
         this.loadControllerModel();
     }
@@ -148,19 +163,27 @@ export default class VRInputController {
 
 
     getIntersections(controller) {
-        let floor = this.scene.getObjectByName('Floor');
+        //let floor = this.scene.getObjectByName('Floor');
 
-        if (floor) {
+        //if (floor) {
+        let objs = game.collision;
+        if (objs) {
             this.tempMatrix.identity().extractRotation(controller.matrixWorld);
 
             this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
             this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
 
-            return this.raycaster.intersectObjects(floor.children, true);
+            return this.raycaster.intersectObjects(objs, true);
         }
     }
 
     handleRaycast(dt) {
+        if (!this.controller0.getButtonState('grips')) {
+            this.line.visible = false;
+            return;
+        }
+
+        this.line.visible = true;
         let intersections = this.getIntersections(this.controller0);
 
         if (this.tween) {
@@ -185,26 +208,22 @@ export default class VRInputController {
         if (intersections && intersections.length > 0) {
             let isTriggerPressed = this.controller0.getButtonState('trigger');
             let intersection = intersections[0];
-
-            if (isTriggerPressed) {
+            this.selectedObject = intersection;
+            if (isTriggerPressed && intersection.object.parent.name === 'Floor') {
                 let {distance, point: {x, z}} = intersection;
                 let duration = distance / SPEED;
                 let dx = x - this.body.position.x;
                 let dz = z - this.body.position.z;
 
                 this.tween = {dx, dz, x, z, duration, ellapsed: 0, traveled: 0};
-            } else {
-                // Move the selector.
-                this.selector.position.copy(intersection.point);
-                this.selector.position.y += 0.05;
-                this.selector.visible = true;
-
-                // Shorten the line to the point of intersection.
-                this.line.scale.z = intersection.distance;
             }
-        } else {
-            this.selector.visible = true;
-            this.line.scale.z = 5;
+            this.line.scale.x = intersection.distance;
+            this.line.sprite.visible = true;
+    } else {
+            //this.selector.visible = true;
+            this.selectedObject = null;
+            this.line.scale.x = 5;
+            this.line.sprite.visible = false;
         }
     }
 

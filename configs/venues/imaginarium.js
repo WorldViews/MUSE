@@ -61,12 +61,22 @@ SHIP_OLD_MODEL = {
 };
 
 SHIP_MODEL = {
-    type: 'Model', name: 'Floor',
+    type: 'Model', name: 'Ship',
     parent: 'station',
     path: 'models/imaginarium-ship/imaginarium-ship.obj',
-    position: [9.2, 0, 0],
+    position: [9.4, 0, 0],
     rot: [0, 0, 0],
-    scale: 0.027
+    scale: 0.027,
+    ignoreCollision: true
+}
+SHIP_MODEL_COLLISION = {
+    type: 'Model', name: 'Floor',
+    parent: 'station',
+    path: 'models/imaginarium-ship/imaginarium-ship-collision.obj',
+    position: [0, 0, 0],
+    rot: [0, 0, 0],
+    scale: 1,
+    hide: true
 }
 var SPECS = [
     {  type: 'Stats', right: '-0px' },
@@ -76,6 +86,7 @@ var SPECS = [
     {   type: 'Group', name: 'station'  },
     // 'Floor' is a special name used for VR Controller raycast
     SHIP_MODEL,
+    SHIP_MODEL_COLLISION,
     {   type: 'Model', name: 'bmw',
         parent: 'station',
         path: 'models/bmw/model.dae',
