@@ -6,6 +6,7 @@ import DDSLoader from './lib/loaders/DDSLoader';
 import {FBXLoader} from './lib/loaders/FBXLoader';
 import Util from './Util';
 import {MUSE} from './MUSE';
+import {Node3D} from './Node3D';
 import {reportError} from './Util';
 
 
@@ -51,6 +52,13 @@ var numLoaders = 0; // just for debugging purposes
 var numGroups = 0;
 
 var PENDING_LOADERS = {};
+
+class ModelNode extends Node3D
+{
+    constructor(game, options) {
+        super(game, options);
+    }
+}
 
 class Loader
 {
@@ -192,6 +200,8 @@ class Loader
         if (spec.type != 'Model') {
             Util.reportWarning("Model specs should have type: Model");
         }
+        var modelNode = new ModelNode(game, spec);
+
         var path = spec.path;
         if (path.endsWith(".dae")) {
             this.incrementNumPending();
@@ -199,6 +209,7 @@ class Loader
                 console.log("****** resolved collada load "+spec.path);
                 game.setFromProps(collada.scene, spec);
                 game.addToGame(collada.scene, spec.name, spec.parent);
+                modelNode.setObject3D(collada.scene);
                 this.handleCompletion();
             });
             return;
@@ -209,6 +220,7 @@ class Loader
                 console.log("***** Loaded fbx "+path);
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
+                modelNode.setObject3D(obj);
                 this.handleCompletion();
             });
         }
@@ -218,6 +230,7 @@ class Loader
                 //loadOBJModel0(path, spec, (obj) => {
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
+                modelNode.setObject3D(obj);
                 this.handleCompletion();
             });
         }

@@ -11,7 +11,7 @@ import { Game } from './Game';
 import Util from './Util';
 import { Dancer } from './controllers/DanceController';
 import NavigationController from './controllers/NavigationController';
-import SolarSystemController from './controllers/SolarSystemController';
+import SolarSystem from './controllers/SolarSystem';
 import StarsController from './controllers/StarsController';
 import StatsController from './controllers/StatsController';
 import {ReactControls} from './controllers/ReactControls';
