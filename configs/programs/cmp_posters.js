@@ -11,7 +11,6 @@ function setProgram(name, vidURL, channel) {
     }
 }
 
-
 POSTERS = [
     // In front
     {  type: 'Screen',    name: 'Poster_EarthClock',
@@ -44,19 +43,33 @@ POSTERS = [
      radius: 7.8,
      phiStart: 70, phiLength: 12,
      thetaStart: -8, thetaLength: 12,
- },
+     onMuseEvent: {'click': () =>
+         setProgram("EarthClock", "videos/Climate-Music-V3-Distortion_HD_540.webm")}
+},
  {  type: 'Screen',    name: 'Poster_CoolEffect_back',
     path: 'assets/images/PartnerLogos/CoolEffect.png',
     radius: 7.8,
     phiStart: 70, phiLength: 12,
     thetaStart: 12, thetaLength: 12,
+    onMuseEvent: {'click': () =>
+        setProgram("EarthClock", "videos/ExposingCarbonPollutionCoolEffect.mp4")}
 },
 {  type: 'Screen',    name: 'Poster_SustainableSV_back',
    path: 'assets/images/PartnerLogos/SustainableSV.png',
    radius: 7.8,
    phiStart: 70, phiLength: 12,
    thetaStart: -28, thetaLength: 12,
-}
+   onMuseEvent: {'click': () =>
+       setProgram("EarthClock", "videos/SustainableSiliconValley_BuildingSustainableRegion.mp4")}
+},
+
+{   type: 'Screen', name: 'vidBubble3', parent: 'videoBubbles', radius: 0.6, position: [2,1,-7.8],
+    //path: 'videos/ISS_tour.mp4', autoPlay: false
+    side: "FrontSide",
+    rotation: [0,-1.6,0],
+    path: 'videos/StephanAndBill_4Kx2K.mp4', autoPlay: false
+},
+
 ];
 
 MUSE.returnValue(POSTERS);
