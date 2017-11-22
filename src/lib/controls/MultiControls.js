@@ -20,6 +20,25 @@ function bind( scope, fn ) {
     };
 }
 
+class PositionConstraint
+{
+    constructor(h) {
+        setHeight(h);
+    }
+
+    setHeight(h) {
+        this.height = h;
+    }
+
+    constrain(p, newP) {
+        if (!newP)
+            newP = new THREE.Vector3();
+        newP.copy(p);
+        newP.y = this.height;
+        return newP;
+    }
+}
+
 class MultiControls extends MUSENode
 {
     constructor(game, domElement, opts) {
