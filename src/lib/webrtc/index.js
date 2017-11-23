@@ -16,7 +16,6 @@ export default class WebRTCServer {
 
         // create connection to the server
         this.createPC();
-        this.startTimer();
     }
 
     createPC(data) {
@@ -127,6 +126,8 @@ export default class WebRTCServer {
                 console.error(e);
             }
         );
+
+        this.startTimer();
     }
 
     updatePC(id, data) {
