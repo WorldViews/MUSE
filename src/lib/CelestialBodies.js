@@ -25,7 +25,7 @@ function latLonToVector3(lat, lon, radius, height) {
 class CelestialBody extends Node3D {
 
     constructor(game, opts) {
-        super(game,opts);
+        super(game, opts);
         console.log("Planet this: "+this);
         this.startTime = new Date().getTime()/1000.0;
         this.game = game;
@@ -103,10 +103,21 @@ class CelestialBody extends Node3D {
     }
 
     _addBody(texture) {
-        this.material = new THREE.MeshPhongMaterial( { map: texture, overdraw: 0.5 } );
+        var matOpts = { map: texture, overdraw: 0.5 };
+        if (this.options.side)
+            matOpts.side = this.options.side;
+        if (this.options.material)
+            this.material = new THREE[this.options.material]( matOpts );
+        else
+            this.material = new THREE.MeshPhongMaterial( { map: texture, overdraw: 0.5 } );
+        //this.material = new THREE.MeshPhongMaterial( matOpts );
         this.mesh = new THREE.Mesh( this.geometry, this.material );
         this.mesh.name = this.name;
         this.group.add(this.mesh);
+        if (this.options.color) {
+            var c = this.options.color;
+            this.material.color.setRGB(c[0],c[1],c[2]);
+        }
         this.loaded = true;
     }
 
@@ -226,27 +237,6 @@ class CelestialBody extends Node3D {
 class Planet extends CelestialBody {
 };
 
-function addPlanet(game, name, radius, x, y, z, tex, parent)
-{
-    parent = parent || 'solarSystem';
-    console.log(">>> addPlanet "+name);
-//    var scene = game.scene;
-//    var group = new THREE.Group();
-//    game.addToGame(group, name, parent);
-    //game.models[name] = group;
-    //scene.add(group);
-    var opts = {name, radius, parent, position:[x,y,z], 'texture': tex};
-    var planet = new Planet(game, opts);
-    game.setFromProps(planet.group, opts);
-    game.addToGame(planet.group, opts.name, opts.parent);
-    game.registerController(opts.name, planet);
-    game.registerPlayer(planet);
-    //planet.group.position.x = x;
-    //planet.group.position.y = y;
-    //planet.group.position.z = z;
-    return planet;
-}
-
 function addBody(game, opts)
 {
     var body = new CelestialBody(game, opts);
@@ -259,4 +249,60 @@ function addBody(game, opts)
 
 Game.registerNodeType("CelestialBody", addBody);
 
-export {CelestialBody,Planet,addPlanet};
+class SolarSystem {
+
+    constructor(game, options) {
+        var parent = "solarSystem";
+        addBody(game, {name: 'Sun', parent,
+                radius:  300, position: [-5000, 0, -3000],
+                texture: './textures/sun_surface1.jpg', color: [4,4,4]});
+        addBody(game, {name: 'Earth', parent,
+                radius: 1000, position: [-2000, 0, 0],
+                texture: './textures/land_ocean_ice_cloud_2048.jpg'});
+        addBody(game, {name: 'Mars', parent,
+                radius:  200, position: [ 2000, 0, 2000],
+                texture: './textures/Mars_4k.jpg'});
+        addBody(game, {name: 'Jupiter', parent,
+                radius: 300,  position: [ 1500, 0, -1500],
+                texture: './textures/Jupiter_Map.jpg'});
+        addBody(game, {name: 'Neptune', parent,
+                radius: 100,  position: [-1000, 0, -1000],
+                texture: './textures/Neptune.jpg'});
+
+        //this.solarSystem = game.getGroup('solarSystem');
+    }
+
+    update() {
+        //this.solarSystem.rotation.y += 0.0001;
+    }
+};
+
+function addSolarSystem(game, options)
+{
+    return new SolarSystem(game, options);
+    //var name = options.name || 'solarSystem';
+    //game.registerController(name, cmp);
+    //return cmp;
+}
+
+Game.registerNodeType("SolarSystem", addSolarSystem);
+
+class StarsController {
+    constructor(game, options) {
+        addBody(game, {name: 'Stars', parent: 'solarSystem',
+                radius: 10000,  position: [-1000, 0, -1000],
+                texture: './textures/Sky_8k.jpg',
+                material: 'MeshBasicMaterial',
+                side: THREE.DoubleSide});
+    }
+
+    update() {
+        //this.stars.group.rotation.y += 0.0001;
+    }
+}
+
+Game.registerNodeType("Stars", (game, options) => {
+    return game.registerController(options.name, new StarsController(game, options));
+});
+
+export {CelestialBody,Planet,SolarSystem};

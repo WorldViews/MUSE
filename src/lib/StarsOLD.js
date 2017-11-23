@@ -16,7 +16,7 @@ function latLonToVector3(lat, lon, radius, height) {
 //function Stars(group, radius, opts)
 function Stars(game, opts)
 {
-    var radius = opts.radius || 5000;
+    var radius = opts.radius || 10000;
 
     this.init = function() {
         this.name = "";
