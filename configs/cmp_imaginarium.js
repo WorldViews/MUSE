@@ -1,4 +1,5 @@
 
+/*
 MEDIA_SPECS = [
     { type : 'MediaSequence',
       records: [
@@ -24,13 +25,16 @@ MEDIA_SPECS = [
        ]
     }
 ];
-
+*/
+MEDIA_SPECS = "configs/mediaSpecs/cmp_showcase.js";
+/*
 VID_BUBBLES = [
     {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
         path: 'http://192.168.16.206:8080',
         imageType: 1
     },
 ]
+*/
 
 SCRIPTS = {  type: 'Scripts' };
 
