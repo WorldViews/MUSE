@@ -91,7 +91,7 @@ export default class DATGUIControls extends UIControls {
         datGUIVR.enableMouse(game.camera, game.renderer);
 
         // add gui to scene
-        game.scene.add(this.ui);
+        // game.scene.add(this.ui);
 
         // create toggle button
         let uiDiv = $("#uiDiv");
@@ -155,8 +155,10 @@ export default class DATGUIControls extends UIControls {
     toggleUI(obj, offset) {
         if (this.ui.visible) {
             this.ui.visible = false;
+            game.scene.remove(this.ui);
         } else {
             this.ui.visible = true;
+            game.scene.add(this.ui);
 
             obj = obj || game.camera;
             offset = offset || new THREE.Vector3(-0.5, 0.5, -2);
