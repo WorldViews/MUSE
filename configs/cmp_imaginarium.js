@@ -24,6 +24,13 @@ MEDIA_SPECS = [
     }
 ];
 
+VID_BUBBLES = [
+    {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
+        path: 'http://192.168.16.206:8080',
+        imageType: 1
+    },
+]
+
 SCRIPTS = {  type: 'Scripts' };
 
 POSTERS = [
@@ -103,7 +110,7 @@ CONFIG = {
        media: MEDIA_SPECS
     },
     'venue': '/configs/venues/imaginarium.js',
-    'specs': [SCRIPTS, POSTERS]
+    'specs': [SCRIPTS, POSTERS, VID_BUBBLES]
 };
 
 MUSE.returnValue(CONFIG);

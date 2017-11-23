@@ -211,7 +211,8 @@ MUSENode.defineFields(Screen, [
   "thetaLength",
   "path",
   "autoPlay",
-  "side"
+  "side",
+  "imageType"
 ]);
 
 function loadScreen(game, opts)

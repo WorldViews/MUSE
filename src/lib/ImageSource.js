@@ -42,6 +42,9 @@ export default class ImageSource {
     static getImageSource(url, options) {
         console.log("getImageSource "+url);
         var type = ImageSource.TYPE.IMAGE;
+        if (options.imageType) {
+            type = options.imageType;
+        }
         var URL = url.toUpperCase();
         VIDEO_EXTENTIONS.forEach(ext => {
             if (URL.endsWith(ext.toUpperCase()))
