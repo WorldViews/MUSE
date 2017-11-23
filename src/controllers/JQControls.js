@@ -295,8 +295,10 @@ class ViewControl  extends JQWidget {
     onViewCallback(name) {
         console.log("onViewCallback" + name);
         let cb = this.viewCallbacks[name];
-        if (cb && cb.callback)
+        if (cb && cb.callback) {
             cb.callback();
+        }
+        this.$views.blur();
     }
 
     onMarkView(viewName) {
@@ -410,6 +412,8 @@ class StageControl {
         }
         this.selectedModel = name;
         this._setVisible(name, true);
+        if (this.$models)
+            this.$models.blur();
     }
 
     _setVisible(name, v) {
