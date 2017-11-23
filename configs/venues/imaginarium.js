@@ -23,7 +23,8 @@ var LIGHTS = [
     {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2], intensity: 0.2},
     {  type: 'AmbientLight', name: 'ambientLight', color: 0xffffff, intensity: 0.1 },
     {  type: 'DirectionalLight', name: 'directionalLight', color: 0x333333, intensity: 0.7, position: [1000, 1000, 100]},
-    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [1000, 1000, 0], distance: 5000, intensity: 0.6},
+    //{  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [1000, 1000, 0], distance: 5000, intensity: 0.6},
+    {  type: 'PointLight', name: 'sunLight',    color: 0xffffff, position: [-3000, 0, -2000], distance: 8000, intensity: 10.6},
 ];
 
 var OBJ_MODEL = {
@@ -60,6 +61,16 @@ SHIP_OLD_MODEL = {
     scale: 0.025
 };
 
+SHIP_MODEL_DAE = {
+    type: 'Model', name: 'ShipDAE',
+    parent: 'station',
+    path: 'models/dae_ship/refined-ship.dae',
+    position: [9.4, 0, 200],
+    rot: [0, 0, 0],
+    scale: 0.027,
+    ignoreCollision: true
+}
+
 SHIP_MODEL = {
     type: 'Model', name: 'Ship',
     parent: 'station',
@@ -69,6 +80,7 @@ SHIP_MODEL = {
     scale: 0.027,
     ignoreCollision: true
 }
+
 SHIP_MODEL_COLLISION = {
     type: 'Model', name: 'Floor',
     parent: 'station',
