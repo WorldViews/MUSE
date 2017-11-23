@@ -38,19 +38,19 @@ export default class WebRTCServer {
         var STUN = {
             urls: [
                 "stun:stun.l.google.com:19302",
-                "stun:stun1.l.google.com:19302",
-                "stun:stun2.l.google.com:19302",
-                "stun:stun3.l.google.com:19302",
-                "stun:stun4.l.google.com:19302",
-                "stun:stun.ekiga.net",
-                "stun:stun.ideasip.com",
-                "stun:stun.rixtelecom.se",
-                "stun:stun.schlund.de",
-                "stun:stun.stunprotocol.org:3478",
-                "stun:stun.voiparound.com",
-                "stun:stun.voipbuster.com",
-                "stun:stun.voipstunt.com",
-                "stun:stun.voxgratia.org"
+                // "stun:stun1.l.google.com:19302",
+                // "stun:stun2.l.google.com:19302",
+                // "stun:stun3.l.google.com:19302",
+                // "stun:stun4.l.google.com:19302",
+                // "stun:stun.ekiga.net",
+                // "stun:stun.ideasip.com",
+                // "stun:stun.rixtelecom.se",
+                // "stun:stun.schlund.de",
+                // "stun:stun.stunprotocol.org:3478",
+                // "stun:stun.voiparound.com",
+                // "stun:stun.voipbuster.com",
+                // "stun:stun.voipstunt.com",
+                // "stun:stun.voxgratia.org"
                 //'turn:hypermeeting.paldeploy.com:3478?transport=udp'
             ]
         };
@@ -198,7 +198,8 @@ export default class WebRTCServer {
                         clearInterval(iceTimer);
                         $(data.iceCandidates).each(function (i, candidate) {
                             console.log('candidate from server: ' + JSON.stringify(candidate, null, 2));
-                            pc.addIceCandidate(new RTCIceCandidate(candidate));
+                            if (scope.pc)
+                                scope.pc.addIceCandidate(new RTCIceCandidate(candidate));
                         });
                     }
                 });

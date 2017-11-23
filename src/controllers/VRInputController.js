@@ -73,16 +73,17 @@ export default class VRInputController {
         // this.selector.rotation.x = degToRad(-90);
         // this.scene.add(this.selector);
 
-        this.controller0.add(this.line);
-        this.controller0.addEventListener('triggerup', () => {
-            let intersections = this.getIntersections(this.controller0);
-            if (intersections && intersections.length > 0) {
-                let intersection = intersections[0];
-                Util.dispatchMuseEvent('click', intersection.object);
-            }
-        });
+        this.controller1.add(this.line);
+        this.controller0.addEventListener('triggerup', this.triggerRaycast.bind(this));
+        this.controller1.addEventListener('triggerup', this.triggerRaycast.bind(this));
 
         this.loadControllerModel();
+    }
+
+    triggerRaycast() {
+        if (this.selectedObject) {
+            Util.dispatchMuseEvent('click', this.selectedObject.object);
+        }
     }
 
     loadControllerModel() {
@@ -107,7 +108,7 @@ export default class VRInputController {
 
         this.controller1.addEventListener( 'triggerdown', ()=>guiInputRight.pressed( true ) );
         this.controller1.addEventListener( 'triggerup', ()=>guiInputRight.pressed( false ) );
-        this.controller1.addEventListener( 'menudown', ()=> game.controllers.ui.toggleUI(this.controller1, new THREE.Vector3(-0.5, 0.5, -1)) );
+        this.controller1.addEventListener( 'menudown', ()=> game.controllers.ui.toggleUI() );
     }
 
     loadViveControllerModel() {
@@ -178,13 +179,20 @@ export default class VRInputController {
     }
 
     handleRaycast(dt) {
-        if (!this.controller0.getButtonState('grips')) {
+        if (!this.controller0.getButtonState('grips') &&
+            !this.controller1.getButtonState('grips')) {
             this.line.visible = false;
             return;
         }
 
+        // right controller wins
+        let controller = this.controller1.getButtonState('grips') ? this.controller1 : this.controller0;
+        if (this.line.parent != controller) {
+            this.line.parent.remove(this.line);
+            controller.add(this.line);
+        }
         this.line.visible = true;
-        let intersections = this.getIntersections(this.controller0);
+        let intersections = this.getIntersections(controller);
 
         if (this.tween) {
             let {position} = this.body;
