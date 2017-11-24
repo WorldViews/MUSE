@@ -6,7 +6,8 @@ MEDIA_SPEC = [
                 duration: 25,
                 values: {
                     narrative: "Born",
-                    leftScreen: {url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+                    //leftScreen: {url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
+                    leftScreen: {url: 'videos/tas_1850_2300.mp4'},
                     population: 10,
                     year: {text: 1969}
                 }
