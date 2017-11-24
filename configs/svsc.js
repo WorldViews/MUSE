@@ -3,7 +3,7 @@ var CONFIG = {
     specs: [
         {  type: 'Model', name: 'svsc',
            parent: 'station',
-           path: 'models/SVSC/v1/SimCenter-room.obj',
+           path: 'assets/models/SVSC/v1/SimCenter-room.obj',
            position: [0.2, 0, 1.6],
         },
         {  type: 'PointLight', name: 'light1',

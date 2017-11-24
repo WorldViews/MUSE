@@ -4,7 +4,7 @@ var CONFIG = {
     specs: [
         {  type: 'Model', name: 'svsc',
            parent: 'station',
-           path: 'models/PorterPAL/model.dae',
+           path: 'assets/models/PorterPAL/model.dae',
            position: [0.2, 0, 1.6],
            scale: .01
         },

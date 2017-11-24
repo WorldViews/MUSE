@@ -20,14 +20,14 @@ CONFIG = {
            radius: 1.25, rot: [0,0,0],
            satTracks: {dataSet: 'fengyun1c.3le',
                         models: {
-                            25730: {path:'models/satellites/Fengyun/fengyun.dae',
+                            25730: {path:'assets/models/satellites/Fengyun/fengyun.dae',
                                            scale: 0.04,
                                            recenter: true},
                         }},
            //satTracks: {dataSet: 'iridCosmosColl.json'},
            //satTracks: {models: [
-           //    'models/satellites/ComSat/model.dae',
-           //    'models/satellites/ComSat2/model.dae']},
+           //    'assets/models/satellites/ComSat/model.dae',
+           //    'assets/models/satellites/ComSat2/model.dae']},
            //satTracks: 1,
            dataViz: 0,
            atmosphere: {'name': 'CO2Viz', opacity: .1}

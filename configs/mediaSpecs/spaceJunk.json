@@ -14,7 +14,7 @@
           { "t": "1980-1-1",
             "mainScreen": { "url": "assets/images/SpaceDebrisTalk/Slide3.PNG"}},
           { "t": "1990-1-1",
-              "mainScreen": { "url": "videos/2006_co2_flow_1024x512.mp4"}},
+              "mainScreen": { "url": "assets/video/2006_co2_flow_1024x512.mp4"}},
           { "t": "2000-1-1",
             "mainScreen": { "url": "assets/images/SpaceDebrisTalk/Slide5.PNG"}},
           { "t": "2010-1-1",

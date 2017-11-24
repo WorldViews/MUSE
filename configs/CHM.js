@@ -80,7 +80,7 @@ CONFIG = {
         {   type: 'Group', name: 'station'  },
         {   type: 'Model', name: 'CHM',
             parent: 'station',
-            path: 'models/CHM/CHM_ACM_latest.dae',
+            path: 'assets/models/CHM/CHM_ACM_latest.dae',
             position: [0, 0, 0],
             rot: [0, 0, 0],
             scale: 0.001

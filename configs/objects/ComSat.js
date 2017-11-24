@@ -12,8 +12,8 @@ CONFIG = {
     'specs': [
         {   type: 'Model', name: 'Juno',
             parent: 'station',
-            path: 'models/satellites/ComSat/model.dae',
-            //path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+            path: 'assets/models/satellites/ComSat/model.dae',
+            //path: 'assets/models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
             //scale: 0.1
         },
         LIGHTS

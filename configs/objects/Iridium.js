@@ -6,9 +6,9 @@ CONFIG = {
     'specs': [
         {   type: 'Model', name: 'Juno',
             parent: 'station',
-            path: 'models/satellites/Iridium/model.dae',
+            path: 'assets/models/satellites/Iridium/model.dae',
             fitTo: {scale: 1},
-            //path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+            //path: 'assets/models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
             //scale: 0.01
         },
     ]

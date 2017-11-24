@@ -229,7 +229,7 @@ class CelestialBody extends Node3D {
     }
 
     testVideo() {
-        var url = "videos/GlobalWeather2013.mp4";
+        var url = "assets/video/GlobalWeather2013.mp4";
         this.setSurfaceVideo(url);
     }
 };

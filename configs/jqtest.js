@@ -8,7 +8,7 @@ var LIGHTS = [
 
 var VID_BUBBLES = [
     {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
-        path: 'videos/YukiyoCompilation.mp4',
+        path: 'assets/video/YukiyoCompilation.mp4',
     },
     // {   type: 'Screen', name: 'vidBubble2', parent: 'station', radius: 0.4, position: [1,3.6,0],
     //     path: 'webrtc+http://localhost:8081',
@@ -24,14 +24,14 @@ var SPECS = [
     {   type: 'Group', name: 'station'  },
     {   type: 'Model', name: 'platform',
         parent: 'station',
-        path: 'models/PlayDomeSkp_v1.dae',
+        path: 'assets/models/PlayDomeSkp_v1.dae',
         position: [0, 0, 0],
         rot: [0, 0, 0],
         scale: 0.025
     },
     {   type: 'Model', name: 'bmw',
         parent: 'station',
-        path: 'models/bmw/model.dae',
+        path: 'assets/models/bmw/model.dae',
         position: [0.2, 0, 1.6],
         rot: [0, 0, 0],
         scale: 0.020,
@@ -40,13 +40,13 @@ var SPECS = [
     VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
-        path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
         phiStart: 34, phiLength: 47,
         thetaStart: 110, thetaLength: 140
     },
     {   type: 'Screen', name: 'rightScreen',
         parent: 'station', radius: 8.8,
-        //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        //path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
         path: 'assets/images/ColabTalk/Slide1.PNG',
         phiStart: 34, phiLength: 47,
         thetaStart: 300, thetaLength: 60

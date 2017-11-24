@@ -12,8 +12,8 @@ CONFIG = {
     'specs': [
         {   type: 'Model', name: 'Calipso',
             parent: 'station',
-            path: 'models/satellites/calipso.dae',
-            //path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+            path: 'assets/models/satellites/calipso.dae',
+            //path: 'assets/models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
             // scale: 0.05
         },
         LIGHTS

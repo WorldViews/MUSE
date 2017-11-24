@@ -5,9 +5,9 @@ VEARTH = {
     position: [0,0,0],
     satTracks: {dataSet: 'stdb/all_stdb.json',
                 models: {
-                    22675: {path:'models/satellites/ComSat/model.dae',
+                    22675: {path:'assets/models/satellites/ComSat/model.dae',
                            scale: .001},
-                    24946: {path:'models/satellites/Iridium/model.dae',
+                    24946: {path:'assets/models/satellites/Iridium/model.dae',
                           scale: .00005}
                 }},
     dataViz: 0,

@@ -56,7 +56,7 @@ class Scripts {
         var pspec = {
             name: "portal2",
             radius: 0.5,
-            path: 'videos/YukiyoCompilation.mp4',
+            path: 'assets/video/YukiyoCompilation.mp4',
             position: [5,.8,0]
         }
         game.portal2 = new PanoPortal(game,pspec);

@@ -3,9 +3,9 @@ var SATS_MEDIA = [
     {  type: 'Slides', group: 'mainScreen',
        records: [
            { t: '1950-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'},
-           { t: '1960-1-1',   url: 'videos/SpaceDebris.mp4'},
+           { t: '1960-1-1',   url: 'assets/video/SpaceDebris.mp4'},
            { t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
-           { t: '2012-1-1',   url: 'videos/YukiyoCompilation.mp4'},
+           { t: '2012-1-1',   url: 'assets/video/YukiyoCompilation.mp4'},
            //{ t: '2012-1-1',   url: 'http://dvr4.paldeploy.com/video/Sakura/Yukiyo/YukiyoCompilation.mp4'},
        ]
    },
@@ -22,7 +22,7 @@ var SATS_MEDIA = [
           { t: '1980-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
           { t: '1990-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
           //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
-          { t: '2000-1-1',   url: 'videos/YukiyoCompilation.mp4'},
+          { t: '2000-1-1',   url: 'assets/video/YukiyoCompilation.mp4'},
           { t: '2010-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
           { t: '2017-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
       ]
@@ -33,7 +33,7 @@ var SATS_MEDIA = [
           { url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'},
           { url: 'assets/images/SpaceDebrisTalk/Slide3.PNG'},
           //{ t: '2000-1-1',   url: 'assets/images/SpaceDebrisTalk/Slide4.PNG'},
-          { url: 'videos/YukiyoCompilation.mp4'},
+          { url: 'assets/video/YukiyoCompilation.mp4'},
           { url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'},
           { url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}
       ]

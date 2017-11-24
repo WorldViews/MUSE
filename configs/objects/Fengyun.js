@@ -12,8 +12,8 @@ CONFIG = {
     'specs': [
         {   type: 'Model', name: 'Fengyun1c',
             parent: 'station',
-            path: 'models/satellites/Fengyun/fengyun.dae',
-            //path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+            path: 'assets/models/satellites/Fengyun/fengyun.dae',
+            //path: 'assets/models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
             //scale: 0.01
             recenter: true
         },

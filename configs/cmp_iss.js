@@ -26,19 +26,19 @@ var LIGHTS = [
 
 var VID_BUBBLES = [
     {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
-        path: 'videos/YukiyoCompilation.mp4',
+        path: 'assets/video/YukiyoCompilation.mp4',
     }
 ];
 
 ISS_MODEL = [
     {   type: 'Model', name: 'iss',
         parent: 'station',
-        //path: 'models/AcrimSat_FINAL.fbx',
-        //path: 'models/ISS.fbx',
-        //path: 'models/ISS/NASA/ISS_Interior.dae',
-        //path: 'models/ISS/NASA/TexNoUV/ISS_2016_tex_nouv.dae',
-        path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
-        //path: 'models/ISS/NASA/NoTex/ISS_2016_notex.dae'
+        //path: 'assets/models/AcrimSat_FINAL.fbx',
+        //path: 'assets/models/ISS.fbx',
+        //path: 'assets/models/ISS/NASA/ISS_Interior.dae',
+        //path: 'assets/models/ISS/NASA/TexNoUV/ISS_2016_tex_nouv.dae',
+        path: 'assets/models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+        //path: 'assets/models/ISS/NASA/NoTex/ISS_2016_notex.dae'
         //scale: 0.1
     }
 ];
@@ -47,7 +47,7 @@ var SPECS = [
     {   type: 'Group', name: 'station'  },
     {   type: 'Model', name: 'bmw',
         parent: 'station',
-        path: 'models/bmw/model.dae',
+        path: 'assets/models/bmw/model.dae',
         position: [0.2, 0, 1.6],
         rot: [0, 0, 0],
         scale: 0.020,
@@ -59,13 +59,13 @@ var SPECS = [
     VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
-        path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
         phiStart: 34, phiLength: 47,
         thetaStart: 110, thetaLength: 140
     },
     {   type: 'Screen', name: 'rightScreen',
         parent: 'station', radius: 8.8,
-        path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
         phiStart: 34, phiLength: 47,
         thetaStart: 300, thetaLength: 60
     },

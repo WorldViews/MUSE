@@ -3,15 +3,15 @@
 var VIDEO_BUBBLES = [
     {  type: 'Group', name: 'videoBubbles', visible: false },
     {   type: 'Screen', name: 'vidBubble1', parent: 'videoBubbles', radius: 0.6, position: [0,3.6,0],
-        path: 'videos/SpaceWalk.mp4', autoPlay: false
+        path: 'assets/video/SpaceWalk.mp4', autoPlay: false
     },
     {   type: 'Screen', name: 'vidBubble2', parent: 'videoBubbles', radius: 0.6, position: [2,3,0],
-        path: 'videos/MoonWalk.mp4', autoPlay: false
+        path: 'assets/video/MoonWalk.mp4', autoPlay: false
     },
     {   type: 'Screen', name: 'vidBubble3', parent: 'videoBubbles', radius: 0.6, position: [-2,3,0],
-        //path: 'videos/ISS_tour.mp4', autoPlay: false
+        //path: 'assets/video/ISS_tour.mp4', autoPlay: false
         side: "FrontSide",
-        path: 'videos/YukiyoCompilation.mp4', autoPlay: true
+        path: 'assets/video/YukiyoCompilation.mp4', autoPlay: true
     },
 ];
 
@@ -133,8 +133,8 @@ CONFIG = {
                dataSet: 'stdb/all_stdb.json',
                //dataSet: '2017-01-01.muse.json',
                //models: [
-                //   'models/satellites/ComSat/model.dae',
-                //   'models/satellites/ComSat2/model.dae'],
+                //   'assets/models/satellites/ComSat/model.dae',
+                //   'assets/models/satellites/ComSat2/model.dae'],
            },
            //satTracks: 1,
            dataViz: 0,

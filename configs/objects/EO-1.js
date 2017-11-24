@@ -11,8 +11,8 @@ CONFIG = {
     'specs': [
         {   type: 'Model', name: 'EO-1',
             parent: 'station',
-            path: 'models/satellites/EO.dae',
-            //path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+            path: 'assets/models/satellites/EO.dae',
+            //path: 'assets/models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
             scale: 0.5
         },
         LIGHTS

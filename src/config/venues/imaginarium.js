@@ -26,13 +26,13 @@ var LIGHTS = [
 
 var OBJ_MODEL = {
     type: 'Model', name: 'derrick', parent: 'station',
-    path: 'models/obj/derrick.obj',
+    path: 'assets/models/obj/derrick.obj',
     position: [20, 0, 1.6], rot: [0, 0, 0], scale: 2.0
 };
 
 var VID_BUBBLES = [
     {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
-        path: 'videos/YukiyoCompilation.mp4',
+        path: 'assets/video/YukiyoCompilation.mp4',
     },
     // {   type: 'Screen', name: 'vidBubble2', parent: 'station', radius: 0.4, position: [1,3.6,0],
     //     path: 'webrtc+http://localhost:8081',
@@ -42,9 +42,9 @@ var VID_BUBBLES = [
 var SATELLITE_MODEL = [
     {   type: 'Model', name: 'satellite1',
         parent: 'station',
-        //path: 'models/AcrimSat_FINAL.fbx',
-        //path: 'models/ISS.fbx',
-        path: 'models/satellites/Juno/Juno.obj',
+        //path: 'assets/models/AcrimSat_FINAL.fbx',
+        //path: 'assets/models/ISS.fbx',
+        path: 'assets/models/satellites/Juno/Juno.obj',
         scale: 1.0
     }
 ];
@@ -57,14 +57,14 @@ var IMAGINARIUM_VENUE = [
     {   type: 'Group', name: 'station'  },
     {   type: 'Model', name: 'platform',
         parent: 'station',
-        path: 'models/PlayDomeSkp_v1.dae',
+        path: 'assets/models/PlayDomeSkp_v1.dae',
         position: [0, 0, 0],
         rot: [0, 0, 0],
         scale: 0.025
     },
     {   type: 'Model', name: 'bmw',
         parent: 'station',
-        path: 'models/bmw/model.dae',
+        path: 'assets/models/bmw/model.dae',
         position: [0.2, 0, 1.6],
         rot: [0, 0, 0],
         scale: 0.020,
@@ -75,21 +75,21 @@ var IMAGINARIUM_VENUE = [
     //VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
-        //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        //path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
         path: 'textures/DisplayNames/display1.PNG',
         phiStart: 34, phiLength: 47,
         thetaStart: 110, thetaLength: 140
     },
     {   type: 'Screen', name: 'rightScreen',
         parent: 'station', radius: 8.8,
-        //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        //path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
         path: 'textures/DisplayNames/display2.PNG',
         phiStart: 40, phiLength: 30,
         thetaStart: 270, thetaLength: 60
     },
     {   type: 'Screen', name: 'leftScreen',
         parent: 'station', radius: 8.8,
-        //path: 'videos/Climate-Music-V3-Distortion_HD_540.webm',
+        //path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
         path: 'textures/DisplayNames/display3.PNG',
         phiStart: 40, phiLength: 30,
         thetaStart: 40, thetaLength: 50
@@ -113,9 +113,9 @@ var IMAGINARIUM_VENUE = [
        radius: 1.25, position: [0,1.9,0],
        xxxsatTracks: {dataSet: 'iridiumCosmos.3le',
                     models: {
-                        22675: {path:'models/satellites/ComSat/model.dae',
+                        22675: {path:'assets/models/satellites/ComSat/model.dae',
                                        scale: .001},
-                        24946: {path:'models/satellites/Iridium/model.dae',
+                        24946: {path:'assets/models/satellites/Iridium/model.dae',
                                       scale: .00005}
                     }},
     }

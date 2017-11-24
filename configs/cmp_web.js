@@ -5,7 +5,7 @@ VEARTH = [
        radius: 1.25, position: [0,0,0],
        satellites: 0, satTracks: 0,
        dataViz: 1,
-       //videoTexture: 'videos/GlobalWeather2013.mp4',
+       //videoTexture: 'assets/video/GlobalWeather2013.mp4',
        atmosphere: {'name': 'CO2Viz', opacity: .1}
     }
 ];

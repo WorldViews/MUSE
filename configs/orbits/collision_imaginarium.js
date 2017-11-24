@@ -4,9 +4,9 @@ VEARTH = {  type: 'VirtualEarth', name: 'vEarth', satTracks: 0,
    radius: 1.25, position: [0,1.9,0],
    satTracks: {dataSet: 'iridiumCosmos.3le',
                 models: {
-                    22675: {path:'models/satellites/ComSat/model.dae',
+                    22675: {path:'assets/models/satellites/ComSat/model.dae',
                                    scale: .001},
-                    24946: {path:'models/satellites/Iridium/model.dae',
+                    24946: {path:'assets/models/satellites/Iridium/model.dae',
                                   scale: .00005}
                 }},
 }

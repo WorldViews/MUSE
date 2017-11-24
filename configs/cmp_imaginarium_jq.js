@@ -4,14 +4,14 @@ MEDIA_SPECS = [
     { type : 'MediaSequence',
       records: [
           //{ t: 0,    mainScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
-         // { t: 0,   mainScreen:  {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
-          { t: 0,   mainScreen:  {url: 'videos/ClimateMusicProj-v7-HD.mp4'}},
+         // { t: 0,   mainScreen:  {url: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm'}},
+          { t: 0,   mainScreen:  {url: 'assets/video/ClimateMusicProj-v7-HD.mp4'}},
           { t: 50,   leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}},
           { t: 100,  rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide1.PNG'}},
           { t: 200,  leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide7.PNG'},
                      rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'}},
           { t: 400,  leftScreen:  {url: 'assets/images/SpaceDebrisTalk/Slide8.PNG'}},
-          { t: 500,  rightScreen: {url: 'videos/YukiyoCompilation.mp4'}},
+          { t: 500,  rightScreen: {url: 'assets/video/YukiyoCompilation.mp4'}},
           { t: 600,  rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide5.PNG'}},
           { t: 700,  rightScreen: {url: 'assets/images/SpaceDebrisTalk/Slide6.PNG'}}
       ]

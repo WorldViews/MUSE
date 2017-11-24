@@ -6,7 +6,7 @@ import {Game} from '../Game';
 import {MUSENode} from '../Node';
 import {Node3D} from '../Node3D';
 
-let BVH_PATH1 = './models/bvh/MasterLiuPerformanceChar00.bvh';
+let BVH_PATH1 = './assets/models/bvh/MasterLiuPerformanceChar00.bvh';
 let BVH_PATH2 = '/assets/motionCapture/lauren_duality_edit.bvh';
 let BVH_PATH = BVH_PATH1;
 

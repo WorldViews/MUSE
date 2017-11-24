@@ -6,7 +6,7 @@ import ImageSource from './ImageSource';
 var pspec = {
     name: "bubbleScreen1",
     radius: 0.5,
-    path: 'videos/YukiyoCompilation.mp4',
+    path: 'assets/video/YukiyoCompilation.mp4',
     //    phiStart: 0,
     //    phiLength: 90,
     position: [3,.8,0]

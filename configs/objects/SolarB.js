@@ -12,8 +12,8 @@ CONFIG = {
     'specs': [
         {   type: 'Model', name: 'SolarB',
             parent: 'station',
-            path: 'models/satellites/SolarB/SolarB.dae',
-            //path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+            path: 'assets/models/satellites/SolarB/SolarB.dae',
+            //path: 'assets/models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
             scale: 0.2
         },
         LIGHTS

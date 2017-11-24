@@ -6,12 +6,12 @@ var LIGHTS = [
 ISS_MODEL = [
     {   type: 'Model', name: 'iss',
         parent: 'station',
-        //path: 'models/AcrimSat_FINAL.fbx',
-        //path: 'models/ISS.fbx',
-        //path: 'models/ISS/NASA/ISS_Interior.dae',
-        //path: 'models/ISS/NASA/TexNoUV/ISS_2016_tex_nouv.dae',
-        path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
-        //path: 'models/ISS/NASA/NoTex/ISS_2016_notex.dae'
+        //path: 'assets/models/AcrimSat_FINAL.fbx',
+        //path: 'assets/models/ISS.fbx',
+        //path: 'assets/models/ISS/NASA/ISS_Interior.dae',
+        //path: 'assets/models/ISS/NASA/TexNoUV/ISS_2016_tex_nouv.dae',
+        path: 'assets/models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+        //path: 'assets/models/ISS/NASA/NoTex/ISS_2016_notex.dae'
         //scale: 0.1
     }
 ];

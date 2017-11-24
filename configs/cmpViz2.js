@@ -4,7 +4,7 @@ VEARTH = [
        radius: 1.25, position: [0,0,0],
        satellites: 0, satTracks: 0,
        dataViz: 1,
-       //videoTexture: 'videos/GlobalWeather2013.mp4',
+       //videoTexture: 'assets/video/GlobalWeather2013.mp4',
        atmosphere: {'name': 'CO2Viz', opacity: .1}
     }
 ];
@@ -81,12 +81,12 @@ CONFIG = {
           'narrative'
        ],
        scripts: {
-           'Show Earthquakes': (game) => setEarthVideo(game, "videos/earthquakes.mp4"),
-           'Show 2013 Weather': (game) => setEarthVideo(game, "videos/GlobalWeather2013.mp4"),
-           //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "videos/tas_Amon_CCSM4_1850_2300.mp4"),
-           'Show surface temp 1850-2300': (game) => setEarthVideo(game, "videos/tas_1850_2300.mp4"),
-           'Climate Model Clouds': (game) => setEarthVideo(game, "videos/CloudTruth.mp4"),
-           'CO2 flow for 2006': (game) => setEarthVideo(game, "videos/2006_co2_flow_1024x512.mp4"),
+           'Show Earthquakes': (game) => setEarthVideo(game, "assets/video/earthquakes.mp4"),
+           'Show 2013 Weather': (game) => setEarthVideo(game, "assets/video/GlobalWeather2013.mp4"),
+           //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_Amon_CCSM4_1850_2300.mp4"),
+           'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_1850_2300.mp4"),
+           'Climate Model Clouds': (game) => setEarthVideo(game, "assets/video/CloudTruth.mp4"),
+           'CO2 flow for 2006': (game) => setEarthVideo(game, "assets/video/2006_co2_flow_1024x512.mp4"),
        }
     },
     'cameraControls': 'Orbit',

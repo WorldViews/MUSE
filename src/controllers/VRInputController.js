@@ -11,13 +11,13 @@ const {degToRad} = THREE.Math;
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 const NINETY = Math.PI / 2;
 
-const VIVE_PATH = 'models/vive-controller/';
+const VIVE_PATH = 'assets/models/vive-controller/';
 const OBJ_NAME = 'vr_controller_vive_1_5.obj';
 const TEXTURE_NAME = 'onepointfive_texture.png';
 const SPEC_MAP_NAME = 'onepointfive_spec.png';
 const SPEED = 1 / 500; // one unit per sec
 
-const OCULUS_PATH = 'models/oculus-controller/';
+const OCULUS_PATH = 'assets/models/oculus-controller/';
 const OCULUS_LEFT_OBJ = 'oculus_cv1_controller_left.obj';
 const OCULUS_RIGHT_OBJ = 'oculus_cv1_controller_right.obj';
 const OCULUS_TEXTURE_NAME = 'external_controller01_col.png';

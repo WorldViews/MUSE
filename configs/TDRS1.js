@@ -12,8 +12,8 @@ CONFIG = {
     'specs': [
         {   type: 'Model', name: 'TDRS1',
             parent: 'station',
-            path: 'models/satellites/TDRS1.dae',
-            //path: 'models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
+            path: 'assets/models/satellites/TDRS1.dae',
+            //path: 'assets/models/ISS/NASA/Interior/Tex/ISS_Interior_USOnly_Tex.dae',
             scale: 50
         },
         LIGHTS

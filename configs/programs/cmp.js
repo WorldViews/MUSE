@@ -3,8 +3,8 @@ MEDIA_SPECS = [
     {  type: 'MediaSequence', defaultDuration: 1,
        records: [
            { duration: 4,      mainScreen: {url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'}},
-           { duration: 10,      mainScreen: {url: 'videos/GlobalWeather2013.mp4'}},
-           { duration: 32*60,   mainScreen: {url: 'videos/Climate-Music-V3-Distortion_HD_540.webm'}},
+           { duration: 10,      mainScreen: {url: 'assets/video/GlobalWeather2013.mp4'}},
+           { duration: 32*60,   mainScreen: {url: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm'}},
        ]
    }
 ];
@@ -14,7 +14,7 @@ VEARTH = [
        radius: 1.25, position: [0,0,0],
        satellites: 0, satTracks: 0,
        dataViz: 1,
-       //videoTexture: 'videos/GlobalWeather2013.mp4',
+       //videoTexture: 'assets/video/GlobalWeather2013.mp4',
        atmosphere: {'name': 'CO2Viz', opacity: .1}
     }
 ];
@@ -125,11 +125,11 @@ PROGRAM =
     scripts: {
         'Show 3D Graph': (game) => show3DGraph(game),
         'Show Virtual Earth': (game) => showVirtualEarth(game),
-        'Show Earthquakes': (game) => setEarthVideo(game, "videos/earthquakes.mp4"),
-        'Show 2013 Weather': (game) => setEarthVideo(game, "videos/GlobalWeather2013.mp4"),
-        //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "videos/tas_Amon_CCSM4_1850_2300.mp4"),
-        'Show surface temp 1850-2300': (game) => setEarthVideo(game, "videos/tas_1850_2300.mp4"),
-        'Climate Model Clouds': (game) => setEarthVideo(game, "videos/CloudTruth.mp4"),
+        'Show Earthquakes': (game) => setEarthVideo(game, "assets/video/earthquakes.mp4"),
+        'Show 2013 Weather': (game) => setEarthVideo(game, "assets/video/GlobalWeather2013.mp4"),
+        //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_Amon_CCSM4_1850_2300.mp4"),
+        'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_1850_2300.mp4"),
+        'Climate Model Clouds': (game) => setEarthVideo(game, "assets/video/CloudTruth.mp4"),
     },
     media: MEDIA_SPECS,
     nodes: SPECS
