@@ -253,9 +253,14 @@ class SolarSystem {
 
     constructor(game, options) {
         var parent = "solarSystem";
+        var sunPosition = [-5000,0,-3000];
+        var sunLight = {  type: 'PointLight', name: 'sunLight', position: sunPosition,
+                       color: 0xffffff, distance: 8000, intensity: 10.6};
+        game.loadSpecs(sunLight);
         addBody(game, {name: 'Sun', parent,
-                radius:  300, position: [-5000, 0, -3000],
-                texture: './textures/sun_surface1.jpg', color: [4,4,4]});
+                radius:  200, position: sunPosition,
+                texture: './textures/sun_surface1.jpg', color: [80,50,20],
+                atmosphere: {'name': 'photosphere', opacity: .02}});
         addBody(game, {name: 'Earth', parent,
                 radius: 1000, position: [-2000, 0, 0],
                 texture: './textures/land_ocean_ice_cloud_2048.jpg'});
@@ -280,9 +285,6 @@ class SolarSystem {
 function addSolarSystem(game, options)
 {
     return new SolarSystem(game, options);
-    //var name = options.name || 'solarSystem';
-    //game.registerController(name, cmp);
-    //return cmp;
 }
 
 Game.registerNodeType("SolarSystem", addSolarSystem);
