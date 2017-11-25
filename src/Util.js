@@ -43,6 +43,13 @@ function getTypedObj(obj)
     return obj;
 }
 
+// given scalar scale or vector scale, return vector scale
+export function scaleVec(s)
+{
+    if (typeof s == "number")
+        return THREE.Vector3(s,s,s);
+    return s;
+}
 // take a string, a float (seconds since epoch) or date
 // and return date.
 export function toDate(datetime) {
@@ -227,6 +234,7 @@ export default {
     getTypedObj,
     randomIntFromInterval,
     randomFromInterval,
+    scaleVec,
     toTime,
     toDate,
     reportError,

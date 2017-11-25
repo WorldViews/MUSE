@@ -366,7 +366,7 @@ class Game {
             }
             if (props.scale) {
     	    if (Array.isArray(props.scale)) {
-                    obj3d.scale.fromArray(scaleVec(props.scale));
+                    obj3d.scale.fromArray(Util.scaleVec(props.scale));
     	    }
     	    else if (typeof(props.scale) === "number") {
                     obj3d.scale.fromArray([props.scale,props.scale,props.scale]);
