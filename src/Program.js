@@ -121,6 +121,7 @@ class Program extends MUSENode
         // This bit is a hack because it is CMP specific.
         // it was moved here from CMPProgram.  This functionality
         // can all be moved to scripts in the config.
+        /*
         if (this.gss) {
             var year = GSS.timeToYear(t);
             //console.log("year: " + year);
@@ -137,6 +138,7 @@ class Program extends MUSENode
             //console.log("yearStr:"+yearStr);
             this.game.state.set('year', yearStr);
         }
+        */
     }
 
     play() {
