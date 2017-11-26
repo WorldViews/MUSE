@@ -396,11 +396,12 @@ class SolarSystem {
     }
 
     updatePlanetParams(sf) {
+        sf = sf || 1;
         var planetData = PLANET_DATA;
         var names = ["sun", "earth", "mars", "jupiter", "neptune"];
         names.forEach(name => {
             var model = game.models[name];
-            var r = this.getRadius(name);
+            var r = sf*this.getRadius(name);
             model.scale.set(r,r,r);
             var pos = this.getPosition(name);
             model.position.set(pos[0], pos[1], pos[2]);
@@ -409,6 +410,22 @@ class SolarSystem {
 
     update() {
         //this.solarSystem.rotation.y += 0.0001;
+    }
+
+    getViewpoint(name) {
+        var pos = this.getPosition(name);
+        //position[0] -= 100;
+        var position = {x: pos[0]-100, y: pos[1], z: pos[2]};
+        var model = game.models[name];
+        var position = model.getWorldPosition().clone();
+        position.x -= 100;
+        var rotation = {x: 0, y: 0, z: 0};
+        return {position, rotation};
+    }
+
+    goto(name) {
+        var vp = this.getViewpoint(name);
+        game.viewManager.goto(vp, 10, name);
     }
 };
 
