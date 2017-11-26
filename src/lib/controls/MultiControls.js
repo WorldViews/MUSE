@@ -23,19 +23,15 @@ function bind( scope, fn ) {
 class PositionConstraint
 {
     constructor(h) {
-        setHeight(h);
+        this.setHeight(h);
     }
 
     setHeight(h) {
         this.height = h;
     }
 
-    constrain(p, newP) {
-        if (!newP)
-            newP = new THREE.Vector3();
-        newP.copy(p);
-        newP.y = this.height;
-        return newP;
+    constrain(p) {
+        p.y = this.height;
     }
 }
 
@@ -51,7 +47,7 @@ class MultiControls extends MUSENode
         game.xc = this; // debugging convenience
         this.object = game.camera;
         this.target = new THREE.Vector3( 0, 0, 0 );
-
+        this.positionConstraint = new PositionConstraint(2);
         this.domElement = ( domElement !== undefined ) ? domElement : document;
         this.enabled = true;
         console.log("domElement "+this.domElement);
@@ -364,6 +360,8 @@ class MultiControls extends MUSENode
     onKeyDown( event ) {
         var kc = event.keyCode;
         this.downKeys [kc] = true;
+        if (this.positionConstraint)
+            this.positionConstraint.setHeight(this.getCamPos().y);
         console.log("onKeyDown "+kc);
     };
 
@@ -372,6 +370,10 @@ class MultiControls extends MUSENode
         delete(this.downKeys[kc]);
         console.log("onKeyUp "+kc);
     };
+
+    getCamPos() {
+        return this.game.camera.position;
+    }
 
     update()
     {
@@ -382,6 +384,7 @@ class MultiControls extends MUSENode
             moveSpeed *= 2;
             panSpeed *= 2;
         }
+        var constraint = this.positionConstraint;
         //console.log("downKeys:"+ JSON.stringify(down));
         var cam = this.game.camera;
 /*
@@ -409,36 +412,48 @@ class MultiControls extends MUSENode
             var camPos = cam.position;
             var v = this.getCamForward();
             camPos.addScaledVector(v, moveSpeed);
+            if (constraint)
+                constraint.constrain(camPos);
         }
 
         if (down[KEYS.BOTTOM]) {
             var camPos = cam.position;
             var v = this.getCamForward();
             camPos.addScaledVector(v, -moveSpeed);
+            if (constraint)
+                constraint.constrain(camPos);
         }
 
         if (down[KEYS.D]){
             var camPos = cam.position;
             var v = this.getCamRight();
             camPos.addScaledVector(v, moveSpeed);
+            if (constraint)
+                constraint.constrain(camPos);
         }
 
         if (down[KEYS.A]) {
             var camPos = cam.position;
             var v = this.getCamRight();
             camPos.addScaledVector(v, -moveSpeed);
+            if (constraint)
+                constraint.constrain(camPos);
         }
 
         if (down[KEYS.W]) {
             var camPos = cam.position;
             var v = this.getCamForward();
             camPos.addScaledVector(v, moveSpeed);
+            if (constraint)
+                constraint.constrain(camPos);
         }
 
         if (down[KEYS.S]) {
             var camPos = cam.position;
             var v = this.getCamForward();
             camPos.addScaledVector(v, -moveSpeed);
+            if (constraint)
+                constraint.constrain(camPos);
         }
 
         if (down[KEYS.B]) {
@@ -448,6 +463,7 @@ class MultiControls extends MUSENode
                 this.game.viewManager.goto(this.prevView, 2);
             }
         }
+
     }
 
     // This tries to find an appropriate target for trackballing
