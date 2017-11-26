@@ -307,13 +307,32 @@ class CMPDataVizController {
         this.play();
     }
 
+    updateData() {
+        var state = this.state;
+        if (!this.loader.data) {
+            console.log("No data yet");
+            return;
+        }
+        var data = this.loader.data.active;
+        var varNames = ["co2", "balance", "temperature"];
+        var year = state.Year;
+        game.state.set("year", year);
+        varNames.forEach(id => {
+            var dat = data[id];
+            var val = dat[year - 1850];
+            //console.log('year: '+year+" "+id+" "+val);
+            if (val) {
+                game.state.set(id, val);
+            }
+        });
+    }
 
     update(t) {
         // update the year
         if (this.labelYearText) {
             this.labelYearText.set('data', ['Year ' + this.state.Year]);
         }
-
+        this.updateData()
         // TWEEN.update();
         if (this.charts) {
             let data = this.loader.data.active;
