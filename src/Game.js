@@ -10,6 +10,7 @@ import {reportError} from './Util';
 import AppState from './AppState';
 
 window.MUSE_TRANSPARENT = false;
+window.MUSE_USE_LOGARITHMIC_BUFFER = true;
 
 let {degToRad} = THREE.Math;
 
@@ -44,13 +45,19 @@ class Game {
         this.types = {};
         this.domElementId = domElementId;
         this.renderer = this.createRenderer(domElementId);
-
+        var near = 0.1;
+        var far = 30000;
+        if (MUSE_USE_LOGARITHMIC_BUFFER) {
+            near = 0.01;
+            far = 1.0E20;
+            //alert("Using logartihmic Buffer "+near+" "+far);
+        }
         let size = this.renderer.getSize();
         this.camera = new THREE.PerspectiveCamera(
     	    45, // this is vFov.  had been 75 but too large
             size.width / size.height,
-            0.1,
-            30000
+            near,
+            far
         );
 
         //renderer.setClearColor( 0x000020 ); //NOFOG
@@ -104,6 +111,9 @@ class Game {
                 opts.alpha = true;
             if (MUSE_TRANSPARENT)
                 opts.alpha = true;
+            if (MUSE_USE_LOGARITHMIC_BUFFER) {
+                opts.logarithmicDepthBuffer = true;
+            }
             renderer = new THREE.WebGLRenderer(opts);
             /*
             renderer = new THREE.WebGLRenderer({
