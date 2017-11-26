@@ -249,14 +249,80 @@ function addBody(game, opts)
 
 Game.registerNodeType("CelestialBody", addBody);
 
+// From https://nssdc.gsfc.nasa.gov/planetary/factsheet/
+// distances are in km
+// rotationalPeriods are in getHours
+// orbitPeriods are in days
+var PLANET_DATA = {
+    sun: {
+        diameter: 1.3914E06,
+        distSun: 0,
+        rotationPeriod: 24.47*24,
+        orbitPeriod: 0,
+    },
+    earth: {
+        diameter: 12756,
+        distSun: 149.6E6,
+        rotationPeriod: 23.9,
+        orbitPeriod: 365.2
+    },
+    mars: {
+        diameter: 6792,
+        distSun: 227.9E06,
+        rotationPeriod: 24.6,
+        orbitPeriod: 687.0
+    },
+    jupiter: {
+        diameter: 142984,
+        distSun: 778.6E06,
+        rotationPeriod: 9.9,
+        orbitPeriod: 4331,
+    },
+    neptune: {
+        diameter: 49528,
+        distSun: 4495.1E06,
+        rotationPeriod: 16.1,
+        orbitPeriod: 59800,
+    },
+}
+
+/*
+function getSqueezedData()
+{
+    var pd = PLANET_DATA;
+    var sdata = {};
+    for (var name in pd) {
+        var dat = pd[name];
+        var r = dat['diameter']/2.0;
+        r = 2*Math.pow(r, .25);
+        var dSun = dat['distSun'];
+        dSun = Math.pow(dSun, .5);
+        var position = [0,0,dSun];
+        var sdat = {
+            radius: r,
+            diameter: dat.diameter,
+            dSun: dSun,
+            distSun: dat['distSun'],
+            position
+        }
+        sdata[name] = sdat;
+    }
+    return sdata;
+}
+
+window.SQUEEZED_PLANET_DATA = getSqueezedData();
+*/
+
 class SolarSystem {
 
+/*
     constructor(game, options) {
         var parent = "solarSystem";
         var sunPosition = [-5000,0,-3000];
         var sunLight = {  type: 'PointLight', name: 'sunLight', position: sunPosition,
                        color: 0xffffff, distance: 8000, intensity: 10.6};
         game.loadSpecs(sunLight);
+
         addBody(game, {name: 'Sun', parent,
                 radius:  200, position: sunPosition,
                 texture: './textures/sun_surface1.jpg', color: [80,50,20],
@@ -273,8 +339,72 @@ class SolarSystem {
         addBody(game, {name: 'Neptune', parent,
                 radius: 100,  position: [-1000, 0, -1000],
                 texture: './textures/Neptune.jpg'});
+    }
+*/
+    constructor(game, options) {
+        var parent = "solarSystem";
+        //var dat = SQUEEZED_PLANET_DATA;
+        //var sunPosition = dat.sun.position;
+        var sunPosition = this.getPosition('sun');
+        var sunLight = {  type: 'PointLight', name: 'sunLight', position: sunPosition,
+                       color: 0xffffff, distance: 8000, intensity: 6.6};
+        game.loadSpecs(sunLight);
 
-        //this.solarSystem = game.getGroup('solarSystem');
+        addBody(game, {name: 'sun', parent, radius: 1,
+                //position: dat.sun.position,
+                texture: './textures/sun_surface1.jpg', color: [80,50,20],
+                atmosphere: {'name': 'photosphere', opacity: .02}});
+        addBody(game, {name: 'earth', parent, radius: 1,
+                //position: dat.earth.position,
+                texture: './textures/land_ocean_ice_cloud_2048.jpg'});
+        addBody(game, {name: 'mars', parent, radius: 1,
+                //position: dat.mars.position,
+                texture: './textures/Mars_4k.jpg'});
+        addBody(game, {name: 'jupiter', parent, radius: 1,
+                //position: dat.jupiter.position,
+                texture: './textures/Jupiter_Map.jpg'});
+        addBody(game, {name: 'neptune', parent, radius: 1,
+                //position: dat.neptune.position,
+                texture: './textures/Neptune.jpg'});
+        this.updatePlanetParams(1);
+        this.alignEarthPos([80,0, 0]);
+    }
+
+    getPosition(name) {
+        var dSun = PLANET_DATA[name].distSun;
+        dSun = Math.pow(dSun, .5);
+        return [0,0,dSun];
+    }
+
+    getRadius(name) {
+        var r = PLANET_DATA[name].diameter/2.0;
+        return 2*Math.pow(r, .25);
+    }
+
+    //
+    // This repositions solarSystem so that the earth is at the specified
+    // position in world coordinates.
+    //
+    alignEarthPos(pos)
+    {
+        //var dat = PLANET_DATA;
+        var ss = game.models.solarSystem;
+        //var dSun = dat.earth.distSun;
+        //dSun = Math.pow(dSun, .5);
+        var epos = this.getPosition('earth');
+        ss.position.set(pos[0]-epos[0], pos[1]-epos[1], pos[2]-epos[2]);
+    }
+
+    updatePlanetParams(sf) {
+        var planetData = PLANET_DATA;
+        var names = ["sun", "earth", "mars", "jupiter", "neptune"];
+        names.forEach(name => {
+            var model = game.models[name];
+            var r = this.getRadius(name);
+            model.scale.set(r,r,r);
+            var pos = this.getPosition(name);
+            model.position.set(pos[0], pos[1], pos[2]);
+        })
     }
 
     update() {
@@ -284,7 +414,9 @@ class SolarSystem {
 
 function addSolarSystem(game, options)
 {
-    return new SolarSystem(game, options);
+    var ss = new SolarSystem(game, options);
+    window.SOLAR_SYSTEM = ss;
+    return ss;
 }
 
 Game.registerNodeType("SolarSystem", addSolarSystem);
@@ -292,7 +424,8 @@ Game.registerNodeType("SolarSystem", addSolarSystem);
 class StarsController {
     constructor(game, options) {
         addBody(game, {name: 'Stars', parent: 'solarSystem',
-                radius: 10000,  position: [-1000, 0, -1000],
+                //radius: 10000,  position: [-1000, 0, -1000],
+                radius: 10000000,  position: [-1000, 0, -1000],
                 texture: './textures/Sky_8k.jpg',
                 material: 'MeshBasicMaterial',
                 side: THREE.DoubleSide});
