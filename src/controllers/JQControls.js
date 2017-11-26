@@ -125,9 +125,22 @@ class JQControls extends UIControls {
             this.fieldsView.setValue(name, value);
     }
 
-    registerModel(name, callback) { this.stageControl.registerModel(name, callback); }
+    registerModel(name, callback) {
+        if (!this.stageControl) {
+            console.log("JQControl registerModel - no stageControl");
+            return;
+        }
+        this.stageControl.registerModel(name, callback);
+    }
     removeModel(name) { this.stageControl.removeModel(name); }
-    selectModel(name) { this.stageControl.selectModel(name); }
+
+    selectModel(name) {
+        if (!this.stageControl) {
+            console.log("JQControl selectModel - no stageControl");
+            return;
+        }
+        this.stageControl.selectModel(name);
+    }
 
     dispose() {
         document.body.removeChild(this.root);
@@ -189,8 +202,15 @@ class FieldsView extends JQWidget {
         if (!this.$fields[name]) {
             this.addField(new Field(name), name)
         }
-        if (this.fields[name].format)
-            value = this.fields[name].format(value);
+        var format = this.fields[name].format;
+        if (format) {
+            if (typeof format == "string") {
+                value = value != null ? sprintf(format, value) : "null";
+            }
+            else {
+                value = format(value);
+            }
+        }
         this.$fields[name].html(value);
     }
 
