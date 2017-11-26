@@ -16,18 +16,19 @@ GSS.DEFAULT_URL = "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4M
 function getFloat(f, defval)
 {
     if (typeof f == "number")
-	return f;
+        return f;
     if (typeof f == "string") {
-	try {
-	    return JSON.parse(f);
-	}
-	catch (e) {
-	    //report("err parsing float for str: "+f);
-	}
+        try {
+            return JSON.parse(f);
+        }
+        catch (e) {
+            //report("err parsing float for str: "+f);
+        }
     }
     return defval;
 }
 
+/*
 function timeToYear(t)
 {
     var t1 = 10*60;
@@ -46,6 +47,8 @@ function timeToYear(t)
 }
 
 GSS.timeToYear = timeToYear;
+*/
+
 GSS.getFloat = getFloat;
 
 GSS.SpreadSheet = function(url)
@@ -156,22 +159,3 @@ GSS.SpreadSheet.prototype.getFieldByYear = function(y, field)
     }
     return str;
 }
-
-
-/*
-// moved to CMPVR
-
-function getVideoOpacity(t)
-{
-    var y = timeToYear(t);
-    var va = getFieldByYear(y, "videofade");
-    va = getFloat(va, 1.0);
-    return va;
-}
-
-function getNarrative(t)
-{
-    var y = timeToYear(t);
-    return getFieldByYear(y, "narrative");
-}
-*/
