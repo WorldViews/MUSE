@@ -1,20 +1,24 @@
 
+/*
 MEDIA_SPECS = [
     {  type: 'MediaSequence', defaultDuration: 1,
        records: [
            { duration: 4,      mainScreen: {url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'}},
            { duration: 10,      mainScreen: {url: 'assets/video/GlobalWeather2013.mp4'}},
-           { duration: 32*60,   mainScreen: {url: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm'}},
+           //{ duration: 32*60,   mainScreen: {url: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm'}},
+           { duration: 32*60,   mainScreen: {url: 'assets/video/ClimateMusicProj-v7-HD.mp4'}},
        ]
    }
 ];
+*/
+
+MEDIA_SPECS = "configs/mediaSpecs/cmp_showcase.js";
 
 VEARTH = [
     {  type: 'VirtualEarth', name: 'vEarth',
        radius: 1.25, position: [0,0,0],
        satellites: 0, satTracks: 0,
        dataViz: 1,
-       //videoTexture: 'assets/video/GlobalWeather2013.mp4',
        atmosphere: {'name': 'CO2Viz', opacity: .1}
     }
 ];
@@ -22,9 +26,7 @@ VEARTH = [
 var SPECS = [
     //{  type: 'JQControls' },
     {  type: 'Group', name: 'station'  },
-    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [-1000, 0, 0], distance: 5000},
-    {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [3000, 0, 0], distance: 5000},
-    {  type: 'CMPData' },
+//    {  type: 'CMPData' },
     {  type: 'CMPDataViz', name: 'cmp',
         position: [0, 0, 0],
         //position: [-10, 0, 0],
@@ -40,8 +42,17 @@ var SPECS = [
 
 function updateCMPViz2(year)
 {
-    if (!year)
+    if (!year) {
         return;
+    }
+    var gss = game.program.gss;
+    if (gss) {
+        var nar = gss.getFieldByYear(year, "narrative") || "";
+        if (nar) {
+            nar = Math.floor(year) + ':' + nar;
+        }
+        this.game.state.set('narrative', nar);
+    }
     var earth = game.controllers.vEarth;
     var atm = earth.atmosphere;
     var startYear = 1800;
@@ -51,7 +62,7 @@ function updateCMPViz2(year)
     var TMin = 13.0;
     var TMax = 33.0;
     var co2 = game.state.get("co2");
-    var T = game.state.get("temp");
+    var T = game.state.get("temperature");
     var balance = game.state.get("balance");
     var co2f = (co2 - co2Min)/(co2Max - co2Min);
     var Tf = (T - TMin)/(TMax - TMin);
@@ -113,11 +124,11 @@ PROGRAM =
     duration: 32*60,
     gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
     channels: [
-        {name: 'time', label: "Time", format: toHHMMSS },
-        {name: 'year', label: "Year" },
-        {name: 'temp', label: "T", format: v => sprintf("%6.2f", v)},
-        {name: 'co2', label: "CO2"},
-        {name: 'balance', label: "Balance", format: v => v != undefined ? sprintf("%8.1f", v) : "None"},
+        {name: 'time',        label: "Time",    format: toHHMMSS },
+        {name: 'year',        label: "Year"                      },
+        {name: 'temperature', label: "T",       format: "%6.2f"  },
+        {name: 'co2',         label: "CO2",     format: "%6.2f"  },
+        {name: 'balance',     label: "Balance", format: "%8.1f"  },
         //'dyear',
         'spacer',
         {name: 'narrative', style: "height:110px", fieldElement: "div"}
