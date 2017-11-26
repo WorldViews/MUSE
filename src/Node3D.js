@@ -5,7 +5,7 @@ import Util from './Util';
 //import {MUSE} from './MUSE';
 import {MUSENode} from './Node';
 
-var EVENT_TYPES = ["click"];
+var EVENT_TYPES = ["click", "doubleClick"];
 
 // This is a base class for MUSE Nodes that correspond
 // to THREE 3D objects.

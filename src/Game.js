@@ -34,6 +34,7 @@ class Game {
             let netLink = new NetLink(this);
             this.registerController("netLink", netLink);
         }
+        this.stateStack = [];
         this.Util = Util;
     }
 
@@ -499,6 +500,24 @@ class Game {
             }, name);
             loader.load(specs, null, expectedType);
         });
+    }
+
+/*
+The game state stack is used to do things like keep list of viewPoints and
+provide a way for a user to pop back to previus viewpoints.  Currently it
+is used to pop back out of video bubbles.
+*/
+    pushGameState(stateFun) {
+        this.stateStack.push(stateFun);
+    }
+
+    popGameState() {
+        if (this.stateStack.length == 0) {
+            console.log("********* gameState stack underflow");
+            return;
+        }
+        var stateFun = this.stateStack.pop();
+        stateFun();
     }
 }
 

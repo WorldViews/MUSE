@@ -28,13 +28,11 @@ function getBubbles(vidNames) {
         numBubbles++;
         var path = "assets/video/"+name;
         var bubbleName = "videoBubble" + numBubbles;
-        var bubble = {  type: 'Screen', parent, radius, path, name: bubbleName,
+        var bubble = {  type: "VideoBubble", parent, radius, path, name: bubbleName,
             position: radialPos(angle),
-            side: "FrontSide", autoPlay: false,
             rotation: [0,-1.6,0],
         };
         angle += 15;
-        //alert("bubble: "+JSON.stringify(bubble));
         return bubble;
     });
 }

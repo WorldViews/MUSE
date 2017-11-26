@@ -116,6 +116,10 @@ class MultiControls extends MUSENode
         this.getTarget();
     };
 
+    // Note that we create our own 'click' event because the THREE click
+    // event seems to trigger even if the mouse moved between down and up.
+    // we made our own using mouseDown and mouseUp to just call This
+    // if the mouse doesn't move, and the down and up are in rapid succession.
     onMouseUp( event ) {
         //console.log("MultiControls.onMouseUp");
         event.preventDefault();
@@ -126,60 +130,26 @@ class MultiControls extends MUSENode
             var t = Util.getClockTime();
             var dt = t - this.mouseDownTime;
             if (dt < 0.6)
-                this.onClick( event );
+                this.handleMuseEvent(event, 'click');
             else {
                 console.log("Lazy click... ignored...");
             }
         }
     };
 
-    // this is a dirty special hack that will be replaced by
-    // a more general event mechanism.
-    dispatchDoubleClick(obj) {
-        console.log("MultiControl.dispatchDoubleClick");
-        while (obj) {
-            var userData = obj.userData;
-            if (userData && userData.doubleClick) {
-                report("******** BINGO Double Click!!!! *******");
-                break;
-            }
-            obj = obj.parent;
-        }
-        if (!obj)
-            return null;
-            //if (obj.name && obj.name.startsWith("vidBub")) {
-        if (obj.name) {
-            var position = obj.getWorldPosition();
-            var rotation = new THREE.Euler(0,0,0);
-            var view = {position, rotation};
-            this.prevView = this.game.viewManager.getCurrentView();
-            this.prevScreen = this.game.screens[obj.name];
-            this.game.viewManager.goto(view, 2);
-            this.game.screens[obj.name].play();
-        }
-        return obj;
-    }
-
-    // Note that we did not use the 'click' event because it
-    // seems to trigger even if the mouse moved between down and up.
-    // we made our own using mouseDown and mouseUp to just call This
-    // if the mouse doesn't move, and the down and up are in rapid succession.
-    onClick( event ) {
-        console.log("MultiControl.onClick");
-        this.handleRaycast(event, 1);
-        var obj = this.pickedObj;
-        console.log("MultiControl.onClick pickedObj: ", obj);
-        if (obj)
-            Util.dispatchMuseEvent('click', obj);
-    }
-
     onDoubleClick( event ) {
-        console.log("MultiControl.onDoubleClick");
+        this.handleMuseEvent(event, 'doubleClick');
+    }
+
+    handleMuseEvent( event, museEvType )
+    {
+        console.log("MultiControl.useEvent "+museEvType);
         this.handleRaycast(event, 1);
         var obj = this.pickedObj;
-        console.log("MultiControl.onDoubleClick pickedObj: ", obj);
-        if (obj)
-            this.dispatchDoubleClick(obj);
+        console.log(" pickedObj: ", obj);
+        if (obj) {
+            Util.dispatchMuseEvent(museEvType, obj);
+        }
     }
 
     onMouseWheel(evt) {
@@ -358,11 +328,15 @@ class MultiControls extends MUSENode
     }
 
     onKeyDown( event ) {
+        console.log("onKeyDown "+kc);
         var kc = event.keyCode;
         this.downKeys [kc] = true;
         if (this.positionConstraint)
             this.positionConstraint.setHeight(this.getCamPos().y);
-        console.log("onKeyDown "+kc);
+        if (kc == KEYS.B) {
+            console.log("***** About to pop game state");
+            this.game.popGameState();
+        }
     };
 
     onKeyUp( event ) {
@@ -455,15 +429,12 @@ class MultiControls extends MUSENode
             if (constraint)
                 constraint.constrain(camPos);
         }
-
+/*
         if (down[KEYS.B]) {
-            if (this.prevView) {
-                if (this.prevScreen)
-                    this.prevScreen.pause();
-                this.game.viewManager.goto(this.prevView, 2);
-            }
+            console.log("***** About to pop game state");
+            this.game.popGameState();
         }
-
+*/
     }
 
     // This tries to find an appropriate target for trackballing

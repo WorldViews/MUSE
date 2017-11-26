@@ -79,9 +79,11 @@ class Screen extends Node3D
         game.setFromProps(this.screenObject, spec);
         game.addToGame(this.screenObject, spec.name, spec.parent);
         this.setObject3D(this.screenObject)
+        /*
         if (!this.screenMesh.userData)
             this.screenMesh.userData = {};
         this.screenMesh.userData.doubleClick = "FOO";
+        */
         if (spec.name) {
             game.screens[spec.name] = this;
             game.registerPlayer(this);
@@ -223,4 +225,42 @@ function loadScreen(game, opts)
 
 Game.registerNodeType("Screen", loadScreen);
 
-export {Screen};
+/*
+Video bubbles are subclasses of screens showing Panoramic
+video or images, with action to move in or out of them.
+*/
+class VideoBubble extends Screen {
+
+}
+
+function clickedOnBubble() {
+    alert("Click on bubble");
+}
+
+function doubleClickedOnBubble(obj) {
+    var position = obj.getWorldPosition();
+    var rotation = new THREE.Euler(0,0,0);
+    var view = {position, rotation};
+    var prevView = game.viewManager.getCurrentView();
+    var screen = game.screens[obj.name];
+    game.viewManager.goto(view, 2);
+    screen.play();
+    console.log("*** About to push game state");
+    game.pushGameState(() => {
+        game.viewManager.goto(prevView, 2);
+        screen.pause();
+    });
+    return obj;
+}
+
+function getBubble(game, opts) {
+    opts.side = opts.side || "FrontSide";
+    if (opts.autoPlay == undefined)
+        opts.autoPlay = false;
+    opts.onMuseEvent = {'doubleClick': doubleClickedOnBubble };
+    return new VideoBubble(game, opts);
+}
+
+Game.registerNodeType("VideoBubble", getBubble);
+
+export {Screen, VideoBubble};
