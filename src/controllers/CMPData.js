@@ -39,14 +39,6 @@ class CMPData {
             game.state.set("balance", balance);
             game.state.set("dyear", dyear)
         }
-        /*
-        else {
-            game.state.set("temp", "");
-            game.state.set("co2", "");
-            game.state.set("balance", "");
-            game.state.set("dyear", "");
-        }
-        */
     }
 }
 
