@@ -27,21 +27,6 @@ var LIGHTS = [
     //{  type: 'PointLight', name: 'sunLight',    color: 0xffffff, position: [-3000, 0, -2000], distance: 8000, intensity: 10.6},
 ];
 
-var OBJ_MODEL = {
-    type: 'Model', name: 'derrick', parent: 'station',
-    path: 'assets/models/obj/derrick.obj',
-    position: [20, 0, 1.6], rot: [0, 0, 0], scale: 2.0
-};
-
-var VID_BUBBLES = [
-    {   type: 'Screen', name: 'vidBubble1', parent: 'station', radius: 0.4, position: [0,3.6,0],
-        path: 'assets/video/YukiyoCompilation.mp4',
-    },
-    // {   type: 'Screen', name: 'vidBubble2', parent: 'station', radius: 0.4, position: [1,3.6,0],
-    //     path: 'webrtc+http://localhost:8081',
-    // },
-];
-
 SATELLITE_MODEL = [
     {   type: 'Model', name: 'satellite1',
         parent: 'station',
@@ -108,8 +93,6 @@ var SPECS = [
         visible: false
     },
     //SATELLITE_MODEL,
-    //OBJ_MODEL,
-    //VID_BUBBLES,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,
         //path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
@@ -156,19 +139,23 @@ var SPECS = [
     {  type: 'Dancer',
         motionUrl: '/assets/motionCapture/lauren_duality_edit.bvh',
         name: 'dancer', visible: false },
+/*
     {  type: 'CMPDataViz', name: 'cmp',
        position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
        visible: false
     },
+*/
     {  type: 'SolarSystem' },
     {  type: 'Stars' },
     //{  type: 'Hurricane', scale: 0.01 }
+    /*
     {  type: 'VirtualEarth', name: 'vEarth', satTracks: 0,
        radius: 1.25, position: [0,1.9,0],
        dataViz: 1,
         //videoTexture: 'assets/video/GlobalWeather2013.mp4',
        atmosphere: {'name': 'CO2Viz', opacity: .1}
     }
+    */
 ];
 
 MUSE.returnValue(SPECS);
