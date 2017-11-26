@@ -34,6 +34,8 @@ var SPECS = [
 POSTERS = "configs/programs/cmp_posters.js";
 BUBBLES = "configs/programs/cmp_vidBubbles.js";
 
+SOLAR_SYSTEM = [ {  type: 'SolarSystem' }, {  type: 'Stars' } ];
+
 function toHHMMSS(t) {
     var sec_num = parseInt(t, 10); // don't forget the second param
     var hours   = Math.floor(sec_num / 3600);
@@ -128,7 +130,8 @@ CONFIG = {
        media: MEDIA_SPECS,
        nodes: [SCRIPTS, POSTERS, BUBBLES, SPECS]
     },
-    'venue': '/configs/venues/imaginarium.js',
+    venue: '/configs/venues/imaginarium.js',
+    environment: SOLAR_SYSTEM
     //'specs': [SCRIPTS, POSTERS, BUBBLES]
 };
 

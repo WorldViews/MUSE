@@ -139,16 +139,20 @@ var SPECS = [
     {  type: 'Dancer',
         motionUrl: '/assets/motionCapture/lauren_duality_edit.bvh',
         name: 'dancer', visible: false },
-/*
+
+// Note that the SolarSystem and Stars are now part of the environment
+// so have been removed from here.
+//    {  type: 'SolarSystem' },
+//    {  type: 'Stars' },
+    //{  type: 'Hurricane', scale: 0.01 }
+
+// Now these visualizations which are CMP specific have been moved
+// out of here into the program or config files.
+    /*
     {  type: 'CMPDataViz', name: 'cmp',
        position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
        visible: false
     },
-*/
-    {  type: 'SolarSystem' },
-    {  type: 'Stars' },
-    //{  type: 'Hurricane', scale: 0.01 }
-    /*
     {  type: 'VirtualEarth', name: 'vEarth', satTracks: 0,
        radius: 1.25, position: [0,1.9,0],
        dataViz: 1,

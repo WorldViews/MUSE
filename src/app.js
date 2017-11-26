@@ -155,6 +155,8 @@ function start_(config) {
             parts.push(game.loadSpecs(Util.getTypedObj(config.webUI), "webUI"));
         if (config.venue)
             parts.push(game.loadSpecs(config.venue, "venue"));
+        if (config.environment)
+            parts.push(game.loadSpecs(config.environment, "environment"));
         if (config.specs)
             parts.push(game.loadSpecs(config.specs, "specs"));
         Promise.all(parts).then(() => {
