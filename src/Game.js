@@ -49,7 +49,7 @@ class Game {
         //var far = 30000;
         var far = 200000;
         if (MUSE_USE_LOGARITHMIC_BUFFER) {
-            near = 0.01;
+            near = 0.000001;
             far = 1.0E20;
             //alert("Using logartihmic Buffer "+near+" "+far);
         }

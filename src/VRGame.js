@@ -30,8 +30,11 @@ class VRGame extends Game {
 
         // create the VR body
         this.body = new THREE.Object3D();
+        this.head = new THREE.Object3D();
+        this.head.rotation.set(0, Math.PI*0.75, 0);
+        this.head.add(this.camera);
+        this.body.add(this.head);
         this.scene.add(this.body);
-        this.body.add(this.camera);
     }
 
     /**

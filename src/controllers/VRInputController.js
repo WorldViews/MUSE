@@ -41,15 +41,16 @@ export default class VRInputController {
     constructor(scene, body, camera, vrType) {
         this.scene = scene;
         this.body = body;
+        this.head = body.children[0];
         this.camera = camera;
         this.type = vrType;
-        this.direction = new THREE.Vector3();
+        this.direction = new THREE.Vector3(0, 0, 1);
 
         this.controller0 = new VRController(0);
         this.controller1 = new VRController(1);
 
-        this.body.add(this.controller0);
-        this.body.add(this.controller1);
+        this.head.add(this.controller0);
+        this.head.add(this.controller1);
 
         this.raycaster = new THREE.Raycaster();
         this.tempMatrix = new THREE.Matrix4();
@@ -182,6 +183,9 @@ export default class VRInputController {
         if (!this.controller0.getButtonState('grips') &&
             !this.controller1.getButtonState('grips')) {
             this.line.visible = false;
+            if (this.tween) {
+                delete this.tween;
+            }
             return;
         }
 
@@ -240,24 +244,27 @@ export default class VRInputController {
         let axisX = axes[0];
         let axisY = axes[1];
 
-        this.camera.getWorldDirection(this.direction);
+        //this.camera.getWorldDirection(this.direction);
+        let direction = this.direction.clone();
+        this.head.matrix.multiplyVector3(direction);
+        // let direction = this.direction;
 
         if (axisY < -0.5) {
-            this.body.translateX(0.02 * this.direction.x);
-            this.body.translateZ(0.02 * this.direction.z);
+            this.body.translateX(0.02 * direction.x);
+            this.body.translateZ(0.02 * direction.z);
         } else if (axisY > 0.5) {
-            this.body.translateX(-0.02 * this.direction.x);
-            this.body.translateZ(-0.02 * this.direction.z);
+            this.body.translateX(-0.02 * direction.x);
+            this.body.translateZ(-0.02 * direction.z);
         }
 
         if (axisX > 0.5) {
             // TODO: refactor into function
-            let right = this.direction.clone().applyAxisAngle(Y_AXIS, -NINETY);
+            let right = direction.applyAxisAngle(Y_AXIS, -NINETY);
             this.body.translateX(0.02 * right.x);
             this.body.translateZ(0.02 * right.z);
         } else if (axisX < -0.5) {
             // TODO: refactor into function
-            let left = this.direction.clone().applyAxisAngle(Y_AXIS, NINETY);
+            let left = direction.applyAxisAngle(Y_AXIS, NINETY);
             this.body.translateX(0.02 * left.x);
             this.body.translateZ(0.02 * left.z);
         }
@@ -265,14 +272,14 @@ export default class VRInputController {
         let rotAxes = this.controller1.getAxes();
         let rotAxisX = rotAxes[0];
         let rotAxisY = rotAxes[1];
-        let oldRot = this.body.rotation.y;
+        let oldRot = this.head.rotation.y;
         let rotMagnitude = (Math.PI/400);
         if (rotAxisX > 0.3) {
             oldRot -= rotMagnitude*Math.abs(rotAxisX);
-            this.body.rotation.set(0, oldRot, 0)
+            this.head.rotation.set(0, oldRot, 0)
         } else if (rotAxisX < -0.3) {
             oldRot += rotMagnitude*Math.abs(rotAxisX);
-            this.body.rotation.set(0, oldRot, 0)
+            this.head.rotation.set(0, oldRot, 0)
         }
     }
 
