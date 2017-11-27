@@ -71,6 +71,7 @@ class MultiControls extends MUSENode
         this.speedRotateY = 0;
         this.raycaster = new THREE.Raycaster();
         this.raycastPt = new THREE.Vector2()
+        this.maxTrackBallDistance = 200;
 
         this._onMouseMove = bind( this, this.onMouseMove );
         this._onMouseDown = bind( this, this.onMouseDown );
@@ -447,19 +448,24 @@ class MultiControls extends MUSENode
         var isect = this.raycast(0,0);
         if (isect) {
             console.log("setting target from intersect");
-            this.target = isect.point.clone();
+            var target = isect.point;
+            var d = this.getCamPos().distanceTo(target);
+            if (d < this.maxTrackBallDistance) {
+                console.log("using target d: "+d);
+                this.target = target.clone();
+                return;
+            }
+            console.log(sprintf("not using target - d: %f > maxD: %f!", d, this.maxTrackBallDistance));
         }
-        else {
-            console.log("setting target without intersect");
-            var cam = this.game.camera;
-            //var wv = cam.getWorldDirection();
-            var wv = this.getCamForward();
-            var d = 100;
-            this.target = cam.position.clone();
-            this.target.addScaledVector(wv, d);
-        }
-        //console.log("Target:", this.target);
+        console.log("setting target without intersect");
+        var cam = this.game.camera;
+        //var wv = cam.getWorldDirection();
+        var wv = this.getCamForward();
+        var d = 100;
+        this.target = cam.position.clone();
+        this.target.addScaledVector(wv, d);
     }
+
 
     getCamAngles()
     {
