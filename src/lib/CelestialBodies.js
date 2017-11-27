@@ -345,6 +345,7 @@ class SolarSystem {
         var parent = "solarSystem";
         //var dat = SQUEEZED_PLANET_DATA;
         //var sunPosition = dat.sun.position;
+        this.earthGamePosition = [-80,30,0];
         var sunPosition = this.getPosition('sun');
         var sunLight = {  type: 'PointLight', name: 'sunLight', position: sunPosition,
                        color: 0xffffff, distance: 8000, intensity: 6.6};
@@ -367,7 +368,10 @@ class SolarSystem {
                 //position: dat.neptune.position,
                 texture: './textures/Neptune.jpg'});
         this.updatePlanetParams(1);
-        this.alignEarthPos([80,0, 0]);
+        if (this.earthGamePosition) {
+            //this.alignPosition([80,0, 0]);
+            this.alignPosition(this.earthGamePosition);
+        }
     }
 
     getPosition(name) {
@@ -382,17 +386,15 @@ class SolarSystem {
     }
 
     //
-    // This repositions solarSystem so that the earth is at the specified
+    // This repositions solarSystem so that the specified body is at the specified
     // position in world coordinates.
     //
-    alignEarthPos(pos)
+    alignPosition(pos, bodyName)
     {
-        //var dat = PLANET_DATA;
+        bodyName = bodyName || "earth";
         var ss = game.models.solarSystem;
-        //var dSun = dat.earth.distSun;
-        //dSun = Math.pow(dSun, .5);
-        var epos = this.getPosition('earth');
-        ss.position.set(pos[0]-epos[0], pos[1]-epos[1], pos[2]-epos[2]);
+        var bpos = this.getPosition(bodyName);
+        ss.position.set(pos[0]-bpos[0], pos[1]-bpos[1], pos[2]-bpos[2]);
     }
 
     updatePlanetParams(sf) {
@@ -442,7 +444,7 @@ class StarsController {
     constructor(game, options) {
         addBody(game, {name: 'Stars', parent: 'solarSystem',
                 //radius: 10000,  position: [-1000, 0, -1000],
-                radius: 10000000,  position: [-1000, 0, -1000],
+                radius: 100000,  position: [-1000, 0, -1000],
                 texture: './textures/Sky_8k.jpg',
                 material: 'MeshBasicMaterial',
                 side: THREE.DoubleSide});
