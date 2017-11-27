@@ -10,7 +10,7 @@ import {reportError} from './Util';
 import AppState from './AppState';
 
 window.MUSE_TRANSPARENT = false;
-window.MUSE_USE_LOGARITHMIC_BUFFER = true;
+window.MUSE_USE_LOGARITHMIC_BUFFER = false;
 
 let {degToRad} = THREE.Math;
 
@@ -46,7 +46,8 @@ class Game {
         this.domElementId = domElementId;
         this.renderer = this.createRenderer(domElementId);
         var near = 0.1;
-        var far = 30000;
+        //var far = 30000;
+        var far = 200000;
         if (MUSE_USE_LOGARITHMIC_BUFFER) {
             near = 0.01;
             far = 1.0E20;
