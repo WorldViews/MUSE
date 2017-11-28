@@ -346,6 +346,7 @@ class SolarSystem {
         //var dat = SQUEEZED_PLANET_DATA;
         //var sunPosition = dat.sun.position;
         this.earthGamePosition = [-80,30,0];
+        this.camCalc = new THREE.PerspectiveCamera(); // dummy camera just used for computing view info
         var sunPosition = this.getPosition('sun');
         var sunLight = {  type: 'PointLight', name: 'sunLight', position: sunPosition,
                        color: 0xffffff, distance: 8000, intensity: 6.6};
@@ -416,13 +417,16 @@ class SolarSystem {
 
     getViewpoint(name) {
         var pos = this.getPosition(name);
+        var cam = this.camCalc;
         //position[0] -= 100;
-        var position = {x: pos[0]-100, y: pos[1], z: pos[2]};
+        //var position = {x: pos[0]-100, y: pos[1], z: pos[2]};
         var model = game.models[name];
-        var position = model.getWorldPosition().clone();
-        position.x -= 100;
-        var rotation = {x: 0, y: 0, z: 0};
-        return {position, rotation};
+        var modelWorldPos = model.getWorldPosition();
+        cam.position.copy(modelWorldPos);
+        cam.position.x -= 100;
+        //var rotation = {x: 0, y: 0, z: 0};
+        cam.lookAt(modelWorldPos);
+        return {position: cam.position.clone(), rotation: cam.rotation.clone()};
     }
 
     goto(name) {
