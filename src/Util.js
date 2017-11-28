@@ -80,6 +80,19 @@ export function toTime(datetime) {
     return datetime;
 }
 
+function toHHMMSS(t)
+{
+    var sec_num = parseInt(t, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+    if (hours > 0) {
+        return sprintf("%02d:%02d:%02d", hours, minutes, seconds);
+    } else {
+        return sprintf("%02d:%02d", minutes, seconds);
+    }
+}
+
 export function formatDatetime(dt)
 {
     if (!(dt instanceof Date))
@@ -224,7 +237,21 @@ export function dispatchMuseEvent(evType, obj) {
     return obj;
 }
 
-export default {
+export var toRad = THREE.Math.degToRad;
+export var toDeg = THREE.Math.radToDeg;
+
+// Return a position in the x-z plane a given distance
+// and from origin and given angle.
+function radialPosition(angle, r, h) {
+    r = r || 7.4;
+    h = h || 1.0;
+    var x = -r*Math.cos(toRad(angle));
+    var z = -r*Math.sin(toRad(angle));
+    return [x,h,z];
+}
+
+var Util =
+{
     cloneObject,
     getJSON,
     getJSONFromScript,
@@ -237,6 +264,10 @@ export default {
     scaleVec,
     toTime,
     toDate,
+    toDeg,
+    toRad,
+    toHHMMSS,
+    radialPosition,
     reportError,
     reportWarning,
     formatDatetime,
@@ -244,3 +275,8 @@ export default {
     isVideoURL,
     dispatchMuseEvent
 };
+
+window.MUSE.Util = Util;
+window.Util = Util;
+
+export default Util;
