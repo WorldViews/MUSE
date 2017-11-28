@@ -89,7 +89,7 @@ class VRGame extends Game {
         super.render();
 
         if (this.vr.display && this.vr.display.isPresenting) {
-            this.vr.display.submitFrame();
+            this.renderer.submitFrame(this.scene, this.camera);
         }
     }
 }
