@@ -263,6 +263,8 @@ class MultiControls extends MUSENode
             if (verbosity) {
                 console.log("isect "+i+" "+obj.name, obj);
             }
+            if (obj.museIgnorePicking)
+                continue;
             if (this.ignoredModels.includes(obj.name))
                 continue;
             if (obj.name && obj.name.startsWith("sat"))
