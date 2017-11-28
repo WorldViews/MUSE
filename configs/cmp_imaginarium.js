@@ -33,21 +33,9 @@ var SPECS = [
 
 POSTERS = "configs/programs/cmp_posters.js";
 BUBBLES = "configs/programs/cmp_vidBubbles.js";
+TOKENS = "configs/programs/cmp_tokens.js";
 
 SOLAR_SYSTEM = [ {  type: 'SolarSystem' }, {  type: 'Stars' } ];
-
-function toHHMMSS(t) {
-    var sec_num = parseInt(t, 10); // don't forget the second param
-    var hours   = Math.floor(sec_num / 3600);
-    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-    var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-    if (hours > 0) {
-        return sprintf("%02d:%02d:%02d", hours, minutes, seconds);
-    } else {
-        return sprintf("%02d:%02d", minutes, seconds);
-    }
-}
 
 function updateCMPViz2(year)
 {
@@ -90,18 +78,32 @@ function onStartProgram() {
     game.state.on("year", updateCMPViz2);
 }
 
-function onStart() {
+// This forces images to load by quickly going to viewpoint far Away
+// from which every image is in view frustrum.
+function forceImages() {
     var vm = game.viewManager;
     console.log(vm);
     console.log("Going to edge of universe");
     vm.gotoView("Very Far Away", 0);
-    alert("Going very far away to load all images");
+    //alert("Going very far away to load all images");
     //vm.gotoView("Left Rear", 0);
     setTimeout( () => {
         console.log("going home now");
-        vm.gotoView("Nearby Outside Looking In",10);
+        vm.gotoView("Nearby Outside Looking In", 0);
+        vm.gotoView("Left Rear", 3);
     }, 1000);
 }
+
+function onStart() {
+    if (Util.getParameterByName("quickstart"))
+        return;
+    forceImages();
+}
+
+var jqGUI = {type: 'JQControls'
+//screens: ["mainScreen"],
+};
+var datGUI = {type: 'DATGUIControls' };
 
 CONFIG = {
     //onStart: setupPosterActions,
@@ -110,9 +112,8 @@ CONFIG = {
     'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .01},
     //'cameraControls': 'JoelControls',
     //'webUI': {type: 'DATGUIControls',
-    'webUI': {type: 'JQControls',
-           //screens: ["mainScreen"],
-          },
+    //'webUI': {type: 'JQControls' },
+    webUI: Util.getParameterByName("datgui") ? datGUI : jqGUI,
     'program': {
         onStartProgram: onStartProgram,
        duration: 32*60,
@@ -131,7 +132,7 @@ CONFIG = {
            }
        ],
        channels: [
-           {name: 'time',        label: "Time",    format: toHHMMSS , default: 0},
+           {name: 'time',        label: "Time",    format: Util.toHHMMSS , default: 0},
            {name: 'year',        label: "Year"                      , default: 1850, min: 1850, max: 2300 },
            {name: 'temperature', label: "T",       format: "%6.2f"  },
            {name: 'co2',         label: "CO2",     format: "%6.2f"  },
@@ -142,7 +143,7 @@ CONFIG = {
         ],
 
        media: MEDIA_SPECS,
-       nodes: [SCRIPTS, POSTERS, BUBBLES, SPECS]
+       nodes: [SCRIPTS, POSTERS, BUBBLES, TOKENS, SPECS]
     },
     venue: '/configs/venues/imaginarium.js',
     environment: SOLAR_SYSTEM
