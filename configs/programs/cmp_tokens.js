@@ -4,23 +4,27 @@
 function selectStageModel(name)
 {
     console.log("selectStageModel "+name);
-    var model = game.models[name];
-    model.visible = !model.visible;
+    game.program.selectStageModel(name);
 }
 
 var numToks = 0;
-function getToken(name, modelPath, tokenPos) {
+function getToken(name, tokenPos, spec) {
+    var modelOpts = spec.modelOpts || {};
+    var scale = modelOpts.scale || 1.0;
+    var modelPos = modelOpts.position || [0,0,0];
     numToks++;
     var token = {
         type: 'Group', name: "tokenGroup"+numToks, position: tokenPos,
-        scale: 0.9,
+        scale: 0.7,
          children: [
          {   type: 'Model', name: name,
-             path: modelPath,
-             position: [.75, 0.55, 1.35],
+             path: spec.modelUrl,
+             //position: [.75, 0.55, 1.35],
+             position: modelPos,
              rot: [0, 0, 0],
-             scale: 0.010,
-             onMuseEvent: {'click': () => selectStageModel("dancer") }
+             scale: scale,
+             //onMuseEvent: {'click': () => selectStageModel("dancer") }
+             onMuseEvent: {'click': spec.onClick }
          },
          {  type: 'Model',
             path: 'assets/models/pedestal/model.dae',
@@ -40,24 +44,28 @@ function getTokens(angle, tokSpecs)
     var tokens = [];
     tokSpecs.forEach(spec => {
         var name = spec.name;
-        tokens.push(getToken(name, spec.modelUrl,  Util.radialPosition(angle, 2.2, -.1) ));
+        var pos = Util.radialPosition(angle, 2.2, -.1);
+        tokens.push(getToken(name, pos, spec ));
         angle += spacing;
     });
     return tokens;
 }
 
 var tokSpecs = [
-    {name: "dancerTok1",
+    {name: "dancerTok",
      modelUrl: "assets/models/tokens/dancer/model.dae",
+     modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010},
      onClick: () => selectStageModel("dancer")
     },
-    {name: "dancerTok1",
-     modelUrl: "assets/models/tokens/dancer/model.dae",
-     onClick: () => selectStageModel("dancer")
+    {name: "earthTok",
+     modelUrl: "assets/models/tokens/globe/model.dae",
+     modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
+     onClick: () => selectStageModel("vEarth")
     },
-    {name: "dancerTok3",
+    {name: "cmpTok",
      modelUrl: "assets/models/tokens/dancer/model.dae",
-     onClick: () => selectStageModel("dancer")
+     modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010},
+     onClick: () => selectStageModel("cmp")
     }
 ]
 

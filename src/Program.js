@@ -228,6 +228,31 @@ class Program extends MUSENode
         if (this.mediaSequence)
             this.mediaSequence.next();
     }
+
+    selectStageModel(modelName, stageName) {
+        var stage = this.stages[0];
+        var selectedModel = null;
+        if (modelName && modelName != "none") {
+             if(!stage.models[modelName]) {
+                 Util.reportError("Model "+modelName+" not registered on stage");
+                 return;
+             }
+             //var selectedModel = game.models[modelName];
+             selectedModel = game.controllers[modelName];
+             if (!selectedModel) {
+                 Util.reportError("No model named "+modelName);
+                 return;
+             }
+         }
+         for (var name in stage.models) {
+             //var model = game.models[name];
+             var model = game.controllers[name];
+             if (model)
+                    model.visible = false;
+        }
+        if (selectedModel)
+            selectedModel.visible = true;
+    }
 }
 
 function addProgram(game, opts)
