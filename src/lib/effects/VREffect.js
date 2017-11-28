@@ -224,10 +224,10 @@ let VREffect = function ( renderer, onError ) {
 			vrDisplay.submitFrame();
 
 			// https://github.com/toji/webvr.info/blob/master/samples/07-advanced-mirroring.html#L373
-			if ( vrDisplay.capabilities.hasExternalDisplay ) {
-				renderer.context.viewport( 0, 0, canvas.width, canvas.height );
-                renderer.render( scene, camera );
-			}
+			// if ( vrDisplay.capabilities.hasExternalDisplay ) {
+			// 	renderer.context.viewport( 0, 0, canvas.width, canvas.height );
+            //     renderer.render( scene, camera );
+			// }
 
 		}
 

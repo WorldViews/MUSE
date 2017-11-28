@@ -250,21 +250,21 @@ export default class VRInputController {
         // let direction = this.direction;
 
         if (axisY < -0.5) {
-            this.body.translateX(0.02 * direction.x);
-            this.body.translateZ(0.02 * direction.z);
-        } else if (axisY > 0.5) {
             this.body.translateX(-0.02 * direction.x);
             this.body.translateZ(-0.02 * direction.z);
+        } else if (axisY > 0.5) {
+            this.body.translateX(0.02 * direction.x);
+            this.body.translateZ(0.02 * direction.z);
         }
 
         if (axisX > 0.5) {
             // TODO: refactor into function
-            let right = direction.applyAxisAngle(Y_AXIS, -NINETY);
+            let right = direction.applyAxisAngle(Y_AXIS, NINETY);
             this.body.translateX(0.02 * right.x);
             this.body.translateZ(0.02 * right.z);
         } else if (axisX < -0.5) {
             // TODO: refactor into function
-            let left = direction.applyAxisAngle(Y_AXIS, NINETY);
+            let left = direction.applyAxisAngle(Y_AXIS, -NINETY);
             this.body.translateX(0.02 * left.x);
             this.body.translateZ(0.02 * left.z);
         }
