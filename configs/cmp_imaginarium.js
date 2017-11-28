@@ -24,8 +24,8 @@ var SPECS = [
         //scale: [1.5, 1, 1.5],
         scale: [1.2, 0.8, 1.2],
         visible: true,
-        startTime: 10*60, // 10 minutes before starting
-        duration: 20*60   // 20 minutes duration time
+        startTime: 11*60 + 18, // 11:18 minutes before starting
+        duration: 1075   // 17:56 minutes duration time
     },
     //{  type: 'Stars' },
     VEARTH

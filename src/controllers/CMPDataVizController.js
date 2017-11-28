@@ -519,11 +519,12 @@ class CMPDataVizController {
                 var normalizedTime = dt/this.state.duration;
                 this.seekNormalize(normalizedTime);
             } else {
+                state.Year = startYear;
                 this.stop();
             }
         }
 
-        if (t > this.state.startTime && this.lastTime < this.state.startTime) {
+        if (t > this.state.startTime && this.lastTS < this.state.startTime) {
             this.play();
         }
 
