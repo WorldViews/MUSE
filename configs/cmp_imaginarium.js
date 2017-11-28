@@ -90,8 +90,22 @@ function onStartProgram() {
     game.state.on("year", updateCMPViz2);
 }
 
+function onStart() {
+    var vm = game.viewManager;
+    console.log(vm);
+    console.log("Going to edge of universe");
+    vm.gotoView("Very Far Away", 0);
+    alert("Going very far away to load all images");
+    //vm.gotoView("Left Rear", 0);
+    setTimeout( () => {
+        console.log("going home now");
+        vm.gotoView("Nearby Outside Looking In",10);
+    }, 1000);
+}
+
 CONFIG = {
     //onStart: setupPosterActions,
+    onStart: onStart,
     //'cameraControls': 'Orbit',
     'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .01},
     //'cameraControls': 'JoelControls',
