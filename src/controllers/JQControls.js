@@ -425,6 +425,8 @@ class StageControl {
 
     selectModel(name) {
         console.log("StageControl.selectModel "+name);
+        game.program.selectStageModel(name);
+        /*
         //var game = this.ui.game;
         var game = window.game;
         for (var modelName in this.models) {
@@ -432,16 +434,19 @@ class StageControl {
         }
         this.selectedModel = name;
         this._setVisible(name, true);
+        */
         if (this.$models)
             this.$models.blur();
     }
 
+    /*
     _setVisible(name, v) {
         if(game.models[name])
             game.models[name].visible = v;
         if (game.controllers[name])
             game.controllers[name].visible = v;
     }
+    */
 }
 
 class VideoView extends JQWidget {
