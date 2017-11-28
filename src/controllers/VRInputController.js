@@ -89,7 +89,7 @@ export default class VRInputController {
 
     loadControllerModel() {
         var gamepadModel = 'vive';
-        if (this.type === 'Oculus VR HMD') {
+        if (this.type.includes('Oculus')) {
             gamepadModel = 'oculus';
         }
 
@@ -246,7 +246,7 @@ export default class VRInputController {
 
         //this.camera.getWorldDirection(this.direction);
         let direction = this.direction.clone();
-        this.head.matrix.multiplyVector3(direction);
+        direction.applyMatrix4(this.head.matrix);
         // let direction = this.direction;
 
         if (axisY < -0.5) {
