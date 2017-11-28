@@ -244,7 +244,8 @@ export var toDeg = THREE.Math.radToDeg;
 // and from origin and given angle.
 function radialPosition(angle, r, h) {
     r = r || 7.4;
-    h = h || 1.0;
+    if (h == undefined)
+        h = 1.0;
     var x = -r*Math.cos(toRad(angle));
     var z = -r*Math.sin(toRad(angle));
     return [x,h,z];

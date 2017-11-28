@@ -63,27 +63,6 @@ var POSTER_SPECS = [
 FRONT_POSTERS = getPosters(POSTER_SPECS, 180);
 REAR_POSTERS = getPosters(POSTER_SPECS, 0, 12);
 
-/*
-TOKENS = [
-    {type: 'Group', name: "GroupXX", position: [0.2, 0, 1.6],
-     children: [
-         {   type: 'Model', name: 'dancerToken',
-             path: 'assets/models/tokens/dancer/model.dae',
-             position: [0, 0.2, 1],
-             rot: [0, 0, 0],
-             scale: 0.012,
-             onMuseEvent: {'click': () => selectStageModel("dancer") }
-         },
-         {   type: 'Model',
-         path: 'assets/models/pedestal/model.dae',
-         position: [0, 0, 0],
-         rot: [0, 0, 0],
-         scale: 0.02,
-     }
- ]}
-];
-*/
-
 POSTERS = [FRONT_POSTERS, REAR_POSTERS];
 
 MUSE.returnValue(POSTERS);
