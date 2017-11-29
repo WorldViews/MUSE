@@ -17,7 +17,7 @@ export function addPointLight(game, spec)
     var intensity = spec.intensity || 2.0;
     var decay = spec.decay || 1.0;
     let light = new THREE.PointLight(color, intensity, distance, decay);
-    game.addToGame(light, spec.name);
+    game.addToGame(light, spec.name, spec.parent);
     game.setFromProps(light, spec);
     return light;
 }
@@ -27,7 +27,7 @@ export function addAmbientLight(game, spec) {
     var intensity = spec.intensity || 2.0;
     let light = new THREE.AmbientLight(color, intensity);
     light.name = spec.name;
-    game.addToGame(light, spec.name);
+    game.addToGame(light, spec.name, spec.parent);
     game.setFromProps(light, spec);
     return light;
 }
@@ -39,7 +39,7 @@ export function addDirectionalLight(game, spec) {
     var position = spec.position || [0, 0, 0]
     let light = new THREE.DirectionalLight(color, intensity);
     light.name = spec.name;
-    game.addToGame(light, spec.name);
+    game.addToGame(light, spec.name, spec.parent);
     game.setFromProps(light, spec);
     return light;
 }
@@ -47,4 +47,3 @@ export function addDirectionalLight(game, spec) {
 Game.registerNodeType("PointLight", addPointLight);
 Game.registerNodeType("AmbientLight", addAmbientLight);
 Game.registerNodeType("DirectionalLight", addDirectionalLight);
-
