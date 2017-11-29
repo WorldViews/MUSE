@@ -95,6 +95,9 @@ function forceImages() {
 }
 
 function onStart() {
+    var solarSystem = game.controllers.solarSystem;
+    //var solarSystem = SOLAR_SYSTEM;
+    window.planetTour = solarSystem.getTour();
     if (Util.getParameterByName("quickstart"))
         return;
     forceImages();

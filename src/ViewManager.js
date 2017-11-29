@@ -440,7 +440,7 @@ class ViewManager extends MUSENode
             var view = this.views[name];
             var rot = view.rot;
             if (rot) {
-                console.log("rot: "+rot);
+                //console.log("rot: "+rot);
                 view.rotation = new THREE.Euler(toRad(rot[0]), toRad(rot[1]), toRad(rot[2]));
             }
         }
