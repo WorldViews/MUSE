@@ -384,6 +384,7 @@ class SolarSystem {
         game.viewManager.goto(vp, 10, name);
     }
 
+/*
     // tour related stuff...
     addPosition(anim, bodyName, dur, offset) {
         if (dur == undefined)
@@ -395,7 +396,7 @@ class SolarSystem {
                       'position.z': -pos[2]+offset[2]}, dur);
     }
 
-    getTour() {
+    getTour0() {
         var target = game.models.solarSystem;
         var anim = new Anim("planetaryTour", target);
         //anim.addStep({'position.x': 0, 'position.y': 0, 'position.z': 0}, 0);
@@ -415,16 +416,71 @@ class SolarSystem {
         this.addPosition(anim, "earth",   10, far);
         this.addPosition(anim, "earth",   10, closer);
         this.addPosition(anim, "earth",   10, near);
+
+        //var pos = this.getPosition("neptune");
+        //var pos = this.getPosition("eath");
+        //anim.addStep({'position.x': -pos[0], 'position.y': -pos[1], 'position.z': -pos[2]}, 1000*1000);
+        //anim.pause();
+
+        game.registerPlayer(anim);
+        return anim;
+    }
+*/
+    getTour() {
+        var tour = new PlanetaryTour(this);
+        return tour;
+    }
+};
+
+class PlanetaryTour {
+    constructor(solarSystem) {
+        this.solarSystem = solarSystem;
+        this.initTour();
+    }
+
+    // tour related stuff...
+    addPosition(bodyName, dur, offset) {
+        var anim = this.anim;
+        if (dur == undefined)
+            dur = 100;
+        offset = offset || [200,0,-200];
+        var pos = this.solarSystem.getPosition(bodyName);
+        anim.addStep({'position.x': -pos[0]+offset[0],
+                      'position.y': -pos[1]+offset[1],
+                      'position.z': -pos[2]+offset[2]}, dur);
+    }
+
+    initTour() {
+        this.target = game.models.solarSystem;
+        this.anim = new Anim("planetaryTour", this.target);
+        //anim.addStep({'position.x': 0, 'position.y': 0, 'position.z': 0}, 0);
+        //this.addPosition(anim, "sun");
+        var far = [-800,0,-200];
+        var closer = [-800,0,-200];
+        var near = [-200,0,-200];
+        this.addPosition("neptune",  0, far);
+        this.addPosition("neptune", 10, closer);
+        this.addPosition("neptune", 10, near);
+        this.addPosition("jupiter", 10, far);
+        this.addPosition("jupiter", 10, closer);
+        this.addPosition("jupiter", 10, near);
+        this.addPosition("mars",    10, far);
+        this.addPosition("mars",    10, closer);
+        this.addPosition("mars",    10, near);
+        this.addPosition("earth",   10, far);
+        this.addPosition("earth",   10, closer);
+        this.addPosition("earth",   10, near);
         /*
         var pos = this.getPosition("neptune");
         var pos = this.getPosition("eath");
         anim.addStep({'position.x': -pos[0], 'position.y': -pos[1], 'position.z': -pos[2]}, 1000*1000);
         anim.pause();
         */
-        game.registerPlayer(anim);
-        return anim;
+        game.registerPlayer(this.anim);
+        return this.anim;
     }
-};
+
+}
 
 function addSolarSystem(game, options)
 {
