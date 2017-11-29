@@ -107,7 +107,9 @@ class SatTracks {
                     color: rtype.color, opacity: 0.9, alphaTest: 0.1, transparent: true } );
             rtype.particles = new THREE.Points( rtype.geometry, rtype.material );
             rtype.particles.rtype = rtype;
-            this.game.addToGame(rtype.particles);
+            //this.game.addToGame(rtype.particles);
+            var gname = ('satellites_x_'+name).replace(" ", "_");
+            this.game.addToGame(rtype.particles, gname, this.opts.parent);
         }
     }
 
