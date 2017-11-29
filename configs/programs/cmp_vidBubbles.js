@@ -8,7 +8,10 @@ var vidSpecs = [
        image: 'assets/images/FXPALBanner.jpg'
     },
     "ErikAndBill_4Kx2K.mp4",
-    "webrtc://192.168.16.206:8080/"
+    {  name: "Live 360 Vid Server",
+       video: "webrtc://192.168.16.206:8080/",
+       image: 'assets/images/FXPALBanner.jpg'
+   }
     //"GreenlandMelting360_720p.mp4",
     //"GreenlandMelting360_3840p.mp4",
     //"ClimateChangeFiji360_1440.mp4"
@@ -24,7 +27,10 @@ function getBubbles(vidSpecs) {
         if (typeof spec == "string")
             spec = {name: spec, video: spec};
         numBubbles++;
-        var path = "assets/video/"+spec.video;
+        var path = spec.video;
+        if (path.indexOf(":") < 0 && !path.startsWith("/")) {
+            path = "assets/video/"+path;
+        }
         var bubbleName = "videoBubble" + numBubbles;
         var bubble = {  type: "VideoBubble", parent, radius, path, name: bubbleName,
             videoPath: path,
