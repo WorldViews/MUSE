@@ -286,69 +286,19 @@ var PLANET_DATA = {
     },
 }
 
-/*
-function getSqueezedData()
-{
-    var pd = PLANET_DATA;
-    var sdata = {};
-    for (var name in pd) {
-        var dat = pd[name];
-        var r = dat['diameter']/2.0;
-        r = 2*Math.pow(r, .25);
-        var dSun = dat['distSun'];
-        dSun = Math.pow(dSun, .5);
-        var position = [0,0,dSun];
-        var sdat = {
-            radius: r,
-            diameter: dat.diameter,
-            dSun: dSun,
-            distSun: dat['distSun'],
-            position
-        }
-        sdata[name] = sdat;
-    }
-    return sdata;
-}
-
-window.SQUEEZED_PLANET_DATA = getSqueezedData();
-*/
 
 class SolarSystem {
-
-/*
     constructor(game, options) {
         var parent = "solarSystem";
-        var sunPosition = [-5000,0,-3000];
-        var sunLight = {  type: 'PointLight', name: 'sunLight', position: sunPosition,
-                       color: 0xffffff, distance: 8000, intensity: 10.6};
-        game.loadSpecs(sunLight);
-
-        addBody(game, {name: 'Sun', parent,
-                radius:  200, position: sunPosition,
-                texture: './textures/sun_surface1.jpg', color: [80,50,20],
-                atmosphere: {'name': 'photosphere', opacity: .02}});
-        addBody(game, {name: 'Earth', parent,
-                radius: 1000, position: [-2000, 0, 0],
-                texture: './textures/land_ocean_ice_cloud_2048.jpg'});
-        addBody(game, {name: 'Mars', parent,
-                radius:  200, position: [ 2000, 0, 2000],
-                texture: './textures/Mars_4k.jpg'});
-        addBody(game, {name: 'Jupiter', parent,
-                radius: 300,  position: [ 1500, 0, -1500],
-                texture: './textures/Jupiter_Map.jpg'});
-        addBody(game, {name: 'Neptune', parent,
-                radius: 100,  position: [-1000, 0, -1000],
-                texture: './textures/Neptune.jpg'});
-    }
-*/
-    constructor(game, options) {
-        var parent = "solarSystem";
+        game.getGroup("solarPivot");
+        game.getGroup("solarSystem", {parent: "solarPivot"});
         //var dat = SQUEEZED_PLANET_DATA;
         //var sunPosition = dat.sun.position;
         this.earthGamePosition = [-80,30,0];
         this.camCalc = new THREE.PerspectiveCamera(); // dummy camera just used for computing view info
         var sunPosition = this.getPosition('sun');
         var sunLight = {  type: 'PointLight', name: 'sunLight', position: sunPosition,
+                    parent,
                        color: 0xffffff, distance: 8000, intensity: 6.6};
         game.loadSpecs(sunLight);
 
@@ -435,24 +385,36 @@ class SolarSystem {
     }
 
     // tour related stuff...
-    addPosition(anim, bodyName) {
+    addPosition(anim, bodyName, dur, offset) {
+        if (dur == undefined)
+            dur = 100;
+        offset = offset || [200,0,-200];
         var pos = this.getPosition(bodyName);
-        var offset = [200,0,-200];
         anim.addStep({'position.x': -pos[0]+offset[0],
                       'position.y': -pos[1]+offset[1],
-                      'position.z': -pos[2]+offset[2]}, 100*1000);
+                      'position.z': -pos[2]+offset[2]}, dur);
     }
 
     getTour() {
         var target = game.models.solarSystem;
         var anim = new Anim("planetaryTour", target);
-        anim.addStep({'position.x': 0, 'position.y': 0, 'position.z': 0}, 0);
-        this.addPosition(anim, "sun");
-        this.addPosition(anim, "earth");
-        this.addPosition(anim, "earth");
-        this.addPosition(anim, "mars");
-        this.addPosition(anim, "mars");
-        this.addPosition(anim, "neptune");
+        //anim.addStep({'position.x': 0, 'position.y': 0, 'position.z': 0}, 0);
+        //this.addPosition(anim, "sun");
+        var far = [-800,0,-200];
+        var closer = [-800,0,-200];
+        var near = [-200,0,-200];
+        this.addPosition(anim, "neptune",  0, far);
+        this.addPosition(anim, "neptune", 10, closer);
+        this.addPosition(anim, "neptune", 10, near);
+        this.addPosition(anim, "jupiter", 10, far);
+        this.addPosition(anim, "jupiter", 10, closer);
+        this.addPosition(anim, "jupiter", 10, near);
+        this.addPosition(anim, "mars",    10, far);
+        this.addPosition(anim, "mars",    10, closer);
+        this.addPosition(anim, "mars",    10, near);
+        this.addPosition(anim, "earth",   10, far);
+        this.addPosition(anim, "earth",   10, closer);
+        this.addPosition(anim, "earth",   10, near);
         /*
         var pos = this.getPosition("neptune");
         var pos = this.getPosition("eath");

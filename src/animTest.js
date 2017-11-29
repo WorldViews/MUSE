@@ -1,41 +1,57 @@
 
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
+import _ from 'lodash';
+
 console.log("********************************************");
 
 class Anim
 {
-    constructor(name, target) {
+    constructor(name, target, steps) {
         var inst = this;
         this.target = target;
-        window.OBJ = {'x': 0}
+        //this.OBJ = {'x': 0}
         console.log("Anim "+name);
         this.name = name;
-        this.tween = createjs.Tween.get(OBJ)
-        //this.tween = new TWEEN.Tween(OBJ)
-	    .to({x:0},   0)
-	    .to({x:100},  10000)
-	    .to({x:2000}, 100000);
-        this.tween.addEventListener('change', () => inst.handleChange(OBJ))
+        if (steps instanceof createjs.Tween)
+            this.tween = steps;
+        else {
+            this.tween = createjs.Tween.get({});
+        }
+        this.tween.addEventListener('change', () => inst.handleChange())
     }
 
-    handleChange(obj)
+    // dur is in seconds
+    addStep(vals, dur) {
+        this.tween.to(vals, dur*1000);
+    }
+
+    getTween() {
+        return this.tween;
+    }
+
+    handleChange()
     {
-        //console.log("OBJ: "+JSON.stringify(obj));
-        //var m = game.models.platform.scene;
-        //var m = game.models.station.scene;
-        var m = this.target;
-        this.target.x = obj.x;
+        var vals = this.tween.target;
+        //console.log("vals: "+JSON.stringify(vals));
+        for (var name in vals) {
+            //console.log("set "+name+" to "+vals[name]);
+            if (this.target)
+                _.set(this.target, name, vals[name]);
+        }
+        //this.target.x = obj.x;
     }
 
-    get playTime() {
+    getPlayTime() {
         return 0;
     }
 
-    set playTime(t) {
-        this.tween.setPosition(t);
+    setPlayTime(t) {
+        console.log("Anim "+this.name+" setPlayTime "+t);
+        this.tween.setPosition(t*1000);
     }
 
     setPaused(v) {
+        console.log("Anim "+this.name+" setPaused "+v);
         this.tween.setPaused(v);
     }
 
@@ -54,9 +70,14 @@ function animTest(game)
 {
     game = game || window.game;
     console.log("!!!! >>>>>>>>>>>>>>>>>>>>>>>>>> animTest...........");
-    window.a = new Anim("anim1", game.models.station.position);
-    game.registerPlayer(a);
-    return a;
+    var target = game.models.station;
+    window.anim = new Anim("anim1", game.models.station);
+    anim.addStep({'position.x': 0}, 0);
+    anim.addStep({'position.x': 10}, 100);
+    anim.addStep({'position.x': 30,  'rotation.x':0}, 200);
+    anim.addStep({'position.x': 100, 'rotation.x': 1}, 400);
+    game.registerPlayer(anim);
+    return anim;
 }
 
 window.animTest = animTest;
