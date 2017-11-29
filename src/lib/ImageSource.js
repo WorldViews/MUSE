@@ -50,6 +50,12 @@ export default class ImageSource {
             if (URL.endsWith(ext.toUpperCase()))
                 type = ImageSource.TYPE.VIDEO;
         });
+        if (url.startsWith('webrtc')) {
+            url = url.replace('webrtc', 'http');
+            url = url.replace(/\/$/, '');
+            type = ImageSource.TYPE.WEBRTC;
+        }
+
         var opts = {type,url};
         if (options && options.autoPlay != null)
             opts.autoPlay = options.autoPlay;
