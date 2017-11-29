@@ -58,6 +58,16 @@ var POSTER_SPECS = [
      logo: "assets/images/LinkLogos/OneDome.png",
      video: "assets/video/OneDomeTrailer.mp4"
     },
+    {name: "KinetechArts",
+     logo: "assets/images/PartnerLogos/KinetechArtsLogo.jpg",
+     video: "assets/video/KinetechArts_ABriefHistory.mp4"
+    },
+    {name: "FxPal",
+     logo: "assets/images/LinkLogos/FxPal.png",
+     //video: "assets/video/FxPal_20Years.mp4"
+     video: "assets/video/FxPal_Creativity.mp4"
+     //video: "assets/video/FxPal_Future_of_Work.mp4"
+    },
 ];
 
 FRONT_POSTERS = getPosters(POSTER_SPECS, 180);
