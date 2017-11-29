@@ -8,7 +8,7 @@ import {SatTracks} from '../SpaceObjects/SatTracks'
 import {Atmosphere} from './Atmosphere'
 import {CMPDataViz2} from './CMPDataViz2'
 import ImageSource from './ImageSource';
-
+import {Anim} from '../animTest';
 
 // convert the positions from a lat, lon to a position on a sphere.
 // http://www.smartjava.org/content/render-open-data-3d-world-globe-threejs
@@ -432,6 +432,35 @@ class SolarSystem {
     goto(name) {
         var vp = this.getViewpoint(name);
         game.viewManager.goto(vp, 10, name);
+    }
+
+    // tour related stuff...
+    addPosition(anim, bodyName) {
+        var pos = this.getPosition(bodyName);
+        var offset = [200,0,-200];
+        anim.addStep({'position.x': -pos[0]+offset[0],
+                      'position.y': -pos[1]+offset[1],
+                      'position.z': -pos[2]+offset[2]}, 100*1000);
+    }
+
+    getTour() {
+        var target = game.models.solarSystem;
+        var anim = new Anim("planetaryTour", target);
+        anim.addStep({'position.x': 0, 'position.y': 0, 'position.z': 0}, 0);
+        this.addPosition(anim, "sun");
+        this.addPosition(anim, "earth");
+        this.addPosition(anim, "earth");
+        this.addPosition(anim, "mars");
+        this.addPosition(anim, "mars");
+        this.addPosition(anim, "neptune");
+        /*
+        var pos = this.getPosition("neptune");
+        var pos = this.getPosition("eath");
+        anim.addStep({'position.x': -pos[0], 'position.y': -pos[1], 'position.z': -pos[2]}, 1000*1000);
+        anim.pause();
+        */
+        game.registerPlayer(anim);
+        return anim;
     }
 };
 
