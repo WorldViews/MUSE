@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 import {MUSE} from './MUSE';
 var toDeg = THREE.Math.radToDeg;
+import _ from 'lodash';
 
 if (!window.MUSE)
     window.MUSE = MUSE;
@@ -277,6 +278,7 @@ var Util =
     dispatchMuseEvent
 };
 
+Util._ = _;
 window.MUSE.Util = Util;
 window.Util = Util;
 

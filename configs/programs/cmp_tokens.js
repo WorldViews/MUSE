@@ -9,12 +9,13 @@ function selectStageModel(name)
 
 var numToks = 0;
 function getToken(name, tokenPos, spec) {
+    parent = 'tokens';
     var modelOpts = spec.modelOpts || {};
     var scale = modelOpts.scale || 1.0;
     var modelPos = modelOpts.position || [0,0,0];
     numToks++;
     var token = {
-        type: 'Group', name: "tokenGroup"+numToks, position: tokenPos,
+        type: 'Group', name: "tokenGroup"+numToks, parent, position: tokenPos,
         scale: 0.7,
          children: [
          {   type: 'Model', name: name,
@@ -38,6 +39,7 @@ function getToken(name, tokenPos, spec) {
 
 function getTokens(angle, tokSpecs)
 {
+    game.getGroup('tokens', {parent: 'station' });
     var angle = 180;
     var spacing = 20;
     angle = angle - (tokSpecs.length-1) * (spacing)/2;

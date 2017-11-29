@@ -13,6 +13,7 @@ var vidNames = [
 function getBubbles(vidNames) {
     var angle = 60;
     var radius = 0.5;
+    game.getGroup('videoBubbles', {parent: 'station' });
     var parent = 'videoBubbles';
     var numBubbles = 0;
     return vidNames.map(name => {
