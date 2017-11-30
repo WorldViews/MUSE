@@ -33,8 +33,19 @@ class DanceController extends Node3D
         this.pSystems = [];
         this.loadBVH(opts.motionUrl);
         var inst = this;
+        this.color = new THREE.Color();
         game.state.on(this.name, state => inst.setProps(state));
-        //game.loadSpecs({type: "Axes", name: "dancerAxes", parent: opts.parent});
+        game.state.on("cmpColorHue", h => inst.setHue(h));
+    }
+
+    setHue(h) {
+        this.color.setHSL(h,.9,.5);
+        this.setColor(this.color);
+    }
+
+    setColor(c) {
+        this.color.copy(c);
+        this.pSystems.forEach(pSys => pSys.setColor(c));
     }
 
     setProps(props) {
@@ -50,25 +61,8 @@ class DanceController extends Node3D
         if ( this.mixer ) this.mixer.update( this.clock.getDelta() );
         if ( this.skeletonHelper ) this.skeletonHelper.update();
         this.pSystems.forEach(pSys => pSys.update());
-        /*
-        if (this.particleSystem) {
-            this.psUpdate();
-        }
-        */
-        //console.log("head: " + head.position.x+" "+head.position.y+" "+head.position.z);
-        //this.axes.position.copy(head.position);
     }
-/*
-    loadBVH(bvhPath) {
-        console.log("loadBVH: "+this.name+" "+bvhPath);
-        var opts = this.opts;
-        var loader = new BVHLoader();
-        var inst = this;
-        loader.load( bvhPath, function( bvh ) {
-            inst._setupBVH(bvh, inst.opts);
-        });
-    }
-*/
+
     loadBVH(bvhPath) {
         console.log("loadBVH: "+this.name+" "+bvhPath);
         var opts = this.opts;
@@ -191,16 +185,36 @@ class PSys {
 				maxParticles: 250000
 			} );
         parent.add(this.particleSystem);
-        this.options = {
+        /*
+        options = {
 				position: new THREE.Vector3(),
-				positionRandomness: .1,
+				positionRandomness: .3,
 				velocity: new THREE.Vector3(),
-				velocityRandomness: .05,
+				velocityRandomness: .5,
 				color: 0xaa88ff,
 				colorRandomness: .2,
-				turbulence: .15,
-				lifetime: 30,
-				size: 2,
+				turbulence: .5,
+				lifetime: 2,
+				size: 5,
+				sizeRandomness: 1
+			};
+			spawnerOptions = {
+				spawnRate: 15000,
+				horizontalSpeed: 1.5,
+				verticalSpeed: 1.33,
+				timeScale: 1
+			};
+        */
+        this.options = {
+				position: new THREE.Vector3(),
+				positionRandomness: .2,
+				velocity: new THREE.Vector3(),
+				velocityRandomness: .2,
+				color: 0xaa88ff,
+				colorRandomness: .2,
+				turbulence: .35,
+				lifetime: 10,
+				size: 4,
 				sizeRandomness: 1
 			};
         this.spawnerOptions = {
@@ -209,6 +223,11 @@ class PSys {
 				verticalSpeed: 1.33,
 				timeScale: 1
 			};
+    }
+
+    setColor(c) {
+        console.log("PSys setColor ", c);
+        this.options.color = c;
     }
 
     update() {

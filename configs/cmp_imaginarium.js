@@ -64,14 +64,17 @@ function updateCMPViz2(year)
     var co2f = (co2 - co2Min)/(co2Max - co2Min);
     var Tf = (T - TMin)/(TMax - TMin);
     var h = 0.6 + .6*Tf;
+    var opacity = 0.9*co2f;
     try {
         console.log(sprintf("year: %s co2: %6.2f T: %6.2f balance: %6.2f  Tf: %4.2f h: %4.2f  co2f: %4.2f",
                 year, co2, T, balance, Tf, h, co2f));
     } catch(e) {
         console.log(e);
     }
-    atm.setOpacity(0.9*co2f);
+    atm.setOpacity(opacity);
     atm.setHue(h);
+    game.state.set("cmpOpacity", opacity);
+    game.state.set("cmpColorHue", h);
 }
 
 function onStartProgram() {
