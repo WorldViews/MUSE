@@ -144,6 +144,7 @@ class Program extends MUSENode
     play() {
         console.log("**** play *****");
         this.setPlaySpeed(this._savedPlaySpeed);
+        this.game.state.dispatch("playRequested", true);
         this.propagate(player => player.play());
     }
 
@@ -151,6 +152,7 @@ class Program extends MUSENode
         console.log("**** pause *****");
         this._savedPlaySpeed = this._playSpeed;
         this._playSpeed = 0;
+        this.game.state.dispatch("pauseRequested", true)
         this.propagate(player => player.pause());
     }
 
