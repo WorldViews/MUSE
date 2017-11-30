@@ -242,6 +242,14 @@ class MediaStream {
         this.dump();
     }
 
+    play() {
+        console.log("MediaStream.play");
+    }
+
+    pause() {
+        console.log("MediaStream.pause");
+    }
+
     dump() {
         console.log("MediaStream: "+this.name);
         this.keyFrames.dump();

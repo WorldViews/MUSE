@@ -206,6 +206,7 @@ class Program extends MUSENode
             try { fun(player) }
             catch (e) {
                 console.log("err: ", e);
+                MUSE.LAST_BAD_PLAYER = player;
             }
         });
     }
