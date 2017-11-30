@@ -192,6 +192,7 @@ class Screen extends Node3D
     }
 
     updateSource(url, options) {
+        options = options || {};
         console.log("Getting ImageSource "+url);
         if (this.imageSource) {
             this.imageSource.dispose();
@@ -230,34 +231,53 @@ Video bubbles are subclasses of screens showing Panoramic
 video or images, with action to move in or out of them.
 */
 class VideoBubble extends Screen {
-
 }
+
+MUSENode.defineFields(VideoBubble, [
+  "imagePath",
+  "videoPath"
+]);
 
 function clickedOnBubble() {
     alert("Click on bubble");
 }
 
-function doubleClickedOnBubble(obj) {
+function moveIntoBubble(obj) {
     var position = obj.getWorldPosition();
     var rotation = new THREE.Euler(0,0,0);
     var view = {position, rotation};
     var prevView = game.viewManager.getCurrentView();
     var screen = game.screens[obj.name];
+    var node = game.getNode(obj);
+    console.log("moveIntoBubble node:", node)
+    if (node.options.imagePath && node.options.videoPath) {
+        node.updateSource(node.options.videoPath);
+    }
     game.viewManager.goto(view, 2);
     screen.play();
     console.log("*** About to push game state");
     game.pushGameState(() => {
+        if (node.options.imagePath && node.options.videoPath) {
+            node.updateSource(node.options.imagePath);
+        }
         game.viewManager.goto(prevView, 2);
         screen.pause();
     });
     return obj;
 }
 
+function doubleClickedOnBubble(obj) {
+    moveIntoBubble(obj);
+}
+
 function getBubble(game, opts) {
     opts.side = opts.side || "FrontSide";
+    opts
     if (opts.autoPlay == undefined)
         opts.autoPlay = false;
     opts.onMuseEvent = {'doubleClick': doubleClickedOnBubble };
+    if (opts.imagePath)
+        opts.path = opts.imagePath;
     return new VideoBubble(game, opts);
 }
 

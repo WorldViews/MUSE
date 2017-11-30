@@ -2,25 +2,39 @@
 
 (function() {
 
-var vidNames = [
-    "StephanAndBill_4Kx2K.mp4",
+var vidSpecs = [
+    {  name: 'Stephan and Bill',
+       video: 'StephanAndBill_4Kx2K.mp4',
+       image: 'assets/images/FXPALBanner.jpg'
+    },
     "ErikAndBill_4Kx2K.mp4",
+    {  name: "Live 360 Vid Server",
+       video: "webrtc://192.168.16.206:8080/",
+       image: 'assets/images/FXPALBanner.jpg'
+   }
     //"GreenlandMelting360_720p.mp4",
-    "GreenlandMelting360_3840p.mp4",
-    "ClimateChangeFiji360_1440.mp4"
+    //"GreenlandMelting360_3840p.mp4",
+    //"ClimateChangeFiji360_1440.mp4"
 ]
 
-function getBubbles(vidNames) {
+function getBubbles(vidSpecs) {
     var angle = 60;
     var radius = 0.5;
     game.getGroup('videoBubbles', {parent: 'station' });
     var parent = 'videoBubbles';
     var numBubbles = 0;
-    return vidNames.map(name => {
+    return vidSpecs.map(spec => {
+        if (typeof spec == "string")
+            spec = {name: spec, video: spec};
         numBubbles++;
-        var path = "assets/video/"+name;
+        var path = spec.video;
+        if (path.indexOf(":") < 0 && !path.startsWith("/")) {
+            path = "assets/video/"+path;
+        }
         var bubbleName = "videoBubble" + numBubbles;
         var bubble = {  type: "VideoBubble", parent, radius, path, name: bubbleName,
+            videoPath: path,
+            imagePath: spec.image,
             position: Util.radialPosition(angle),
             rotation: [0,-1.6,0],
         };
@@ -29,7 +43,7 @@ function getBubbles(vidNames) {
     });
 }
 
-var BUBBLES = getBubbles(vidNames);
+var BUBBLES = getBubbles(vidSpecs);
 //console.log("BUBBLES", BUBBLES);
 
 MUSE.returnValue(BUBBLES);

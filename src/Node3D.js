@@ -34,6 +34,10 @@ class Node3D extends MUSENode {
 
     setObject3D(obj3D) {
         this.object3D = obj3D;
+        if (!obj3D.userData) {
+            obj3D.userData = {};
+        };
+        obj3D.userData.node = this;
         var museEvents = this.options.onMuseEvent;
         if (museEvents) {
             for (var evType in museEvents) {

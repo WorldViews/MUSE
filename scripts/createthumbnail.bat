@@ -1,0 +1,1 @@
+ffmpeg -ss %3 -i %1 -y -f image2 -vcodec mjpeg -vframes 1 %2

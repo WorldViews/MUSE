@@ -431,6 +431,24 @@ class Game {
         return game.models[nameOrObj];
     }
 
+    // Try to coerce whatever it is given with the associated
+    // node.
+    getNode(n) {
+        if (n instanceof MUSENode)
+            return n;
+        if (n.userData && n.userData.node)
+            return n.userData.node;
+        if (typeof n == "string") {
+            var c = game.controllers[n];
+            if (c)
+                return c;
+            obj3D = game.models[n];
+            if (obj3D)
+                return obj3D.userData.node;
+        }
+        return null;
+    }
+
     fitObjectTo(obj3d, opts) {
         console.log("fitObjectTo:", obj3d, opts);
         obj3d = this.getObject3D(obj3d);

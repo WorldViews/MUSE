@@ -29,6 +29,10 @@ class Anim
         return this.tween;
     }
 
+    getDuration() {
+        return this.tween.duration / 1000.0;
+    }
+
     handleChange()
     {
         var vals = this.tween.target;
@@ -46,7 +50,7 @@ class Anim
     }
 
     setPlayTime(t) {
-        console.log("Anim "+this.name+" setPlayTime "+t);
+        //console.log("Anim "+this.name+" setPlayTime "+t);
         this.tween.setPosition(t*1000);
     }
 
