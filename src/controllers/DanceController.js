@@ -29,7 +29,8 @@ class DanceController extends Node3D
         this.ready = false;
         this.readyPromise = null;
         this.head = null;
-        this.particleSystem = null;
+        //this.particleSystem = null;
+        this.pSystems = [];
         this.loadBVH(opts.motionUrl);
         var inst = this;
         game.state.on(this.name, state => inst.setProps(state));
@@ -48,9 +49,12 @@ class DanceController extends Node3D
         //console.log("DanceController.update...");
         if ( this.mixer ) this.mixer.update( this.clock.getDelta() );
         if ( this.skeletonHelper ) this.skeletonHelper.update();
+        this.pSystems.forEach(pSys => pSys.update());
+        /*
         if (this.particleSystem) {
             this.psUpdate();
         }
+        */
         //console.log("head: " + head.position.x+" "+head.position.y+" "+head.position.z);
         //this.axes.position.copy(head.position);
     }
@@ -107,57 +111,14 @@ class DanceController extends Node3D
         inst.game.models[name] = dancer;
         inst.ready = true;
         this.head = this.skeletonHelper.bones[14];
+        var rhand = this.skeletonHelper.bones[19];
+        var lhand = this.skeletonHelper.bones[47];
+        this.head = this.skeletonHelper.bones[14];
+        //this.pSystems.push(new PSys("head", this.head, this.dancer));
+        this.pSystems.push(new PSys("rhand", rhand, this.dancer));
+        this.pSystems.push(new PSys("lhand", lhand, this.dancer));
         //this.psSetup();
         inst.update();
-    }
-
-    psSetup()
-    {
-        this.psTick = 0;
-        this.axes = new THREE.AxisHelper(500);
-        this.psClock = new THREE.Clock();
-        this.head.add(this.axes);
-        this.particleSystem = new THREE.GPUParticleSystem( {
-				maxParticles: 250000
-			} );
-        this.head.add(this.particleSystem);
-        this.psOptions = {
-				position: new THREE.Vector3(),
-				positionRandomness: .3,
-				velocity: new THREE.Vector3(),
-				velocityRandomness: .1,
-				color: 0xaa88ff,
-				colorRandomness: .2,
-				turbulence: .5,
-				lifetime: 20,
-				size: 5,
-				sizeRandomness: 1
-			};
-        this.psSpawnerOptions = {
-				spawnRate: 15000,
-				horizontalSpeed: 1.5,
-				verticalSpeed: 1.33,
-				timeScale: 1
-			};
-    }
-
-    psUpdate() {
-        var options = this.psOptions;
-        var spawnerOptions = this.psSpawnerOptions;
-        var delta = this.psClock.getDelta() * spawnerOptions.timeScale;
-        this.psTick += delta;
-        if ( this.psTick < 0 ) this.psTick = 0;
-        if ( delta > 0 ) {
-            //options.position.x = Math.sin( this.psTick * spawnerOptions.horizontalSpeed ) * 20;
-            //options.position.y = Math.sin( this.psTick * spawnerOptions.verticalSpeed ) * 10;
-            //options.position.z = Math.sin( this.psTick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed ) * 5;
-            for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
-                // Yep, that's really it.	Spawning particles is super cheap, and once you spawn them, the rest of
-                // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
-                this.particleSystem.spawnParticle( options );
-            }
-        }
-        this.particleSystem.update( this.psTick );
     }
 
     _removeDancer(dancer) {
@@ -212,6 +173,64 @@ class DanceController extends Node3D
 
     pause() {
         this.mixer.timeScale = 0;
+    }
+}
+
+// A particle system attached to a given Object3D That
+// can generate a trail along the path of that object.
+class PSys {
+    constructor(name, obj3D, parent)
+    {
+        parent = parent || game.scene;
+        this.obj3D = obj3D;
+        this.tick = 0;
+        this.clock = new THREE.Clock();
+        //this.axes = new THREE.AxisHelper(500);
+        //this.obj3D.add(this.axes);
+        this.particleSystem = new THREE.GPUParticleSystem( {
+				maxParticles: 250000
+			} );
+        parent.add(this.particleSystem);
+        this.options = {
+				position: new THREE.Vector3(),
+				positionRandomness: .1,
+				velocity: new THREE.Vector3(),
+				velocityRandomness: .05,
+				color: 0xaa88ff,
+				colorRandomness: .2,
+				turbulence: .15,
+				lifetime: 30,
+				size: 2,
+				sizeRandomness: 1
+			};
+        this.spawnerOptions = {
+				spawnRate: 15000,
+				horizontalSpeed: 1.5,
+				verticalSpeed: 1.33,
+				timeScale: 1
+			};
+    }
+
+    update() {
+        var options = this.options;
+        var spawnerOptions = this.spawnerOptions;
+        var delta = this.clock.getDelta() * spawnerOptions.timeScale;
+        this.tick += delta;
+        if ( this.tick < 0 ) this.tick = 0;
+        var pos = this.obj3D.getWorldPosition();
+        //var s = 0.06;
+        if ( delta > 0 ) {
+            options.position.copy(pos);
+            //options.position.x = Math.sin( this.psTick * spawnerOptions.horizontalSpeed ) * 20;
+            //options.position.y = Math.sin( this.psTick * spawnerOptions.verticalSpeed ) * 10;
+            //options.position.z = Math.sin( this.psTick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed ) * 5;
+            for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
+                // Yep, that's really it.	Spawning particles is super cheap, and once you spawn them, the rest of
+                // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
+                this.particleSystem.spawnParticle( options );
+            }
+        }
+        this.particleSystem.update( this.tick );
     }
 }
 
