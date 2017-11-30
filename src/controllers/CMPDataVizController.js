@@ -42,6 +42,7 @@ class CMPDataVizController {
         this.rotationSpeed = options.rotationSpeed || 0; // in degrees per second
         this.scale = options.scale || chartScale;
         this.state = state;
+        this.state.playState = 'play';
 
         if (options.duration) {
             this.state.yearPerMinute = (endYear - startYear)/(options.duration/60);
@@ -68,6 +69,12 @@ class CMPDataVizController {
         this._updateTime = this._updateTime.bind(this);
 
         game.state.on('time', this._updateTime);
+        game.state.on("playRequested", () => {
+            this.play();
+        });
+        game.state.on("pauseRequested", () => {
+            this.pause();
+        });
     }
 
     reset() {
@@ -368,14 +375,30 @@ class CMPDataVizController {
     seekNormalize(val) {
         var start = startYear + parseInt(val*(endYear - startYear));
         var dur = (endYear - start)*(secPerYear());
-        this._playHistory(dur, start, endYear)
+        this._updateTween(dur, start, endYear)
     }
 
     play() {
-        this.seekNormalize(0);
+        this.state.playState = 'play';
+        let t = game.state.get('time')
+        var dt = t - this.state.startTime;
+        var normalizedTime = dt/this.state.duration;
+        this.seekNormalize(normalizedTime);
+
+        // Tween.js has a broken play() function.  It doesn't work after paused
+        // if (this.historyT1)
+        //     this.historyT1.play();
+        // if (this.historyT2)
+        //     this.historyT2.play();
+    }
+
+    pause() {
+        this.state.playState = 'pause';
+        this._stopHistory();
     }
 
     stop() {
+        this.state.playState = 'stop';
         this._stopHistory();
     }
 
@@ -420,7 +443,7 @@ class CMPDataVizController {
         }
     }
 
-    _playHistory(_duration, _from, _to) {
+    _updateTween(_duration, _from, _to) {
         this._stopHistory()
         var duration = _duration || 120 // 2min
         var param = {y: _from}
@@ -431,6 +454,7 @@ class CMPDataVizController {
             .on('change', ()=>{
                 state.SandYear = Math.round(param.y)
             })
+        state.SandYear = _from;
 
         var param1 = {y: _from}
         this.historyT2 = createjs.Tween.get(param1)
@@ -443,6 +467,7 @@ class CMPDataVizController {
                     state.Year = year;
                 }
             })
+        state.Year = _from;
 
         // create tween to go from bad -> good & good -> bad
         //this.badHistoryTween = this._createChartTween(_from, 2150, 2190, true);
@@ -525,7 +550,10 @@ class CMPDataVizController {
         }
 
         if (t > this.state.startTime && this.lastTS < this.state.startTime) {
-            this.play();
+            this.seekNormalize(0);
+            if (this.state.playState == 'play') {
+                this.play();
+            }
         }
 
         this.lastTS = t;
