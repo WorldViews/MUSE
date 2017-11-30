@@ -2,13 +2,13 @@
 
 var VIDEO_BUBBLES = [
     {  type: 'Group', name: 'videoBubbles', visible: false },
-    {   type: 'Screen', name: 'vidBubble1', parent: 'videoBubbles', radius: 0.6, position: [0,3.6,0],
+    {   type: 'VideoBubble', name: 'vidBubble1', parent: 'videoBubbles', radius: 0.6, position: [0,3.6,0],
         path: 'assets/video/SpaceWalk.mp4', autoPlay: false
     },
-    {   type: 'Screen', name: 'vidBubble2', parent: 'videoBubbles', radius: 0.6, position: [2,3,0],
+    {   type: 'VideoBubble', name: 'vidBubble2', parent: 'videoBubbles', radius: 0.6, position: [2,3,0],
         path: 'assets/video/MoonWalk.mp4', autoPlay: false
     },
-    {   type: 'Screen', name: 'vidBubble3', parent: 'videoBubbles', radius: 0.6, position: [-2,3,0],
+    {   type: 'VideoBubble', name: 'vidBubble3', parent: 'videoBubbles', radius: 0.6, position: [-2,3,0],
         //path: 'assets/video/ISS_tour.mp4', autoPlay: false
         side: "FrontSide",
         path: 'assets/video/YukiyoCompilation.mp4', autoPlay: true
@@ -144,4 +144,4 @@ CONFIG = {
     ]
 };
 
-MUSE.RETURN = CONFIG;
+MUSE.returnValue(CONFIG);
