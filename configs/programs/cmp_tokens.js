@@ -71,7 +71,33 @@ var tokSpecs = [
     }
 ]
 
+function toggleVisiblity(name) {
+    var m = game.models[name];
+    m.visible = !m.visible;
+}
+
+function playVideoOnSurface(name, url) {
+    url = url || "assets/video/ErikAndBill_4Kx2K.mp4";
+    var n = game.getNode(name);
+    n.updateSource(url);
+    var m = game.models[name];
+    m.visible = true;
+}
+
+DUMMY_TOKEN =
+{   type: 'Model', name: "coverControl",
+    path: "assets/models/pedestal/model.dae",
+    //position: [.75, 0.55, 1.35],
+    position: Util.radialPosition(0, 2.2, -.1),
+    //rot: [2, 0, 1],
+    scale: .02,
+    //onMuseEvent: {'click': () => selectStageModel("dancer") }
+    onMuseEvent: {'click': () => toggleVisiblity("innerCover"),
+                  'doubleClick': () => playVideoOnSurface("innerCover") }
+},
+
 TOKENS = getTokens(180, tokSpecs);
+TOKENS.push(DUMMY_TOKEN);
 
 /*
 TOKENS = [
