@@ -442,7 +442,7 @@ class Game {
             var c = game.controllers[n];
             if (c)
                 return c;
-            obj3D = game.models[n];
+            var obj3D = game.models[n];
             if (obj3D)
                 return obj3D.userData.node;
         }
