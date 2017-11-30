@@ -447,7 +447,7 @@ class CMPDataVizController {
         this._stopHistory()
         var duration = _duration || 120 // 2min
         var param = {y: _from}
-        this.historyT1 = createjs.Tween.get(param);
+        this.historyT1 = createjs.Tween.get(param, { paused: this.state.playState == 'pause' });
         this.historyT1
             .wait(4000)
             .to({y:_to}, duration*1000)
@@ -457,7 +457,7 @@ class CMPDataVizController {
         state.SandYear = _from;
 
         var param1 = {y: _from}
-        this.historyT2 = createjs.Tween.get(param1)
+        this.historyT2 = createjs.Tween.get(param1, { paused: this.state.playState == 'pause' })
         this.historyT2
             .to({y:_to}, duration*1000)
             .on('change', ()=>{
