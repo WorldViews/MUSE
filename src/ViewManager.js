@@ -207,9 +207,12 @@ class ViewManager extends MUSENode
         //this.bookmarksURL_ = "/Kinetics/bookmarks.json";
         this.bookmarksURL_ = "xxx";
         this.activeAnimations = [];
-        var bookmarksUrl = options.bookmarksUrl || "data/cmp_bookmarks.json";
-        this.setBookmarksURL(bookmarksUrl);
-        this.downloadBookmarks();
+        //var bookmarksUrl = options.bookmarksUrl || "data/cmp_bookmarks.json";
+        var bookmarksUrl = options.bookmarksUrl;
+        if (bookmarksUrl){
+            this.setBookmarksURL(bookmarksUrl);
+            this.downloadBookmarks();
+        }
         this.setEasing(5);
         //this.handleBookmarks(SAMPLE_VIEWS)
     }
