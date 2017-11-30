@@ -28,9 +28,12 @@ class DanceController extends Node3D
         this.opts = opts;
         this.ready = false;
         this.readyPromise = null;
+        this.head = null;
+        this.particleSystem = null;
         this.loadBVH(opts.motionUrl);
         var inst = this;
         game.state.on(this.name, state => inst.setProps(state));
+        //game.loadSpecs({type: "Axes", name: "dancerAxes", parent: opts.parent});
     }
 
     setProps(props) {
@@ -45,6 +48,11 @@ class DanceController extends Node3D
         //console.log("DanceController.update...");
         if ( this.mixer ) this.mixer.update( this.clock.getDelta() );
         if ( this.skeletonHelper ) this.skeletonHelper.update();
+        if (this.particleSystem) {
+            this.psUpdate();
+        }
+        //console.log("head: " + head.position.x+" "+head.position.y+" "+head.position.z);
+        //this.axes.position.copy(head.position);
     }
 /*
     loadBVH(bvhPath) {
@@ -98,10 +106,59 @@ class DanceController extends Node3D
         inst.skeletonHelper = skeletonHelper;
         inst.game.models[name] = dancer;
         inst.ready = true;
+        this.head = this.skeletonHelper.bones[14];
+        //this.psSetup();
         inst.update();
     }
 
+    psSetup()
+    {
+        this.psTick = 0;
+        this.axes = new THREE.AxisHelper(500);
+        this.psClock = new THREE.Clock();
+        this.head.add(this.axes);
+        this.particleSystem = new THREE.GPUParticleSystem( {
+				maxParticles: 250000
+			} );
+        this.head.add(this.particleSystem);
+        this.psOptions = {
+				position: new THREE.Vector3(),
+				positionRandomness: .3,
+				velocity: new THREE.Vector3(),
+				velocityRandomness: .1,
+				color: 0xaa88ff,
+				colorRandomness: .2,
+				turbulence: .5,
+				lifetime: 20,
+				size: 5,
+				sizeRandomness: 1
+			};
+        this.psSpawnerOptions = {
+				spawnRate: 15000,
+				horizontalSpeed: 1.5,
+				verticalSpeed: 1.33,
+				timeScale: 1
+			};
+    }
 
+    psUpdate() {
+        var options = this.psOptions;
+        var spawnerOptions = this.psSpawnerOptions;
+        var delta = this.psClock.getDelta() * spawnerOptions.timeScale;
+        this.psTick += delta;
+        if ( this.psTick < 0 ) this.psTick = 0;
+        if ( delta > 0 ) {
+            //options.position.x = Math.sin( this.psTick * spawnerOptions.horizontalSpeed ) * 20;
+            //options.position.y = Math.sin( this.psTick * spawnerOptions.verticalSpeed ) * 10;
+            //options.position.z = Math.sin( this.psTick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed ) * 5;
+            for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
+                // Yep, that's really it.	Spawning particles is super cheap, and once you spawn them, the rest of
+                // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
+                this.particleSystem.spawnParticle( options );
+            }
+        }
+        this.particleSystem.update( this.psTick );
+    }
 
     _removeDancer(dancer) {
         dancer.parent.remove(dancer);
@@ -147,6 +204,14 @@ class DanceController extends Node3D
     setPlaySpeed(s) {
         if (!this.ready) { console.log("Dancer not ready"); return};
         this.mixer.timeScale = s;
+    }
+
+    play() {
+        this.mixer.timeScale = 1;
+    }
+
+    pause() {
+        this.mixer.timeScale = 0;
     }
 }
 
