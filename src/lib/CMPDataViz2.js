@@ -58,7 +58,7 @@ class BlobSet {
             transparent: true
         });
         this.particles = new THREE.Points( this.geometry, this.material );
-        this.particles.museIgnorePicking = true;
+        this.particles.userData = {museIgnorePicking: true};
     }
 }
 
