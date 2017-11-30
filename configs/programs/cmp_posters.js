@@ -62,6 +62,11 @@ var POSTER_SPECS = [
      logo: "assets/images/PartnerLogos/KinetechArtsLogo.jpg",
      video: "assets/video/KinetechArts_ABriefHistory.mp4"
     },
+    {name: "GlobalFootprintNetwork",
+     logo: "assets/images/PartnerLogos/GlobalFootprintNetwork.jpg",
+     video: "assets/video/NationalFootprintAccounts.mp4"
+     //video: "assets/video/EcologicalFootprintOfCountries.mp4"
+    },
     {name: "FxPal",
      logo: "assets/images/LinkLogos/FxPal.png",
      //video: "assets/video/FxPal_20Years.mp4"
