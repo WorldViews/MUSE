@@ -100,7 +100,7 @@ function onStart() {
     window.planetTour = solarSystem.getTour();
     if (Util.getParameterByName("quickstart"))
         return;
-    forceImages();
+    //forceImages();
 }
 
 var jqGUI = {type: 'JQControls'
