@@ -46,6 +46,7 @@ class CelestialBody extends Node3D {
         //var texPath = opts.texture || 'textures/land_ocean_ice_cloud_2048.jpg';
         var texPath = opts.texture;
         this.imageSource = null;
+        this.satTracks = null;
         console.log("*** Planet.loading "+texPath);
         this.geometry = new THREE.SphereGeometry( radius, 30, 30 );
         if (opts.videoTexture) {
@@ -72,14 +73,7 @@ class CelestialBody extends Node3D {
             this.dataViz = new CMPDataViz2(this, opts);
         }
         if (opts.satTracks) {
-            console.log("************* VirtualEarth: satTracks: ", opts.satTracks);
-            var satOpts = {};
-            if (typeof opts.satTracks === "object") {
-                satOpts = opts.satTracks;
-            }
-            satOpts.radius = satOpts.radius || this.radius;
-            satOpts.parent = satOpts.parent || opts.name;
-            this.satTracks = new SatTracks(this.game, satOpts);
+            this.addSatTracks(opts.satTracks);
         }
         if (game.program) {
             this.setPlayTime(game.program.getPlayTime());
@@ -88,6 +82,24 @@ class CelestialBody extends Node3D {
             console.log("CelestialBody "+this.name+" ... no program yet");
             this.setPlayTime(0);
         }
+    }
+
+    // Note that everything to do with Satellites should probably
+    // be removed from here.  SatTracks doesn't even seem to know which
+    // which node or object it is associated with, so that should be easy.
+    addSatTracks(satOpts) {
+        console.log("************* VirtualEarth: addSatTracks: ", satOpts);
+        if (this.satTracks) {
+            reportError("Already have satTracks");
+            return;
+        }
+        if (typeof satOpts !== "object") {
+            satOpts = { dataSet: 'stdb/all_stdb.json' };
+        }
+        satOpts.radius = satOpts.radius || this.radius;
+        satOpts.parent = satOpts.parent || this.name;
+        this.satTracks = new SatTracks(this.game, satOpts);
+        return this.satTracks;
     }
 
     setVisible(v) {
