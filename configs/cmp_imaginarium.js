@@ -13,6 +13,7 @@ VEARTH = [
     }
 ];
 
+var NET_LINK = {type: 'NetLink'};
 var KINECT_WATCHER = {type: 'KinectWatcher'}
 
 var SPECS = [
@@ -116,6 +117,7 @@ var datGUI = {type: 'DATGUIControls' };
 
 CONFIG = {
     //onStart: setupPosterActions,
+    gameOptions: {headlightIntensity: 1, ambientLightIntensity: 1},
     onStart: onStart,
     //'cameraControls': 'Orbit',
     'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .01},
@@ -152,7 +154,7 @@ CONFIG = {
         ],
 
        media: MEDIA_SPECS,
-       nodes: [SCRIPTS, POSTERS, BUBBLES, TOKENS, SPECS]
+       nodes: [NET_LINK, SCRIPTS, POSTERS, BUBBLES, TOKENS, SPECS]
     },
     venue: '/configs/venues/imaginarium.js',
     environment: SOLAR_SYSTEM
