@@ -3,7 +3,7 @@ import OrbitControls from './lib/controls/OrbitControls';
 import LookControls from './lib/controls/LookControls';
 import {MultiControls} from './lib/controls/MultiControls';
 import {Loader} from './Loader';
-import { NetLink } from './NetLink';
+//import { NetLink } from './NetLink'; // circular imports
 import Util from './Util';
 import {reportError} from './Util';
 
@@ -32,10 +32,6 @@ class Game {
         this.collision = [];
         this.state = new AppState(this.events);
         this.netLink = null;
-        if (this.user) {
-            this.netLink = new NetLink(this);
-            this.registerController("netLink", this.netLink);
-        }
         this.stateStack = [];
         this.nodes = {};
         this.Util = Util;

@@ -8,6 +8,7 @@ import { PanoPortal } from './lib/PanoPortal';
 import { Program } from './Program';
 import './Screens';
 import { Game } from './Game';
+import { NetLink } from './NetLink';
 import Util from './Util';
 import { Dancer } from './controllers/DanceController';
 import { KinectWatcher } from './controllers/KinectWatcher';

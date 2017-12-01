@@ -2,16 +2,22 @@
 import io from 'socket.io-client';
 import {Avatar} from "./Avatar";
 import JanusClient from './lib/janus';
+import {Game} from './Game';
 import Util from './Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
-class NetLink {
+class NetLink extends MUSENode {
     constructor(game, options) {
+        if (game.netLink) {
+            Util.reportWarning("Already have NetLink");
+        }
+        super(game, options);
         console.log("****************** NetLink *********************");
         this.options = options;
         var self = this;
         this.game = game;
+        game.netLink = this;
         this.user = game.user || "anon";
         this.users = {};
         this.numUsers = 0;
@@ -36,6 +42,7 @@ class NetLink {
         if (Util.getParameterByName('janus')) {
             this._initJanus();
         }
+        game.registerController("netLink", this);
     }
 
     registerKinectWatcher(watcher) {
@@ -164,5 +171,16 @@ class NetLink {
         console.log("Unrecognized message: "+JSON.stringify(msg));
     }
 }
+
+function addNetLink(game, opts)
+{
+    if (game.netLink) {
+        Util.reportError("Already have NetLink");
+        return game.netLink;
+    }
+    return new NetLink(game, opts);
+}
+
+Game.registerNodeType("NetLink", addNetLink);
 
 export {NetLink};
