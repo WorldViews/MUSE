@@ -226,7 +226,7 @@ class PSys {
     }
 
     setColor(c) {
-        console.log("PSys setColor ", c);
+        //console.log("PSys setColor ", c);
         this.options.color = c;
     }
 

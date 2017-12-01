@@ -13,6 +13,8 @@ VEARTH = [
     }
 ];
 
+var KINECT_WATCHER = {type: 'KinectWatcher'}
+
 var SPECS = [
     //{  type: 'JQControls' },
     {  type: 'Group', name: 'station'  },
@@ -28,7 +30,8 @@ var SPECS = [
         duration: 1075   // 17:56 minutes duration time
     },
     //{  type: 'Stars' },
-    VEARTH
+    VEARTH,
+    KINECT_WATCHER
 ];
 
 POSTERS = "configs/programs/cmp_posters.js";
