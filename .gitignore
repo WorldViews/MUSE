@@ -20,3 +20,5 @@ junk/*
 .tmp
 npm-debug.log
 src/ProgramControl.js
+yarn*
+.vscode
