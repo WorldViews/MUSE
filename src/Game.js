@@ -457,6 +457,15 @@ class Game {
         return null;
     }
 
+    getBBox(obj3d) {
+        obj3d = this.getObject3D(obj3d);
+        return new THREE.Box3().setFromObject(obj3d);
+    }
+
+    getCenter(obj3d) {
+        return this.getBBox(obj3d).getCenter();
+    }
+
     fitObjectTo(obj3d, opts) {
         console.log("fitObjectTo:", obj3d, opts);
         obj3d = this.getObject3D(obj3d);
@@ -466,6 +475,35 @@ class Game {
         if (opts.position) {
             var v = opts.position;
             v = new THREE.Vector3(v[0],v[1],v[2]);
+            obj3d.position.copy(v);
+        }
+        if (opts.scale) {
+            var prevS = obj3d.scale.x;
+            var w = dim.x;
+            var newS = opts.scale*prevS/w;
+            obj3d.scale.set(newS,newS,newS);
+        }
+    }
+
+    // fitObjectTo would be very handy, but still is not
+    // working yet.  This is an attempt in progress to get it right.
+    fitObjectToX(obj3d, opts) {
+        console.log("fitObjectTo:", obj3d, opts);
+        obj3d = this.getObject3D(obj3d);
+        var bb = new THREE.Box3().setFromObject(obj3d);
+        var dim = bb.getSize();
+        var cw = bb.getCenter();//center in world coords
+        console.log("bb:", bb);
+        console.log("cw:", cw);
+        if (opts.position) {
+            var v = opts.position;
+            v = new THREE.Vector3(v[0],v[1],v[2]);
+            var cp = cw.clone();
+            obj3d.parent.worldToLocal(cp);
+            console.log("cp:",  cp); //c in parent
+            console.log("pos:", v); // v in parent
+            v.sub(cp);
+            console.log("v-cp",v);
             obj3d.position.copy(v);
         }
         if (opts.scale) {
