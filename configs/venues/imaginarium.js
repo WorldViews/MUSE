@@ -22,7 +22,7 @@ var LIGHTS = [
     {  type: 'PointLight', name: 'light2', color: 0xaaffaa, position: [0, -25, 0], intensity: 0.2},
     {  type: 'PointLight', name: 'light3', color: 0xaaaaff, position: [0, -25, 2], intensity: 0.2},
     {  type: 'AmbientLight', name: 'ambientLight', color: 0xffffff, intensity: 0.1 },
-    {  type: 'DirectionalLight', name: 'directionalLight', color: 0x333333, intensity: 0.7, position: [1000, 1000, 100]},
+    {  type: 'DirectionalLight', name: 'directionalLight', color: 0x333333, intensity: 0.7, position: [10, 10, 1], castShadow: true},
     //{  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [1000, 1000, 0], distance: 5000, intensity: 0.6},
     //{  type: 'PointLight', name: 'sunLight',    color: 0xffffff, position: [-3000, 0, -2000], distance: 8000, intensity: 10.6},
 ];
@@ -63,7 +63,8 @@ SHIP_MODEL = {
     position: [9.4, 0, 0],
     rot: [0, 0, 0],
     scale: 0.027,
-    ignoreCollision: true
+    ignoreCollision: true,
+    receiveShadow: true
 }
 
 SHIP_MODEL_COLLISION = {

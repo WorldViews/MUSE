@@ -210,7 +210,7 @@ class Loader
                 game.setFromProps(collada.scene, spec);
                 game.addToGame(collada.scene, spec.name, spec.parent);
                 modelNode.setObject3D(collada.scene);
-                this.handleCompletion();
+                this.handleCompletion(collada.scene, spec);
             });
             return;
         }
@@ -221,7 +221,7 @@ class Loader
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
                 modelNode.setObject3D(obj);
-                this.handleCompletion();
+                this.handleCompletion(obj, spec);
             });
         }
         if (path.endsWith(".obj")) {
@@ -231,7 +231,7 @@ class Loader
                 game.setFromProps(obj, spec);
                 game.addToGame(obj, spec.name, spec.parent);
                 modelNode.setObject3D(obj);
-                this.handleCompletion();
+                this.handleCompletion(obj, spec);
             });
         }
     }
@@ -242,7 +242,14 @@ class Loader
         this.numPending++;
     }
 
-    handleCompletion() {
+    handleCompletion(obj, spec) {
+        if (spec && spec.castShadow) {
+            obj.traverse(o => o.castShadow = spec.castShadow);
+        }
+        if (spec && spec.receiveShadow) {
+            obj.traverse(o => o.receiveShadow = spec.receiveShadow);
+        }
+
         this.numPending--;
         console.log("handleCompletion "+this.name+" "+this.numPending);
         if (this.numPending > 0)
