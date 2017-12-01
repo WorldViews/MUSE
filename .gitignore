@@ -21,3 +21,4 @@ junk/*
 npm-debug.log
 src/ProgramControl.js
 package-lock.json
+yarn*

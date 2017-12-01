@@ -219,7 +219,7 @@ export default class VRInputController {
 
         if (intersections && intersections.length > 0) {
             let isTriggerPressed = this.controller0.getButtonState('trigger');
-            let intersection = intersections[0];
+            let intersection = this.pickIntersection(intersections);
             this.selectedObject = intersection;
             if (isTriggerPressed && intersection.object.parent.name === 'Floor') {
                 let {distance, point: {x, z}} = intersection;
@@ -236,6 +236,14 @@ export default class VRInputController {
             this.selectedObject = null;
             this.line.scale.x = 5;
             this.line.sprite.visible = false;
+        }
+    }
+
+    pickIntersection(intersections) {
+        for (var i=0; i<intersects.length; i++) {
+            if (_.get(obj, 'userData.museIgnorePicking'))
+                continue;
+            return obj;
         }
     }
 

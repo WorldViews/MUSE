@@ -25,13 +25,15 @@ function getToken(name, tokenPos, spec) {
              rot: [0, 0, 0],
              scale: scale,
              //onMuseEvent: {'click': () => selectStageModel("dancer") }
-             onMuseEvent: {'click': spec.onClick }
-         },
+             onMuseEvent: {'click': spec.onClick },
+             castShadow: true,
+        },
          {  type: 'Model',
             path: 'assets/models/pedestal/model.dae',
             position: [0, 0, 0],
             rot: [0, 0, 0],
             scale: 0.02,
+            castShadow: true,
         }
     ]};
     return token;

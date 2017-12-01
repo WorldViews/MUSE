@@ -72,7 +72,6 @@ class KinectWatcher extends Node3D
         rhpos.multiplyScalar(.001);
         this.lhSys.update(lhpos);
         this.rhSys.update(rhpos);
-
     }
 }
 
