@@ -66,13 +66,19 @@ class ParticleSys {
         this.options.color = c;
     }
 
-    update() {
+    update(pos) {
         var options = this.options;
         var spawnerOptions = this.spawnerOptions;
         var delta = this.clock.getDelta() * spawnerOptions.timeScale;
         this.tick += delta;
         if ( this.tick < 0 ) this.tick = 0;
-        var pos = this.obj3D.getWorldPosition();
+        if (!pos) {
+            if (!this.obj3D) {
+                console.log("No way to get position");
+                return;
+            }
+            pos = this.obj3D.getWorldPosition();
+        }
         //var s = 0.06;
         if ( delta > 0 ) {
             options.position.copy(pos);

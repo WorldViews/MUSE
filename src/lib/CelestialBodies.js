@@ -413,7 +413,10 @@ class PlanetaryTour {
     }
 
     // tour related stuff...
-    addPosition(bodyName, t, offset) {
+    addPosition(bodyName, t, offset, ease) {
+        if (!ease) {
+            ease = createjs.Ease.getPowInOut(1)
+        }
         t += this.t0;
         console.log("addPosition "+bodyName+" "+t);
         var anim = this.anim;
@@ -427,7 +430,7 @@ class PlanetaryTour {
         var pos = this.solarSystem.getPosition(bodyName);
         anim.addStep({'position.x': -pos[0]+offset[0],
                       'position.y': -pos[1]+offset[1],
-                      'position.z': -pos[2]+offset[2]}, dur);
+                      'position.z': -pos[2]+offset[2]}, dur, ease);
     }
 
     goPast(body, t)
