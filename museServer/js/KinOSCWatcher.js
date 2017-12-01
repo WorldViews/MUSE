@@ -37,8 +37,8 @@ Body.prototype.getSkelMessage = function()
 {
     var msg = {'msgType': 'kinect.skel', 'bodyId': this.id, 'time': this.lastTime};
     for (var jid in this.joints) {
-	//var id = Body.ALL_JOINTS[jid];
-	var id = Body.JOINTS[jid];
+	var id = Body.ALL_JOINTS[jid];
+	//var id = Body.JOINTS[jid];
 	if (!id) {
 	    //id = jid;
 	    continue;
@@ -236,5 +236,3 @@ KinOSCWatcher.prototype.getIPAddresses = function () {
 };
 
 exports.KinOSCWatcher  = KinOSCWatcher;
-
-

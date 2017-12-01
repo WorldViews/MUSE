@@ -31,6 +31,19 @@ class KinectWatcher extends Node3D
         var inst = this;
         //game.state.on(this.name, state => inst.setProps(state));
         game.state.on("cmpColorHue", h => inst.setHue(h));
+        this.setupLines();
+    }
+
+    setupLines() {
+        this.material = new THREE.LineBasicMaterial({ color: 0x0000ff });
+        this.geometry = new THREE.Geometry();
+        var vertices = this.geometry.vertices;
+        vertices.push(new THREE.Vector3(0, 0, 0));
+        vertices.push(new THREE.Vector3(0, 10, 0));
+        vertices.push(new THREE.Vector3(10, 0, 0));
+        vertices.push(new THREE.Vector3(0, 0, 0));
+        this.line = new THREE.Line(this.geometry, this.material);
+        this.game.scene.add(this.line);
     }
 
     setVisible(v) {
@@ -72,6 +85,14 @@ class KinectWatcher extends Node3D
         rhpos.multiplyScalar(.001);
         this.lhSys.update(lhpos);
         this.rhSys.update(rhpos);
+        if (this.geometry) {
+            //rhpos.multiplyScalar(3);
+            //lhpos.multiplyScalar(3);
+            var v = this.geometry.vertices;
+            v[1].copy(lhpos);
+            v[2].copy(rhpos);
+            this.geometry.verticesNeedUpdate = true;
+        }
     }
 }
 
