@@ -10,7 +10,7 @@ var VIDEO_BUBBLES = [
     },
     {   type: 'VideoBubble', name: 'vidBubble3', parent: 'videoBubbles', radius: 0.6, position: [-2,3,0],
         //path: 'assets/video/ISS_tour.mp4', autoPlay: false
-        side: "FrontSide",
+        //side: "FrontSide",
         path: 'assets/video/YukiyoCompilation.mp4', autoPlay: true
     },
 ];
