@@ -7,8 +7,9 @@ import Util from './Util';
 function getClockTime() { return new Date().getTime()/1000.0; }
 
 class NetLink {
-    constructor(game) {
+    constructor(game, options) {
         console.log("****************** NetLink *********************");
+        this.options = options;
         var self = this;
         this.game = game;
         this.user = game.user || "anon";
@@ -21,10 +22,12 @@ class NetLink {
         this.channel = 'pano';
         this.sock = io(this.sioURL);
         this.sock.on(this.channel, msg => { self.handleMessage(msg);});
+        this.sock.on("kinect.skel", msg => { self.handleKinectMessage(msg);});
         // this.getUser("Tony");
         // this.getUser("Don");
         this.updateInterval = 0.1;
         this.verbosity = 0;
+        this.kinWatchers = [];
         this.state = {
             position: new THREE.Vector3(0, 0, 0),
             rotation: new THREE.Euler(0, 0, 0),
@@ -33,6 +36,10 @@ class NetLink {
         if (Util.getParameterByName('janus')) {
             this._initJanus();
         }
+    }
+
+    registerKinectWatcher(watcher) {
+        this.kinWatchers.push(watcher);
     }
 
     _initJanus() {
@@ -140,6 +147,18 @@ class NetLink {
         if (msg.type == 'muse.status') {
             var userName = msg.user;
             this.getUser(userName, msg);
+            return;
+        }
+        console.log("Unrecognized message: "+JSON.stringify(msg));
+    }
+
+    handleKinectMessage(msg) {
+        if (this.verbosity) {
+            console.log("NetLink.handleKinectMessage "+JSON.stringify(msg));
+        }
+        if (msg.msgType == 'kinect.skel') {
+            //console.log("kinect.skel: "+JSON.stringify(msg, null, 3));
+            this.kinWatchers.forEach(w => w.handleMessage(msg));
             return;
         }
         console.log("Unrecognized message: "+JSON.stringify(msg));

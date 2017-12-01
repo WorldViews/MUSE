@@ -10,6 +10,7 @@ import './Screens';
 import { Game } from './Game';
 import Util from './Util';
 import { Dancer } from './controllers/DanceController';
+import { KinectWatcher } from './controllers/KinectWatcher';
 import NavigationController from './controllers/NavigationController';
 import './lib/CelestialBodies';
 //import StarsController from './controllers/StarsController';

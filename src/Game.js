@@ -31,9 +31,10 @@ class Game {
         this.program = null;
         this.collision = [];
         this.state = new AppState(this.events);
+        this.netLink = null;
         if (this.user) {
-            let netLink = new NetLink(this);
-            this.registerController("netLink", netLink);
+            this.netLink = new NetLink(this);
+            this.registerController("netLink", this.netLink);
         }
         this.stateStack = [];
         this.Util = Util;
