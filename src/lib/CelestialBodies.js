@@ -41,6 +41,7 @@ class CelestialBody extends Node3D {
         this.satTracks = null;
         this.group = new THREE.Group();
         this.group.earth = this;
+        this.setObject3D(this.group);
         this.material = null;
         var loader = new THREE.TextureLoader();
         //var texPath = opts.texture || 'textures/land_ocean_ice_cloud_2048.jpg';
@@ -70,7 +71,7 @@ class CelestialBody extends Node3D {
             this.atmosphere = new Atmosphere(this.group, this, opts.atmosphere);
         }
         if (opts.dataViz) {
-            this.dataViz = new CMPDataViz2(this, opts);
+            this.addDataViz();
         }
         if (opts.satTracks) {
             this.addSatTracks(opts.satTracks);
@@ -84,13 +85,22 @@ class CelestialBody extends Node3D {
         }
     }
 
+    addDataViz(opts) {
+        opts = opts || this.options;
+        if (!this.dataViz) {
+            this.dataViz = new CMPDataViz2(this, opts);
+        }
+        var visible = opts.visible == false ? false : true;
+        this.dataViz.setVisible(visible);
+    }
+
     // Note that everything to do with Satellites should probably
     // be removed from here.  SatTracks doesn't even seem to know which
     // which node or object it is associated with, so that should be easy.
     addSatTracks(satOpts) {
         console.log("************* VirtualEarth: addSatTracks: ", satOpts);
         if (this.satTracks) {
-            reportError("Already have satTracks");
+            console.log("Already have satTracks");
             return;
         }
         if (typeof satOpts !== "object") {

@@ -66,6 +66,8 @@ class CMPDataViz2 {
     constructor(earth, opts) {
         opts = opts || {};
         this.earth = earth;
+        this.object3D = new THREE.Object3D();
+        earth.object3D.add(this.object3D);
         this.rMin = earth.radius;
         this.rMax = earth.radius*2;
         this.co2Mat = null;
@@ -80,11 +82,15 @@ class CMPDataViz2 {
         this.addEnergy(opts);
     }
 
+    setVisible(v) {
+        this.object3D.visible = v;
+    }
+    
     addBlobs(opts) {
         var rMin = opts.rMin || this.radius*1.1;
         var rMax = opts.rMax || this.radius*1.2;
         var blobSet = new BlobSet(opts, () => ranVertex(rMin, rMax));
-        this.earth.group.add(blobSet.particles);
+        this.object3D.add(blobSet.particles);
         return blobSet;
     }
 
@@ -100,7 +106,7 @@ class CMPDataViz2 {
     setCo2(n) {
         var material, particles;
         if (this.co2Blobs)
-            this.earth.group.remove(this.co2Blobs);
+            this.object3D.remove(this.co2Blobs);
         var res = this.addBlobs({n: n, size: 20, color: 0xFFFF00, opacity: 1,
             texture: 'textures/sprites/clouds.png'
         });
@@ -141,7 +147,7 @@ class CMPDataViz2 {
     setEnergy(n) {
         var material, particles;
         var opacity = .2;
-        this.earth.group.remove(this.eOutBlobs);
+        this.object3D.remove(this.eOutBlobs);
         var res = this.addBlobs({
             n: n, size: 5, color: 0xFFFF00, opacity: opacity,
             rMin: this.rMin, rMax: this.rMax
@@ -151,6 +157,9 @@ class CMPDataViz2 {
     }
 
     update() {
+        if (!this.object3D.visible) {
+            return;
+        }
         if (this.co2Blobs)
         this.co2Blobs.rotation.y += 0.005;
         if (this.co2Mat) {
