@@ -37,7 +37,9 @@ class Game {
             this.registerController("netLink", this.netLink);
         }
         this.stateStack = [];
+        this.nodes = {};
         this.Util = Util;
+        MUSE.game = this;
     }
 
     init(domElementId) {

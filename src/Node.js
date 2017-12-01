@@ -34,14 +34,15 @@ class MUSENode {
         opts = opts || {};
         this.game = game;
         var class_ = this.getClassName();
+        this.id = opts.id || getUniqueId(class_);
+        this.name = opts.name || this.id;
+        this.options = opts;
         if (REGISTER_NODES) {
             if (!nodesByType[class_])
                 nodesByType[class_] = [];
             nodesByType[class_].push(this);
+            game.nodes[this.name] = this;
         }
-        this.id = opts.id || getUniqueId(class_);
-        this.name = opts.name || this.id;
-        this.options = opts;
         //this.checkOpts(opts);
     }
 
