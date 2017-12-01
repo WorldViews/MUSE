@@ -5,6 +5,7 @@ import {BVHLoader} from '../BVHLoader';
 import {Game} from '../Game';
 import {MUSENode} from '../Node';
 import {Node3D} from '../Node3D';
+import {ParticleSys} from '../lib/ParticleSys';
 
 let BVH_PATH1 = './assets/models/bvh/MasterLiuPerformanceChar00.bvh';
 let BVH_PATH2 = '/assets/motionCapture/lauren_duality_edit.bvh';
@@ -109,8 +110,8 @@ class DanceController extends Node3D
         var lhand = this.skeletonHelper.bones[47];
         this.head = this.skeletonHelper.bones[14];
         //this.pSystems.push(new PSys("head", this.head, this.dancer));
-        this.pSystems.push(new PSys("rhand", rhand, this.dancer));
-        this.pSystems.push(new PSys("lhand", lhand, this.dancer));
+        this.pSystems.push(new ParticleSys("rhand", rhand, this.dancer));
+        this.pSystems.push(new ParticleSys("lhand", lhand, this.dancer));
         //this.psSetup();
         inst.update();
     }
@@ -172,6 +173,7 @@ class DanceController extends Node3D
 
 // A particle system attached to a given Object3D That
 // can generate a trail along the path of that object.
+/*
 class PSys {
     constructor(name, obj3D, parent)
     {
@@ -185,26 +187,6 @@ class PSys {
 				maxParticles: 250000
 			} );
         parent.add(this.particleSystem);
-        /*
-        options = {
-				position: new THREE.Vector3(),
-				positionRandomness: .3,
-				velocity: new THREE.Vector3(),
-				velocityRandomness: .5,
-				color: 0xaa88ff,
-				colorRandomness: .2,
-				turbulence: .5,
-				lifetime: 2,
-				size: 5,
-				sizeRandomness: 1
-			};
-			spawnerOptions = {
-				spawnRate: 15000,
-				horizontalSpeed: 1.5,
-				verticalSpeed: 1.33,
-				timeScale: 1
-			};
-        */
         this.options = {
 				position: new THREE.Vector3(),
 				positionRandomness: .2,
@@ -252,6 +234,7 @@ class PSys {
         this.particleSystem.update( this.tick );
     }
 }
+*/
 
 MUSENode.defineFields(DanceController, [
     "motionUrl"
