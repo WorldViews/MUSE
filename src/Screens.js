@@ -108,6 +108,13 @@ class Screen extends Node3D
         this._iframe.style.display = 'none';
         document.body.appendChild(this._iframe);
         this._iframe.contentDocument.body.appendChild(this._element);
+
+        if (spec.text) {
+            this.updateText(spec.text);
+        }
+        if (spec.html) {
+            this.updateHTML(spec.html);
+        }
     }
 
     //watchProperties(evt) {
@@ -216,7 +223,9 @@ MUSENode.defineFields(Screen, [
   "path",
   "autoPlay",
   "side",
-  "imageType"
+  "imageType",
+  "text",
+  "html"
 ]);
 
 function loadScreen(game, opts)

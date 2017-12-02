@@ -21,6 +21,9 @@ function setProgram(name, spec) {
     }
     if (spec.stageModel)
         program.selectStageModel(spec.stageModel);
+    else {
+        program.selectStageModel("none");
+    }
     game.pushGameState(gs);
 }
 
@@ -38,8 +41,15 @@ function getPosters(specs, theta, posterSize)
             path: spec.logo, radius: 7.8,
             phiStart, thetaStart,
             phiLength: posterSize, thetaLength: posterSize,
-            onMuseEvent: {'click': () => setProgram(spec.name, spec)}
+            //onMuseEvent: {'click': () => setProgram(spec.name, spec)}
+            onMuseEvent: spec.onMuseEvent
         };
+        if (!poster.onMuseEvent) {
+            poster.onMuseEvent = {'click': () => setProgram(spec.name, spec)};
+        }
+        poster.path = spec.logo;
+        poster.text = spec.text;
+        poster.html = spec.html;
         thetaStart += (posterSize+posterSpacing);
         return poster;
     });
@@ -88,10 +98,26 @@ var POSTER_SPECS = [
     },
 ];
 
+var CONTROL_SPECS = [
+    {name: "stopButton",
+     html:'<div style="width:100%;height:100%;background-color:red" />',
+     onMuseEvent: {'click': () => {
+         game.program.pause();
+     }}
+    },
+    {name: "playButton",
+     html:'<div style="width:100%;height:100%;background-color:green" />',
+     onMuseEvent: {'click': () => {
+         game.program.play();
+     }}
+    },
+]
+
 FRONT_POSTERS = getPosters(POSTER_SPECS, 180);
+CONTROLS = getPosters(CONTROL_SPECS, 100);
 //REAR_POSTERS = getPosters(POSTER_SPECS, 0, 12);
 
-POSTERS = [FRONT_POSTERS];
+POSTERS = [FRONT_POSTERS, CONTROLS];
 
 MUSE.returnValue(POSTERS);
 
