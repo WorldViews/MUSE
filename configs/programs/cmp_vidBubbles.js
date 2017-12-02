@@ -5,16 +5,29 @@
 var vidSpecs = [
     {  name: 'Stephan and Bill',
        video: 'StephanAndBill_4Kx2K.mp4',
-       image: 'assets/images/FXPALBanner.jpg'
+       image: 'assets/images/BubblePreviews/StephanAndBill_4Kx2K.jpg'
     },
-    "ErikAndBill_4Kx2K.mp4",
+    {  name: 'Erik and Bill',
+       video: 'ErikAndBill_4Kx2K.mp4',
+       image: 'assets/images/BubblePreviews/ErikAndBill_4Kx2K.jpg'
+    },
     {  name: "Live 360 Vid Server",
        video: "webrtc://192.168.16.206:8080/",
        image: 'assets/images/FXPALBanner.jpg'
-   }
+    },
+    {  name: 'Greenland Melting',
+      video: 'GreenlandMelting360_3840p.mp4',
+      image: 'assets/images/BubblePreviews/GreenlandMelting360_3840p.jpg'
+    },
+    {  name: 'Iceland Glaciers',
+      video: 'ErikAndBill_4Kx2K.mp4',
+      image: 'assets/images/BubblePreviews/IcelandGlaciers360_1440.jpg'
+    },
+    {  name: 'Climate Change Fiji',
+      video: 'ClimateChangeFiji360_1440.mp4',
+      image: 'assets/images/BubblePreviews/ClimateChangeFiji360_1440.jpg'
+    },
     //"GreenlandMelting360_720p.mp4",
-    //"GreenlandMelting360_3840p.mp4",
-    //"ClimateChangeFiji360_1440.mp4"
 ]
 
 function getBubbles(vidSpecs) {
