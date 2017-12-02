@@ -31,7 +31,7 @@ class KinectWatcher extends Node3D
         var inst = this;
         //game.state.on(this.name, state => inst.setProps(state));
         game.state.on("cmpColorHue", h => inst.setHue(h));
-        this.setupLines();
+        //this.setupLines();
     }
 
     setupLines() {
