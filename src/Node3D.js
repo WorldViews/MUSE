@@ -25,11 +25,19 @@ class Node3D extends MUSENode {
 
     setVisible(val) {
         console.log("Node3D.setVisible not implemented "+this.getClassName());
+        if (this.object3D)
+            this.object3D.visible = val;
     }
 
     getVisible() {
-        console.log("Node3D.getVisible not implemented "+this.getClassName());
+        //console.log("Node3D.getVisible not implemented "+this.getClassName());
+        if (this.object3D)
+            return this.object3D.visible;
         return false;
+    }
+
+    getObject3D() {
+        return this.object3D;
     }
 
     setObject3D(obj3D) {
