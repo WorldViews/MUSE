@@ -47,6 +47,7 @@ class Program extends MUSENode
         this.channels = options.channels || [];
         this.scripts = options.scripts || {};
         this.stages = options.stages || [];
+        this.selectedStageModel = null;
         console.log("channels:", this.channels);
         var inst = this;
         var promises = [];
@@ -140,6 +141,9 @@ class Program extends MUSENode
         }
         */
     }
+
+    getDuration() { return this.duration; }
+    setDuration(dur) { this.duration = dur;}
 
     play() {
         console.log("**** play *****");
@@ -238,6 +242,10 @@ class Program extends MUSENode
         stage.models[modelName] = modelName;
     }
 
+    getStageModel(stageName) {
+        return this.selectedStageModel;
+    }
+
     selectStageModel(modelName, stageName) {
         var stage = this.stages[0];
         var selectedModel = null;
@@ -261,6 +269,7 @@ class Program extends MUSENode
         }
         if (selectedModel)
             selectedModel.visible = true;
+        this.selectedStageModel = modelName;
     }
 }
 

@@ -147,7 +147,7 @@ class MultiControls extends MUSENode
     handleMuseEvent( event, museEvType )
     {
         console.log("MultiControl.useEvent "+museEvType);
-        this.handleRaycast(event, 1);
+        this.handleRaycast(event);
         var obj = this.pickedObj;
         console.log(" pickedObj: ", obj);
         if (obj) {
@@ -242,6 +242,7 @@ class MultiControls extends MUSENode
     }
 
     handleRaycast(event, verbosity) {
+        verbosity = verbosity || 0;
         var x = (event.pageX / window.innerWidth)*2 - 1;
         var y = - (event.pageY / window.innerHeight)*2 + 1;
         return this.raycast(x,y, verbosity);
@@ -250,6 +251,7 @@ class MultiControls extends MUSENode
     raycast(x,y, verbosity)
     {
         //console.log("raycast "+x+" "+y);
+        verbosity = verbosity || 0;
         this.raycastPt.x = x;
         this.raycastPt.y = y;
         this.raycaster.setFromCamera(this.raycastPt, this.game.camera);

@@ -33,6 +33,7 @@ var SPECS = [
     },
     //{  type: 'Stars' },
     VEARTH,
+    KINECT_WATCHER
     //{type: 'OpenPerformer', name: "Isadora", size: 0.5, position: [0,2,0]},
     //{type: 'ExampleNode', name: "example1", size: 0.25, position: [2,3,0]},
 ];
@@ -159,7 +160,6 @@ CONFIG = {
     },
     venue: '/configs/venues/imaginariumSimple.js',
     environment: SOLAR_SYSTEM
-    //'specs': [SCRIPTS, POSTERS, BUBBLES]
 };
 
 MUSE.returnValue(CONFIG);

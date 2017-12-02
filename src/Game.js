@@ -582,8 +582,39 @@ The game state stack is used to do things like keep list of viewPoints and
 provide a way for a user to pop back to previus viewpoints.  Currently it
 is used to pop back out of video bubbles.
 */
-    pushGameState(stateFun) {
-        this.stateStack.push(stateFun);
+    getGameState() {
+        var program = this.program;
+        var gs = {};
+        var urlStateName = "mainScreen.url"; // hack!!!!
+        gs.playTime = program.getPlayTime();
+        gs.url = this.state.get(urlStateName);
+        gs.stageModel = program.getStageModel();
+        gs.duration = program.getDuration();
+        return gs;
+    }
+
+    setGameState(gs) {
+        var program = this.program;
+        var urlStateName = "mainScreen.url"; // hack!!!!
+        if (typeof gs == "object") {
+            program.selectStageModel(gs.stageModel);
+            game.state.set(urlStateName, gs.url);
+            program.setPlayTime(gs.playTime);
+            program.setDuration(gs.duration)
+            if (gs.restoreFun)
+                gs.restoreFun();
+        }
+        else {
+            alert("Game state was function");
+            gs();
+        }
+    }
+
+    // Game state is either an object that may have
+    // values for various parts of state, or a function to
+    // be called for restoring state.
+    pushGameState(gs) {
+        this.stateStack.push(gs);
     }
 
     popGameState() {
@@ -591,8 +622,8 @@ is used to pop back out of video bubbles.
             console.log("********* gameState stack underflow");
             return;
         }
-        var stateFun = this.stateStack.pop();
-        stateFun();
+        var gs = this.stateStack.pop();
+        this.setGameState(gs);
     }
 }
 

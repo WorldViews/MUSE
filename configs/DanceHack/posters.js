@@ -2,20 +2,26 @@
 (function() {
 // For now this just sets the video.  It should set the program
 // in a way that corresponds to that video.
-function setProgram(name, vidURL, channel) {
+//function setProgram(specname, vidURL, channel) {
+function setProgram(name, spec) {
+    var channel = "mainScreen";
+    var vidURL = spec.video;
     console.log("setProgram: "+name+" "+vidURL+" "+channel);
+    var program = game.program;
     channel = channel || "mainScreen";
+    var urlStateName = channel+".url";
+    // get current program state
+    var gs = game.getGameState();
     if (vidURL) {
-        console.log("setting state "+channel+".url: "+vidURL);
-        game.state.set(channel+".url", vidURL)
-    }
-}
+        console.log("setting state "+urlStateName+": "+vidURL);
+        game.state.set(urlStateName, vidURL);
+        program.setPlayTime(0);
+        program.setDuration(spec.duration || 60);
 
-function selectStageModel(name)
-{
-    console.log("selectStageModel "+name);
-    var model = game.models[name];
-    model.visible = !model.visible;
+    }
+    if (spec.stageModel)
+        program.selectStageModel(spec.stageModel);
+    game.pushGameState(gs);
 }
 
 // Layout posters radially, centered at a given angle theta.
@@ -32,7 +38,7 @@ function getPosters(specs, theta, posterSize)
             path: spec.logo, radius: 7.8,
             phiStart, thetaStart,
             phiLength: posterSize, thetaLength: posterSize,
-            onMuseEvent: {'click': () => setProgram(spec.name, spec.video)}
+            onMuseEvent: {'click': () => setProgram(spec.name, spec)}
         };
         thetaStart += (posterSize+posterSpacing);
         return poster;
@@ -60,7 +66,9 @@ var POSTER_SPECS = [
     },
     {name: "KinetechArts",
      logo: "assets/images/PartnerLogos/KinetechArtsLogo.jpg",
-     video: "assets/video/KinetechArts_ABriefHistory.webm"
+     video: "assets/video/KinetechArts_ABriefHistory.webm",
+     duration: 30,
+     stageModel: 'dancer'
     },
     {name: "ClimateMusicProject",
      logo: "assets/images/PartnerLogos/ClimateMusicProject.jpg",
