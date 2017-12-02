@@ -4,11 +4,11 @@
 
 var vidSpecs = [
     {  name: 'Stephan and Bill',
-       video: 'StephanAndBill_4Kx2K.mp4',
+       video: 'StephanAndBill_4Kx2K.webm',
        image: 'assets/images/BubblePreviews/StephanAndBill_4Kx2K.jpg'
     },
     {  name: 'Erik and Bill',
-       video: 'ErikAndBill_4Kx2K.mp4',
+       video: 'ErikAndBill_4Kx2K.webm',
        image: 'assets/images/BubblePreviews/ErikAndBill_4Kx2K.jpg'
     },
     {  name: "Live 360 Vid Server",
@@ -16,15 +16,15 @@ var vidSpecs = [
        image: 'assets/images/FXPALBanner.jpg'
     },
     {  name: 'Greenland Melting',
-      video: 'GreenlandMelting360_3840p.mp4',
+      video: 'GreenlandMelting360_3840p.webm',
       image: 'assets/images/BubblePreviews/GreenlandMelting360_3840p.jpg'
     },
-//    {  name: 'Iceland Glaciers',
-//      video: 'ErikAndBill_4Kx2K.mp4',
-//      image: 'assets/images/BubblePreviews/IcelandGlaciers360_1440.jpg'
-//    },
+    {  name: 'Iceland Glaciers',
+      video: 'ErikAndBill_4Kx2K.webm',
+      image: 'assets/images/BubblePreviews/IcelandGlaciers360_1440.jpg'
+    },
     {  name: 'Climate Change Fiji',
-      video: 'ClimateChangeFiji360_1440.mp4',
+      video: 'ClimateChangeFiji360_1440.webm',
       image: 'assets/images/BubblePreviews/ClimateChangeFiji360_1440.jpg'
     },
     //"GreenlandMelting360_720p.mp4",
@@ -51,7 +51,7 @@ function getBubbles(vidSpecs) {
             position: Util.radialPosition(angle),
             rotation: [0,-1.6,0],
         };
-        angle += 15;
+        angle += 10;
         return bubble;
     });
 }
