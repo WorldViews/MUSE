@@ -70,6 +70,7 @@ class KinectWatcher extends Node3D
 
     handleMessage(msg) {
         //console.log("KinectWatcher....... msg: "+JSON.stringify(msg, null, 3));
+        console.log("KinectWatcher msg bodyId: "+msg.bodyId);
         var lh = msg.LEFT_HAND;
         var rh = msg.RIGHT_HAND;
         if (!(lh && rh)) {
