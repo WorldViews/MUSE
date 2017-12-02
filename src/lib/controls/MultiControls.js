@@ -54,15 +54,16 @@ class MultiControls extends MUSENode
 
         this.downKeys = {};
         this.keyPanSpeed = opts.keyPanSpeed || 0.005;
-        this.keyMoveSpeed = opts.keyMoveSpeed || 0.06;
+        this.keyMoveSpeed = opts.movementSpeed || 0.05;
+        this.panSensitivity = opts.panSensitivity || 0.01;
+        this.panRatio = 0.002; // controls sensitivity in orbit mode
+        this.pitchRatio = this.panRatio;
         this.whichButton = null;
         this.mouseDragOn = false;
         this.mousePtDown = null;
         this.mouseDownTime = 0;
         this.anglesDown = null;
         this.camPosDown = null;
-        this.panRatio = 0.005;
-        this.pitchRatio = 0.005;
         this.lookSense = 1; // if 1, cam moves with mouse, if -1 opposite of mouse
         this.prevView = null;
         this.prevScreen = null;
@@ -71,7 +72,8 @@ class MultiControls extends MUSENode
         this.speedRotateY = 0;
         this.raycaster = new THREE.Raycaster();
         this.raycastPt = new THREE.Vector2()
-        this.maxTrackBallDistance = 200;
+        this.minTrackballDistance = 1;
+        this.maxTrackballDistance = 200;
 
         this._onMouseMove = bind( this, this.onMouseMove );
         this._onMouseDown = bind( this, this.onMouseDown );
@@ -226,10 +228,16 @@ class MultiControls extends MUSENode
         var cam = this.game.camera;
         var camPos = cam.position;
         var d = camPos.distanceTo(this.target);
+        if (d < this.minTrackballDistance) {
+            console.log("d: "+d+ " -> "+this.minTrackballDistance);
+            d = this.minTrackballDistance;
+        }
+        var f = .04;
         //console.log(sprintf("dolly dx: %f", dx));
         //var wv = cam.getWorldDirection();
         var wv = this.getCamForward();
-        var ds = dx < 0 ? 0.1*d : -0.1*d;
+        var ds = dx < 0 ? f*d : -f*d;
+        //var ds = dx < 0 ? d : -d;
         camPos.addScaledVector(wv, ds);
     }
 
@@ -318,7 +326,7 @@ class MultiControls extends MUSENode
     handlePan(dx, dy)
     {
         var camPos = this.object.position;
-        var f = 0.05;
+        var f = this.panSensitivity;
         var dV = new THREE.Vector3();
         var vRight = this.getCamRight();
         var vUp = this.getCamUp();
@@ -452,18 +460,18 @@ class MultiControls extends MUSENode
             console.log("setting target from intersect");
             var target = isect.point;
             var d = this.getCamPos().distanceTo(target);
-            if (d < this.maxTrackBallDistance) {
+            if (d < this.maxTrackballDistance) {
                 console.log("using target d: "+d);
                 this.target = target.clone();
                 return;
             }
-            console.log(sprintf("not using target - d: %f > maxD: %f!", d, this.maxTrackBallDistance));
+            console.log(sprintf("not using target - d: %f > maxD: %f!", d, this.maxTrackballDistance));
         }
         console.log("setting target without intersect");
         var cam = this.game.camera;
         //var wv = cam.getWorldDirection();
         var wv = this.getCamForward();
-        var d = 100;
+        var d = 2;
         this.target = cam.position.clone();
         this.target.addScaledVector(wv, d);
     }
@@ -547,7 +555,7 @@ class MultiControls extends MUSENode
 MUSENode.defineFields(MultiControls, [
     "movementSpeed",
     "keyPanSpeed",
-    "keyMoveSpeed",
+    //"keyMoveSpeed",
     "distance"
 ]);
 
