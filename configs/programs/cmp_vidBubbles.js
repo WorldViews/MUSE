@@ -20,7 +20,7 @@ var vidSpecs = [
       image: 'assets/images/BubblePreviews/GreenlandMelting360_3840p.jpg'
     },
     {  name: 'Iceland Glaciers',
-      video: 'ErikAndBill_4Kx2K.webm',
+      video: 'IcelandGlaciers360_1440.webm',
       image: 'assets/images/BubblePreviews/IcelandGlaciers360_1440.jpg'
     },
     {  name: 'Climate Change Fiji',
