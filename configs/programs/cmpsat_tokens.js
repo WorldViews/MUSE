@@ -85,8 +85,8 @@ var tokSpecs = [
      onClick: () => selectStageModel("vEarth")
     },
     {name: "cmpTok",
-     modelUrl: "assets/models/tokens/dancer/model.dae",
-     modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010},
+     modelUrl: "assets/models/tokens/DataChart/DataChartToken.dae",
+     modelOpts: {position: [.75, 0.55, 1.35], scale: 1.0},
      onClick: () => selectStageModel("cmp")
     },
     {name: "satTok",

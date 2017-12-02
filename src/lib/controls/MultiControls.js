@@ -457,7 +457,7 @@ class MultiControls extends MUSENode
         //console.log("getTarget");
         var isect = this.raycast(0,0);
         if (isect) {
-            console.log("setting target from intersect");
+            //console.log("setting target from intersect");
             var target = isect.point;
             var d = this.getCamPos().distanceTo(target);
             if (d < this.maxTrackballDistance) {
