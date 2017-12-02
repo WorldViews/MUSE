@@ -14,6 +14,7 @@ class ParticleSys {
         parent = parent || game.scene;
         this.obj3D = obj3D;
         this.tick = 0;
+        this.name = name;
         this.clock = new THREE.Clock();
         //this.axes = new THREE.AxisHelper(500);
         //this.obj3D.add(this.axes);
@@ -92,6 +93,18 @@ class ParticleSys {
             }
         }
         this.particleSystem.update( this.tick );
+    }
+
+    destroy() {
+      console.log("destroying "+this.name);
+      var ps = this.particleSystem;
+      if (ps) {
+        ps.parent.remove(ps);
+      }
+      else {
+        console.log("*** no particleSystem for psys");
+      }
+      this.particleSystem = null;
     }
 }
 

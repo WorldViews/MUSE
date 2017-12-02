@@ -5,6 +5,7 @@ import {MUSENode} from '../Node';
 import {Node3D} from '../Node3D';
 import { sprintf } from "sprintf-js";
 import {ParticleSys} from '../lib/ParticleSys';
+import {Util} from '../Util';
 
 class KinectWatcher extends Node3D
 {
@@ -15,7 +16,7 @@ class KinectWatcher extends Node3D
         opts = opts || {};
 	    //opts.scale = opts.scale || 0.06;
         this.checkOptions(opts);
-        this.pSystems = [];
+        //this.pSystems = [];
         this.color = new THREE.Color();
         if (game.netLink) {
             game.netLink.registerKinectWatcher(this);
@@ -24,10 +25,7 @@ class KinectWatcher extends Node3D
             //alert("No NetLink");
         }
         this.color = new THREE.Color();
-        this.lhSys = new ParticleSys("klh", null);
-        this.rhSys = new ParticleSys("krh", null);
-        this.pSystems.push(this.lhSys);
-        this.pSystems.push(this.rhSys);
+        this.pSystems = {};
         var inst = this;
         //game.state.on(this.name, state => inst.setProps(state));
         game.state.on("cmpColorHue", h => inst.setHue(h));
@@ -60,40 +58,59 @@ class KinectWatcher extends Node3D
 
     setColor(c) {
         this.color.copy(c);
-        this.pSystems.forEach(pSys => pSys.setColor(c));
+        for (var id in this.pSystem) {
+          var ps = this.pSystem[id];
+          ps.setColor(c);
+        }
     }
 
     update() {
         if (!this.visible)
 	       return;
+        this.pruneOld();
+    }
+
+    pruneOld() {
+      var t = MUSE.Util.getClockTime();
+      for (var id in this.pSystems) {
+        var ps = this.pSystems[id];
+        var dt = t - ps.lastTime;
+        if (dt > 2) {
+          delete this.pSystems[id];
+          ps.destroy();
+        }
+      }
+    }
+
+    handleJoint(msg, joint) {
+      var bodyId = msg.bodyId;
+      var pos = msg[joint];
+      //console.log("bodyId "+bodyId+" "+joint+" "+pos);
+      if (!pos)
+        return;
+      var v = new THREE.Vector3(pos[0], pos[1], pos[2]);
+      var pid = bodyId+"_"+joint;
+      if (!this.pSystems[pid]) {
+        this.pSystems[pid] = new ParticleSys(pid, null);
+      }
+      var ps = this.pSystems[pid];
+      v.multiplyScalar(.001);
+      ps.update(v);
+      ps.lastTime = MUSE.Util.getClockTime();
+      this.pruneOld();
     }
 
     handleMessage(msg) {
         //console.log("KinectWatcher....... msg: "+JSON.stringify(msg, null, 3));
-        console.log("KinectWatcher msg bodyId: "+msg.bodyId);
+        //console.log("KinectWatcher msg bodyId: "+msg.bodyId);
         var lh = msg.LEFT_HAND;
         var rh = msg.RIGHT_HAND;
         if (!(lh && rh)) {
             return;
         }
-        if (0) {
-            console.log(sprintf("lh: %6.2f %6.2f %6.2f  rh: %6.2f %6.2f %6.2f",
-            lh[0], lh[1], lh[2],  rh[0], rh[1], rh[2]));
-        }
-        var lhpos = new THREE.Vector3(lh[0], lh[1], lh[2]);
-        lhpos.multiplyScalar(.001);
-        var rhpos = new THREE.Vector3(rh[0], rh[1], rh[2]);
-        rhpos.multiplyScalar(.001);
-        this.lhSys.update(lhpos);
-        this.rhSys.update(rhpos);
-        if (this.geometry) {
-            //rhpos.multiplyScalar(3);
-            //lhpos.multiplyScalar(3);
-            var v = this.geometry.vertices;
-            v[1].copy(lhpos);
-            v[2].copy(rhpos);
-            this.geometry.verticesNeedUpdate = true;
-        }
+        this.handleJoint(msg, "LEFT_HAND");
+        this.handleJoint(msg, "RIGHT_HAND");
+        return;
     }
 }
 
