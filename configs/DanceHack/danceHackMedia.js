@@ -4,28 +4,15 @@ MEDIA_SPECS = [
        records: [
           { duration: 4,
               mainScreen:  {url: 'assets/images/MuseTalk/Slide1.PNG'},
-              leftScreen:  {url: 'assets/images/MuseTalk/Slide1.PNG'},
-              rightScreen: {url: 'assets/images/MuseTalk/Slide1.PNG'}
           },
           { duration: 4,
             mainScreen:  {url: 'assets/images/MuseTalk/Slide2.PNG'},
-            leftScreen:  {url: 'assets/images/MuseTalk/Slide1.PNG'},
-            rightScreen: {url: 'assets/images/MuseTalk/Slide1.PNG'}
           },
-          { duration: 4,
-            mainScreen:  {url: 'assets/images/MuseTalk/Slide3.PNG'},
-            leftScreen:  {url: 'assets/images/MuseTalk/Slide2.PNG'},
-            rightScreen: {url: 'assets/images/MuseTalk/Slide1.PNG'}
-          },
-          { duration: 4,
-            mainScreen:  {url: 'assets/images/MuseTalk/Slide4.PNG'},
-            leftScreen:  {url: 'assets/images/MuseTalk/Slide3.PNG'},
-            rightScreen: {url: 'assets/images/MuseTalk/Slide1.PNG'}
-          },
-           { duration: 29*60,  mainScreen: {url: 'assets/video/ClimateMusicProj-v7-HD.mp4'}},
-           { duration: 10,     mainScreen: {url: 'assets/video/GlobalWeather2013.mp4'}},
+          { duration: 29*60,  mainScreen: {url: 'assets/video/ClimateMusicProj-v7-HD.mp4'}},
+          { duration: 10,     mainScreen: {url: 'assets/video/GlobalWeather2013.mp4'}},
        ]
    },
+   /*
    {  type: 'StageStream', stage: 'Main Stage',
       records: [
           { t: 100,   name: 'none'},
@@ -34,6 +21,7 @@ MEDIA_SPECS = [
           { t: 1000,   name: 'dancer'}
       ]
    }
+   */
 ];
 
 MUSE.returnValue(MEDIA_SPECS);

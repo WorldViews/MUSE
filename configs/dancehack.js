@@ -37,9 +37,9 @@ var SPECS = [
     //{type: 'ExampleNode', name: "example1", size: 0.25, position: [2,3,0]},
 ];
 
-POSTERS = "configs/programs/cmp_posters.js";
-BUBBLES = "configs/programs/cmp_vidBubbles.js";
-TOKENS = "configs/programs/cmp_tokens.js";
+POSTERS = "configs/DanceHack/posters.js";
+BUBBLES = "configs/DanceHack/vidBubbles.js";
+TOKENS = "configs/DanceHack/tokens.js";
 
 SOLAR_SYSTEM = [ {  type: 'SolarSystem' }, {  type: 'Stars' } ];
 
@@ -130,7 +130,7 @@ CONFIG = {
     webUI: Util.getParameterByName("datgui") ? datGUI : jqGUI,
     'program': {
         onStartProgram: onStartProgram,
-       duration: 32*60,
+        duration: 32*60,
        gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
        stages: [
            {
@@ -139,15 +139,13 @@ CONFIG = {
                    'vEarth': 'Virtual Earth',
                    'dancer': 'Dancer',
                    'cmp': 'Data Visualization',
-                   'portal': 'Panoramic Portal',
-                   'bmw': 'Eriks Car',
                    'none': 'Nothing'
                }
            }
        ],
        channels: [
            {name: 'time',        label: "Time",    format: Util.toHHMMSS , default: 0},
-           {name: 'year',        label: "Year"                      , default: 1850, min: 1850, max: 2300 },
+           {name: 'year',        label: "Year",                            default: 1850, min: 1850, max: 2300 },
            {name: 'temperature', label: "T",       format: "%6.2f"  },
            {name: 'co2',         label: "CO2",     format: "%6.2f"  },
            {name: 'balance',     label: "Balance", format: "%8.1f"  },
