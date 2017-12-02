@@ -85,6 +85,7 @@ var SPECS = [
     // 'Floor' is a special name used for VR Controller raycast
     SHIP_MODEL,
     SHIP_MODEL_COLLISION,
+    /*
     {   type: 'Model', name: 'bmw',
         parent: 'station',
         path: 'assets/models/bmw/model.dae',
@@ -93,6 +94,7 @@ var SPECS = [
         scale: 0.020,
         visible: false
     },
+    */
     //SATELLITE_MODEL,
     {   type: 'Screen', name: 'mainScreen',
         parent: 'station', radius: 8.8,

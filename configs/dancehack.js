@@ -17,6 +17,17 @@ var NET_LINK = {type: 'NetLink'};
 var KINECT_WATCHER = {type: 'KinectWatcher'}
 var OPEN_PERFORMER = {type: 'OpenPerformer', name: "Isadora", size: 0.5, position: [0,2,0]};
 
+GEODESIC_DOME =  {
+       type: 'Model', name: 'geodesicDome',
+        parent: 'station',
+        path: 'assets/models/GeodesicDome/model.dae',
+        position: [0.0, 0, 0],
+        rot: [0, 90, 0],
+        scale: 0.0045,
+        visible: true
+};
+
+
 var SPECS = [
     //{  type: 'JQControls' },
     {  type: 'Group', name: 'station'  },
@@ -33,7 +44,8 @@ var SPECS = [
     },
     //{  type: 'Stars' },
     VEARTH,
-    KINECT_WATCHER
+    KINECT_WATCHER,
+    GEODESIC_DOME
     //{type: 'OpenPerformer', name: "Isadora", size: 0.5, position: [0,2,0]},
     //{type: 'ExampleNode', name: "example1", size: 0.25, position: [2,3,0]},
 ];
@@ -140,6 +152,7 @@ CONFIG = {
                    'vEarth': 'Virtual Earth',
                    'dancer': 'Dancer',
                    'cmp': 'Data Visualization',
+                   'geodesicDome': 'Geodesic Dome',
                    'none': 'Nothing'
                }
            }
@@ -159,7 +172,7 @@ CONFIG = {
        nodes: [NET_LINK, SCRIPTS, POSTERS, BUBBLES, TOKENS, SPECS]
     },
     venue: '/configs/venues/imaginariumSimple.js',
-    environment: SOLAR_SYSTEM
+    environment: SOLAR_SYSTEM,
 };
 
 MUSE.returnValue(CONFIG);

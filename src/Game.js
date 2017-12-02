@@ -597,6 +597,7 @@ is used to pop back out of video bubbles.
         var program = this.program;
         var urlStateName = "mainScreen.url"; // hack!!!!
         if (typeof gs == "object") {
+            console.log("restoring gamestate ", gs);
             program.selectStageModel(gs.stageModel);
             game.state.set(urlStateName, gs.url);
             program.setPlayTime(gs.playTime);
@@ -605,7 +606,7 @@ is used to pop back out of video bubbles.
                 gs.restoreFun();
         }
         else {
-            alert("Game state was function");
+            console.log("Game state was function");
             gs();
         }
     }

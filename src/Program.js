@@ -16,6 +16,8 @@ import {MUSENode} from './Node';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
+// This should be called ProgramControl, which is
+// distinct from Program.
 class Program extends MUSENode
 {
     constructor(game, options) {
@@ -246,6 +248,15 @@ class Program extends MUSENode
         return this.selectedStageModel;
     }
 
+    // this is a temperary hack because a few controllers
+    // are not models or nodes, so they don't get found.
+    // soon we will make them all nodes.
+    getNode(name) {
+        if (game.nodes[name])
+            return game.nodes[name];
+        return game.controllers[name];
+    }
+
     selectStageModel(modelName, stageName) {
         var stage = this.stages[0];
         var selectedModel = null;
@@ -255,7 +266,9 @@ class Program extends MUSENode
                  return;
              }
              //var selectedModel = game.models[modelName];
-             selectedModel = game.controllers[modelName];
+            // selectedModel = game.controllers[modelName];
+            //selectedModel = game.nodes[modelName];
+            selectedModel = this.getNode(modelName);
              if (!selectedModel) {
                  Util.reportError("No model named "+modelName);
                  return;
@@ -263,7 +276,9 @@ class Program extends MUSENode
          }
          for (var name in stage.models) {
              //var model = game.models[name];
-             var model = game.controllers[name];
+             //var model = game.controllers[name];
+             //var model = game.nodes[name];
+             var model = this.getNode(name);
              if (model)
                     model.visible = false;
         }

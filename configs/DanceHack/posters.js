@@ -16,7 +16,7 @@ function setProgram(name, spec) {
         console.log("setting state "+urlStateName+": "+vidURL);
         game.state.set(urlStateName, vidURL);
         program.setPlayTime(0);
-        program.setDuration(spec.duration || 60);
+        program.setDuration(spec.duration || 3*60);
 
     }
     if (spec.stageModel)
@@ -62,7 +62,8 @@ var POSTER_SPECS = [
     },
     {name: "OneDome",
      logo: "assets/images/LinkLogos/OneDome.png",
-     video: "assets/video/OneDomeTrailer.webm"
+     video: "assets/video/OneDomeTrailer.webm",
+     stageModel: 'geodesicDome',
     },
     {name: "KinetechArts",
      logo: "assets/images/PartnerLogos/KinetechArtsLogo.jpg",

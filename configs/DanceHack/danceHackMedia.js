@@ -2,12 +2,14 @@
 MEDIA_SPECS = [
     {  type: 'MediaSequence', defaultDuration: 1,
        records: [
+           /*
           { duration: 4,
               mainScreen:  {url: 'assets/images/MuseTalk/Slide1.PNG'},
           },
           { duration: 4,
             mainScreen:  {url: 'assets/images/MuseTalk/Slide2.PNG'},
           },
+          */
           { duration: 29*60,  mainScreen: {url: 'assets/video/ClimateMusicProj-v7-HD.mp4'}},
           { duration: 10,     mainScreen: {url: 'assets/video/GlobalWeather2013.mp4'}},
        ]
