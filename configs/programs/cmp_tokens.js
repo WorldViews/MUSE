@@ -56,23 +56,6 @@ function getTokens(angle, tokSpecs)
     return tokens;
 }
 
-var SAT_VIEWER = {  type: 'VirtualEarth', name: 'satViewer',
-   radius: 1.25, position: [0,1.9,0],
-   satTracks: { dataSet: 'stdb/all_stdb.json' },
-   atmosphere: {name: 'SatAtmos', opacity: .2}
-};
-
-function toggleSatellites()
-{
-    //
-    var sv = MUSE.game.getNode("satViewer");
-    if (!sv) {
-        game.loadSpecs(SAT_VIEWER);
-        game.program.registerStageModel("satViewer");
-    }
-    selectStageModel("satViewer");
-}
-
 var tokSpecs = [
     {name: "dancerTok",
      modelUrl: "assets/models/tokens/dancer/model.dae",
@@ -88,11 +71,6 @@ var tokSpecs = [
      modelUrl: "assets/models/tokens/dancer/model.dae",
      modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010},
      onClick: () => selectStageModel("cmp")
-    },
-    {name: "satTok",
-     modelUrl: "assets/models/satellites/ComSat2/model.dae",
-     modelOpts: {position: [0.2,.7,-0.2], rot: [0,0,-90], scale: 0.004},
-     onClick: () => toggleSatellites()
     }
 ]
 
