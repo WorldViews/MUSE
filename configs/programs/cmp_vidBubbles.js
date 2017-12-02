@@ -51,7 +51,7 @@ function getBubbles(vidSpecs) {
             position: Util.radialPosition(angle),
             rotation: [0,-1.6,0],
         };
-        angle += 15;
+        angle += 10;
         return bubble;
     });
 }

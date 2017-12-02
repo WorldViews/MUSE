@@ -104,6 +104,7 @@ function forceImages() {
 function onStart() {
     var solarSystem = game.controllers.solarSystem;
     //var solarSystem = SOLAR_SYSTEM;
+    return;
     window.planetTour = solarSystem.getTour();
     if (Util.getParameterByName("quickstart"))
         return;
@@ -120,7 +121,7 @@ CONFIG = {
     gameOptions: {headlightIntensity: 1, ambientLightIntensity: 1},
     onStart: onStart,
     //'cameraControls': 'Orbit',
-    'cameraControls': {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .01},
+    'cameraControls': {type: 'MultiControls', movementSpeed: .03, keyPanSpeed: .01},
     //'cameraControls': 'JoelControls',
     //'webUI': {type: 'DATGUIControls',
     //'webUI': {type: 'JQControls' },

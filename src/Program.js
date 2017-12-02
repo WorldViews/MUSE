@@ -232,6 +232,12 @@ class Program extends MUSENode
             this.mediaSequence.next();
     }
 
+    registerStageModel(modelName, stageName)
+    {
+        var stage = this.stages[0];
+        stage.models[modelName] = modelName;
+    }
+
     selectStageModel(modelName, stageName) {
         var stage = this.stages[0];
         var selectedModel = null;
