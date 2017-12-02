@@ -48,30 +48,34 @@ var POSTER_SPECS = [
     },
     {name: "CoolEffect",
      logo: "assets/images/PartnerLogos/CoolEffect.png",
-     video: "assets/video/ExposingCarbonPollutionCoolEffect.mp4"
+     video: "assets/video/ExposingCarbonPollutionCoolEffect.webm"
     },
     {name: "SustainableSV",
      logo: "assets/images/PartnerLogos/SustainableSV.png",
-     video: "assets/video/SustainableSiliconValley_BuildingSustainableRegion.mp4"
+     video: "assets/video/SustainableSiliconValley_BuildingSustainableRegion.webm"
     },
     {name: "OneDome",
      logo: "assets/images/LinkLogos/OneDome.png",
-     video: "assets/video/OneDomeTrailer.mp4"
+     video: "assets/video/OneDomeTrailer.webm"
     },
     {name: "KinetechArts",
      logo: "assets/images/PartnerLogos/KinetechArtsLogo.jpg",
-     video: "assets/video/KinetechArts_ABriefHistory.mp4"
+     video: "assets/video/KinetechArts_ABriefHistory.webm"
+    },
+    {name: "ClimateMusicProject",
+     logo: "assets/images/PartnerLogos/ClimateMusicProject.jpg",
+     video: "assets/video/ClimateMusicProjectpromo.webm"
     },
     {name: "GlobalFootprintNetwork",
      logo: "assets/images/PartnerLogos/GlobalFootprintNetwork.jpg",
-     video: "assets/video/NationalFootprintAccounts.mp4"
-     //video: "assets/video/EcologicalFootprintOfCountries.mp4"
+     video: "assets/video/NationalFootprintAccounts.webm"
+     //video: "assets/video/EcologicalFootprintOfCountries.webm"
     },
     {name: "FxPal",
      logo: "assets/images/LinkLogos/FxPal.png",
-     //video: "assets/video/FxPal_20Years.mp4"
-     video: "assets/video/FxPal_Creativity.mp4"
-     //video: "assets/video/FxPal_Future_of_Work.mp4"
+     //video: "assets/video/FxPal_20Years.webm"
+     video: "assets/video/FxPal_Creativity.webm"
+     //video: "assets/video/FxPal_Future_of_Work.webm"
     },
 ];
 
