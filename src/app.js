@@ -29,6 +29,9 @@ import { SlidePlayer } from './lib/MediaControl';
 import { Hurricane } from './lib/Hurricane';
 import { VirtualEarth } from './lib/VirtualEarth';
 import { Kessler } from './KesslerNode';
+import './Samples/OpenPerformer';
+import './Samples/ExampleNode';
+
 
 import { Player0 } from './interfaces/PlayerInterface';
 import {Route} from './Route';
