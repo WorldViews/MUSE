@@ -47,8 +47,10 @@ class Game {
         var near = 0.1;
         //var far = 30000;
         var far = 200000;
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFShadowMap;
+        if (this.renderer.shadowMap) {
+            this.renderer.shadowMap.enabled = true;
+            this.renderer.shadowMap.type = THREE.PCFShadowMap;
+        }
         if (MUSE_USE_LOGARITHMIC_BUFFER) {
             near = 0.000001;
             far = 1.0E20;
@@ -267,7 +269,11 @@ class Game {
     }
 
     render() {
-        this.renderer.clear();
+        if (this.renderer.clear)
+            this.renderer.clear();
+        else {
+            console.log("***** no renderer.clear!!");
+        }
         this.renderer.render(this.scene, this.camera);
 
         if (this.shadowMapViewers) {
