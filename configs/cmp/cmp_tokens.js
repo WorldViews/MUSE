@@ -16,6 +16,7 @@ function getToken(name, tokenPos, spec) {
     var tokScale = 1.1;
     var rot = modelOpts.rot;
     numToks++;
+    var pedName = "pedistal"+numToks;
     var token = {
         type: 'Group', name: "tokenGroup"+numToks, parent, position: tokenPos,
         scale: tokScale,
@@ -33,6 +34,7 @@ function getToken(name, tokenPos, spec) {
         },
          {  type: 'Model',
             path: 'assets/models/pedestal/model.dae',
+            name: pedName,
             position: [0, 0, 0],
             rot: [0, 0, 0],
             scale: 0.02,
