@@ -41,9 +41,20 @@ VEARTH = {
                     22675: {path:'assets/models/satellites/ComSat/model.dae',
                            scale: .001},
                     24946: {path:'assets/models/satellites/Iridium/model.dae',
-                          scale: .00005}
+                           scale: .00005}
                 }},
 }
+
+
+IRIDIUM = {
+    type: 'Model', name: 'iridiumBig',
+    path:'assets/models/satellites/Iridium/model.dae',
+    position: [0, 0.5, 0],
+    rot: [0, 0, 0.5],
+    scale: .0005,
+    ignoreCollision: true,
+    receiveShadow: true
+};
 
 SATS_PROGRAM = {
    //duration: 32*60,
@@ -58,8 +69,7 @@ SATS_PROGRAM = {
            name: 'Main Stage',
            models: {
                'vEarth': 'Virtual Earth',
-               'cmp': 'Data Visualization',
-               'iridium': 'Iridium',
+               'iridiumBig': 'Iridium',
                'none': 'Nothing'
            }
        }
@@ -72,7 +82,7 @@ SATS_PROGRAM = {
    },
    //media: MEDIA_SPEC
    //media: "configs/mediaSpecs/spaceJunk.js"
-   nodes: [VEARTH],
+   nodes: [VEARTH, IRIDIUM],
    media: "configs/orbits/spaceJunk_media.js"
 };
 
