@@ -251,7 +251,7 @@ class Loader
         }
 
         this.numPending--;
-        console.log("handleCompletion "+this.name+" "+this.numPending);
+        //console.log("handleCompletion "+this.name+" "+this.numPending);
         if (this.numPending > 0)
             return;
         delete PENDING_LOADERS[this.name];
