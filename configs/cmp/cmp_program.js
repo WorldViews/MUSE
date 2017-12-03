@@ -1,18 +1,7 @@
 
-/*
-MEDIA_SPECS = [
-    {  type: 'MediaSequence', defaultDuration: 1,
-       records: [
-           { duration: 4,      mainScreen: {url: 'assets/images/SpaceDebrisTalk/Slide2.PNG'}},
-           { duration: 10,      mainScreen: {url: 'assets/video/GlobalWeather2013.mp4'}},
-           //{ duration: 32*60,   mainScreen: {url: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm'}},
-           { duration: 32*60,   mainScreen: {url: 'assets/video/ClimateMusicProj-v7-HD.mp4'}},
-       ]
-   }
-];
-*/
 
-MEDIA_SPECS = "configs/mediaSpecs/cmp_showcase.js";
+
+MEDIA_SPECS = "configs/cmp/cmp_showcase_media.js";
 
 VEARTH = [
     {  type: 'VirtualEarth', name: 'vEarth',

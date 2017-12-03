@@ -41,7 +41,7 @@ CONFIG = {
            fieldElement: "span",
           },
     //'program': PROGRAM,
-    'program': 'configs/programs/cmp.js',
+    'program': 'configs/cmp/cmp_program.js',
     'cameraControls': 'Orbit',
     //'specs': SPECS
 };

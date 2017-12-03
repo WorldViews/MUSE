@@ -32,12 +32,12 @@ var SPECS = [
     },
     //{  type: 'Stars' },
     VEARTH,
-    KINECT_WATCHER
+    //KINECT_WATCHER
 ];
 
-POSTERS = "configs/programs/cmp_posters.js";
-BUBBLES = "configs/programs/cmp_vidBubbles.js";
-TOKENS = "configs/programs/cmp_tokens.js";
+POSTERS = "configs/cmp/cmp_posters.js";
+BUBBLES = "configs/cmp/cmp_vidBubbles.js";
+TOKENS = "configs/cmp/cmp_tokens.js";
 
 SOLAR_SYSTEM = [ {  type: 'SolarSystem' }, {  type: 'Stars' } ];
 

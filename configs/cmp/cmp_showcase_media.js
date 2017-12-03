@@ -26,7 +26,6 @@ MEDIA_SPECS = [
            { duration: 10,     mainScreen: {url: 'assets/video/GlobalWeather2013.mp4'}},
        ]
    },
- /*
    {  type: 'StageStream', stage: 'Main Stage',
       records: [
           { t: 100,   name: 'none'},
@@ -35,7 +34,6 @@ MEDIA_SPECS = [
           { t: 1000,   name: 'dancer'}
       ]
    }
-*/
 ];
 
 MUSE.returnValue(MEDIA_SPECS);

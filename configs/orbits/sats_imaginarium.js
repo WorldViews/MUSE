@@ -72,7 +72,8 @@ SATS_PROGRAM = {
    },
    //media: MEDIA_SPEC
    //media: "configs/mediaSpecs/spaceJunk.js"
-   media: "configs/mediaSpecs/spaceJunk.json"
+   nodes: [VEARTH],
+   media: "configs/orbits/spaceJunk_media.js"
 };
 
 CONFIG = {
@@ -84,7 +85,6 @@ CONFIG = {
     //program: SATS_PROGRAM,
     program: SATS_PROGRAM,
     venue: 'configs/venues/imaginarium.js',
-    specs: [VEARTH]
 };
 
 MUSE.returnValue(CONFIG);
