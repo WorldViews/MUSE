@@ -173,6 +173,11 @@ class JQControls extends UIControls {
 
     /**************************************************************/
     // Views
+
+    clearViews() {
+        this.viewControl.clearViews();
+    }
+
     registerView(name, callback) {
         console.log("JQControls.registerView "+name);
         this.viewControl.registerView(name, callback);
@@ -332,24 +337,32 @@ class ViewControl  extends JQWidget {
         this.viewCallbacks = {};
     }
 
+    clearViews() {
+        this.$views.empty();
+    }
+    
     registerView(name, callback) {
-        append(this.$views, sprintf("<option value='%s'>%s</option>", name, name));
+        console.log("viewControl.registerView: "+name);
+        var str = sprintf("<option value='%s'>%s</option>", name, name);
+        console.log("Adding: "+str);
+        append(this.$views, str);
+        console.log("callback: ",callback);
         this.viewCallbacks[name] = { name, callback };
         this.$viewTool.show();
     }
 
     onMarkView(name) {
-        alert("New View name: "+name);
+        console.log("New View name: "+name);
         game.viewManager.bookmarkView(name);
     }
 
     onDeleteView(name) {
-        alert("Delete View: "+name);
+        console.log("Delete View: "+name);
         game.viewManager.deleteView(name);
     }
 
     onViewCallback(name) {
-        console.log("onViewCallback" + name);
+        console.log("onViewCallback " + name);
         let cb = this.viewCallbacks[name];
         if (cb && cb.callback) {
             cb.callback();

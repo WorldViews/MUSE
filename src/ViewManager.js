@@ -326,7 +326,7 @@ class ViewManager extends MUSENode
         var inst = this;
         this.ui.registerView(name, () => inst.gotoView(name));
         this.uploadBookmarks();
-        name = this.getNewViewName();
+        //name = this.getNewViewName();
         this.setViewNameInUI(name);
     }
 
@@ -434,10 +434,11 @@ class ViewManager extends MUSENode
         getJSON(url, obj => inst.handleBookmarks(obj))
     }
 
-    handleBookmarks(obj)
+    handleBookmarks(obj, goHome)
     {
         console.log("handleBookmarks");
         console.log("views: "+JSON.stringify(obj));
+        this.ui.clearViews();
         this.views = obj;
         for (name in this.views) {
             var view = this.views[name];
@@ -449,27 +450,17 @@ class ViewManager extends MUSENode
         }
         this.viewNames = Object.keys(this.views);
         this.viewNames.sort();
-        /*
-          $("#viewNameSelection").html("");
-          //for (var name in ANIM.views) {
-          for (var i=0; i<ANIM.viewNames.length; i++) {
-          var name = ANIM.viewNames[i];
-          console.log("name: "+name+" view: "+JSON.stringify(ANIM.views[name]));
-          //ANIM.viewNames.push(name);
-          $("#viewNameSelection").append($('<option>', { value: name, text: name}));
-          }
-        */
         var inst = this;
         this.viewNames.forEach(viewName => {
             console.log("view: "+viewName+" ui: "+inst.ui);
             inst.ui.registerView(viewName, () => inst.gotoView(viewName));
         });
-        /*
+        if (goHome) {
           if (this.views["Home"]) {
-          console.log("Going to Home after loading bookmarks");
-          this.gotoView("Home", 1);
+              console.log("Going to Home after loading bookmarks");
+              this.gotoView("Home", 1);
           }
-        */
+        }
     }
 
 }
