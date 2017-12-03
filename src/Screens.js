@@ -258,6 +258,16 @@ function moveIntoBubble(obj) {
     var prevView = game.viewManager.getCurrentView();
     var screen = game.screens[obj.name];
     var node = game.getNode(obj);
+    var gs = game.getGameState();
+    var program = game.program;
+    var urlStateName = "mainScreen.url";
+    var dur = obj.duration || 120;
+    var vidURL = "dummy";
+    // set mainScreen to dummy, to stop playing.
+    game.state.set(urlStateName, vidURL);
+    //MUSE.game.program.pause();
+    program.setDuration(dur);
+    program.setPlayTime(0);
     console.log("moveIntoBubble node:", node)
     if (node.options.imagePath && node.options.videoPath) {
         node.updateSource(node.options.videoPath);
@@ -265,12 +275,22 @@ function moveIntoBubble(obj) {
     game.viewManager.goto(view, 2);
     screen.play();
     console.log("*** About to push game state");
+    /*
     game.pushGameState(() => {
         if (node.options.imagePath && node.options.videoPath) {
             node.updateSource(node.options.imagePath);
         }
         game.viewManager.goto(prevView, 2);
         screen.pause();
+    });
+    */
+    game.pushGameState(() => {
+        if (node.options.imagePath && node.options.videoPath) {
+            node.updateSource(node.options.imagePath);
+        }
+        game.viewManager.goto(prevView, 2);
+        screen.pause();
+        game.setGameState(gs);
     });
     return obj;
 }
