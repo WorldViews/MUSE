@@ -13,7 +13,7 @@
   time.
 
 */
-import {animTest, Anim} from './animTest';
+import {animTest, Anim} from './Anim';
 import {PanoPortal} from './lib/PanoPortal';
 import {Game} from './Game';
 

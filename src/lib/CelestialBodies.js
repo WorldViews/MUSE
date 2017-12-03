@@ -8,7 +8,7 @@ import {SatTracks} from '../SpaceObjects/SatTracks'
 import {Atmosphere} from './Atmosphere'
 import {CMPDataViz2} from './CMPDataViz2'
 import ImageSource from './ImageSource';
-import {Anim} from '../animTest';
+import {Anim} from '../Anim';
 
 // convert the positions from a lat, lon to a position on a sphere.
 // http://www.smartjava.org/content/render-open-data-3d-world-globe-threejs
