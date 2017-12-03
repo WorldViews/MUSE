@@ -182,6 +182,7 @@ class JQControls extends UIControls {
 
 class JQWidget {
     constructor(ui, $parent) {
+        this.game = ui.game;
         this.ui = ui;
         this.$parent = $parent;
     }
@@ -237,15 +238,23 @@ class PlayControls extends JQWidget {
     constructor(ui, $parent) {
         super(ui, $parent);
         var inst = this;
+        this.$back = append($parent, "<input type='button' value='B' style='width:20px;padding:10'>");
         this.$play = append($parent, "<input type='button' value='Play' style='width:60px;'>");
-        this.$timeSlider = append($parent, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
-        this.$prev = append($parent, "<br><input type='button' value='<' style='width:20px;'>");
+        //this.$prev = append($parent, "<br><input type='button' value='<' style='width:20px;'>");
+        this.$prev = append($parent, "<input type='button' value='<' style='width:20px;'>");
         this.$next = append($parent, "<input type='button' value='>' style='width:20px;'>");
+        this.$timeSlider = append($parent, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
         this.$timeSlider.on('change', e => inst.onSliderChange(e, false));
         this.$timeSlider.on('input',  e => inst.onSliderChange(e, true));
+        this.$back.on('click', e => inst.goBack(e));
         this.$play.on('click', e => inst.togglePlayPause(e));
         this.$prev.on('click', e => inst.onPrev(e));
         this.$next.on('click', e => inst.onNext(e));
+        this.game.state.on('playState', s => inst.showPlayState());
+    }
+
+    goBack(e) {
+        game.popGameState();
     }
 
     togglePlayPause(e) {
@@ -258,6 +267,17 @@ class PlayControls extends JQWidget {
         else {
             $play.val("Play");
             this.ui.program.pause();
+        }
+    }
+
+    showPlayState() {
+        var $play = this.$play;
+        var s = this.game.state.get('playState');
+        if (s == "playing") {
+            $play.val("Pause");
+        }
+        else {
+            $play.val("Play");
         }
     }
 
