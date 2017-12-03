@@ -286,6 +286,7 @@ class PlayControls extends JQWidget {
         var t = ui.program.startTime + newValue*ui.program.duration;
         if (ui.program)
             ui.program.setPlayTime(t, isAdjust);
+        this.$timeSlider.blur();
     }
 }
 
@@ -300,9 +301,14 @@ class ViewControl  extends JQWidget {
         this.$viewTool = append($parent, "<div>");
         append(this.$viewTool, "<b>View Points:</b><br>");
         this.$views = append(this.$viewTool, "<select/>");
+        this.$viewName = append(this.$viewTool, "<input type='text'/>");
+        this.$mark = append(this.$viewTool, "<input type='button' value='mark'/>");
+        this.$del = append(this.$viewTool, "<input type='button' value='del'/>");
         this.$viewTool.hide();
         append(this.$viewTool, "<p/>");
         this.$views.on('input', e => inst.onViewCallback(inst.$views.val()));
+        this.$mark.on('click', e => inst.onMarkView(inst.$viewName.val()));
+        this.$del.on('click', e => inst.onDeleteView(inst.$viewName.val()));
         this.viewCallbacks = {};
     }
 
@@ -312,17 +318,24 @@ class ViewControl  extends JQWidget {
         this.$viewTool.show();
     }
 
+    onMarkView(name) {
+        alert("New View name: "+name);
+        game.viewManager.bookmarkView(name);
+    }
+
+    onDeleteView(name) {
+        alert("Delete View: "+name);
+        game.viewManager.deleteView(name);
+    }
+
     onViewCallback(name) {
         console.log("onViewCallback" + name);
         let cb = this.viewCallbacks[name];
         if (cb && cb.callback) {
             cb.callback();
         }
+        this.$viewName.val(name);
         this.$views.blur();
-    }
-
-    onMarkView(viewName) {
-        console.log('viewName: ' + viewName);
     }
 
 }
