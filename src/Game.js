@@ -302,23 +302,23 @@ class Game {
 	    return this.models[name];
         var obj = new THREE.Group();
         if (name) {
-	    obj.name = name;
+	           obj.name = name;
         }
         this.setFromProps(obj, props);
         //this.addToGame(obj, name, props.parent);
         // (this would cause stackoverflow if default
         //  group doesn't exist.)
         if (name) {
-	    obj.name = name;
-	    this.models[name] = obj;
+	       obj.name = name;
+	       this.models[name] = obj;
         }
         if (props.parent) {
-	    var parentObj = this.getGroup(props.parent);
-	    parentObj.add(obj);
+	       var parentObj = this.getGroup(props.parent);
+	       parentObj.add(obj);
         }
         else {
 	    //game.scene.add(obj);
-	    this.scene.add(obj);
+	       this.scene.add(obj);
         }
         return obj;
     }
