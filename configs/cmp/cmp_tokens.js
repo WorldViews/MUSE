@@ -11,21 +11,23 @@ var numToks = 0;
 function getToken(name, tokenPos, spec) {
     parent = 'tokens';
     var modelOpts = spec.modelOpts || {};
-    var scale = modelOpts.scale || 1.0;
+    var modelScale = modelOpts.scale || 1.0;
     var modelPos = modelOpts.position || [0,0,0];
+    var tokScale = 1.1;
     var rot = modelOpts.rot;
     numToks++;
     var token = {
         type: 'Group', name: "tokenGroup"+numToks, parent, position: tokenPos,
-        scale: 0.7,
+        scale: tokScale,
+        //onMuseClick: {'click': spec.onClick },
+        // whoops... this didn't work cuz group isn't a Node yet.
          children: [
          {   type: 'Model', name: name,
              path: spec.modelUrl,
              //position: [.75, 0.55, 1.35],
              position: modelPos,
              rot: rot,
-             scale: scale,
-             //onMuseEvent: {'click': () => selectStageModel("dancer") }
+             scale: modelScale,
              onMuseEvent: {'click': spec.onClick },
              castShadow: true,
         },
@@ -35,6 +37,7 @@ function getToken(name, tokenPos, spec) {
             rot: [0, 0, 0],
             scale: 0.02,
             castShadow: true,
+            onMuseEvent: {'click': spec.onClick },
         }
     ]};
     return token;
