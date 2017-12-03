@@ -6,7 +6,7 @@ import * as Util from '../Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 
-var DATA_URL_PREFIX = "data/satellites/";
+var DATA_URL_PREFIX = "assets/data/satellites/";
 
 const SecsPerDay = 86400;
 const MinsPerDay = 1440;
