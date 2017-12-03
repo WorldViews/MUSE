@@ -21,8 +21,8 @@ class Anim
     }
 
     // dur is in seconds
-    addStep(vals, dur) {
-        this.tween.to(vals, dur*1000);
+    addStep(vals, dur, ease) {
+        this.tween.to(vals, dur*1000, ease);
     }
 
     getTween() {
