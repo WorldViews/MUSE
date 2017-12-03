@@ -76,6 +76,9 @@ function updateCMPViz2(year)
     var co2 = game.state.get("co2");
     var T = game.state.get("temperature");
     var balance = game.state.get("balance");
+    if (T == undefined) {
+        return;
+    }
     var co2f = (co2 - co2Min)/(co2Max - co2Min);
     var Tf = (T - TMin)/(TMax - TMin);
     var h = 0.6 + .6*Tf;
