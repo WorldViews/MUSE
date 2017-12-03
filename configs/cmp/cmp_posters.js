@@ -1,5 +1,8 @@
 
 (function() {
+
+var game = MUSE.game;
+
 // For now this just sets the video.  It should set the program
 // in a way that corresponds to that video.
 //function setProgram(specname, vidURL, channel) {
@@ -114,10 +117,16 @@ var CONTROL_SPECS = [
          game.program.play();
      }}
     },
+    {name: "backButton",
+     logo: "textures/icons/back.jpg",
+     onMuseEvent: {'click': () => {
+         game.popGameState();
+     }}
+    },
 ]
 
 PARTNER_POSTERS = getPosters(PARTNER_SPECS, 180, 10);
-RELATED_POSTERS = getPosters(RELATED_SPECS, 80);
+RELATED_POSTERS = getPosters(RELATED_SPECS, 70);
 CONTROLS = getPosters(CONTROL_SPECS, 110);
 //REAR_POSTERS = getPosters(POSTER_SPECS, 0, 12);
 
