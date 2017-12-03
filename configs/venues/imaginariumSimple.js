@@ -116,7 +116,7 @@ var SPECS = [
         parent: 'station', radius: 8.8,
         //path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
         //path: 'textures/DisplayNames/display3.PNG',
-        text: "Hello World",
+        //text: "Hello World",
         phiStart: 40, phiLength: 30,
         thetaStart: 40, thetaLength: 50
     },

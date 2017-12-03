@@ -11,10 +11,12 @@ var vidSpecs = [
        video: 'ErikAndBill_4Kx2K.webm',
        image: 'assets/images/BubblePreviews/ErikAndBill_4Kx2K.jpg'
     },
+    /*
     {  name: "Live 360 Vid Server",
        video: "webrtc://192.168.16.206:8080/",
        image: 'assets/images/FXPALBanner.jpg'
     },
+    */
     {  name: 'Greenland Melting',
       video: 'GreenlandMelting360_3840p.webm',
       image: 'assets/images/BubblePreviews/GreenlandMelting360_3840p.jpg'
@@ -48,7 +50,7 @@ function getBubbles(vidSpecs) {
         var bubble = {  type: "VideoBubble", parent, radius, path, name: bubbleName,
             videoPath: path,
             imagePath: spec.image,
-            position: Util.radialPosition(angle),
+            position: Util.radialPosition(angle, 8.1),
             rotation: [0,-1.6,0],
         };
         angle += 10;

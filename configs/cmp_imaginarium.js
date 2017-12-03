@@ -1,6 +1,6 @@
 
 
-MEDIA_SPECS = "configs/mediaSpecs/cmp_showcase.js";
+MEDIA_SPECS = "configs/cmp/cmp_showcase_media.js";
 
 SCRIPTS = {  type: 'Scripts' };
 
@@ -12,6 +12,16 @@ VEARTH = [
        atmosphere: {'name': 'CO2Viz', opacity: .1}
     }
 ];
+
+GEODESIC_DOME =  {
+       type: 'Model', name: 'geodesicDome',
+        parent: 'station',
+        path: 'assets/models/GeodesicDome/model.dae',
+        position: [0.0, 0, 0],
+        rot: [0, 90, 0],
+        scale: 0.0045,
+        visible: false
+};
 
 var NET_LINK = {type: 'NetLink'};
 var KINECT_WATCHER = {type: 'KinectWatcher'}
@@ -32,6 +42,7 @@ var SPECS = [
     },
     //{  type: 'Stars' },
     VEARTH,
+    GEODESIC_DOME
     //KINECT_WATCHER
 ];
 
@@ -137,8 +148,8 @@ CONFIG = {
                    'vEarth': 'Virtual Earth',
                    'dancer': 'Dancer',
                    'cmp': 'Data Visualization',
-                   'portal': 'Panoramic Portal',
                    'bmw': 'Eriks Car',
+                   'geodesicDome': 'Geodesic Dome',
                    'none': 'Nothing'
                }
            }
@@ -157,7 +168,8 @@ CONFIG = {
        media: MEDIA_SPECS,
        nodes: [NET_LINK, SCRIPTS, POSTERS, BUBBLES, TOKENS, SPECS]
     },
-    venue: '/configs/venues/imaginarium.js',
+    //venue: '/configs/venues/imaginarium.js',
+    venue: '/configs/venues/imaginariumSimple.js',
     environment: SOLAR_SYSTEM
     //'specs': [SCRIPTS, POSTERS, BUBBLES]
 };
