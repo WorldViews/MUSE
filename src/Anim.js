@@ -25,6 +25,15 @@ class Anim
         this.tween.to(vals, dur*1000, ease);
     }
 
+    // dur is in seconds
+    addCall(fun) {
+        this.tween.call(fun);
+    }
+
+    addWait(dur) {
+        this.tween.wait(dur*1000);
+    }
+
     getTween() {
         return this.tween;
     }
@@ -84,5 +93,23 @@ function animTest(game)
     return anim;
 }
 
+function animTest2(game)
+{
+    game = game || window.game;
+    console.log("!!!! >>>>>>>>>>>>>>>>>>>>>>>>>> animTest...........");
+    var target = game.models.station;
+    var vm = game.viewManager;
+    window.anim = new Anim("anim1", game.models.station);
+    anim.addCall(() => vm.gotoView("Above"));
+    anim.addWait(10)
+    anim.addCall(() => vm.gotoView("Home"));
+    anim.addWait(5)
+    anim.addCall(() => vm.gotoView("Left Rear"));
+    game.registerPlayer(anim);
+    return anim;
+}
+
 window.animTest = animTest;
+window.animTest2 = animTest2;
+
 export {animTest, Anim};
