@@ -169,12 +169,14 @@ var CONTROL_SPECS = [
 
 PARTNER_POSTERS = getPosters(PARTNER_SPECS, 180, 10);
 RELATED_POSTERS = getPosters(RELATED_SPECS, 70);
+
 //BACK_BUTTON = getPoster(
 //    {name: "backButton", logo: "textures/icons/back.jpg",
 //     onMuseEvent: {'click': () => game.popGameState();}}, 110);
-PLAY_PAUSE_BUTTON = getPlayPauseButton("playPauseButton", 90);
 
-CONTROLS = getPosters(CONTROL_SPECS, 110);
+PLAY_PAUSE_BUTTON = getPlayPauseButton("playPauseButton", 110);
+
+CONTROLS = getPosters(CONTROL_SPECS, 100);
 CONTROLS.push(PLAY_PAUSE_BUTTON);
 //REAR_POSTERS = getPosters(POSTER_SPECS, 0, 12);
 
