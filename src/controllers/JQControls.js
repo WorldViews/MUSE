@@ -329,18 +329,20 @@ class ViewControl  extends JQWidget {
         this.$viewName = append(this.$viewTool, "<input type='text'/>");
         this.$mark = append(this.$viewTool, "<input type='button' value='mark'/>");
         this.$del = append(this.$viewTool, "<input type='button' value='del'/>");
+        this.$save = append(this.$viewTool, "<input type='button' value='save'/>");
         this.$viewTool.hide();
         append(this.$viewTool, "<p/>");
         this.$views.on('input', e => inst.onViewCallback(inst.$views.val()));
-        this.$mark.on('click', e => inst.onMarkView(inst.$viewName.val()));
-        this.$del.on('click', e => inst.onDeleteView(inst.$viewName.val()));
+        this.$mark.on('click',  e => inst.onMarkView(inst.$viewName.val()));
+        this.$del.on('click',   e => inst.onDeleteView(inst.$viewName.val()));
+        this.$save.on('click',  e => inst.onSave());
         this.viewCallbacks = {};
     }
 
     clearViews() {
         this.$views.empty();
     }
-    
+
     registerView(name, callback) {
         console.log("viewControl.registerView: "+name);
         var str = sprintf("<option value='%s'>%s</option>", name, name);
@@ -349,6 +351,10 @@ class ViewControl  extends JQWidget {
         console.log("callback: ",callback);
         this.viewCallbacks[name] = { name, callback };
         this.$viewTool.show();
+    }
+
+    onSave() {
+        game.viewManager.save();
     }
 
     onMarkView(name) {
