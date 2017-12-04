@@ -69,6 +69,17 @@ class Program extends MUSENode
         });
     }
 
+    // This clears the program - meaning clearing screens.
+    // it is used when pushing into a new program.   For Now
+    // it only clears the main screen, but shoudl do all of them.
+    clear() {
+        // this is hack to get the main screen to clear.  Instead
+        var urlStateName = "mainScreen.url";
+        var vidURL = "dummy";
+        // set mainScreen to dummy, to stop playing.
+        game.state.set(urlStateName, vidURL);
+    }
+
     startProgram() {
         var t = this.getPlayTime();
         this.setPlayTime(t);
