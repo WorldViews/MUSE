@@ -211,6 +211,26 @@ class Screen extends Node3D
         this.screenMesh.texture = texture;
         this.play();
     }
+
+    updateSourceNEW(url, options) {
+        options = options || {};
+        console.log("Getting ImageSource "+url);
+        var newImageSource = ImageSource.getImageSource(url, options);
+        var readyPromise = newImageSource.readyPromise();
+        var inst = this;
+        readyPromise.then(rs => {
+            let texture = newImageSource.createTexture();
+            inst.material.map = texture;
+            //this.texture = texture;
+            inst.screenMesh.texture = texture;
+            var oldImageSource = inst.imageSource;
+            inst.imageSource = newImageSource;
+            inst.play();
+            if (oldImageSource) {
+                oldImageSource.dispose();
+            }
+        });
+    }
 }
 
 MUSENode.defineFields(Screen, [

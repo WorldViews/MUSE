@@ -39,6 +39,42 @@ export default class ImageSource {
         this.running = false;
     }
 
+/*
+Questions for Yulius:
+1) Is this code ok?
+2) Where is ImageSource.TYPE.VIDEO define?
+3) what happens if this class is disposed, and onloaded data gets
+called?  Is there a way to get rid of this Promise.
+*/
+    readyPromise(minReadyState) {
+        minReadyState = minReadyState || 2;
+        if (this.type != ImageSource.TYPE.VIDEO) {
+            console.log("ImageSource.readyPromise only implemented for VIDEO");
+            return Promise.resolve(minReadyState);
+        }
+        var inst = this;
+        this.video.onloadeddata = () => inst.onLoadedData();
+        this.promise = new Promise((resolve,reject) => {
+            var rs = inst.video.readyState;
+            if (rs >= 2) {
+                resolve(rs);
+                return;
+            }
+            inst.video.onloadeddata = () => {
+                rs = inst.video.readyState;
+                if (rs >= 2) {
+                    resolve(rs)
+                }
+            }
+        });
+        return this.promise;
+    }
+
+    onLoadedData() {
+        var rs = this.video.readyState;
+        alert("video readyState: "+rs);
+    }
+
     static getImageSource(url, options) {
         console.log("getImageSource "+url);
         var type = ImageSource.TYPE.IMAGE;
