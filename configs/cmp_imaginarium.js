@@ -42,8 +42,8 @@ var SPECS = [
     },
     //{  type: 'Stars' },
     VEARTH,
-    GEODESIC_DOME
-    //KINECT_WATCHER
+    GEODESIC_DOME,
+    KINECT_WATCHER,
 ];
 
 POSTERS = "configs/cmp/cmp_posters.js";

@@ -20,7 +20,6 @@ function setProgram(name, spec) {
         game.state.set(urlStateName, vidURL);
         program.setPlayTime(0);
         program.setDuration(spec.duration || 3*60);
-
     }
     if (spec.stageModel)
         program.selectStageModel(spec.stageModel);
@@ -28,6 +27,51 @@ function setProgram(name, spec) {
         program.selectStageModel("none");
     }
     game.pushGameState(gs);
+}
+
+function getPoster(spec, thetaStart, phiStart, posterSize) {
+    var poster = { type: 'Screen', name: spec.name,
+        path: spec.logo, text: spec.text, html: spec.html, radius: 7.8,
+        phiStart, thetaStart,
+        phiLength: posterSize, thetaLength: posterSize,
+        //onMuseEvent: {'click': () => setProgram(spec.name, spec)}
+        onMuseEvent: spec.onMuseEvent
+    };
+    if (!poster.onMuseEvent) {
+        poster.onMuseEvent = {'click': () => setProgram(spec.name, spec)};
+    }
+    //poster.path = spec.logo;
+    //poster.text = spec.text;
+    //poster.html = spec.html;
+    return poster;
+}
+
+function getPlayPauseButton(buttonName, theta, posterSize)
+{
+    posterSize = posterSize || 8;
+    var phiStart = 88 - posterSize;
+    var thetaStart = theta - posterSize/2;
+    var html_paused =  '<div style="width:100%;height:100%;background-color:green" />';
+    var html_playing = '<div style="width:100%;height:100%;background-color:red" />';
+    var html = ( game.state.get("playState") == "paused" ? html_paused : html_playing );
+    var updateAppearance = () => {
+        var node = game.getNode(buttonName);
+        if (!node) return;
+        html = ( game.state.get("playState") == "paused" ? html_paused : html_playing );
+        node.updateHTML(html);
+    };
+    var handleClick = () => {
+        var s = game.state.get("playState");
+        (s == "paused") ? game.program.play() : game.program.pause();
+    }
+    var spec = {
+        name: buttonName,
+        html: html,
+        onMuseEvent: {'click': handleClick},
+    };
+    var poster = getPoster(spec, thetaStart, phiStart, posterSize);
+    game.state.on("playState", updateAppearance);
+    return poster;
 }
 
 // Layout posters radially, centered at a given angle theta.
@@ -40,25 +84,14 @@ function getPosters(specs, theta, posterSize)
     var phiStart = 88 - posterSize;
     var thetaStart = theta - specs.length*(posterSize+posterSpacing)/2;
     var posters = specs.map(spec => {
-        var poster = { type: 'Screen', name: spec.name,
-            path: spec.logo, radius: 7.8,
-            phiStart, thetaStart,
-            phiLength: posterSize, thetaLength: posterSize,
-            //onMuseEvent: {'click': () => setProgram(spec.name, spec)}
-            onMuseEvent: spec.onMuseEvent
-        };
-        if (!poster.onMuseEvent) {
-            poster.onMuseEvent = {'click': () => setProgram(spec.name, spec)};
-        }
-        poster.path = spec.logo;
-        poster.text = spec.text;
-        poster.html = spec.html;
+        var poster = getPoster(spec, thetaStart, phiStart, posterSize);
         thetaStart += (posterSize+posterSpacing);
         return poster;
     });
     console.log("POSTERS:", posters);
     return posters;
 }
+
 
 var PARTNER_SPECS = [
     {name: "CoolEffect",
@@ -104,7 +137,9 @@ var RELATED_SPECS = [
     },
 ];
 
+
 var CONTROL_SPECS = [
+/*
     {name: "stopButton",
      html:'<div style="width:100%;height:100%;background-color:red" />',
      onMuseEvent: {'click': () => {
@@ -117,6 +152,13 @@ var CONTROL_SPECS = [
          game.program.play();
      }}
     },
+    {name: "playPauseButton",
+     html:'<div style="width:100%;height:100%;background-color:green" />',
+     onMuseEvent: {'click': () => {
+         game.program.play();
+     }}
+    },
+*/
     {name: "backButton",
      logo: "textures/icons/back.jpg",
      onMuseEvent: {'click': () => {
@@ -127,7 +169,13 @@ var CONTROL_SPECS = [
 
 PARTNER_POSTERS = getPosters(PARTNER_SPECS, 180, 10);
 RELATED_POSTERS = getPosters(RELATED_SPECS, 70);
+//BACK_BUTTON = getPoster(
+//    {name: "backButton", logo: "textures/icons/back.jpg",
+//     onMuseEvent: {'click': () => game.popGameState();}}, 110);
+PLAY_PAUSE_BUTTON = getPlayPauseButton("playPauseButton", 90);
+
 CONTROLS = getPosters(CONTROL_SPECS, 110);
+CONTROLS.push(PLAY_PAUSE_BUTTON);
 //REAR_POSTERS = getPosters(POSTER_SPECS, 0, 12);
 
 POSTERS = [PARTNER_POSTERS, RELATED_POSTERS, CONTROLS];
