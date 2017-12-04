@@ -255,7 +255,7 @@ class ViewManager extends MUSENode
             var pos1 = view.position;
             var interp = new ViewInterpolator(pos0, camera.rotation.clone(),
                 view.position, view.rotation, camera);
-            var anim = new Animation(this, "goto"+name, dur, interp);
+            var anim = new Animation(this, "goto_"+name, dur, interp);
             anim.activate();
             return;
         }
@@ -385,15 +385,22 @@ class ViewManager extends MUSENode
         return rep;
     }
 
-    // untested
-    uploadBookmarks()
+    save() {
+        var url = this.getBookmarksURL();
+        url = url.replace("data/", "/update/");
+        this.uploadBookmarks(url);
+    }
+
+    uploadBookmarks(url)
     {
         var jstr = JSON.stringify(this.getViewsRep());
-        var url = this.getBookmarksURL();
+        if (!url) {
+            //url = this.getBookmarksURL();
+            url = "/update/bookmarks.edited.json";
+        }
         console.log("uploadBookmarks url: "+url+"  data: "+jstr);
         //url = url.replace("/", "/update/");
         //url = "http://localhost:4000/update/bookmarks.edited.json";
-        url = "/update/bookmarks.edited.json";
         console.log("uploadBookmarks to "+url);
         //        jQuery.post(url, jstr, function () {
         //          console.log("Succeeded at upload")}, "json");
