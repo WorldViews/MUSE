@@ -22,6 +22,10 @@
     width: 95%;
 }
 
+#uiPlayControls > input[type=button] {
+    margin-right: 10px;
+}
+
 #uiPanel {
     position: absolute; left: 30px; top: 40px;
     padding-left: 10px; padding-right: 10px;
