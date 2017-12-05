@@ -323,7 +323,7 @@ class ViewControl  extends JQWidget {
     constructor(ui, $parent) {
         super(ui, $parent);
         var inst = this;
-        this.$viewTool = append($parent, "<div>");
+        this.$viewTool = append($parent, '<div id="uiViewControls">');
         append(this.$viewTool, "<b>View Points:</b><br>");
         this.$views = append(this.$viewTool, "<select/>");
         this.$viewName = append(this.$viewTool, "<input type='text'/>");
