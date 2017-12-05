@@ -24,9 +24,6 @@ function setProgram(name, spec) {
     }
     if (spec.stageModel)
         program.selectStageModel(spec.stageModel);
-    else {
-        program.selectStageModel("none");
-    }
     program.play();
     game.pushGameState(gs);
 }
