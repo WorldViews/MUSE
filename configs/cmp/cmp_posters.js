@@ -26,6 +26,7 @@ function setProgram(name, spec) {
     else {
         program.selectStageModel("none");
     }
+    program.play();
     game.pushGameState(gs);
 }
 
@@ -124,7 +125,7 @@ var PARTNER_SPECS = [
 var RELATED_SPECS = [
     {name: "EarthClock",
      logo: "assets/images/CMPPosters/TimeToChange.jpg",
-     video: "assets/video/Climate-Music-V3-Distortion_HD_540.webm"
+     video: "assets/video/ClimateMusicProj-v7-HD.mp4"
     },
     {name: "SustainableSV",
      logo: "assets/images/PartnerLogos/SustainableSV.png",

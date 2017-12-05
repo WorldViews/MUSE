@@ -21,10 +21,10 @@ var vidSpecs = [
       video: 'GreenlandMelting360_3840p.webm',
       image: 'assets/images/BubblePreviews/GreenlandMelting360_3840p.jpg'
     },
-    {  name: 'Iceland Glaciers',
-      video: 'IcelandGlaciers360_1440.webm',
-      image: 'assets/images/BubblePreviews/IcelandGlaciers360_1440.jpg'
-    },
+//    {  name: 'Iceland Glaciers',
+//      video: 'IcelandGlaciers360_1440.webm',
+//      image: 'assets/images/BubblePreviews/IcelandGlaciers360_1440.jpg'
+//    },
     {  name: 'Climate Change Fiji',
       video: 'ClimateChangeFiji360_1440.webm',
       image: 'assets/images/BubblePreviews/ClimateChangeFiji360_1440.jpg'

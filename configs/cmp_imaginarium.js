@@ -151,7 +151,6 @@ CONFIG = {
                    'vEarth': 'Virtual Earth',
                    'dancer': 'Dancer',
                    'cmp': 'Data Visualization',
-                   'bmw': 'Eriks Car',
                    'geodesicDome': 'Geodesic Dome',
                    'none': 'Nothing'
                }
