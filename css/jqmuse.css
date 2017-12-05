@@ -23,7 +23,7 @@
 }
 
 #uiPlayControls > input[type=button] {
-    margin-right: 10px;
+    margin-right: 4px;
 }
 
 #uiPanel {
@@ -40,6 +40,15 @@
     width: 85%;
     background: rgba(20,5,60,0.0);
 }
+
+#uiViewControls > input[type=button] {
+    margin: 2px;
+}
+
+#uiViewControls > input[type=text] {
+    margin: 2px;
+}
+
 
 .uiButton {
     margin: 2px;
