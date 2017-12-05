@@ -50,6 +50,7 @@ class Program extends MUSENode
         this.scripts = options.scripts || {};
         this.stages = options.stages || [];
         this.selectedStageModel = null;
+        this.screenNames = ["mainScreen", "innerCover"];
         console.log("channels:", this.channels);
         var inst = this;
         var promises = [];
@@ -69,15 +70,105 @@ class Program extends MUSENode
         });
     }
 
+/*
+    getProgramState() {
+        var ps = {};
+        var urlStateName = "mainScreen.url"; // hack!!!!
+        ps.playTime = this.getPlayTime();
+        ps.url = this.game.state.get(urlStateName);
+        ps.stageModel = this.getStageModel();
+        ps.duration = this.getDuration();
+        ps.playState = this.game.state.get("playState");
+        return ps;
+    }
+
+    setProgramState(ps) {
+        var program = this;
+        var game = this.game;
+        var urlStateName = "mainScreen.url"; // hack!!!!
+        program.selectStageModel(ps.stageModel);
+        //game.state.set(urlStateName, gs.url);
+        game.state.dispatch(urlStateName, ps.url);
+        program.setPlayTime(ps.playTime);
+        program.setDuration(ps.duration);
+        if (ps.playState == "paused") {
+            program.pause();
+        }
+        else {
+            program.play();
+        }
+    }
+*/
+    getProgramState() {
+        var ps = {};
+        //var urlStateName = "mainScreen.url"; // hack!!!!
+        ps.playTime = this.getPlayTime();
+        ps.screenUrls = {};
+        this.screenNames.forEach(screenName => {
+            var urlStateName = screenName+".url";
+            var url = this.game.state.get(urlStateName);
+            if (url == undefined)
+                url = null; // this helps it show up in JSON dump
+            ps.screenUrls[screenName] = url;
+            console.log("saved "+screenName+" "+urlStateName+" "+url);
+        });
+        ps.stageModel = this.getStageModel();
+        ps.duration = this.getDuration();
+        ps.playState = this.game.state.get("playState");
+        return ps;
+    }
+
+    setProgramState(ps) {
+        console.log("Program.setProgramState ", ps);
+        var program = this;
+        var game = this.game;
+        //var urlStateName = "mainScreen.url"; // hack!!!!
+        program.selectStageModel(ps.stageModel);
+        //game.state.set(urlStateName, gs.url);
+        console.log("setting screenUrls", ps.screenUrls);
+        for (var screenName in ps.screenUrls) {
+            var url = ps.screenUrls[screenName];
+            var urlStateName = screenName+".url";
+            console.log("restoring "+screenName+" "+urlStateName+" "+url);
+            game.state.dispatch(urlStateName, url);
+        }
+        //game.state.dispatch(urlStateName, ps.url);
+        program.setPlayTime(ps.playTime);
+        program.setDuration(ps.duration);
+        if (ps.playState == "paused") {
+            program.pause();
+        }
+        else {
+            program.play();
+        }
+    }
+
     // This clears the program - meaning clearing screens.
     // it is used when pushing into a new program.   For Now
     // it only clears the main screen, but shoudl do all of them.
     clear() {
         // this is hack to get the main screen to clear.  Instead
-        var urlStateName = "mainScreen.url";
         //var vidURL = "textures/blank.png"; // this makes the screen white
+        /*
         var vidURL = "missing.jpg"; // this will blank the screen
-        game.state.set(urlStateName, vidURL);
+        game.state.set("mainScreen.url", vidURL);
+        game.state.set("innerCover.url", vidURL);
+        */
+        /*
+        var vidURL = "missing.jpg"; // this will blank the screen
+        */
+        var vidURL = "missing.jpg"; // this will blank the screen
+        this.screenNames.forEach(screenName => {
+            console.log("clearing "+screenName+" with dummy URL"+vidURL);
+            game.state.set(screenName+".url", vidURL);
+        });
+        /*
+        this.screenNames.forEach(screenName => {
+            console.log("clearing "+screenName);
+            var sn = game.getNode(screenName);
+            sn.clear();
+        });
+        */
     }
 
     /*

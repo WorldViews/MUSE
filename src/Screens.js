@@ -120,7 +120,7 @@ class Screen extends Node3D
     //watchProperties(evt) {
     //    var props = evt.message;
     onChange(props) {
-        console.log("Screen.onChange"+JSON.stringify(props));
+        console.log("Screen.onChange "+this.name+" propts: "+JSON.stringify(props));
         if (typeof props === 'object') {
             if (props.url)
                 this.updateSource(props.url, props);
@@ -203,6 +203,11 @@ class Screen extends Node3D
             return;
         }
         this.imageSource.setPlayTime(t);
+    }
+
+    clear() {
+        console.log("Screen.clear "+this.name);
+        this.updateSource("missing.jpg");
     }
 
     setBlank() {
@@ -312,7 +317,9 @@ function moveIntoBubble(obj) {
 
 function playVideoOnSurface(name, url) {
     var n = game.getNode(name);
-    n.updateSource(url);
+    var stateName = name+".url";
+    game.state.dispatch(stateName, url);
+    //n.updateSource(url);
     n.setVisible(true);
     game.program.play();
 }
@@ -333,15 +340,18 @@ function playBubbleInDome(obj) {
     //}
     playVideoOnSurface(domeName, bubbleNode.options.videoPath);
     console.log("*** About to push game state");
+    game.pushGameState(gs);
+    /*
     game.pushGameState(() => {
         console.log("restoring game state after bubble in dome");
         //if (node.options.imagePath && node.options.videoPath) {
         //    node.updateSource(node.options.imagePath);
         //}
-        domeNode.setBlank();
-        domeNode.setVisible(false);
+        //domeNode.setBlank();
+        //domeNode.setVisible(false);
         game.setGameState(gs);
     });
+    */
     return obj;
 }
 

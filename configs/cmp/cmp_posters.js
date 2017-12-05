@@ -15,6 +15,7 @@ function setProgram(name, spec) {
     var urlStateName = channel+".url";
     // get current program state
     var gs = game.getGameState();
+    program.clear();
     if (vidURL) {
         console.log("setting state "+urlStateName+": "+vidURL);
         game.state.set(urlStateName, vidURL);

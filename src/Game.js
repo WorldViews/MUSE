@@ -590,6 +590,9 @@ is used to pop back out of video bubbles.
 */
     getGameState() {
         var program = this.program;
+        var ps = program.getProgramState();
+        var gs = {programState: ps};
+        /*
         var gs = {};
         var urlStateName = "mainScreen.url"; // hack!!!!
         gs.playTime = program.getPlayTime();
@@ -598,23 +601,31 @@ is used to pop back out of video bubbles.
         gs.duration = program.getDuration();
         gs.playState = this.state.get("playState");
         return gs;
+        */
+        return gs;
     }
 
+    dumpGameState(gs) {
+        if (typeof gs == "object")
+            console.log("gameState: "+JSON.stringify(gs, null,3));
+
+        console.log
+    }
+
+    dumpGameStack() {
+        for (var i=this.stateStack.length-1; i>=0; i--) {
+            var gs = this.stateStack[i];
+            console.log("i: "+i+" "+gs);
+            this.dumpGameState(gs);
+        }
+    }
     setGameState(gs) {
+        var ps = gs.programState;
         var program = this.program;
         var urlStateName = "mainScreen.url"; // hack!!!!
         if (typeof gs == "object") {
             console.log("restoring gamestate ", gs);
-            program.selectStageModel(gs.stageModel);
-            game.state.set(urlStateName, gs.url);
-            program.setPlayTime(gs.playTime);
-            program.setDuration(gs.duration);
-            if (gs.playState == "paused") {
-                program.pause();
-            }
-            else {
-                program.play();
-            }
+            this.program.setProgramState(gs.programState);
             if (gs.restoreFun)
                 gs.restoreFun();
         }
