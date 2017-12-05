@@ -108,7 +108,7 @@ class Program extends MUSENode
             var urlStateName = screenName+".url";
             var url = this.game.state.get(urlStateName);
             if (url == undefined)
-                url = null; // this helps it show up in JSON dump
+                url = "_CLEAR_"; // this helps it show up in JSON dump
             ps.screenUrls[screenName] = url;
             console.log("saved "+screenName+" "+urlStateName+" "+url);
         });
@@ -157,11 +157,12 @@ class Program extends MUSENode
         /*
         var vidURL = "missing.jpg"; // this will blank the screen
         */
-        var vidURL = "missing.jpg"; // this will blank the screen
+        var vidURL = "_CLEAR_"; // this will blank the screen
         this.screenNames.forEach(screenName => {
             console.log("clearing "+screenName+" with dummy URL"+vidURL);
             game.state.set(screenName+".url", vidURL);
         });
+        this.selectStageModel("none");
         /*
         this.screenNames.forEach(screenName => {
             console.log("clearing "+screenName);

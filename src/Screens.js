@@ -207,9 +207,10 @@ class Screen extends Node3D
 
     clear() {
         console.log("Screen.clear "+this.name);
-        this.updateSource("missing.jpg");
+        this.updateSource("_CLEAR_");
     }
 
+    // this sets to white background
     setBlank() {
         //this.updateText("")
         this.updateSource("textures/blank.png")
