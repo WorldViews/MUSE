@@ -596,6 +596,7 @@ is used to pop back out of video bubbles.
         gs.url = this.state.get(urlStateName);
         gs.stageModel = program.getStageModel();
         gs.duration = program.getDuration();
+        gs.playState = this.state.get("playState");
         return gs;
     }
 
@@ -607,7 +608,13 @@ is used to pop back out of video bubbles.
             program.selectStageModel(gs.stageModel);
             game.state.set(urlStateName, gs.url);
             program.setPlayTime(gs.playTime);
-            program.setDuration(gs.duration)
+            program.setDuration(gs.duration);
+            if (gs.playState == "paused") {
+                program.pause();
+            }
+            else {
+                program.play();
+            }
             if (gs.restoreFun)
                 gs.restoreFun();
         }
