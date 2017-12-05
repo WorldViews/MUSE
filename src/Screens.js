@@ -267,10 +267,6 @@ MUSENode.defineFields(VideoBubble, [
   "videoPath"
 ]);
 
-function clickedOnBubble() {
-    alert("Click on bubble");
-}
-
 function moveIntoBubble(obj) {
     var position = obj.getWorldPosition();
     var rotation = new THREE.Euler(0,0,0);
@@ -302,6 +298,44 @@ function moveIntoBubble(obj) {
     return obj;
 }
 
+function playVideoOnSurface(name, url) {
+    url = url || "assets/video/ErikAndBill_4Kx2K.mp4";
+    var n = game.getNode(name);
+    n.updateSource(url);
+    var m = game.models[name];
+    m.visible = true;
+}
+
+function playBubbleInDome(obj) {
+    var node = game.getNode(obj);
+    var gs = game.getGameState();
+    var program = game.program;
+    program.clear();
+    var dur = obj.duration || 120;
+
+    program.setDuration(dur);
+    program.setPlayTime(0);
+    console.log("moveIntoBubble node:", node)
+    //if (node.options.imagePath && node.options.videoPath) {
+    //    node.updateSource(node.options.videoPath);
+    //}
+    playVideoOnSurface("innerCover", node.options.videoPath);
+    console.log("*** About to push game state");
+    game.pushGameState(() => {
+        if (node.options.imagePath && node.options.videoPath) {
+            node.updateSource(node.options.imagePath);
+        }
+        game.getNode("innerDome").setVisible(false);
+        game.setGameState(gs);
+    });
+    return obj;
+}
+
+function clickedOnBubble(obj) {
+    playBubbleInDome(obj);
+}
+
+
 function doubleClickedOnBubble(obj) {
     moveIntoBubble(obj);
 }
@@ -311,7 +345,10 @@ function getBubble(game, opts) {
     opts
     if (opts.autoPlay == undefined)
         opts.autoPlay = false;
-    opts.onMuseEvent = {'doubleClick': doubleClickedOnBubble };
+    opts.onMuseEvent = {
+        'click': clickedOnBubble,
+        //'doubleClick': doubleClickedOnBubble,
+    };
     if (opts.imagePath)
         opts.path = opts.imagePath;
     return new VideoBubble(game, opts);
