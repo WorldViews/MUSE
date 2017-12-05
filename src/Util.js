@@ -225,12 +225,13 @@ export function isVideoURL(url) {
     return type;
 }
 
-export function dispatchMuseEvent(evType, obj) {
+// event is the mouse or key event that caused this.  May be null
+export function dispatchMuseEvent(evType, obj, event) {
     while (obj) {
         var userData = obj.userData;
         if (userData && userData[evType]) {
             report("******** BINGO Click!!!! *******");
-            userData[evType](obj);
+            userData[evType](obj, event);
             break;
         }
         obj = obj.parent;

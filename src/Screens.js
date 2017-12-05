@@ -345,11 +345,17 @@ function playBubbleInDome(obj) {
     return obj;
 }
 
-function clickedOnBubble(obj) {
-    playBubbleInDome(obj);
+function clickedOnBubble(obj, evt) {
+    console.log("clickedOnBubble: ", evt)
+    if (evt && evt.shiftKey) {
+        moveIntoBubble(obj);
+    }
+    else {
+        playBubbleInDome(obj);
+    }
 }
 
-function doubleClickedOnBubble(obj) {
+function doubleClickedOnBubble(obj, evt) {
     moveIntoBubble(obj);
 }
 

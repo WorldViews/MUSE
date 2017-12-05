@@ -151,7 +151,7 @@ class MultiControls extends MUSENode
         var obj = this.pickedObj;
         console.log(" pickedObj: ", obj);
         if (obj) {
-            Util.dispatchMuseEvent(museEvType, obj);
+            Util.dispatchMuseEvent(museEvType, obj, event);
         }
     }
 
