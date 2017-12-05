@@ -1,5 +1,6 @@
 import OBJLoader from '../lib/loaders/OBJLoader';
 import * as THREE from 'three';
+import _ from 'lodash';
 import VRController from '../lib/vr/VRController';
 import datGUIVR from 'datguivr';
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
@@ -240,7 +241,8 @@ export default class VRInputController {
     }
 
     pickIntersection(intersections) {
-        for (var i=0; i<intersects.length; i++) {
+        for (var i=0; i<intersections.length; i++) {
+            var obj = intersections[i];
             if (_.get(obj, 'userData.museIgnorePicking'))
                 continue;
             return obj;
