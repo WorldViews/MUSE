@@ -75,10 +75,19 @@ class Program extends MUSENode
     clear() {
         // this is hack to get the main screen to clear.  Instead
         var urlStateName = "mainScreen.url";
-        var vidURL = "dummy";
-        // set mainScreen to dummy, to stop playing.
+        //var vidURL = "textures/blank.png"; // this makes the screen white
+        var vidURL = "missing.jpg"; // this will blank the screen
         game.state.set(urlStateName, vidURL);
     }
+
+    /*
+    clear() {
+        // this is hack to get the main screen to clear.  Instead
+        var urlStateName = "mainScreen.text";
+        // set mainScreen to dummy, to stop playing.
+        game.state.set(urlStateName, "");
+    }
+    */
 
     startProgram() {
         var t = this.getPlayTime();

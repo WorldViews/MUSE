@@ -124,6 +124,8 @@ class Screen extends Node3D
         if (typeof props === 'object') {
             if (props.url)
                 this.updateSource(props.url, props);
+            if (props.text != null) // in case text == ""
+                this.updateText(props.text, props);
             if (props.html)
                 this.updateHtml(props.html, props);
             if (props.requestedPlayTime) {
@@ -152,9 +154,14 @@ class Screen extends Node3D
         this.material.map = texture;
     }
 
-    updateHTML(html) {
-        this._element.innerHTML = html;
 
+    updateHTML(html) {
+        // in case we had a video, we should at least pause it.
+        // probably we should free it up.  The problem now
+        // is that if we have this html, and the screen gets played
+        // the video will start playing and produce audio.
+
+        this._element.innerHTML = html;
         html2canvas(
             this._element,
             {
@@ -196,6 +203,11 @@ class Screen extends Node3D
             return;
         }
         this.imageSource.setPlayTime(t);
+    }
+
+    setBlank() {
+        //this.updateText("")
+        this.updateSource("textures/blank.png")
     }
 
     updateSource(url, options) {
@@ -299,33 +311,35 @@ function moveIntoBubble(obj) {
 }
 
 function playVideoOnSurface(name, url) {
-    url = url || "assets/video/ErikAndBill_4Kx2K.mp4";
     var n = game.getNode(name);
     n.updateSource(url);
-    var m = game.models[name];
-    m.visible = true;
+    n.setVisible(true);
+    game.program.play();
 }
 
 function playBubbleInDome(obj) {
-    var node = game.getNode(obj);
+    var domeName = "innerCover";
+    var bubbleNode = game.getNode(obj);
+    var domeNode = game.getNode(domeName);
+    console.log("playBubbleInDome bubbleNode:", bubbleNode, "domeNode ", domeNode);
     var gs = game.getGameState();
     var program = game.program;
     program.clear();
-    var dur = obj.duration || 120;
-
+    var dur = bubbleNode.options.duration || 120;
     program.setDuration(dur);
     program.setPlayTime(0);
-    console.log("moveIntoBubble node:", node)
     //if (node.options.imagePath && node.options.videoPath) {
     //    node.updateSource(node.options.videoPath);
     //}
-    playVideoOnSurface("innerCover", node.options.videoPath);
+    playVideoOnSurface(domeName, bubbleNode.options.videoPath);
     console.log("*** About to push game state");
     game.pushGameState(() => {
-        if (node.options.imagePath && node.options.videoPath) {
-            node.updateSource(node.options.imagePath);
-        }
-        game.getNode("innerDome").setVisible(false);
+        console.log("restoring game state after bubble in dome");
+        //if (node.options.imagePath && node.options.videoPath) {
+        //    node.updateSource(node.options.imagePath);
+        //}
+        domeNode.setBlank();
+        domeNode.setVisible(false);
         game.setGameState(gs);
     });
     return obj;
@@ -334,7 +348,6 @@ function playBubbleInDome(obj) {
 function clickedOnBubble(obj) {
     playBubbleInDome(obj);
 }
-
 
 function doubleClickedOnBubble(obj) {
     moveIntoBubble(obj);
