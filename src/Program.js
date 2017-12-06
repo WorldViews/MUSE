@@ -26,6 +26,7 @@ class Program extends MUSENode
         this.checkOptions(options);
         this.game = game;
         game.setProgram(this);
+        this.setProgramName(this.name);
         this.gss = null;
         this.mediaSequence = null;
         if (options.gss)
@@ -70,6 +71,14 @@ class Program extends MUSENode
         });
     }
 
+    setProgramName(name) {
+        console.log("programName: "+name);
+        this.programName = name;
+    }
+
+    getProgramName() {
+        return this.programName;
+    }
 /*
     getProgramState() {
         var ps = {};
@@ -112,6 +121,7 @@ class Program extends MUSENode
             ps.screenUrls[screenName] = url;
             console.log("saved "+screenName+" "+urlStateName+" "+url);
         });
+        ps.programName = this.programName;
         ps.stageModel = this.getStageModel();
         ps.duration = this.getDuration();
         ps.playState = this.game.state.get("playState");
@@ -122,6 +132,7 @@ class Program extends MUSENode
         console.log("Program.setProgramState ", ps);
         var program = this;
         var game = this.game;
+        this.setProgramName(ps.programName);
         //var urlStateName = "mainScreen.url"; // hack!!!!
         program.selectStageModel(ps.stageModel);
         //game.state.set(urlStateName, gs.url);
@@ -318,7 +329,7 @@ class Program extends MUSENode
         this.game.players.forEach(player => {
             var rt = this.getRelativeTime(player.name);
             if (player.setPlayTime)
-                player.setPlayTime(rt);
+                player.setPlayTime(rt, isAdjust);
         });
         this.displayTime(t, isAdjust);
     }

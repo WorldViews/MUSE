@@ -162,7 +162,8 @@ CONFIG = {
     //'webUI': {type: 'JQControls' },
     webUI: Util.getParameterByName("datgui") ? datGUI : jqGUI,
     'program': {
-        onStartProgram: onStartProgram,
+       name: "CMP Showcase",
+       onStartProgram: onStartProgram,
        duration: 32*60,
        gss: "https://spreadsheets.google.com/feeds/list/1Vj4wbW0-VlVV4sG4MzqvDvhc-V7rTNI7ZbfNZKEFU1c/default/public/values?alt=json",
        stages: [
