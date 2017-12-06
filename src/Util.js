@@ -225,6 +225,15 @@ export function isVideoURL(url) {
     return type;
 }
 
+export function isPickable(obj) {
+    while (obj) {
+        if (obj.userData && obj.userData.museIgnorePicking)
+            return false;
+        obj = obj.parent;
+    }
+    return true;
+}
+
 // event is the mouse or key event that caused this.  May be null
 export function dispatchMuseEvent(evType, obj, event) {
     while (obj) {
@@ -276,7 +285,8 @@ var Util =
     formatDatetime,
     values,
     isVideoURL,
-    dispatchMuseEvent
+    dispatchMuseEvent,
+    isPickable
 };
 
 Util._ = _;

@@ -80,7 +80,8 @@ MUSENode.defineFields(Node3D, [
     "scale",
     "rotation",
     "visible",
-    "onMuseEvent"
+    "onMuseEvent",
+    "museIgnorePicking"
 ]);
 
 export {Node3D};

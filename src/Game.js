@@ -411,6 +411,13 @@ class Game {
                 var center = box.getCenter();
                 obj3d.position.sub(center);
             }
+            if (props.museIgnorePicking) {
+                if (!obj3d.userData) {
+                    obj3d.userData = {};
+                }
+                obj3d.userData.museIgnorePicking = props.museIgnorePicking;
+                console.log("setFromProps setting museIgnorePicking", obj3d);
+            }
             obj3d.ignoreCollision = !!props.ignoreCollision;
             obj3d.hide = !!props.hide;
 
