@@ -242,10 +242,10 @@ export default class VRInputController {
 
     pickIntersection(intersections) {
         for (var i=0; i<intersections.length; i++) {
-            var obj = intersections[i];
-            if (_.get(obj, 'userData.museIgnorePicking'))
+            var intersection = intersections[i];
+            if (_.get(intersection, 'object.userData.museIgnorePicking'))
                 continue;
-            return obj;
+            return intersection;
         }
     }
 
