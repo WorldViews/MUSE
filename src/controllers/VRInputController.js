@@ -84,12 +84,7 @@ export default class VRInputController {
 
     triggerRaycast() {
         if (this.selectedObject) {
-            let obj = Util.dispatchMuseEvent('click', this.selectedObject.object);
-            if (obj) {
-                game.select(obj);
-            } else {
-                game.select(null);
-            }
+            Util.dispatchMuseEvent('click', this.selectedObject.object);
         }
     }
 
@@ -227,6 +222,7 @@ export default class VRInputController {
             let isTriggerPressed = this.controller0.getButtonState('trigger');
             let intersection = this.pickIntersection(intersections);
             this.selectedObject = intersection;
+            game.select(intersection.object);
             if (isTriggerPressed && intersection.object.parent.name === 'Floor') {
                 let {distance, point: {x, z}} = intersection;
                 let duration = distance / SPEED;

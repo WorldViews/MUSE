@@ -107,7 +107,17 @@ class Game {
 			this.highlightBox = new THREE.BoundingBoxHelper(new THREE.Group(), 0xffff00);
             this.scene.add(this.highlightBox);
         }
-        if ( object ) {
+
+        // crawl up to find if there's an object to highlight
+        while (object) {
+            var userData = object.userData;
+            if (userData && (userData.click || userData.dblclick)) {
+                break;
+            }
+            object = object.parent;
+        }
+
+        if (object) {
             // move the highlightBox so that it surrounds the picked object
             var geometrySize = new THREE.Box3().setFromObject(object);
             var scale = 1.03;
