@@ -84,7 +84,12 @@ export default class VRInputController {
 
     triggerRaycast() {
         if (this.selectedObject) {
-            Util.dispatchMuseEvent('click', this.selectedObject.object);
+            let obj = Util.dispatchMuseEvent('click', this.selectedObject.object);
+            if (obj) {
+                game.select(obj);
+            } else {
+                game.select(null);
+            }
         }
     }
 
@@ -242,10 +247,10 @@ export default class VRInputController {
 
     pickIntersection(intersections) {
         for (var i=0; i<intersections.length; i++) {
-            var obj = intersections[i];
-            if (_.get(obj, 'userData.museIgnorePicking'))
+            var intersection = intersections[i];
+            if (_.get(intersection, 'object.userData.museIgnorePicking'))
                 continue;
-            return obj;
+            return intersection;
         }
     }
 

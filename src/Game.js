@@ -102,6 +102,25 @@ class Game {
         );
     }
 
+    select(object) {
+        if (!this.highlightBox) {
+			this.highlightBox = new THREE.BoundingBoxHelper(new THREE.Group(), 0xffff00);
+            this.scene.add(this.highlightBox);
+        }
+        if ( object ) {
+            // move the highlightBox so that it surrounds the picked object
+            var geometrySize = new THREE.Box3().setFromObject(object);
+            var scale = 1.03;
+            if ( object.position && object.rotation && object.scale ) {
+                this.highlightBox.object = object;
+                this.highlightBox.update();
+                this.highlightBox.visible = true;
+            }
+        } else {
+            this.highlightBox.visible = false;
+        }
+    }
+
     createRenderer(domElementId) {
         var renderer;
 
