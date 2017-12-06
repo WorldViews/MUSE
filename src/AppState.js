@@ -8,8 +8,25 @@ export default class AppState {
         this.events = events;
     }
 
-    dispatch(name, newValue) {
 
+    // This sets state without any callbacks.
+    init(name, newValue) {
+        newValue = _.cloneDeep(newValue);
+        let oldValues = [];
+        let path = name.split('.');
+        while (path.length > 0) {
+            let joinedPath = path.join('.');
+            oldValues[joinedPath] = _.cloneDeep(_.get(this.state, joinedPath));
+            path.pop()
+        }
+
+        _.set(this.state, name, newValue);
+    }
+
+    // This sets, and dispatches regardless of whether the
+    // state has changed.
+    dispatch(name, newValue) {
+        newValue = _.cloneDeep(newValue);
         let oldValues = [];
         let path = name.split('.');
         while (path.length > 0) {
@@ -36,6 +53,8 @@ export default class AppState {
         });
     }
 
+    // This sets state and dispatches, but only dispatces if
+    // state has changed.
     set(name, newValue) {
         if (_.isEqual(_.get(this.state, name), newValue)) {
             return;
