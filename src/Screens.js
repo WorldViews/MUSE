@@ -134,7 +134,7 @@ class Screen extends Node3D
             if (props.text != null) // in case text == ""
                 this.updateText(props.text, props);
             if (props.html)
-                this.updateHtml(props.html, props);
+                this.updateHTML(props.html, props);
             if (props.requestedPlayTime) {
                 var t = props.requestedPlayTime;
                 console.log("requestedPlayTime: "+t);

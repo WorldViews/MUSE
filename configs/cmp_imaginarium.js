@@ -52,6 +52,26 @@ TOKENS = "configs/cmp/cmp_tokens.js";
 
 SOLAR_SYSTEM = [ {  type: 'SolarSystem' }, {  type: 'Stars' } ];
 
+function showDataValues(year, T, co2, balance)
+{
+    var screenName = "leftScreen";
+    var html = "<div style='background-color:blue;font-size:200'>\n";
+    html += "<p>&nbsp;<br>\n";
+    html += "<p>&nbsp;<br>\n";
+    html += "<p>&nbsp;<br>\n";
+    html += sprintf("Year: %d<br>\n", year);
+    html += sprintf("T: %.1f<br>\n", T);
+    html += "<img src='textures/icons/play.png'>\n"
+    html += sprintf("CO2: %f<br>\n", co2);
+    html += "<p>&nbsp;<br>\n";
+    html += "<p>&nbsp;<br>\n";
+    html += "</div>";
+//    game.state.set(screenName+".html", html);
+    n = game.getNode(screenName);
+    n.updateHTML(html);
+    window.HTML_LEFT = html;
+}
+
 function updateCMPViz2(year)
 {
     if (!year) {
@@ -79,6 +99,7 @@ function updateCMPViz2(year)
     if (T == undefined) {
         return;
     }
+    //showDataValues(year, T, co2, balance);
     var co2f = (co2 - co2Min)/(co2Max - co2Min);
     var Tf = (T - TMin)/(TMax - TMin);
     var h = 0.6 + .6*Tf;
