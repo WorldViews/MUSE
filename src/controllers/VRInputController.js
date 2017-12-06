@@ -84,7 +84,12 @@ export default class VRInputController {
 
     triggerRaycast() {
         if (this.selectedObject) {
-            Util.dispatchMuseEvent('click', this.selectedObject.object);
+            let obj = Util.dispatchMuseEvent('click', this.selectedObject.object);
+            if (obj) {
+                game.select(obj);
+            } else {
+                game.select(null);
+            }
         }
     }
 

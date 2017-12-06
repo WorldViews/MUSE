@@ -151,7 +151,12 @@ class MultiControls extends MUSENode
         var obj = this.pickedObj;
         console.log(" pickedObj: ", obj);
         if (obj) {
-            Util.dispatchMuseEvent(museEvType, obj, event);
+            let selectedObj = Util.dispatchMuseEvent(museEvType, obj, event)
+            if (selectedObj) {
+                game.select(selectedObj);
+            } else {
+                game.select(null);
+            }
         }
     }
 
