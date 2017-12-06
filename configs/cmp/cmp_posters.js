@@ -56,8 +56,16 @@ function getPlayPauseButton(buttonName, theta, posterSize)
     var updateAppearance = () => {
         var node = game.getNode(buttonName);
         if (!node) return;
-        html = ( game.state.get("playState") == "paused" ? html_paused : html_playing );
-        node.updateHTML(html);
+        //        html = ( game.state.get("playState") == "paused" ? html_paused : html_playing );
+        //        node.updateHTML(html);
+        if (game.state.get("playState") == "paused") {
+            node.updateSource("textures/icons/bluePlay.png");
+        }
+        else {
+            node.updateSource("textures/icons/bluePaused.png");
+            //node.updateHTML(html_playing);
+        }
+        //        node.updateHTML(html);
     };
     var handleClick = () => {
         var s = game.state.get("playState");
