@@ -217,12 +217,20 @@ class MultiControls extends MUSENode
         var sf = 0.015;
         var dx = 0;
         var camera = this.game.camera;
+        window.LAST_WHEEL_EVT = evt;
         if (evt.wheelDeltaY) { // WebKit
+            //console.log("webkit evt.wheelDeltaY: "+evt.wheelDeltaY);
             dx -= evt.wheelDeltaY * sf;
         } else if (evt.wheelDelta) {    // Opera / IE9
+            //console.log("Opera/IE9 evt.wheelDelta: "+evt.wheelDelta);
             dx -= evt.wheelDelta * sf;
-        } else if (evt.detail) { // Firefox
-            dx += evt.detail * sf;
+        }
+        else if (evt.deltaY) {
+            //console.log("handleDolly evt.deltaY: "+evt.deltaY);
+            dx += evt.deltaY * sf;
+        }
+        else {
+            //console.log("mouseWheel evt didn't find info");
         }
         //console.log(sprintf("handleDolly dx: %f", dx));
         this.dolly(dx);
