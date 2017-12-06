@@ -50,7 +50,7 @@ class Program extends MUSENode
         this.scripts = options.scripts || {};
         this.stages = options.stages || [];
         this.selectedStageModel = null;
-        this.screenNames = ["mainScreen", "innerCover"];
+        this.screenNames = ["mainScreen", "leftScreen", "innerCover"];
         console.log("channels:", this.channels);
         var inst = this;
         var promises = [];

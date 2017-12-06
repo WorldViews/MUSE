@@ -88,10 +88,6 @@ class Screen extends Node3D
             game.screens[spec.name] = this;
             game.registerPlayer(this);
         }
-        var inst = this;
-        console.log("******************** registerWatcher: "+spec.name);
-        game.state.on(this.channel, (newProps) => inst.onChange(newProps));
-
         // setup html renderer
         this._prevText = null;
         this._width = 4096;
@@ -109,12 +105,23 @@ class Screen extends Node3D
         document.body.appendChild(this._iframe);
         this._iframe.contentDocument.body.appendChild(this._element);
 
+        if (spec.path) {
+            game.state.set(this.name+".url", spec.path);
+        }
+
         if (spec.text) {
             this.updateText(spec.text);
+            game.state.set(this.name+".text", spec.text);
         }
         if (spec.html) {
             this.updateHTML(spec.html);
+            game.state.set(this.name+".html", spec.html);
         }
+        // note that we do this last so we don't get callbacks from above
+        var inst = this;
+        console.log("******************** registerWatcher: "+spec.name);
+        game.state.on(this.channel, (newProps) => inst.onChange(newProps));
+
     }
 
     //watchProperties(evt) {

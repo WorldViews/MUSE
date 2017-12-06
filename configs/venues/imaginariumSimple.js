@@ -115,7 +115,7 @@ var SPECS = [
     {   type: 'Screen', name: 'leftScreen',
         parent: 'station', radius: 8.8,
         //path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
-        //path: 'textures/DisplayNames/display3.PNG',
+        path: 'textures/DisplayNames/display3.PNG',
         //text: "Hello World",
         phiStart: 40, phiLength: 30,
         thetaStart: 40, thetaLength: 50
@@ -131,7 +131,8 @@ var SPECS = [
        phiStart: 0, phiLength: 120,
        thetaStart: 0, thetaLength: 360,
        visible: false,
-       path: 'textures/wholeFog.jpg',
+       //path: 'textures/wholeFog.jpg',
+       museIgnorePicking: true
     },
     {  type: 'Screen',    name: 'outerCover',
        radius: 9.4,
