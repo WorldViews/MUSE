@@ -22,8 +22,14 @@
     width: 95%;
 }
 
-#uiPlayControls > input[type=button] {
+#uiPlayControls > input[type=button],
+#uiPlayControls > a
+{
     margin-right: 4px;
+}
+#uiPlayControls > a > img {
+    width: 20px;
+    height: 20px;
 }
 
 #uiPanel {

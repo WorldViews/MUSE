@@ -243,11 +243,11 @@ class PlayControls extends JQWidget {
     constructor(ui, $parent) {
         super(ui, $parent);
         var inst = this;
-        this.$back = append($parent, "<input type='button' value='B' style='width:20px;padding:10'>");
-        this.$play = append($parent, "<input type='button' value='Play' style='width:60px;'>");
-        //this.$prev = append($parent, "<br><input type='button' value='<' style='width:20px;'>");
-        this.$prev = append($parent, "<input type='button' value='<' style='width:20px;'>");
-        this.$next = append($parent, "<input type='button' value='>' style='width:20px;'>");
+        this.$back = append($parent, "<a class='button'><img src='/textures/icons/back.jpg'></a>")
+        this.$play = append($parent, "<a class='button'><img src='/textures/icons/bluePause.png'></a>");
+        this.$play.data('state', 'Play');
+        this.$prev = append($parent, "<a class='button'><img src='/textures/icons/prev.png'></a>");
+        this.$next = append($parent, "<a class='button'><img src='/textures/icons/next.png'></a>");
         this.$timeSlider = append($parent, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
         this.$timeSlider.on('change', e => inst.onSliderChange(e, false));
         this.$timeSlider.on('input',  e => inst.onSliderChange(e, true));
@@ -264,13 +264,17 @@ class PlayControls extends JQWidget {
 
     togglePlayPause(e) {
         var $play = this.$play;
+        var img = $play.find('img');
         console.log("$play: "+$play.val());
-        if ($play.val() == "Play") {
-            $play.val("Pause");
+        var playState = $play.data('state')
+        if (playState == "Pause") {
+            $play.data('state', 'Play');
+            img.attr('src', '/textures/icons/bluePause.png')
             this.ui.program.play();
         }
         else {
-            $play.val("Play");
+            img.attr('src', '/textures/icons/bluePlay.png')
+            $play.data('state', 'Pause')
             this.ui.program.pause();
         }
     }
