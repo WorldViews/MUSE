@@ -136,6 +136,18 @@ function forceImages() {
     }, 1000);
 }
 
+
+function setEarthVideo(game, url)
+{
+    var vEarth = game.controllers.vEarth;
+    vEarth.setSurfaceVideo(url)
+}
+
+function planetaryTour() {
+    var solarSystem = game.getNode("solarSystem");
+    window.planetTour = solarSystem.getTour();
+}
+
 function onStart() {
     var solarSystem = game.controllers.solarSystem;
     //var solarSystem = SOLAR_SYSTEM;
@@ -188,6 +200,16 @@ CONFIG = {
            'spacer',
            {name: 'narrative', style: "height:110px", fieldElement: "div"}
         ],
+        scripts: {
+            //'Show 3D Graph': (game) => show3DGraph(game),
+            //'Show Virtual Earth': (game) => showVirtualEarth(game),
+            'Force Images': (game) => forceImages(),
+            'Planetary Tour': (game) => planetaryTour(),
+            'Show 2013 Weather': (game) => setEarthVideo(game, "assets/video/GlobalWeather2013.mp4"),
+            //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_Amon_CCSM4_1850_2300.mp4"),
+            'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_1850_2300.mp4"),
+            'Climate Model Clouds': (game) => setEarthVideo(game, "assets/video/CloudTruth.mp4"),
+        },
 
        media: MEDIA_SPECS,
        nodes: [NET_LINK, SCRIPTS, POSTERS, BUBBLES, TOKENS, SPECS]

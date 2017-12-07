@@ -152,7 +152,7 @@ var RELATED_SPECS = [
 
 BACK_SPEC = {
     name: "backButton",
-    logo: "textures/icons/back.jpg",
+    logo: "textures/icons/back.png",
     onMuseEvent: {'click': () => {
      game.popGameState();
     }}
