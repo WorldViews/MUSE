@@ -135,7 +135,7 @@ var PARTNER_SPECS = [
 var RELATED_SPECS = [
     {name: "EarthClock",
      logo: "assets/images/CMPPosters/TimeToChange.jpg",
-     video: "assets/video/ClimateMusicProj-v7-HD.mp4"
+     video: "assets/video/ClimateMusicProj-v7-HD.webm"
     },
     {name: "SustainableSV",
      logo: "assets/images/PartnerLogos/SustainableSV.png",
