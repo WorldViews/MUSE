@@ -111,5 +111,6 @@ function animTest2(game)
 
 window.animTest = animTest;
 window.animTest2 = animTest2;
+MUSE.Anim = Anim;
 
 export {animTest, Anim};

@@ -148,6 +148,20 @@ function planetaryTour() {
     window.planetTour = solarSystem.getTour();
 }
 
+function imaginariumTour() {
+    //var target = game.models.station;
+    var vm = game.viewManager;
+    var anim = new MUSE.Anim("anim1", game.models.station);
+    anim.addCall(() => vm.gotoView("Above", 5));
+    anim.addWait(10)
+    anim.addCall(() => vm.gotoView("Home"));
+    anim.addWait(5)
+    anim.addCall(() => vm.gotoView("Left Rear"));
+    //game.registerPlayer(anim);
+    window.lastAnim = anim;
+    return anim;
+}
+
 function onStart() {
     var solarSystem = game.controllers.solarSystem;
     //var solarSystem = SOLAR_SYSTEM;
@@ -205,6 +219,7 @@ CONFIG = {
             //'Show Virtual Earth': (game) => showVirtualEarth(game),
             'Force Images': (game) => forceImages(),
             'Planetary Tour': (game) => planetaryTour(),
+            'Imaginarium Tour': (game) => imaginariumTour(),
             'Show 2013 Weather': (game) => setEarthVideo(game, "assets/video/GlobalWeather2013.mp4"),
             //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_Amon_CCSM4_1850_2300.mp4"),
             'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_1850_2300.mp4"),
