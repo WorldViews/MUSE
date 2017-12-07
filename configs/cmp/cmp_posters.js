@@ -51,8 +51,8 @@ function getPlayPauseButton(buttonName, theta, posterSize)
     posterSize = posterSize || 8;
     var phiStart = 88 - posterSize;
     var thetaStart = theta - posterSize/2;
-    var play_url = "textures/icons/bluePlay.png";
-    var pause_url = "textures/icons/bluePause.png";
+    var play_url = "textures/icons/lightPlay.png";
+    var pause_url = "textures/icons/lightPause.png";
     //var html_paused =  '<div style="width:100%;height:100%;background-color:green" />';
     //var html_playing = '<div style="width:100%;height:100%;background-color:red" />';
     var url = ( game.state.get("playState") == "paused" ? play_url : pause_url );
@@ -152,7 +152,7 @@ var RELATED_SPECS = [
 
 BACK_SPEC = {
     name: "backButton",
-    logo: "textures/icons/back.png",
+    logo: "textures/icons/lightBack.png",
     onMuseEvent: {'click': () => {
      game.popGameState();
     }}
