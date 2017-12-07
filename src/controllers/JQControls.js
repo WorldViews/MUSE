@@ -243,8 +243,8 @@ class PlayControls extends JQWidget {
     constructor(ui, $parent) {
         super(ui, $parent);
         var inst = this;
-        this.$back = append($parent, "<a class='button'><img src='/textures/icons/back.jpg'></a>")
-        this.$play = append($parent, "<a class='button'><img src='/textures/icons/bluePause.png'></a>");
+        this.$back = append($parent, "<a class='button'><img src='/textures/icons/lightBack.png'></a>")
+        this.$play = append($parent, "<a class='button'><img src='/textures/icons/lightPause.png'></a>");
         this.$play.data('state', 'Play');
         this.$prev = append($parent, "<a class='button'><img src='/textures/icons/prev.png'></a>");
         this.$next = append($parent, "<a class='button'><img src='/textures/icons/next.png'></a>");
@@ -288,10 +288,10 @@ class PlayControls extends JQWidget {
         var $play = this.$play;
         var img = $play.find('img');
         if (playing) {
-            img.attr('src', '/textures/icons/bluePause.png')
+            img.attr('src', '/textures/icons/lightPause.png')
         }
         else {
-            img.attr('src', '/textures/icons/bluePlay.png')
+            img.attr('src', '/textures/icons/lightPlay.png')
         }
     }
 
