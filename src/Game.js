@@ -301,7 +301,7 @@ class Game {
         if (this.renderer.clear)
             this.renderer.clear();
         else {
-            console.log("***** no renderer.clear!!");
+            //console.log("***** no renderer.clear!!");
         }
         this.renderer.render(this.scene, this.camera);
 

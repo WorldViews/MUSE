@@ -24,8 +24,8 @@ MEDIA_SPECS = [
             rightScreen: {url: 'assets/images/MuseTalk/Slide1.PNG'}
           },
           */
-           { duration: 29*60,  mainScreen: {url: 'assets/video/ClimateMusicProj-v7-HD.mp4'}},
-           { duration: 10,     mainScreen: {url: 'assets/video/GlobalWeather2013.mp4'}},
+           { duration: 29*60,  mainScreen: {url: 'assets/video/ClimateMusicProj-v7-HD.webm'}},
+           { duration: 10,     mainScreen: {url: 'assets/video/GlobalWeather2013.webm'}},
        ]
    },
    /*

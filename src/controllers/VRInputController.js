@@ -219,7 +219,7 @@ export default class VRInputController {
         }
 
         if (intersections && intersections.length > 0) {
-            let isTriggerPressed = this.controller0.getButtonState('trigger');
+            let isTriggerPressed = this.controller0.getButtonState('trigger') || this.controller1.getButtonState('trigger');
             let intersection = this.pickIntersection(intersections);
             this.selectedObject = intersection;
             game.select(intersection.object);
