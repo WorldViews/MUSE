@@ -67,8 +67,23 @@ var tokSpecs = [
      modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010},
      onClick: () => selectStageModel("dancer")
     },
+    /*{name: "particleTok",
+     modelUrl: "assets/models/tokens/ParticleDancer/model.dae",
+     modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010},
+     onClick: () => selectStageModel("dancer")
+    },*/ //Looks great but high poly count, will find something better
     {name: "earthTok",
      modelUrl: "assets/models/tokens/globe/model.dae",
+     modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
+     onClick: () => selectStageModel("vEarth")
+    },
+    {name: "tempTok",
+     modelUrl: "assets/models/tokens/SurfaceTempGlobe/model.dae",
+     modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
+     onClick: () => selectStageModel("vEarth")
+    },
+    {name: "cloudTok",
+     modelUrl: "assets/models/tokens/ClimateCloudGlobe/model.dae",
      modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
      onClick: () => selectStageModel("vEarth")
     },
