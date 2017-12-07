@@ -263,31 +263,17 @@ class PlayControls extends JQWidget {
     }
 
     togglePlayPause(e) {
-        var $play = this.$play;
-        var img = $play.find('img');
-        console.log("$play: "+$play.val());
-        var playState = $play.data('state')
-        if (playState == "Pause") {
-            $play.data('state', 'Play');
-            img.attr('src', '/textures/icons/bluePause.png')
+        var s = this.game.state.get('playState');
+        if (s === 'paused') {
             this.ui.program.play();
-        }
-        else {
-            img.attr('src', '/textures/icons/bluePlay.png')
-            $play.data('state', 'Pause')
+        } else {
             this.ui.program.pause();
         }
     }
 
     showPlayState() {
-        var $play = this.$play;
         var s = this.game.state.get('playState');
-        if (s == "playing") {
-            $play.val("Pause");
-        }
-        else {
-            $play.val("Play");
-        }
+        this.showState(s === 'playing');
     }
 
     onPrev() {
@@ -299,7 +285,14 @@ class PlayControls extends JQWidget {
     }
 
     showState(playing) {
-        this.$play.val(playing ? "Pause" : "Play");
+        var $play = this.$play;
+        var img = $play.find('img');
+        if (playing) {
+            img.attr('src', '/textures/icons/bluePause.png')
+        }
+        else {
+            img.attr('src', '/textures/icons/bluePlay.png')
+        }
     }
 
     setSlider(val) {

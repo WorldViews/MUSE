@@ -20,20 +20,22 @@
     //background: rgba(5,5,60,0.1);
     background: rgba(5,5,60,0.0);
     width: 95%;
+    margin-bottom: 10px;
 }
 
 #uiPlayControls > input[type=button],
 #uiPlayControls > a
 {
-    margin-right: 4px;
+    margin-right: 10px;
 }
 #uiPlayControls > a > img {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
 }
 
 #uiPanel {
-    position: absolute; left: 30px; top: 40px;
+    position: absolute; left: 30px; top: 50px;
     padding-left: 10px; padding-right: 10px;
     width: 200px;
     text-align:left;
