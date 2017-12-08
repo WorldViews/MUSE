@@ -43,7 +43,7 @@ var SPECS = [
     //{  type: 'Stars' },
     VEARTH,
     GEODESIC_DOME,
-    KINECT_WATCHER,
+    //KINECT_WATCHER,
 ];
 
 POSTERS = "configs/cmp/cmp_posters.js";
@@ -162,6 +162,15 @@ function imaginariumTour() {
     return anim;
 }
 
+var sparkler = null;
+function toggleSparkler() {
+    if (!sparkler) {
+        sparkler = new MUSE.Sparkler("sparkler");
+    }
+    window.sparkler = sparkler;
+    sparkler.toggle();
+}
+
 function onStart() {
     var solarSystem = game.controllers.solarSystem;
     //var solarSystem = SOLAR_SYSTEM;
@@ -224,6 +233,7 @@ CONFIG = {
             //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_Amon_CCSM4_1850_2300.mp4"),
             'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_1850_2300.mp4"),
             'Climate Model Clouds': (game) => setEarthVideo(game, "assets/video/CloudTruth.mp4"),
+            'Toggle Sparkler': (game) => toggleSparkler(),
         },
 
        media: MEDIA_SPECS,
