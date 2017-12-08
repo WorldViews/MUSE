@@ -169,6 +169,11 @@ function toggleSparkler() {
     }
     window.sparkler = sparkler;
     sparkler.toggle();
+    //
+      var c0 = game.vr.controllers.controller0;
+      var c1 = game.vr.controllers.controller1;
+      sparkler.trackObject("left", c0);
+      sparkler.trackObject("right", c1);
 }
 
 function onStart() {

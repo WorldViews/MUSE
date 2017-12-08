@@ -138,6 +138,7 @@ class Sparkler {
     }
 
     trackObject(tname, obj3d) {
+      console.log("Sparkler.trackObject "+tname, obj3d)
         var pSys = this.getPsys(tname);
         if (!pSys)
             return;
