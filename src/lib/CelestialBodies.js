@@ -118,6 +118,14 @@ class CelestialBody extends Node3D {
             this.atmosphere.visible = v;
         if (this.dataViz)
             this.dataViz.visible = v;
+        if (v) {
+            // could try to start playing...
+        }
+        else {
+            console.log("Trying to pause image source for planet "+this.name);
+            if (this.imageSource)
+                this.imageSource.pause();
+        }
     }
 
     getVisible() {

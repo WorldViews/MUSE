@@ -404,8 +404,16 @@ class Program extends MUSENode
              //var model = game.controllers[name];
              //var model = game.nodes[name];
              var model = this.getNode(name);
-             if (model)
-                    model.visible = false;
+             if (model) {
+                 console.log("turning off visiblity for "+name, model);
+                model.visible = false;
+                if (model.setVisible) {
+                    model.setVisible(false);
+                }
+                else {
+                    console.log("*** not setVisible for model", model)
+                }
+            }
         }
         if (selectedModel)
             selectedModel.visible = true;

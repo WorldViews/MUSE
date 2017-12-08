@@ -88,7 +88,7 @@ var tokSpecs = [
 //     modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
 //     onClick: () => selectStageModel("vEarth")
 //    },
-    {name: "cloudTok",
+    {name: "co2Tok",
      modelUrl: "assets/models/tokens/ClimateCloudGlobe/model.dae",
      modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
     // onClick: () => selectStageModel("co2Earth")
