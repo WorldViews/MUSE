@@ -7,6 +7,12 @@ function selectStageModel(name)
     game.program.selectStageModel(name);
 }
 
+function setCO2Model() {
+    var url = url || "assets/video/2006_co2_flow_1024x512.webm";
+    selectStageModel("co2Earth");
+    setEarthVideo(game, url, "co2Earth")
+}
+
 var numToks = 0;
 function getToken(name, tokenPos, spec) {
     parent = 'tokens';
@@ -77,15 +83,16 @@ var tokSpecs = [
      modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
      onClick: () => selectStageModel("vEarth")
     },
-    {name: "tempTok",
-     modelUrl: "assets/models/tokens/SurfaceTempGlobe/model.dae",
-     modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
-     onClick: () => selectStageModel("vEarth")
-    },
+//    {name: "tempTok",
+//     modelUrl: "assets/models/tokens/SurfaceTempGlobe/model.dae",
+//     modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
+//     onClick: () => selectStageModel("vEarth")
+//    },
     {name: "cloudTok",
      modelUrl: "assets/models/tokens/ClimateCloudGlobe/model.dae",
      modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
-     onClick: () => selectStageModel("vEarth")
+    // onClick: () => selectStageModel("co2Earth")
+       onClick: () => setCO2Model()
     },
     {name: "cmpTok",
      modelUrl: "assets/models/tokens/DataCharts/DataChartsToken.dae",

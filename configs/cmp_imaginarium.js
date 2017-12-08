@@ -41,6 +41,10 @@ var SPECS = [
         duration: 1075   // 17:56 minutes duration time
     },
     //{  type: 'Stars' },
+    {  type: 'VirtualEarth', name: 'co2Earth', radius: 1.25, position: [0,1.9,0],
+       satellites: 0, satTracks: 0, dataViz: 0,
+    },
+
     VEARTH,
     GEODESIC_DOME,
     //KINECT_WATCHER,
@@ -137,9 +141,10 @@ function forceImages() {
 }
 
 
-function setEarthVideo(game, url)
+function setEarthVideo(game, url, name)
 {
-    var vEarth = game.controllers.vEarth;
+    name = name || "vEarth";
+    var vEarth = game.controllers[name];
     vEarth.setSurfaceVideo(url)
 }
 
@@ -211,6 +216,7 @@ CONFIG = {
                name: 'Main Stage',
                models: {
                    'vEarth': 'Virtual Earth',
+                   'co2Earth': 'CO2 Earth',
                    'dancer': 'Dancer',
                    'cmp': 'Data Visualization',
                    'geodesicDome': 'Geodesic Dome',
@@ -236,7 +242,7 @@ CONFIG = {
             'Imaginarium Tour': (game) => imaginariumTour(),
             'Show 2013 Weather': (game) => setEarthVideo(game, "assets/video/GlobalWeather2013.mp4"),
             //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_Amon_CCSM4_1850_2300.mp4"),
-            'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_1850_2300.mp4"),
+            //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_1850_2300.mp4"),
             'Climate Model Clouds': (game) => setEarthVideo(game, "assets/video/CloudTruth.mp4"),
             'Toggle Sparkler': (game) => toggleSparkler(),
         },
