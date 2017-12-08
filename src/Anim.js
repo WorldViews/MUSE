@@ -4,6 +4,8 @@ import _ from 'lodash';
 
 console.log("********************************************");
 
+var ALL_ANIMS = [];
+
 class Anim
 {
     constructor(name, target, steps) {
@@ -17,7 +19,15 @@ class Anim
         else {
             this.tween = createjs.Tween.get({});
         }
-        this.tween.addEventListener('change', () => inst.handleChange())
+        this.tween.addEventListener('change', () => inst.handleChange());
+        ALL_ANIMS.push(this);
+    }
+
+    static stopAll() {
+        console.log("*** Stop all anims ***");
+        ALL_ANIMS.forEach(anim => {
+            anim.pause();
+        });
     }
 
     // dur is in seconds
@@ -98,10 +108,16 @@ function animTest2(game)
     game = game || window.game;
     console.log("!!!! >>>>>>>>>>>>>>>>>>>>>>>>>> animTest...........");
     var target = game.models.station;
+    var program = game.program;
     var vm = game.viewManager;
     window.anim = new Anim("anim1", game.models.station);
-    anim.addCall(() => vm.gotoView("Above"));
-    anim.addWait(10)
+    anim.addCall(() => vm.gotoView("Above", 8));
+    anim.addWait(2);
+    anim.addCall(() => {
+        console.log("******* select Dancer!! *****");
+        program.selectStageModel("dancer");
+    });
+    anim.addWait(5);
     anim.addCall(() => vm.gotoView("Home"));
     anim.addWait(5)
     anim.addCall(() => vm.gotoView("Left Rear"));

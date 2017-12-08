@@ -117,6 +117,7 @@ class MultiControls extends MUSENode
         this.anglesDown = this.getCamAngles();
         this.camPosDown = this.game.camera.position.clone();
         this.getTarget();
+        game.stopAnimations();
     };
 
     // Note that we create our own 'click' event because the THREE click

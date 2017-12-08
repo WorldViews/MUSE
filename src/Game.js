@@ -6,6 +6,7 @@ import {Loader} from './Loader';
 //import { NetLink } from './NetLink'; // circular imports
 import Util from './Util';
 import {reportError} from './Util';
+import {Anim} from './Anim';
 
 import AppState from './AppState';
 
@@ -256,6 +257,12 @@ class Game {
         }
     }
 
+    stopAnimations() {
+        if (this.viewManager)
+            this.viewManager.stop();
+        Anim.stopAll();
+    }
+    
     startGame() {
         if (this.config && this.config.onStart) {
             this.config.onStart(this);

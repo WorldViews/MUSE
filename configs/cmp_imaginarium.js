@@ -42,7 +42,7 @@ var SPECS = [
     },
     //{  type: 'Stars' },
     {  type: 'VirtualEarth', name: 'co2Earth', radius: 1.25, position: [0,1.9,0],
-       satellites: 0, satTracks: 0, dataViz: 0,
+       satellites: 0, satTracks: 0, dataViz: 0
     },
 
     VEARTH,
@@ -156,12 +156,21 @@ function planetaryTour() {
 function imaginariumTour() {
     //var target = game.models.station;
     var vm = game.viewManager;
+    var program = game.program;
     var anim = new MUSE.Anim("anim1", game.models.station);
-    anim.addCall(() => vm.gotoView("Above", 5));
-    anim.addWait(10)
-    anim.addCall(() => vm.gotoView("Home"));
-    anim.addWait(5)
-    anim.addCall(() => vm.gotoView("Left Rear"));
+    anim.addCall(() => vm.gotoView("Above", 8));
+    anim.addWait(1)
+    anim.addCall(() => {
+        console.log("******* select Dancer!! *****");
+        program.selectStageModel("dancer");
+    });
+    anim.addWait(8);
+    anim.addCall(() => vm.gotoView("Home", 3));
+    anim.addWait(4)
+    anim.addCall(() => vm.gotoView("Left Rear", 2));
+    anim.addCall(() => program.selectStageModel("cmp"));
+    anim.addWait(3)
+    anim.addCall(() => vm.gotoView("Nearby Outside Looking In", 6));
     //game.registerPlayer(anim);
     window.lastAnim = anim;
     return anim;

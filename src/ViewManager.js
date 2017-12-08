@@ -285,6 +285,15 @@ class ViewManager extends MUSENode
         return {'position': pos, 'rotation': eulerAngles};
     }
 
+    stop = function()
+    {
+        for (var i = this.activeAnimations.length-1; i >= 0; i--) {
+            var anim = this.activeAnimations[i];
+            anim.deactivate();
+        }
+        this.activeAnimations = [];
+    }
+
     update = function()
     {
         for (var i = this.activeAnimations.length-1; i >= 0; i--) {
