@@ -164,9 +164,11 @@ class Sparkler {
         var y = 1;
         this.trailNames.forEach(name => {
             var pSys = new MUSE.ParticleSys(name, null);
-            pSys.options.turbulence = .04;
-            pSys.options.size = 10;
-            pSys.options.positionRandomness = .1;
+            pSys.options.turbulence = .001;
+            pSys.options.size = 19;
+            pSys.options.lifetime = 13.5;
+            pSys.options.positionRandomness = .055;
+            pSys.options.velocityRandomness = .016;
             pSys._pos = new THREE.Vector3(x, y, 0);
             x += 1;
             this.pSystems[name] = pSys;
