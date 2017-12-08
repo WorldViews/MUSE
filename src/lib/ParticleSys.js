@@ -4,13 +4,14 @@ import * as THREE from 'three';
 import {Game} from '../Game';
 import {MUSENode} from '../Node';
 import {Node3D} from '../Node3D';
-
+import Util from '../Util';
 
 // A particle system attached to a given Object3D That
 // can generate a trail along the path of that object.
 class ParticleSys {
     constructor(name, obj3D, parent)
     {
+        console.log("creating ParticleSys "+name, obj3D, parent);
         parent = parent || game.scene;
         this.obj3D = obj3D;
         this.tick = 0;
@@ -107,5 +108,108 @@ class ParticleSys {
       this.particleSystem = null;
     }
 }
+
+MUSE.ParticleSys = ParticleSys;
+
+class Sparkler {
+    constructor(name) {
+        this.name = name || "sparkler";
+        this.trailNames = ["left", "right"];
+        this.pSystems = null;
+        console.log("new Sparkler "+this.name);
+        this.verbosity = 0;
+        this.ps = null;
+        this.pos = null;
+        //this.addSparklers();
+        game.registerController(this.name, this);
+    }
+
+    getPsys(tname) {
+        if (!this.pSystems) {
+            console.log("No trails");
+            return null;
+        }
+        var pSys = this.pSystems[tname];
+        if (!pSys) {
+            console.log("No trail named "+tname);
+            return null;
+        }
+        return pSys;
+    }
+
+    trackObject(tname, obj3d) {
+        var pSys = this.getPsys(tname);
+        if (!pSys)
+            return;
+        pSys.trackedObject = obj3d;
+    }
+
+    setPosition(tname, pos) {
+        var pSys = this.getPsys(tname);
+        if (!pSys)
+            return;
+        var pos = Util.toVector3(pos);
+        pSys._pos.copy(pos);
+    }
+
+    addSparklers() {
+        console.log("add sparkler");
+        if (this.pSystems) {
+            console.log("********************** already have sparkler!! ****");
+            return;
+        }
+        this.pSystems = {};
+        var x = 0;
+        var y = 1;
+        this.trailNames.forEach(name => {
+            var pSys = new MUSE.ParticleSys(name, null);
+            pSys._pos = new THREE.Vector3(x, y, 0);
+            x += 1;
+            this.pSystems[name] = pSys;
+        })
+    }
+
+    removeSparklers() {
+        console.log("remove sparklers");
+        if (!this.pSystems) {
+            console.log("No sparklers to remove");
+            return;
+        }
+        for (var name in this.pSystems) {
+            var pSys = this.pSystems[name];
+            pSys.destroy();
+        }
+        this.pSystems = null;
+    }
+
+    toggle() {
+        if (this.pSystems) {
+            this.removeSparklers();
+        }
+        else {
+            this.addSparklers();
+        }
+    }
+
+    update() {
+        if (this.verbosity) {
+            console.log("sparkler.update");
+        }
+        if (!this.pSystems)
+            return;
+        for (var name in this.pSystems) {
+            var pSys = this.pSystems[name];
+            if (pSys.trackedObject) {
+                var wp = pSys.trackedObject.getWorldPosition();
+                pSys.update(wp);
+            }
+            else {
+                pSys.update(pSys._pos);
+            }
+        }
+    }
+}
+
+MUSE.Sparkler = Sparkler;
 
 export {ParticleSys};

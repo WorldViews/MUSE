@@ -51,6 +51,17 @@ export function scaleVec(s)
         return THREE.Vector3(s,s,s);
     return s;
 }
+
+function toVector3(v)
+{
+    if (v instanceof THREE.Vector3)
+        return v;
+    if (Array.isArray(v))
+        return new THREE.Vector3(v[0], v[1], v[2]);
+    reportError("Cannot coerce "+v+" to vector3");
+    return null;
+}
+
 // take a string, a float (seconds since epoch) or date
 // and return date.
 export function toDate(datetime) {
@@ -279,6 +290,7 @@ var Util =
     toDeg,
     toRad,
     toHHMMSS,
+    toVector3,
     radialPosition,
     reportError,
     reportWarning,
