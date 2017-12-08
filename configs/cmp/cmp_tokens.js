@@ -10,6 +10,7 @@ function selectStageModel(name)
 function setCO2Model() {
     var url = url || "assets/video/2006_co2_flow_1024x512.webm";
     selectStageModel("co2Earth");
+    game.program.pause();
     setEarthVideo(game, url, "co2Earth")
 }
 
