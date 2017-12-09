@@ -111,7 +111,6 @@ var SPECS = [
         phiStart: 40, phiLength: 30,
         thetaStart: 270, thetaLength: 60
     },
-    */
     {   type: 'Screen', name: 'leftScreen',
         parent: 'station', radius: 8.8,
         //path: 'assets/video/Climate-Music-V3-Distortion_HD_540.webm',
@@ -120,6 +119,7 @@ var SPECS = [
         phiStart: 40, phiLength: 30,
         thetaStart: 40, thetaLength: 50
     },
+    */
     {  type: 'Screen',    name: 'marquee1', channel: 'narrative',
        radius: 7.8,
        phiStart: 58, phiLength: 20,
