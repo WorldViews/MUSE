@@ -5,7 +5,7 @@ import {BVHLoader} from '../BVHLoader';
 import {Game} from '../Game';
 import {MUSENode} from '../Node';
 import {Node3D} from '../Node3D';
-import {ParticleSys} from '../lib/ParticleSys';
+import {ParticleSys,Sparkler} from '../lib/ParticleSys';
 
 let BVH_PATH1 = './assets/models/bvh/MasterLiuPerformanceChar00.bvh';
 let BVH_PATH2 = '/assets/motionCapture/lauren_duality_edit.bvh';
@@ -30,8 +30,11 @@ class DanceController extends Node3D
         this.ready = false;
         this.readyPromise = null;
         this.head = null;
+        this.lhand = null;
+        this.rhand = null;
         //this.particleSystem = null;
-        this.pSystems = [];
+        this.sparkler = new MUSE.Sparkler("dancerSparkler");
+        //this.pSystems = [];
         this.loadBVH(opts.motionUrl);
         var inst = this;
         this.color = new THREE.Color();
@@ -46,7 +49,8 @@ class DanceController extends Node3D
 
     setColor(c) {
         this.color.copy(c);
-        this.pSystems.forEach(pSys => pSys.setColor(c));
+        this.sparkler.setColor(this.color);
+        //this.pSystems.forEach(pSys => pSys.setColor(c));
     }
 
     setProps(props) {
@@ -61,7 +65,16 @@ class DanceController extends Node3D
         //console.log("DanceController.update...");
         if ( this.mixer ) this.mixer.update( this.clock.getDelta() );
         if ( this.skeletonHelper ) this.skeletonHelper.update();
-        this.pSystems.forEach(pSys => pSys.update());
+        /*
+        if (this.lhand) {
+            this.sparkler.setPosition("left", this.lhand.position);
+        }
+        if (this.rhand) {
+            this.sparkler.setPosition("right", this.rhand.position);
+        }
+        */
+        this.sparkler.update();
+        //this.pSystems.forEach(pSys => pSys.update());
     }
 
     loadBVH(bvhPath) {
@@ -109,9 +122,12 @@ class DanceController extends Node3D
         var rhand = this.skeletonHelper.bones[19];
         var lhand = this.skeletonHelper.bones[47];
         this.head = this.skeletonHelper.bones[14];
+        this.lhand = lhand;
+        this.rhand = rhand;
         //this.pSystems.push(new PSys("head", this.head, this.dancer));
-        this.pSystems.push(new ParticleSys("rhand", rhand, this.dancer));
-        this.pSystems.push(new ParticleSys("lhand", lhand, this.dancer));
+        //this.sparkler.addSparklers();
+        //this.pSystems.push(new ParticleSys("rhand", rhand, this.dancer));
+        //this.pSystems.push(new ParticleSys("lhand", lhand, this.dancer));
         //this.psSetup();
         inst.update();
     }
@@ -136,8 +152,17 @@ class DanceController extends Node3D
     }
 
     set visible(v) {
-        if (this.dancer)
+        if (this.dancer) {
             this.dancer.visible = v;
+        }
+        if (v) {
+            this.sparkler.addSparklers(this.dancer);
+            this.sparkler.trackObject("left", this.lhand);
+            this.sparkler.trackObject("right", this.rhand);
+        }
+        else {
+            this.sparkler.removeSparklers();
+        }
     }
 
     // Player Interface methods
