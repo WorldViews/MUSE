@@ -119,7 +119,7 @@ DUMMY_TOKEN =
 {   type: 'Model', name: "coverControl",
     path: "assets/models/pedestal/model.dae",
     //position: [.75, 0.55, 1.35],
-    position: Util.radialPosition(130, 2.2, -.1),
+    position: Util.radialPosition(120, 2.2, -.1),
     //rot: [2, 0, 1],
     scale: .022,
     onMuseEvent: {'click': () => selectStageModel(null) }
