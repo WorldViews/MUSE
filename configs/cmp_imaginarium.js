@@ -212,9 +212,9 @@ function imaginariumTour() {
         anim.addCall(() => vm.gotoView("Very Far Away", 0));
         anim.addWait(1);
         anim.addCall(() => vm.gotoView("V1", 6));
-        anim.addWait(7);
+        anim.addWait(8);
         anim.addCall(() => vm.gotoView("V1", 2));
-        anim.addWait(3);
+        anim.addWait(4);
         FORCED_IMAGES = true;
     }
     else {
@@ -299,9 +299,9 @@ CONFIG = {
         scripts: {
             //'Show 3D Graph': (game) => show3DGraph(game),
             //'Show Virtual Earth': (game) => showVirtualEarth(game),
+            'Start': (game) => imaginariumTour(),
             'Force Images': (game) => forceImages(),
             //'Planetary Tour': (game) => planetaryTour(),
-            'Enter Imaginarium': (game) => imaginariumTour(),
             'Show 2013 Weather': (game) => setEarthVideo(game, "assets/video/GlobalWeather2013.mp4"),
             //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_Amon_CCSM4_1850_2300.mp4"),
             //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_1850_2300.mp4"),
