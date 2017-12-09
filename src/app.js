@@ -1,289 +1,175 @@
 import * as THREE from 'three';
-import VRControls from './lib/controls/VRControls';
-import PointerLockControls from './lib/controls/PointerLockControls';
-import TrackballControls from './lib/controls/TrackballControls';
-import VREffect from './lib/effects/VREffect';
-import Earth from './lib/EARTH';
-import Stars from './lib/Stars';
 
-import {addPlanet} from './lib/Planet';
-import attachPointerLock from './attachPointerLock';
-import loadChart from './loadChart';
-import loadCollada from './loadCollada';
-import loadModels from './loadModels';
-import loadScreen from './loadScreen';
-import loadVideo from './loadVideo';
-import loadVR from './loadVR';
-import CMPDataViz from './lib/CMPDataViz';
-import setupLights from './setupLights';
+import {MUSE} from './MUSE';
+import { CMPDataUpdater } from './controllers/CMPData';
+import { CMPDataVizController } from './controllers/CMPDataVizController';
+import { Scripts } from './Scripts';
+import { PanoPortal } from './lib/PanoPortal';
+import { Program } from './Program';
+import './Screens';
+import { Game } from './Game';
+import { NetLink } from './NetLink';
+import Util from './Util';
+import { Dancer } from './controllers/DanceController';
+import { KinectWatcher } from './controllers/KinectWatcher';
+import NavigationController from './controllers/NavigationController';
+import './lib/CelestialBodies';
+//import StarsController from './controllers/StarsController';
+import StatsController from './controllers/StatsController';
+import {ReactControls} from './controllers/ReactControls';
+import {JQControls} from './controllers/JQControls';
+import DATGUIControls from './controllers/DATGUIControls';
+import VRGame from './VRGame';
+import WebVR from './lib/vr/WebVR';
 
-import {R, TH_LEN, TH_MIN, PH_LEN, PH_MIN} from './const/screen';
+import { ViewManager } from './ViewManager';
+import { addLight, setupLights } from './Lights';
+import { DynamicObjectDB_test } from './lib/DynamicObjectDB';
+import { SlidePlayer } from './lib/MediaControl';
+import { Hurricane } from './lib/Hurricane';
+import { VirtualEarth } from './lib/VirtualEarth';
+import { Kessler } from './KesslerNode';
+import './Samples/OpenPerformer';
+import './Samples/ExampleNode';
 
-let Y_AXIS = new THREE.Vector3(0, 1, 0);
-let NINETY = Math.PI / 2;
-let DAE_PATH = 'models/PlayDomeSkp.dae';
-let VIDEO_PATH = 'videos/Climate-Music-V3-Distortion_HD_540.webm';
+
+import { Player0 } from './interfaces/PlayerInterface';
+import {Route} from './Route';
+import '../test/testNode';
 
 let {degToRad} = THREE.Math;
 
-let MODEL_SPECS = [{
-    path: 'models/PlayDomeSkp.dae',
-    position: [0, 0, 0],
-    rotation: [0, degToRad(0), 0],
-    scale: 0.025
-}];
-
-// climate music project
-var CMP;
-
-var canvas3d = document.getElementById('canvas3d');
-canvas3d.height = window.innerHeight;
-canvas3d.width = window.innerWidth;
-
-var renderer = new THREE.WebGLRenderer({ canvas: canvas3d, antialias: true });
-renderer.setSize(canvas3d.width, canvas3d.height);
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.autoClear = false;
-
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(75, canvas3d.width / canvas3d.height, 1, 4000);
-
-var starsGroup = new THREE.Group();
-scene.add(starsGroup);
-var stars = new Stars(starsGroup, 2500, {name: 'Stars'});
-starsGroup.position.set(0, 0, 0);
-
-var vrControls = new VRControls(camera);
-vrControls.shouldUpdatePosition = false;
-// vrControls.standing = true;
-
-// Allow the PointerLockControls to create the body,
-// even if we do not use the controls for movement.
-var plControls = new PointerLockControls(camera);
-var body = plControls.getObject();
-body.position.set(2, 2, 2);
-scene.add(body);
-
-var effect = new VREffect(renderer);
-effect.autoSubmitFrame = false;
-
-var keys = new Set();
-
-window.addEventListener('keydown', (e) => {
-  keys.add(e.keyCode);
-});
-
-window.addEventListener('keyup', (e) => {
-  keys.delete(e.keyCode);
-});
-
-// Chrome and Firefox implemented gamepads different.
-// Chrome prefers polling for the gamepads.
-// Firefox will update the gamepad object.
-window.addEventListener('gamepadconnected', (e) => {
-  console.log('gamepad connected: ' + e.gamepad.id);
-});
-
-window.addEventListener('gampaddisconnected', (e) => {
-  console.log('gamepad disconnected');
-});
-
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  effect.setSize( window.innerWidth, window.innerHeight );
-  CMP.resize(window.innerWidth, window.innerHeight);
-});
-
-// TESTING HUD
-
-let width = window.innerWidth;
-let height = window.innerWidth;
-
-var hudCanvas = document.createElement('canvas');
-hudCanvas.width = width;
-hudCanvas.height = height;
-var hudBitmap = hudCanvas.getContext('2d');
-
-hudBitmap.font = "Normal 40px Arial";
-hudBitmap.textAlign = 'center';
-hudBitmap.fillStyle = "rgba(245,245,245,0.75)";
-hudBitmap.fillText('Waiting for gamepad...', width / 2, height / 2);
-
-var cameraHUD = new THREE.OrthographicCamera(
-  -width/2, width/2,
-  height/2, -height/2,
-  0, 30
-);
-
-var sceneHUD = new THREE.Scene();
-
-var hudTexture = new THREE.Texture(hudCanvas)
-hudTexture.needsUpdate = true;
-var material = new THREE.MeshBasicMaterial( {map: hudTexture, transparent: true} );
-
-var planeGeometry = new THREE.PlaneGeometry( width, height );
-var plane = new THREE.Mesh( planeGeometry, material );
-// sceneHUD.add( plane );
-plane.position.set(-250, -250, -1000);
-
-var direction = new THREE.Vector3();
-
-function animate() {
-  if (plControls.enabled) {
-    plControls.getDirection(direction);
-  }
-  else {
-    camera.getWorldDirection(direction);
-  }
-
-  // Do not allow gamepad controls when pointerlock controls are enabled.
-  if (navigator.getGamepads && !plControls.enabled) {
-    let gamepadList = navigator.getGamepads();
-    let gamepad = gamepadList[0];
-
-    if (gamepad) {
-      let {axes} = gamepad;
-      let axisX = axes[0];
-      let axisY = axes[1];
-
-      if (axisY < -0.5) {
-        body.translateX(0.01 * direction.x);
-        body.translateZ(0.01 * direction.z);
-      }
-      else if (axisY > 0.5) {
-        body.translateX(-0.01 * direction.x);
-        body.translateZ(-0.01 * direction.z);
-      }
-
-      if (axisX > 0.5) {
-        // TODO: refactor into function
-        let right = direction.clone().applyAxisAngle(Y_AXIS, -NINETY);
-        body.translateX(0.01 * right.x);
-        body.translateZ(0.01 * right.z);
-      }
-      else if (axisX < -0.5) {
-        // TODO: refactor into function
-        let left = direction.clone().applyAxisAngle(Y_AXIS, NINETY);
-        body.translateX(0.01 * left.x);
-        body.translateZ(0.01 * left.z);
-      }
+function getStartPosition() {
+    var lookAt = new THREE.Vector3(0,2,0);
+    var start = new THREE.Vector3(4, 2,-5);
+    if (Util.getParameterByName("user")) {
+        // figure out a random start position
+        let radius = Util.randomFromInterval(3, 8);
+        let angle = Util.randomFromInterval(0, 2*Math.PI);
+        let height = Util.randomFromInterval(1.5, 5);
+        let x = Math.cos(angle)*radius;
+        let z = Math.sin(angle)*radius;
+        let start = new THREE.Vector3(x, height, z);
+        let lookAt = new THREE.Vector3(0, 1.5, 0);
     }
-  }
-
-  keys.forEach((keyCode) => {
-    if (keyCode == 87) { // Move forward incrementally with W
-      // PointerLockControls do not move the camera.
-      if (!plControls.enabled) {
-        body.translateX(0.1 * direction.x);
-        body.translateZ(0.1 * direction.z);
-      }
-      else {
-        body.translateZ(-0.1);
-      }
-    }
-    if (keyCode == 65) { // Move left incrementally with A
-      // PointerLockControls do not move the camera.
-      if (!plControls.enabled) {
-        let left = direction.clone().applyAxisAngle(Y_AXIS, NINETY);
-        body.translateX(0.1 * left.x);
-        body.translateZ(0.1 * left.z);
-      }
-      else {
-        body.translateX(-0.1);
-      }
-    }
-    if (keyCode == 68) { // Move right incrementally with D
-      if (!plControls.enabled) {
-        // PointerLockControls do not move the camera.
-        let right = direction.clone().applyAxisAngle(Y_AXIS, -NINETY);
-        body.translateX(0.1 * right.x);
-        body.translateZ(0.1 * right.z);
-      }
-      else {
-        body.translateX(0.1);
-      }
-    }
-    if (keyCode == 83) { // Move left incrementally with S
-      // PointerLockControls do not move the camera.
-      if (!plControls.enabled) {
-        body.translateX(-0.1 * direction.x);
-        body.translateZ(-0.1 * direction.z);
-      }
-      else {
-        body.translateZ(0.1);
-      }
-    }
-  });
-
-  CMP.update();
-  vrControls.update();
-
-  render();
-
-  effect.requestAnimationFrame(animate);
+    return { start, lookAt };
 }
 
-let mathboxContext;
-
-function render(vrDisplay) {
-  // renderer.clear(); // help
-  
-  if (mathboxContext) {
-    mathboxContext.frame();
-  }
-
-  effect.render(scene, camera);
-
-  // Is this right?
-  effect.render(sceneHUD, cameraHUD);
-
-  // renderer.render()
-
-  // Do this manually
-  if (vrDisplay && vrDisplay.isPresenting) {
-    effect.submitFrame();
-  }
-
-  // earthGroup.rotation.y += 0.01;
-  starsGroup.rotation.y += 0.0001;
-}
-
-function start()
+function loadConfig(path)
 {
-    loadModels(MODEL_SPECS, scene);
-    loadScreen(VIDEO_PATH, scene);
-    CMP = new CMPDataViz(renderer, scene, camera);
-    CMP.resize(window.innerWidth, window.innerHeight);
+    console.log("Loading config file "+path);
+    Util.getJSONFromScript(path,
+        function(obj) {
+                if (!obj) {
+                    alert("No value from config -- please fix file "+path);
+                    obj = window.CONFIG;
+                }
+                console.log("Loaded CONFIG: ", obj);
+                if (!obj) {
+                    var errStr = "**** No CONFIG defined (maybe syntax error)";
+                    alert(errStr);
+                    return;
+                }
+                start(obj);
+        },
+        function(jqxhr, settings, ex) {
+                console.log("error: ", ex);
+                alert("Cannot load "+path);
+        }
+    );
+}
 
-    loadChart(renderer, scene, camera).then(({context}) => {
-      mathboxContext = context;
+
+function loadModel(modelPath) {
+    console.log("***** loadModel "+modelPath);
+    var config = {
+        cameraControls: 'Orbit',
+        gameOptions: {ambientLightIntensity: 2},
+        specs: [
+            {type: 'Model', 'name': 'model', 'path': modelPath,
+             fitTo: {position:[0,0,0], scale: 1}}
+        ]
+    };
+    console.log("CONFIG: "+JSON.stringify(config));
+    start(config);
+}
+
+/*
+start processes a configuration and begins the game.  The argument can
+either be a configuation object, a URL to a .js or .json for the configuration
+object.   If no configuration is given, the query string is checked.  If a
+config option is given in the query string, that is used to get a URL for
+the config.  If a "model" option is given, a simple configuration is set
+up to display that model.
+
+Not that this first waits until document is fully loaded, which makes
+initializeion of DOM related stuff (e.g. by JQControls) simpler.
+*/
+function start(config) {
+    $(document).ready(e => start_(config));
+}
+
+function start_(config) {
+    console.log("app.start", config);
+    // this provides a way to view a model by constructiong
+    // a default config for viewing it.
+    if (config == null && Util.getParameterByName("model")) {
+        var modelPath = Util.getParameterByName("model");
+        loadModel(modelPath);
+        return;
+    }
+    if (config == null && Util.getParameterByName("config")) {
+        var configPath = Util.getParameterByName("config");
+        if (!configPath.endsWith(".js")) {
+            var configPath = "configs/"+configPath+".js";
+        }
+        loadConfig(configPath);
+        return;
+    }
+    if (typeof config == "string") {
+        loadConfig(config);
+        return;
+    }
+    config = config || {};
+    let vr = config.vr || Util.getParameterByName("vr");
+
+    let pos = getStartPosition();
+
+    if (vr) {
+        window.game = new VRGame('canvas3d', config.gameOptions);
+        game.body.position.set(pos.start.x, 1.5, pos.start.z);
+    } else {
+        window.game = new Game('canvas3d', config.gameOptions);
+        var cameraControls = config.cameraControls || "MultiControls";
+        game.addControls(Util.getTypedObj(cameraControls));
+        game.camera.position.set(pos.start.x, pos.start.y, pos.start.z);
+        game.camera.up = new THREE.Vector3(0,1,0);
+        game.camera.lookAt(pos.lookAt);
+    }
+    game.defaultGroupName = 'station';
+
+    var parts = [];
+    console.log("****** Getting program *******");
+    var getProgram;
+    if (!config.program)
+        config.program = {type: "Program"};
+    var getProgram = game.loadSpecs(config.program, "Program", "Program");
+    getProgram.then(() => {
+        console.log("**************** Program Loaded ********************");
+        if (config.webUI)
+            parts.push(game.loadSpecs(Util.getTypedObj(config.webUI), "webUI"));
+        if (config.venue)
+            parts.push(game.loadSpecs(config.venue, "venue"));
+        if (config.environment)
+            parts.push(game.loadSpecs(config.environment, "environment"));
+        if (config.specs)
+            parts.push(game.loadSpecs(config.specs, "specs"));
+        Promise.all(parts).then(() => {
+            console.log("****************** Starting game ******************");
+            game.config = config;
+            game.startGame();
+        });
     });
-
-    loadVR(renderer.domElement).then(({button, display}) => {
-      document.body.appendChild(button);
-      // Finally start animation loop
-      render = render.bind(null, display);
-      animate();
-    }).catch(error => {
-      // If VR is not available, do not worry about binding the VRDisplay.
-      // Only use PointerLock if VR is not available, do not use both.
-      if (!error.isVRAvailable) {
-        attachPointerLock(plControls);
-        animate();
-      }
-      else {
-        console.log(error);
-      }
-    });
-
-    console.log("****** adding planets ******");
-    var earth = addPlanet(scene, 'Earth',   1000, -2000, 0, 0);
-    var mars = addPlanet(scene, 'Mars',    200,   2000, 0, 2000,  './textures/Mars_4k.jpg');
-    var jupiter = addPlanet(scene, 'Jupiter', 300,   1500, 0, -1500, './textures/Jupiter_Map.jpg');
-    var nepture = addPlanet(scene, 'Nepture', 100,  -1000, 0, -1000, './textures/Neptune.jpg');
-    setupLights(scene);
 }
 
 window.start = start;

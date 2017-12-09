@@ -43,15 +43,13 @@ let VREffect = function ( renderer, onError ) {
 
 	if ( navigator.getVRDisplays ) {
 
-		navigator.getVRDisplays().then( gotVRDisplays ).catch( function () {
+        navigator.getVRDisplays().then( gotVRDisplays ).catch( function () {
 
 			console.warn( 'THREE.VREffect: Unable to get VR Displays' );
 
 		} );
 
 	}
-
-	//
 
 	this.isPresenting = false;
 
@@ -61,26 +59,30 @@ let VREffect = function ( renderer, onError ) {
 	var rendererUpdateStyle = false;
 	var rendererPixelRatio = renderer.getPixelRatio();
 
-	this.getVRDisplay = function () {
+    this.getUnderlyingRenderer = function() {
+        return renderer;
+    };
+
+    this.getVRDisplay = function () {
 
 		return vrDisplay;
 
 	};
 
-	this.setVRDisplay = function ( value ) {
+    this.setVRDisplay = function ( value ) {
 
 		vrDisplay = value;
 
 	};
 
-	this.getVRDisplays = function () {
+    this.getVRDisplays = function () {
 
 		console.warn( 'THREE.VREffect: getVRDisplays() is being deprecated.' );
 		return vrDisplays;
 
 	};
 
-	this.setSize = function ( width, height, updateStyle ) {
+    this.setSize = function ( width, height, updateStyle ) {
 
 		rendererSize = { width: width, height: height };
 		rendererUpdateStyle = updateStyle;
@@ -100,9 +102,14 @@ let VREffect = function ( renderer, onError ) {
 
 	};
 
+    this.getSize = function() {
+        return renderer.getSize();
+    };
+
 	// VR presentation
 
-	var canvas = renderer.domElement;
+    var canvas = renderer.domElement;
+    this.domElement = renderer.domElement;
 	var defaultLeftBounds = [ 0.0, 0.0, 0.5, 1.0 ];
 	var defaultRightBounds = [ 0.5, 0.0, 0.5, 1.0 ];
 
@@ -138,9 +145,9 @@ let VREffect = function ( renderer, onError ) {
 
 	window.addEventListener( 'vrdisplaypresentchange', onVRDisplayPresentChange, false );
 
-	this.setFullScreen = function ( boolean ) {
+    this.setFullScreen = function ( boolean ) {
 
-		return new Promise( function ( resolve, reject ) {
+        return new Promise( function ( resolve, reject ) {
 
 			if ( vrDisplay === undefined ) {
 
@@ -170,19 +177,19 @@ let VREffect = function ( renderer, onError ) {
 
 	};
 
-	this.requestPresent = function () {
+    this.requestPresent = function () {
 
 		return this.setFullScreen( true );
 
 	};
 
-	this.exitPresent = function () {
+    this.exitPresent = function () {
 
 		return this.setFullScreen( false );
 
 	};
 
-	this.requestAnimationFrame = function ( f ) {
+    this.requestAnimationFrame = function ( f ) {
 
 		if ( vrDisplay !== undefined ) {
 
@@ -196,7 +203,7 @@ let VREffect = function ( renderer, onError ) {
 
 	};
 
-	this.cancelAnimationFrame = function ( h ) {
+    this.cancelAnimationFrame = function ( h ) {
 
 		if ( vrDisplay !== undefined ) {
 
@@ -210,11 +217,17 @@ let VREffect = function ( renderer, onError ) {
 
 	};
 
-	this.submitFrame = function () {
+	this.submitFrame = function( scene, camera ) {
 
 		if ( vrDisplay !== undefined && scope.isPresenting ) {
 
 			vrDisplay.submitFrame();
+
+			// https://github.com/toji/webvr.info/blob/master/samples/07-advanced-mirroring.html#L373
+			// if ( vrDisplay.capabilities.hasExternalDisplay ) {
+			// 	renderer.context.viewport( 0, 0, canvas.width, canvas.height );
+            //     renderer.render( scene, camera );
+			// }
 
 		}
 
@@ -308,12 +321,12 @@ let VREffect = function ( renderer, onError ) {
 
 			camera.matrixWorld.decompose( cameraL.position, cameraL.quaternion, cameraL.scale );
 
-			cameraR.position.copy( cameraL.position );
-			cameraR.quaternion.copy( cameraL.quaternion );
-			cameraR.scale.copy( cameraL.scale );
+            cameraR.position.copy( cameraL.position );
+            cameraR.quaternion.copy( cameraL.quaternion );
+            cameraR.scale.copy( cameraL.scale );
 
-			cameraL.translateOnAxis( eyeTranslationL, cameraL.scale.x );
-			cameraR.translateOnAxis( eyeTranslationR, cameraR.scale.x );
+            cameraL.translateOnAxis( eyeTranslationL, cameraL.scale.x );
+            cameraR.translateOnAxis( eyeTranslationR, cameraR.scale.x );
 
 			if ( vrDisplay.getFrameData ) {
 
@@ -382,7 +395,7 @@ let VREffect = function ( renderer, onError ) {
 
 			if ( scope.autoSubmitFrame ) {
 
-				scope.submitFrame();
+				scope.submitFrame( scene, camera );
 
 			}
 

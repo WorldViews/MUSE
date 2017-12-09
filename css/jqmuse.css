@@ -1,0 +1,95 @@
+
+#uiToggle { color: #ffffff; align: left; }
+
+#uiDiv {
+    position: absolute; left: 10px; top: 10px;
+    text-align:left;
+    //background-color: #ffffff;
+    color: #ffffff;
+    width: 96%;
+    z-index: 10;
+}
+
+.jqui {
+    color: #ffffff;
+}
+
+#uiPlayControls {
+    position: absolute; left: 30px; top: 0px;
+    padding-left: 10px; padding-right: 10px;
+    //background: rgba(5,5,60,0.1);
+    background: rgba(5,5,60,0.0);
+    width: 95%;
+    margin-bottom: 10px;
+}
+
+#uiPlayControls > input[type=button],
+#uiPlayControls > a
+{
+    margin-right: 10px;
+}
+#uiPlayControls > a > img {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+}
+
+#uiPanel {
+    position: absolute; left: 30px; top: 50px;
+    padding-left: 10px; padding-right: 10px;
+    width: 200px;
+    text-align:left;
+    background: rgba(5,5,60,0.6);
+}
+
+#uiTimeSlider {
+    //position: absolute; left: 50px; top: 0px;
+    padding-left: 10px; padding-right: 10px;
+    width: 85%;
+    background: rgba(20,5,60,0.0);
+}
+
+#uiViewControls > input[type=button] {
+    margin: 2px;
+}
+
+#uiViewControls > input[type=text] {
+    margin: 2px;
+}
+
+
+.uiButton {
+    margin: 2px;
+    //padding-left: 10px; padding-right: 10px;
+    background: rgba(220,20,80,0.3);
+}
+
+input[type=range]{
+    -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    //width: 300px;
+    height: 10px;
+    background: #ddf;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: lightblue;
+    margin-top: -8px;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}

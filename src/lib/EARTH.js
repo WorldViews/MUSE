@@ -9,9 +9,9 @@ var Earth = function(group, radius, opts)
         this.name = "";
         if (opts && opts.name)
 	    this.name = opts.name;
-	this.radius = radius;
+        this.radius = radius;
         this.loaded = false;
-	this.group = group;
+        this.group = group;
         var loader = new THREE.TextureLoader();
         loader.load('textures/land_ocean_ice_cloud_2048.jpg', ( texture ) => {
             var geometry = new THREE.SphereGeometry( radius, 30, 30 );
@@ -20,32 +20,32 @@ var Earth = function(group, radius, opts)
 	    this.mesh.name = "Earth";
             group.add(this.mesh);
             this.loaded = true;
-       });
+        });
     }
 
     this.latLonToVector3 = function(lat, lng, h) {
-	if (!h)
+        if (!h)
 	    h = 1;
         //report(""+this.name+" h: "+h+" r: "+this.radius);
-	return EARTH.latLonToVector3(lat, lng, this.radius, h);
+        return EARTH.latLonToVector3(lat, lng, this.radius, h);
     }
 
     this.getLocalGroup = function(lat, lon, h) {
-	var localGroup = new THREE.Group();
-	localGroup.position.copy(this.latLonToVector3(lat, lon, h));
-	var phi = (90-lat)*Math.PI/180;
-	var theta = (lon+90)*Math.PI/180;
-	localGroup.rotation.set(phi, theta, 0, "YXZ");
-	this.group.add(localGroup);
-	return localGroup;
+        var localGroup = new THREE.Group();
+        localGroup.position.copy(this.latLonToVector3(lat, lon, h));
+        var phi = (90-lat)*Math.PI/180;
+        var theta = (lon+90)*Math.PI/180;
+        localGroup.rotation.set(phi, theta, 0, "YXZ");
+        this.group.add(localGroup);
+        return localGroup;
     }
 
     this.addObject = function(obj, lat, lon, h) {
         if (!h)
 	    h = 0.02*this.radius;
-	var lg = this.getLocalGroup(lat, lon, h);
-	lg.add(obj);
-	return lg;
+        var lg = this.getLocalGroup(lat, lon, h);
+        lg.add(obj);
+        return lg;
     }
 
     this.addMarker = function(lat, lon) {
@@ -54,16 +54,16 @@ var Earth = function(group, radius, opts)
         var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
         var marker = new THREE.Mesh( geometry, material );
         return this.addObject(marker, lat, lon, h);
-	var lg = this.getLocalGroup(lat, lon, h);
-	/*
+        var lg = this.getLocalGroup(lat, lon, h);
+        /*
 	var phi = (90-lat)*Math.PI/180;
 	var theta = (lon+90)*Math.PI/180;
 	lg.rotation.set(phi, theta, 0, "YXZ");
 	*/
-	lg.add(marker);
-	//var axisHelper = new THREE.AxisHelper( 10*h );
-	//lg.add( axisHelper );
-	return lg;
+        lg.add(marker);
+        //var axisHelper = new THREE.AxisHelper( 10*h );
+        //lg.add( axisHelper );
+        return lg;
     }
 
     this.init();
@@ -74,7 +74,7 @@ var Earth = function(group, radius, opts)
 Earth.latLonToVector3 = function(lat, lon, radius, height) {
     var phi = (lat)*Math.PI/180;
     var theta = (lon-180)*Math.PI/180;
- 
+
     var x = -(radius+height) * Math.cos(phi) * Math.cos(theta);
     var y =  (radius+height) * Math.sin(phi);
     var z =  (radius+height) * Math.cos(phi) * Math.sin(theta);

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+    <title>Climate Music Experience</title>
+
+    <style>
+      html {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #ffffff;
+        margin: 0px;
+        overflow: hidden;
+        font-family:Monospace;
+        font-size:13px;
+        text-align:center;
+        cursor: pointer;
+      }
+      div.textViewer {
+         color: rgba(240,240,240, .9);
+         background: rgba(200,200,0,0.0);
+         position: absolute;
+         top: 15px;
+         left: 200px;
+         width: 700px;
+         align-items: center;
+         horizontal-align: center;
+      }
+      #canvas3d {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top:0;
+      }
+    </style>
+  </head> 
+  <body>
+    <canvas id="canvas3d"></canvas>
+
+    <script src="dist/vendor.bundle.js"></script>
+    <script src="dist/mathbox-bundle.min.js"></script>
+    <script src="src/legacy/jquery-3.1.1.min.js"></script>
+    <script src="src/legacy/jquery-ui.js"></script>
+    <script src="src/lib/GSpreadSheet.js"></script>
+    <script src="dist/app.bundle.js"></script>
+
+    <script src="configs/cmp_coppertone.js"></script>
+    
+    <script>
+      start({specs: CMP_COPPERTONE});
+    </script>
+  </body>
+</html>

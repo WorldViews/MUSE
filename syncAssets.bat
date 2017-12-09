@@ -1,0 +1,1 @@
+ XCOPY \\data2\groups\mixed\MUSE\assets .\assets /E /D /C /Y
