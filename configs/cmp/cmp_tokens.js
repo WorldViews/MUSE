@@ -74,11 +74,11 @@ var tokSpecs = [
      modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010},
      onClick: () => selectStageModel("dancer")
     },
-    /*{name: "particleTok",
-     modelUrl: "assets/models/tokens/ParticleDancer/model.dae",
-     modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010},
-     onClick: () => selectStageModel("dancer")
-    },*/ //Looks great but high poly count, will find something better
+    {name: "particleTok",
+     modelUrl: "assets/models/tokens/ParticleDancer/sparklers.dae",
+     modelOpts: {position: [0.16, 0.55, -.16], scale: 0.04},
+     onClick: () => toggleSparkler()
+    },
     {name: "earthTok",
      modelUrl: "assets/models/tokens/globe/model.dae",
      modelOpts: {position: [0.16, 0.55, -.16], scale: 0.003},
@@ -119,12 +119,12 @@ DUMMY_TOKEN =
 {   type: 'Model', name: "coverControl",
     path: "assets/models/pedestal/model.dae",
     //position: [.75, 0.55, 1.35],
-    position: Util.radialPosition(0, 2.2, -.1),
+    position: Util.radialPosition(130, 2.2, -.1),
     //rot: [2, 0, 1],
-    scale: .02,
-    //onMuseEvent: {'click': () => selectStageModel("dancer") }
-    onMuseEvent: {'click': () => toggleVisiblity("innerCover"),
-                  'doubleClick': () => playVideoOnSurface("innerCover") }
+    scale: .022,
+    onMuseEvent: {'click': () => selectStageModel(null) }
+    //onMuseEvent: {'click': () => toggleVisiblity("innerCover"),
+    //              'doubleClick': () => playVideoOnSurface("innerCover") }
 },
 
 TOKENS = getTokens(180, tokSpecs);
