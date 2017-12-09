@@ -24,9 +24,10 @@ MEDIA_SPECS = [
             rightScreen: {url: 'assets/images/MuseTalk/Slide1.PNG'}
           },
           */
-           { duration: 29*60,  mainScreen: {url: 'assets/video/ClimateMusicProj-v7-HD.webm'}},
+          //{ duration: 29*60,  mainScreen: {url: 'assets/video/ClimateMusicProj-v7-HD.webm'}},
+          { duration: 29*60,  mainScreen: {url: 'assets/video/CMP-no-overlay-720.webm'}},
           // { duration: 10,     mainScreen: {url: 'assets/video/GlobalWeather2013.webm'}},
-           { duration: 10,     mainScreen: {url: 'assets/video/2006_co2_flow_1024x512.webm'}},
+           { duration: 60,     mainScreen: {url: 'assets/video/2006_co2_flow_1024x512.webm'}},
        ]
    },
    /*

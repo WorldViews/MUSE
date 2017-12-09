@@ -132,10 +132,23 @@ var PARTNER_SPECS = [
     },
 ];
 
+function goToHomeState() {
+    alert("goToHomeState");
+    if (MUSE.HOME_GAME_STATE) {
+        game.setGameState(MUSE.HOME_GAME_STATE);
+    }
+    else {
+        alert("No HOME_GAME_STATE set");
+    }
+}
+
 var RELATED_SPECS = [
     {name: "EarthClock",
      logo: "assets/images/CMPPosters/TimeToChange.jpg",
-     video: "assets/video/ClimateMusicProj-v7-HD.webm"
+     //video: "assets/video/ClimateMusicProj-v7-HD.webm",
+     video: "assets/video/CMP-no-overlay-720.webm",
+     duration: 29*60
+     //onMuseEvent: {'click': () => goToHomeState()},
     },
     {name: "SustainableSV",
      logo: "assets/images/PartnerLogos/SustainableSV.png",
