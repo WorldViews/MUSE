@@ -111,6 +111,15 @@ class ParticleSys {
 
 MUSE.ParticleSys = ParticleSys;
 
+MUSE.SparklerOptions = {
+    turbulence: .02,
+    size: 19,
+    lifetime: 13.5,
+    positionRandomness: .055,
+    velocityRandomness: .026,
+    color: new THREE.Color(),
+};
+
 class Sparkler {
     constructor(name) {
         this.name = name || "sparkler";
@@ -122,6 +131,18 @@ class Sparkler {
         this.pos = null;
         //this.addSparklers();
         game.registerController(this.name, this);
+    }
+
+    setColor(c) {
+        console.log("Sparkler.setColor "+c);
+        MUSE.SparklerOptions.color.copy(c);
+        this.setOptions();
+        /*
+        for (var name in this.pSystems) {
+            var pSys = this.pSystems[name];
+            pSys.options.color = c;
+        }
+        */
     }
 
     getPsys(tname) {
@@ -153,7 +174,7 @@ class Sparkler {
         pSys._pos.copy(pos);
     }
 
-    addSparklers() {
+    addSparklers(parent) {
         console.log("add sparkler");
         if (this.pSystems) {
             console.log("********************** already have sparkler!! ****");
@@ -163,16 +184,38 @@ class Sparkler {
         var x = 0;
         var y = 1;
         this.trailNames.forEach(name => {
-            var pSys = new MUSE.ParticleSys(name, null);
-            pSys.options.turbulence = .001;
+            var pSys = new MUSE.ParticleSys(name, null, parent);
+            /*
+            var options = MUSE.SparklerOptions;
+            pSys.options.turbulence = options.turbulence;
+            pSys.options.size = options.size;
+            pSys.options.lifetime = options.lifetime;
+            pSys.options.positionRandomness = options.positionRandomness;
+            pSys.options.velocityRandomness = options.velocityRandomness;
+            pSys.options.turbulence = .01;
             pSys.options.size = 19;
             pSys.options.lifetime = 13.5;
             pSys.options.positionRandomness = .055;
-            pSys.options.velocityRandomness = .016;
+            pSys.options.velocityRandomness = .026;
+            */
             pSys._pos = new THREE.Vector3(x, y, 0);
             x += 1;
             this.pSystems[name] = pSys;
-        })
+        });
+        this.setOptions();
+    }
+
+    setOptions() {
+        for (var name in this.pSystems) {
+            var pSys = this.pSystems[name];
+            var options = MUSE.SparklerOptions;
+            pSys.options.color = options.color;
+            pSys.options.turbulence = options.turbulence;
+            pSys.options.size = options.size;
+            pSys.options.lifetime = options.lifetime;
+            pSys.options.positionRandomness = options.positionRandomness;
+            pSys.options.velocityRandomness = options.velocityRandomness;
+        }
     }
 
     removeSparklers() {
@@ -203,6 +246,7 @@ class Sparkler {
         }
         if (!this.pSystems)
             return;
+        this.setOptions();
         for (var name in this.pSystems) {
             var pSys = this.pSystems[name];
             if (pSys.trackedObject) {
@@ -218,4 +262,4 @@ class Sparkler {
 
 MUSE.Sparkler = Sparkler;
 
-export {ParticleSys};
+export {ParticleSys,Sparkler};
