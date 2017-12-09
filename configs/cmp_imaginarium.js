@@ -136,8 +136,8 @@ function forceImages() {
     //vm.gotoView("Left Rear", 0);
     setTimeout( () => {
         console.log("going home now");
-        vm.gotoView("Nearby Outside Looking In", 0);
-        vm.gotoView("Left Rear", 3);
+        //vm.gotoView("Nearby Outside Looking In", 0);
+        vm.gotoView("V1", 8);
     }, 1000);
 }
 
@@ -154,6 +154,7 @@ function planetaryTour() {
     window.planetTour = solarSystem.getTour();
 }
 
+/*
 function imaginariumTour() {
     //var target = game.models.station;
     var vm = game.viewManager;
@@ -173,6 +174,57 @@ function imaginariumTour() {
     anim.addWait(3)
     anim.addCall(() => vm.gotoView("Nearby Outside Looking In", 6));
     //game.registerPlayer(anim);
+    window.lastAnim = anim;
+    return anim;
+}
+*/
+/*
+function imaginariumTour() {
+    //var target = game.models.station;
+    var vm = game.viewManager;
+    var program = game.program;
+    var anim = new MUSE.Anim("anim1", game.models.station);
+    //anim.addCall(() => vm.gotoView("V1", 4));
+    anim.addCall(() => vm.gotoView("V1", 0));
+    anim.addCall(() => {
+        console.log("******* clear stage!! *****");
+        program.selectStageModel(null);
+    });
+    anim.addWait(1)
+    anim.addCall(() => vm.gotoView("V4", 8));
+    anim.addWait(8)
+    window.lastAnim = anim;
+    return anim;
+}
+*/
+
+FORCED_IMAGES = false;
+
+function imaginariumTour() {
+    //var target = game.models.station;
+    var vm = game.viewManager;
+    var program = game.program;
+    program.selectStageModel(null);
+    var anim = new MUSE.Anim("anim1", game.models.station);
+    //anim.addCall(() => vm.gotoView("V1", 4));
+    if (!FORCED_IMAGES) {
+        console.log("Force images");
+        anim.addCall(() => vm.gotoView("Very Far Away", 0));
+        anim.addWait(1);
+        anim.addCall(() => vm.gotoView("V1", 6));
+        anim.addWait(7);
+        anim.addCall(() => vm.gotoView("V1", 2));
+        anim.addWait(3);
+        FORCED_IMAGES = true;
+    }
+    else {
+        console.log("Skipping force images");
+        anim.addCall(() => vm.gotoView("V1", 9));
+        anim.addWait(11)
+    }
+    anim.addWait(1)
+    anim.addCall(() => vm.gotoView("V4", 8));
+    anim.addWait(8)
     window.lastAnim = anim;
     return anim;
 }
@@ -248,8 +300,8 @@ CONFIG = {
             //'Show 3D Graph': (game) => show3DGraph(game),
             //'Show Virtual Earth': (game) => showVirtualEarth(game),
             'Force Images': (game) => forceImages(),
-            'Planetary Tour': (game) => planetaryTour(),
-            'Imaginarium Tour': (game) => imaginariumTour(),
+            //'Planetary Tour': (game) => planetaryTour(),
+            'Enter Imaginarium': (game) => imaginariumTour(),
             'Show 2013 Weather': (game) => setEarthVideo(game, "assets/video/GlobalWeather2013.mp4"),
             //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_Amon_CCSM4_1850_2300.mp4"),
             //'Show surface temp 1850-2300': (game) => setEarthVideo(game, "assets/video/tas_1850_2300.mp4"),
