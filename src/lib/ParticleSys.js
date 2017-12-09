@@ -112,11 +112,12 @@ class ParticleSys {
 MUSE.ParticleSys = ParticleSys;
 
 MUSE.SparklerOptions = {
-    turbulence: .01,
+    turbulence: .02,
     size: 19,
     lifetime: 13.5,
     positionRandomness: .055,
-    velocityRandomness: .026
+    velocityRandomness: .026,
+    color: new THREE.Color(),
 };
 
 class Sparkler {
@@ -134,10 +135,14 @@ class Sparkler {
 
     setColor(c) {
         console.log("Sparkler.setColor "+c);
+        MUSE.SparklerOptions.color.copy(c);
+        this.setOptions();
+        /*
         for (var name in this.pSystems) {
             var pSys = this.pSystems[name];
             pSys.options.color = c;
         }
+        */
     }
 
     getPsys(tname) {
@@ -180,13 +185,13 @@ class Sparkler {
         var y = 1;
         this.trailNames.forEach(name => {
             var pSys = new MUSE.ParticleSys(name, null, parent);
+            /*
             var options = MUSE.SparklerOptions;
             pSys.options.turbulence = options.turbulence;
             pSys.options.size = options.size;
             pSys.options.lifetime = options.lifetime;
             pSys.options.positionRandomness = options.positionRandomness;
             pSys.options.velocityRandomness = options.velocityRandomness;
-            /*
             pSys.options.turbulence = .01;
             pSys.options.size = 19;
             pSys.options.lifetime = 13.5;
@@ -196,7 +201,21 @@ class Sparkler {
             pSys._pos = new THREE.Vector3(x, y, 0);
             x += 1;
             this.pSystems[name] = pSys;
-        })
+        });
+        this.setOptions();
+    }
+
+    setOptions() {
+        for (var name in this.pSystems) {
+            var pSys = this.pSystems[name];
+            var options = MUSE.SparklerOptions;
+            pSys.options.color = options.color;
+            pSys.options.turbulence = options.turbulence;
+            pSys.options.size = options.size;
+            pSys.options.lifetime = options.lifetime;
+            pSys.options.positionRandomness = options.positionRandomness;
+            pSys.options.velocityRandomness = options.velocityRandomness;
+        }
     }
 
     removeSparklers() {
@@ -227,6 +246,7 @@ class Sparkler {
         }
         if (!this.pSystems)
             return;
+        this.setOptions();
         for (var name in this.pSystems) {
             var pSys = this.pSystems[name];
             if (pSys.trackedObject) {
