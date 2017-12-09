@@ -1,9 +1,10 @@
 import _ from 'lodash';
 
 var stateDefault = {
-    labelSize: 60,
-    gridLineWidth: 3,
-    chartGridLineWidth: 3,
+    //labelSize: 60,
+    labelSize: 100,
+    gridLineWidth: 8,
+    chartGridLineWidth: 5,
     envelopeLineWidth: 3,
     refLineWidth: 3,
     co2LineWidth: 20,
