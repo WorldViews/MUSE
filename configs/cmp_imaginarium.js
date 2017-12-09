@@ -31,11 +31,11 @@ var SPECS = [
     {  type: 'Group', name: 'station'  },
 //    {  type: 'CMPData' },
     {  type: 'CMPDataViz', name: 'cmp',
-        position: [0, 1, 0],
+        position: [0, 1.2, 0],
         //position: [-10, 0, 0],
-        rotation: [0, 0, 0],
+        rot: [0, 45, 0],
         //scale: [1.5, 1, 1.5],
-        scale: [1.2, 0.8, 1.2],
+        scale: [1.0, 0.7, 1.0],
         visible: true,
         startTime: 11*60 + 18, // 11:18 minutes before starting
         duration: 1075   // 17:56 minutes duration time
