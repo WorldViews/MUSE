@@ -40,11 +40,18 @@ class DanceController extends Node3D
         this.color = new THREE.Color();
         game.state.on(this.name, state => inst.setProps(state));
         game.state.on("cmpColorHue", h => inst.setHue(h));
+        game.state.on("cmpOpacity", f => inst.setOpacity(f));
     }
 
     setHue(h) {
         this.color.setHSL(h,.9,.5);
         this.setColor(this.color);
+    }
+
+    setOpacity(f) {
+        var lifetime = 2 + 20*f;
+        console.log("Dancer opcity "+f+"  lifetime "+lifetime);
+        MUSE.SparklerOptions.lifetime = lifetime;
     }
 
     setColor(c) {
