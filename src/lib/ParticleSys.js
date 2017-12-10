@@ -115,8 +115,8 @@ MUSE.SparklerOptions = {
     turbulence: .02,
     size: 19,
     lifetime: 13.5,
-    positionRandomness: .055,
-    velocityRandomness: .026,
+    positionRandomness: .075,
+    velocityRandomness: .04,
     color: new THREE.Color(),
 };
 
