@@ -262,7 +262,7 @@ class Game {
             this.viewManager.stop();
         Anim.stopAll();
     }
-    
+
     startGame() {
         if (this.config && this.config.onStart) {
             this.config.onStart(this);
@@ -515,52 +515,75 @@ class Game {
         return this.getBBox(obj3d).getCenter();
     }
 
-    fitObjectTo(obj3d, opts) {
-        console.log("fitObjectTo:", obj3d, opts);
-        obj3d = this.getObject3D(obj3d);
-        var bb = new THREE.Box3().setFromObject(obj3d);
-        var dim = bb.getSize();
-        var c = bb.getCenter();
-        if (opts.position) {
-            var v = opts.position;
-            v = new THREE.Vector3(v[0],v[1],v[2]);
-            obj3d.position.copy(v);
-        }
-        if (opts.scale) {
-            var prevS = obj3d.scale.x;
-            var w = dim.x;
-            var newS = opts.scale*prevS/w;
-            obj3d.scale.set(newS,newS,newS);
-        }
-    }
-
     // fitObjectTo would be very handy, but still is not
     // working yet.  This is an attempt in progress to get it right.
-    fitObjectToX(obj3d, opts) {
+    fitObjectTo(obj3d, opts) {
+        opts = opts || {};
         console.log("fitObjectTo:", obj3d, opts);
+        obj3d = this.getObject3D(obj3d);
+        if (opts.size)
+            this.scaleObjectTo(obj3d, opts.size);
+        this.positionObjectBoundingBox(obj3d, opts.position);
+    }
+
+    // move the object so that its bounding box is
+    // positioned at given location.
+    positionObjectBoundingBox(obj3d, position) {
+        position = position || [0,0,0];
+        console.log("positionObjectBoundingBox:", obj3d, position);
         obj3d = this.getObject3D(obj3d);
         var bb = new THREE.Box3().setFromObject(obj3d);
         var dim = bb.getSize();
         var cw = bb.getCenter();//center in world coords
+        var cp = cw.clone();
+        if (obj3d.parent) {
+            obj3d.parent.worldToLocal(cp);
+        }
         console.log("bb:", bb);
         console.log("cw:", cw);
-        if (opts.position) {
-            var v = opts.position;
-            v = new THREE.Vector3(v[0],v[1],v[2]);
-            var cp = cw.clone();
+        console.log("cp:", cp);
+        var v = Util.toVector3(position);
+        console.log("pos:", v); // v in parent
+        v.sub(cp);
+        console.log("v-cp",v);
+        obj3d.position.add(v);
+    }
+
+    scaleObjectTo(obj3d, size) {
+        if (typeof size == "number") {
+            size = [size,size,size];
+        }
+        console.log("fitObjectTo:", obj3d, size);
+        obj3d = this.getObject3D(obj3d);
+        var bb = new THREE.Box3().setFromObject(obj3d);
+        var dim = bb.getSize();
+        var cw = bb.getCenter();//center in world coords
+        var cp = cw.clone();
+        if (obj3d.parent) {
             obj3d.parent.worldToLocal(cp);
-            console.log("cp:",  cp); //c in parent
-            console.log("pos:", v); // v in parent
-            v.sub(cp);
-            console.log("v-cp",v);
-            obj3d.position.copy(v);
         }
-        if (opts.scale) {
-            var prevS = obj3d.scale.x;
-            var w = dim.x;
-            var newS = opts.scale*prevS/w;
-            obj3d.scale.set(newS,newS,newS);
-        }
+        console.log("bb:", bb);
+        console.log("cw:", cw);
+        // find x dimension in local
+        var x1 = new THREE.Vector3(dim.x,0,0);
+        x1.add(cw);
+        obj3d.parent.worldToLocal(x1)
+        var dx = x1.distanceTo(cp);
+        // find y dimention in local
+        var y1 = new THREE.Vector3(0,dim.y,0);
+        y1.add(cw);
+        obj3d.parent.worldToLocal(y1)
+        var dy = y1.distanceTo(cp);
+        // find z dimention in local
+        var z1 = new THREE.Vector3(0,0,dim.z);
+        z1.add(cw);
+        obj3d.parent.worldToLocal(z1)
+        var dz = y1.distanceTo(cp);
+        console.log("current size: "+dx+" "+dy+" "+dz);
+        var sx = obj3d.scale.x*size[0]/dx;
+        var sy = obj3d.scale.y*size[1]/dy;
+        var sz = obj3d.scale.z*size[2]/dz;
+        obj3d.scale.set(sx, sy, sz);
     }
 
     setStatus(str) {
