@@ -15,7 +15,7 @@ function setCO2Model() {
 }
 
 var numToks = 0;
-function getToken(name, tokenPos, spec) {
+function getToken0(name, tokenPos, spec) {
     parent = 'tokens';
     var modelOpts = spec.modelOpts || {};
     var modelScale = modelOpts.scale || 1.0;
@@ -33,6 +33,7 @@ function getToken(name, tokenPos, spec) {
          {   type: 'Model', name: name,
              path: spec.modelUrl,
              //position: [.75, 0.55, 1.35],
+            // position: modelPos,
              position: modelPos,
              rot: rot,
              scale: modelScale,
@@ -42,9 +43,44 @@ function getToken(name, tokenPos, spec) {
          {  type: 'Model',
             path: 'assets/models/pedestal/model.dae',
             name: pedName,
+            //fitTo: {position: [0,0,0], size: 0.5},
             position: [0, 0, 0],
-            rot: [0, 0, 0],
             scale: 0.02,
+            castShadow: true,
+            onMuseEvent: {'click': spec.onClick },
+        }
+    ]};
+    return token;
+}
+
+function getToken(name, tokenPos, spec) {
+    parent = 'tokens';
+    var modelOpts = spec.modelOpts || {};
+    var modelScale = modelOpts.scale || 1.0;
+    var modelPos = modelOpts.position || [0,0,0];
+    var tokScale = 1.1;
+    var rot = modelOpts.rot;
+    numToks++;
+    var pedName = "pedestal"+numToks;
+    var token = {
+        type: 'Group', name: "tokenGroup"+numToks, parent, position: tokenPos,
+        scale: tokScale,
+        //onMuseClick: {'click': spec.onClick },
+        // whoops... this didn't work cuz group isn't a Node yet.
+         children: [
+         {   type: 'Model', name: name,
+             path: spec.modelUrl,
+             fitTo: {position: [0, 0.5+0.25, 0], size: 0.5},
+             //position: modelPos,
+             rot: rot,
+             //scale: modelScale,
+             onMuseEvent: {'click': spec.onClick },
+             castShadow: true,
+        },
+         {  type: 'Model',
+            path: 'assets/models/pedestal/model.dae',
+            name: pedName,
+            fitTo: {position: [0,0.25,0], size: 0.5},
             castShadow: true,
             onMuseEvent: {'click': spec.onClick },
         }
@@ -71,7 +107,7 @@ function getTokens(angle, tokSpecs)
 var tokSpecs = [
     {name: "dancerTok",
      modelUrl: "assets/models/tokens/dancer/model.dae",
-     modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010},
+     modelOpts: {position: [.75, 0.55, 1.35], scale: 0.010, rot: [0,180,0]},
      onClick: () => selectStageModel("dancer")
     },
     {name: "particleTok",

@@ -229,8 +229,14 @@ class Game {
     // Isn't this more complicated than it needs to be?
     // we have a list and map, and functions or objects.
     registerController(name, controller) {
+        console.log("register controller "+name);
         this.controllers[name] = controller;
         return controller;
+    }
+
+    unregisterController(name, controller) {
+        console.log("unregister controller "+name);
+        delete this.controllers[name];
     }
 
     getProgram() {
@@ -399,9 +405,6 @@ class Game {
     // Takes an Object3d and sets the position, rotation and scale if they
     // are present in props.
         setFromProps(obj3d, props) {
-            if (props.fitTo) {
-                this.fitObjectTo(obj3d, props.fitTo);
-            }
             if (props.position) {
                 if (Array.isArray(props.position)) {
                     obj3d.position.fromArray(props.position);
@@ -436,6 +439,9 @@ class Game {
     	    else {
                     reportError("rotations should be array");
     	    }
+            }
+            if (props.fitTo) {
+                this.fitObjectTo(obj3d, props.fitTo);
             }
             if (props.visible != null) {
     	           obj3d.visible = props.visible;
@@ -523,7 +529,7 @@ class Game {
         obj3d = this.getObject3D(obj3d);
         if (opts.size)
             this.scaleObjectTo(obj3d, opts.size);
-        this.positionObjectBoundingBox(obj3d, opts.position);
+        this.positionObjectBoundingBox(obj3d, opts.position, opts.anchor);
     }
 
     // move the object so that its bounding box is
@@ -550,40 +556,52 @@ class Game {
     }
 
     scaleObjectTo(obj3d, size) {
-        if (typeof size == "number") {
-            size = [size,size,size];
-        }
+        //if (typeof size == "number") {
+        //    size = [size,size,size];
+        //}
         console.log("fitObjectTo:", obj3d, size);
         obj3d = this.getObject3D(obj3d);
         var bb = new THREE.Box3().setFromObject(obj3d);
         var dim = bb.getSize();
         var cw = bb.getCenter();//center in world coords
-        var cp = cw.clone();
-        if (obj3d.parent) {
-            obj3d.parent.worldToLocal(cp);
-        }
         console.log("bb:", bb);
         console.log("cw:", cw);
-        // find x dimension in local
-        var x1 = new THREE.Vector3(dim.x,0,0);
-        x1.add(cw);
-        obj3d.parent.worldToLocal(x1)
+        var cp = cw.clone();
+        var x1 = new THREE.Vector3(dim.x,0,0).add(cw);
+        var y1 = new THREE.Vector3(0,dim.y,0).add(cw);
+        var z1 = new THREE.Vector3(0,0,dim.z).add(cw);
+        if (obj3d.parent) {
+            obj3d.parent.worldToLocal(cp);
+            obj3d.parent.worldToLocal(x1)
+            obj3d.parent.worldToLocal(y1)
+            obj3d.parent.worldToLocal(z1)
+        }
         var dx = x1.distanceTo(cp);
-        // find y dimention in local
-        var y1 = new THREE.Vector3(0,dim.y,0);
-        y1.add(cw);
-        obj3d.parent.worldToLocal(y1)
         var dy = y1.distanceTo(cp);
-        // find z dimention in local
-        var z1 = new THREE.Vector3(0,0,dim.z);
-        z1.add(cw);
-        obj3d.parent.worldToLocal(z1)
         var dz = y1.distanceTo(cp);
         console.log("current size: "+dx+" "+dy+" "+dz);
-        var sx = obj3d.scale.x*size[0]/dx;
-        var sy = obj3d.scale.y*size[1]/dy;
-        var sz = obj3d.scale.z*size[2]/dz;
-        obj3d.scale.set(sx, sy, sz);
+        if (typeof size == "number") {
+            var s;
+            if (dx >= dy && dx >= dz) {
+                // dx is largest dimention
+                s = obj3d.scale.x*size/dx;
+            }
+            else if (dy >= dx && dy >= dz) {
+                // dy is largest dimension
+                s = obj3d.scale.y*size/dy;
+            }
+            else {
+                // dz is largest dimension
+                s = obj3d.scale.z*size/dz;
+            }
+            obj3d.scale.set(s,s,s);
+        }
+        else {
+            var sx = obj3d.scale.x*size[0]/dx;
+            var sy = obj3d.scale.y*size[1]/dy;
+            var sz = obj3d.scale.z*size[2]/dz;
+            obj3d.scale.set(sx, sy, sz);
+        }
     }
 
     setStatus(str) {
