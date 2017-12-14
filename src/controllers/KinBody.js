@@ -80,6 +80,41 @@ class StateWatcher {
     }
 }
 
+var JOINT_PAIRS = [
+    ["LEFT_HAND", "LEFT_ELBOW"],
+    ["LEFT_ELBOW", "LEFT_SHOULDER"],
+    ["LEFT_SHOULDER", "NECK"],
+    ["RIGHT_HAND", "RIGHT_ELBOW"],
+    ["RIGHT_ELBOW", "RIGHT_SHOULDER"],
+    ["RIGHT_SHOULDER", "NECK"],
+    ["NECK", "HEAD"]
+];
+
+var JX = 0;
+var JY = 0;
+var JZ = 0;
+class Bone {
+    constructor(body, j1, j2) {
+        this.body = body;
+        this.j1 = j1;
+        this.j2 = j2;
+        this.geometry = new THREE.Geometry();
+        this.material = new THREE.LineBasicMaterial({ color: 0xff00ff });
+        var vertices = this.geometry.vertices;
+        this.v1 = new THREE.Vector3(JX, JY, JZ);
+        JX += .2;
+        JY += .5;
+        JZ += .3;
+        this.v2 = new THREE.Vector3(JX, JY, JZ);
+        JX += -.1;
+        JY += .5;
+        JZ += .3;
+        vertices.push(this.v1);
+        vertices.push(this.v2);
+        this.line = new THREE.Line(this.geometry, body.material);
+        body.skel.add(this.line);
+    }
+}
 
 class Body {
     constructor(bodyId) {
@@ -87,6 +122,7 @@ class Body {
         this.id = bodyId;
         this.bodyNum = Body.numBodies;
         this.joints = {};
+        this.skel = null;
         //this.LEFT_UP = false;
         //this.RIGHT_UP = false;
         this.LEFT_UP = new StateWatcher("LEFT_UP");
@@ -94,7 +130,40 @@ class Body {
         this.lastTime = getClockTime();
     }
 
+    setupSkel() {
+        this.bones = [];
+        this.skel = new THREE.Object3D();
+        this.skel.scale.set(.001,.001,.001);
+        game.scene.add(this.skel);
+        JOINT_PAIRS.forEach(jp => {
+            var bone = new Bone(this, jp[0], jp[1]);
+            this.bones.push(bone);
+        })
+        //this.lines = new THREE.Line(this.geometry, this.material);
+    }
+
+    updateSkel() {
+        if (!this.skel)
+            return;
+        this.bones.forEach(bone => {
+            var j1 = this.getJoint(bone.j1);
+            var j2 = this.getJoint(bone.j2);
+            if (j1.pos && j2.pos) {
+                bone.v1.set(j1.pos[0], j1.pos[1], j1.pos[2]);
+                bone.v2.set(j2.pos[0], j2.pos[1], j2.pos[2]);
+            }
+            else {
+                console.log("Cant get bone info");
+            }
+            bone.geometry.verticesNeedUpdate = true;
+        });
+    }
+
     handleMsg(msg) {
+        if (msg.bodyId != this.id) {
+            console.log("********* mismatched bodyId - should not happen");
+            return;
+        }
         this.msg = msg;
         this.lastTime = getClockTime();
     }
@@ -119,6 +188,8 @@ class Body {
     }
 
     update() {
+        if (this.skel)
+            this.updateSkel(this.skel);
     }
 }
 

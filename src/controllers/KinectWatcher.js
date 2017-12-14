@@ -13,21 +13,11 @@ class DancingBody extends Body {
         super(id);
         //alert("New body "+id);
         //this.pSystems = {};
-        this.jointNames = ["LEFT_HAND", "RIGHT_HAND"];
-        this.sparkler = new MUSE.Sparkler("sparkler_"+id, this.jointNames);
+        this.trailNames = ["LEFT_HAND", "RIGHT_HAND"];
+        this.sparkler = new MUSE.Sparkler("sparkler_"+id, this.trailNames);
         this.sparkler.addSparklers();
-    }
-
-    setupLines() {
-        this.material = new THREE.LineBasicMaterial({ color: 0x0000ff });
-        this.geometry = new THREE.Geometry();
-        var vertices = this.geometry.vertices;
-        vertices.push(new THREE.Vector3(0, 0, 0));
-        vertices.push(new THREE.Vector3(0, 10, 0));
-        vertices.push(new THREE.Vector3(10, 0, 0));
-        vertices.push(new THREE.Vector3(0, 0, 0));
-        this.line = new THREE.Line(this.geometry, this.material);
-        this.game.scene.add(this.line);
+        this.setupSkel();
+        window.DANCER_BODY = this;
     }
 
     handleJoint(msg, joint) {
@@ -37,16 +27,10 @@ class DancingBody extends Body {
         return;
       var v = new THREE.Vector3(pos[0], pos[1], pos[2]);
       v.multiplyScalar(.001);
-      //var jname = joint == "LEFT_HAND" ? "left" : "right";
-      //this.sparkler.setPosition(jname, v);
       this.sparkler.setPosition(joint, v);
     }
 
     handleMsg(msg) {
-        if (msg.bodyId != this.id) {
-            console.log("********* mismatched bodyId - should not happen");
-            return;
-        }
         super.handleMsg(msg);
         //console.log("dancing body "+this.id);
         var lh = msg.LEFT_HAND;
@@ -64,6 +48,7 @@ class DancingBody extends Body {
     }
 
     update() {
+        super.update();
         this.sparkler.update();
     }
 }
