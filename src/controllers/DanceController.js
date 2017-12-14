@@ -69,19 +69,9 @@ class DanceController extends Node3D
     update() {
         if (!this.visible)
 	       return;
-        //console.log("DanceController.update...");
         if ( this.mixer ) this.mixer.update( this.clock.getDelta() );
         if ( this.skeletonHelper ) this.skeletonHelper.update();
-        /*
-        if (this.lhand) {
-            this.sparkler.setPosition("left", this.lhand.position);
-        }
-        if (this.rhand) {
-            this.sparkler.setPosition("right", this.rhand.position);
-        }
-        */
         this.sparkler.update();
-        //this.pSystems.forEach(pSys => pSys.update());
     }
 
     loadBVH(bvhPath) {

@@ -121,16 +121,16 @@ MUSE.SparklerOptions = {
 };
 
 class Sparkler {
-    constructor(name) {
+    constructor(name, trailNames) {
         this.name = name || "sparkler";
-        this.trailNames = ["left", "right"];
+        this.trailNames = trailNames || ["left", "right"];
         this.pSystems = null;
         console.log("new Sparkler "+this.name);
         this.verbosity = 0;
         this.ps = null;
         this.pos = null;
         //this.addSparklers();
-        game.registerController(this.name, this);
+        //game.registerController(this.name, this);
     }
 
     setColor(c) {
@@ -257,6 +257,11 @@ class Sparkler {
                 pSys.update(pSys._pos);
             }
         }
+    }
+
+    destroy() {
+        this.removeSparklers();
+        //game.unregisterController(this.name);
     }
 }
 
