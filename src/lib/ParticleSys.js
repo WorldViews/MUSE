@@ -113,10 +113,10 @@ MUSE.ParticleSys = ParticleSys;
 
 MUSE.SparklerOptions = {
     turbulence: .02,
-    size: 19,
-    lifetime: 13.5,
-    positionRandomness: .075,
-    velocityRandomness: .04,
+    size: 12,
+    lifetime: 2,
+    positionRandomness: .5,
+    velocityRandomness: .5,
     color: new THREE.Color(),
 };
 
@@ -137,12 +137,6 @@ class Sparkler {
         console.log("Sparkler.setColor "+c);
         MUSE.SparklerOptions.color.copy(c);
         this.setOptions();
-        /*
-        for (var name in this.pSystems) {
-            var pSys = this.pSystems[name];
-            pSys.options.color = c;
-        }
-        */
     }
 
     getPsys(tname) {

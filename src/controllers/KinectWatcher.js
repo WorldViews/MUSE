@@ -9,13 +9,14 @@ import {Util} from '../Util';
 import {Body,Bodies} from './KinBody';
 
 class DancingBody extends Body {
-    constructor(id) {
-        super(id);
+    constructor(id, parent) {
+        super(id, parent);
         //alert("New body "+id);
         //this.pSystems = {};
         this.trailNames = ["LEFT_HAND", "RIGHT_HAND"];
         this.sparkler = new MUSE.Sparkler("sparkler_"+id, this.trailNames);
-        this.sparkler.addSparklers();
+        this.sparkler.addSparklers(parent);
+        //this.sparkler.addSparklers();
         this.setupSkel();
         window.DANCER_BODY = this;
     }
@@ -26,7 +27,8 @@ class DancingBody extends Body {
       if (!pos)
         return;
       var v = new THREE.Vector3(pos[0], pos[1], pos[2]);
-      v.multiplyScalar(.001);
+      //v.multiplyScalar(.001);
+      //this.parent.localToWorld(v);
       this.sparkler.setPosition(joint, v);
     }
 
@@ -45,6 +47,7 @@ class DancingBody extends Body {
     destroy() {
         console.log("DancingBody.destroy "+this.id);
         this.sparkler.destroy();
+        super.destroy();
     }
 
     update() {
@@ -66,6 +69,11 @@ class KinectWatcher extends Node3D
         opts = opts || {};
 	    //opts.scale = opts.scale || 0.06;
         this.checkOptions(opts);
+        var obj3d = new THREE.Object3D();
+        obj3d.name = this.name;
+        game.addToGame(obj3d, obj3d.name, opts.parent);
+        game.setFromProps(obj3d, opts);
+        this.setObject3D(obj3d);
         this.color = new THREE.Color();
         if (game.netLink) {
             game.netLink.registerKinectWatcher(this);
@@ -76,8 +84,8 @@ class KinectWatcher extends Node3D
         this.color = new THREE.Color();
         var inst = this;
         //game.state.on(this.name, state => inst.setProps(state));
-        game.state.on("cmpColorHue", h => inst.setHue(h));
-        this.bodies = new Bodies(DancingBody);
+        //game.state.on("cmpColorHue", h => inst.setHue(h));
+        this.bodies = new Bodies(DancingBody, obj3d);
         this._visible = true;
     }
 

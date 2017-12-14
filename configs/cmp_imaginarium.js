@@ -24,7 +24,7 @@ GEODESIC_DOME =  {
 };
 
 var NET_LINK = {type: 'NetLink'};
-var KINECT_WATCHER = {type: 'KinectWatcher'}
+var KINECT_WATCHER = {type: 'KinectWatcher', scale: 0.0005, position: [0,1.5,0]}
 
 var SPECS = [
     //{  type: 'JQControls' },

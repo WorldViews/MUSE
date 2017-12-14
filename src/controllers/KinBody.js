@@ -87,28 +87,29 @@ var JOINT_PAIRS = [
     ["RIGHT_HAND", "RIGHT_ELBOW"],
     ["RIGHT_ELBOW", "RIGHT_SHOULDER"],
     ["RIGHT_SHOULDER", "NECK"],
-    ["NECK", "HEAD"]
+    ["LEFT_SHOULDER", "RIGHT_SHOULDER"],
+    ["NECK", "HEAD"],
+    //
+    ["RIGHT_HIP", "RIGHT_KNEE"],
+    ["RIGHT_KNEE", "RIGHT_FOOT"],
+    ["LEFT_HIP", "LEFT_KNEE"],
+    ["LEFT_KNEE", "LEFT_FOOT"],
+    ["LEFT_HIP", "BASE_SPINE"],
+    ["RIGHT_HIP", "BASE_SPINE"],
+    ["BASE_SPINE", "MID_SPINE"],
+    ["MID_SPINE", "NECK"],
 ];
 
-var JX = 0;
-var JY = 0;
-var JZ = 0;
 class Bone {
     constructor(body, j1, j2) {
         this.body = body;
         this.j1 = j1;
         this.j2 = j2;
         this.geometry = new THREE.Geometry();
-        this.material = new THREE.LineBasicMaterial({ color: 0xff00ff });
+        this.material = new THREE.LineBasicMaterial({ color: 0xff00ff, linewidth: 2 });
         var vertices = this.geometry.vertices;
-        this.v1 = new THREE.Vector3(JX, JY, JZ);
-        JX += .2;
-        JY += .5;
-        JZ += .3;
-        this.v2 = new THREE.Vector3(JX, JY, JZ);
-        JX += -.1;
-        JY += .5;
-        JZ += .3;
+        this.v1 = new THREE.Vector3(0, 0, 0);
+        this.v2 = new THREE.Vector3(1000, 1000, 1000);
         vertices.push(this.v1);
         vertices.push(this.v2);
         this.line = new THREE.Line(this.geometry, body.material);
@@ -117,12 +118,13 @@ class Bone {
 }
 
 class Body {
-    constructor(bodyId) {
+    constructor(bodyId, parent) {
         Body.numBodies++;
         this.id = bodyId;
         this.bodyNum = Body.numBodies;
         this.joints = {};
         this.skel = null;
+        this.parent = parent;
         //this.LEFT_UP = false;
         //this.RIGHT_UP = false;
         this.LEFT_UP = new StateWatcher("LEFT_UP");
@@ -133,8 +135,13 @@ class Body {
     setupSkel() {
         this.bones = [];
         this.skel = new THREE.Object3D();
-        this.skel.scale.set(.001,.001,.001);
-        game.scene.add(this.skel);
+        if (this.parent) {
+            this.parent.add(this.skel);
+        }
+        else {
+            this.skel.scale.set(.001,.001,.001);
+            game.scene.add(this.skel);
+        }
         JOINT_PAIRS.forEach(jp => {
             var bone = new Bone(this, jp[0], jp[1]);
             this.bones.push(bone);
@@ -191,6 +198,11 @@ class Body {
         if (this.skel)
             this.updateSkel(this.skel);
     }
+
+    destroy() {
+        if (this.skel && this.skel.parent)
+            this.skel.parent.remove(this.skel);
+    }
 }
 
 Body.numBodies = 0;
@@ -200,11 +212,12 @@ Body.numBodies = 0;
 // of the Body class, and handles pruning of bodies that are no
 // longer being tracked.
 class Bodies {
-    constructor(bodyClass) {
+    constructor(bodyClass, parent) {
         this.bodyClass = bodyClass || Body;
         this.bodies = {};
         this.selectedBody = null;
         this.updateFuns = [];
+        this.parent = parent;
     }
 
     registerUpdater(updateFun)
@@ -225,7 +238,7 @@ class Bodies {
         var body = this.bodies[bodyId];
         if (!body) {
             //body = new Body(bodyId);
-            body = new this.bodyClass(bodyId);
+            body = new this.bodyClass(bodyId, this.parent);
             this.bodies[bodyId] = body;
         }
         this.selectedBody = body;
