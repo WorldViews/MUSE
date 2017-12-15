@@ -111,12 +111,22 @@ class ParticleSys {
 
 MUSE.ParticleSys = ParticleSys;
 
+/*
 MUSE.SparklerOptions = {
     turbulence: .02,
     size: 12,
     lifetime: 2,
     positionRandomness: .5,
     velocityRandomness: .5,
+    color: new THREE.Color(),
+};
+*/
+MUSE.SparklerOptions = {
+    turbulence: .005,
+    size: 4,
+    lifetime: 3,
+    positionRandomness: .1,
+    velocityRandomness: .05,
     color: new THREE.Color(),
 };
 

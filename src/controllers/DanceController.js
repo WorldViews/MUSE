@@ -11,6 +11,8 @@ let BVH_PATH1 = './assets/models/bvh/MasterLiuPerformanceChar00.bvh';
 let BVH_PATH2 = '/assets/motionCapture/lauren_duality_edit.bvh';
 let BVH_PATH = BVH_PATH1;
 
+var PARENTED_SPARKLER = false;
+
 class DanceController extends Node3D
 {
     constructor(game, opts)
@@ -71,6 +73,23 @@ class DanceController extends Node3D
 	       return;
         if ( this.mixer ) this.mixer.update( this.clock.getDelta() );
         if ( this.skeletonHelper ) this.skeletonHelper.update();
+        if (this.sparkler && this.dancer && this.lhand && this.rhand) {
+            if (PARENTED_SPARKLER) {
+                this.sparkler.setPosition("left", this.lhand.getWorldPosition());
+                this.sparkler.setPosition("right", this.rhand.getWorldPosition());
+            }
+            else {
+                var v = new THREE.Vector3();
+                v.copy(this.lhand.getWorldPosition());
+                this.dancer.localToWorld(v);
+                this.sparkler.setPosition("left", v);
+                v.copy(this.rhand.getWorldPosition());
+                this.dancer.localToWorld(v);
+                this.sparkler.setPosition("right", v);
+            }
+        }
+        //this.sparkler.trackObject("left", this.lhand);
+        //this.sparkler.trackObject("right", this.rhand);
         this.sparkler.update();
     }
 
@@ -113,6 +132,7 @@ class DanceController extends Node3D
         inst.action.play();
         inst.dancer = dancer;
         inst.skeletonHelper = skeletonHelper;
+        inst.boneContainer = boneContainer;
         inst.game.models[name] = dancer;
         inst.ready = true;
         this.head = this.skeletonHelper.bones[14];
@@ -121,6 +141,8 @@ class DanceController extends Node3D
         this.head = this.skeletonHelper.bones[14];
         this.lhand = lhand;
         this.rhand = rhand;
+        rhand.add(new THREE.AxisHelper(10));
+        lhand.add(new THREE.AxisHelper(10));
         //this.pSystems.push(new PSys("head", this.head, this.dancer));
         //this.sparkler.addSparklers();
         //this.pSystems.push(new ParticleSys("rhand", rhand, this.dancer));
@@ -153,9 +175,16 @@ class DanceController extends Node3D
             this.dancer.visible = v;
         }
         if (v) {
-            this.sparkler.addSparklers(this.dancer);
-            this.sparkler.trackObject("left", this.lhand);
-            this.sparkler.trackObject("right", this.rhand);
+            if (PARENTED_SPARKLER) {
+                this.sparkler.addSparklers(this.dancer);
+            }
+            else {
+                this.sparkler.addSparklers();
+            }
+            //this.sparkler.addSparklers(this.dancer);
+            this.sparkler.addSparklers();
+            //this.sparkler.trackObject("left", this.lhand);
+            //this.sparkler.trackObject("right", this.rhand);
         }
         else {
             this.sparkler.removeSparklers();

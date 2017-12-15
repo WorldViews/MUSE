@@ -15,8 +15,8 @@ class DancingBody extends Body {
         //this.pSystems = {};
         this.trailNames = ["LEFT_HAND", "RIGHT_HAND"];
         this.sparkler = new MUSE.Sparkler("sparkler_"+id, this.trailNames);
-        this.sparkler.addSparklers(parent);
-        //this.sparkler.addSparklers();
+        //this.sparkler.addSparklers(parent);
+        this.sparkler.addSparklers();
         this.setupSkel();
         window.DANCER_BODY = this;
     }
@@ -28,7 +28,7 @@ class DancingBody extends Body {
         return;
       var v = new THREE.Vector3(pos[0], pos[1], pos[2]);
       //v.multiplyScalar(.001);
-      //this.parent.localToWorld(v);
+      this.parent.localToWorld(v);
       this.sparkler.setPosition(joint, v);
     }
 

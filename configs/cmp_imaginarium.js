@@ -233,6 +233,7 @@ var sparkler = null;
 function toggleSparkler() {
     if (!sparkler) {
         sparkler = new MUSE.Sparkler("sparkler");
+        game.registerController(sparkler.name, sparkler);
     }
     window.sparkler = sparkler;
     sparkler.toggle();
