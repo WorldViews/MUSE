@@ -5,69 +5,6 @@ import {MUSENode} from '../../Node';
 import {Node3D} from '../../Node3D';
 import Util from '../../Util';
 
-var CSHARP_MIURA = `
-...
-
-public class Miura {
-
-	int nrows;
-	int ncols;
-	float L;
-	float E;
-	float alpha;
-
-	public Miura(int nrows, int ncols) : this(nrows, ncols, 1.5f, 1.0f, 20f) {}
-
-...
-
-   public Vector2[] getUV() {
-	   Vector3[] pts = getPoints(0);
-	   Vector2[] uv = new Vector2[pts.Length];
-       //float H = E*Mathf.Cos(radians(alpha));
-	   float xmin =   10000;
-	   float xmax = -10000;
-	   float ymin =   10000;
-	   float ymax = -10000;
-	   for (int i=0; i<pts.Length; i++) {
-		   if (pts[i].x < xmin)
-			   xmin = pts[i].x;
-		   if (pts[i].x > xmax)
-			   xmax = pts[i].x;
-		   if (pts[i].y < ymin)
-			   ymin = pts[i].y;
-		   if (pts[i].y > ymax)
-			   ymax = pts[i].y;
-	   }
-	  // float totalLength = (ncols-1)*L;
-	   //float totalHeight = (nrows-1)*H;
-	   float totalLength = xmax-xmin;
-	   float totalHeight = ymax-ymin;
-	   for (int i=0; i<pts.Length; i++) {
-		   float x, y, u, v;
-		   if (i < nrows*ncols) {
-				x = pts[i].x;
-				y = pts[i].y;
-				u = (x-xmin)/totalLength;
-				v = 0.5f*(y-ymin)/totalHeight;
-		   }
-		   else {
-				x = pts[i].x;
-				y = pts[i].y;
-				u = (x-xmin)/totalLength;
-				v = 0.5f+0.5f*(y-ymin)/totalHeight;
-		   }
-		   uv[i] = new Vector2(u, v);
-	   }
-	   return uv;
-   }
-
-    int idx(int i,  int j) {
-        return i*ncols + j;
-	}
-
-   ...
-
-`;
 
 function Vector2(x,y) { return new THREE.Vector2(x,y); };
 function Vector3(x,y,z) { return new THREE.Vector3(x,y,z); };
@@ -261,9 +198,16 @@ class MiuraNode extends Node3D
         var opts = this.options; // super may have filled in some things
         this.game = game;
         this.checkOptions(opts);
+        this.angle = opts.angle || 30;
+        this.nrows = opts.nrows || 20;
+        this.ncols = opts.ncols || 20;
+        this.L = opts.L || 2.0;
+        this.E = opts.E || 1.0;
+        this.alpha = opts.alpha || 20;
+        this.miura = new Miura(this.nrows, this.ncols, this.L, this.E, this.alpha);
         this.group = new THREE.Group();
         this.group.name = this.name;
-        this.texturePath = "src/packages/Miura/textures/monacat.jpg";
+        this.texturePath = "src/packages/Miura/textures/dollarBothSides.jpg";
         this.setObject3D(this.group);
         this.addMesh();
         game.setFromProps(this.group, opts);
@@ -283,8 +227,10 @@ class MiuraNode extends Node3D
         for (var i=0; i<pts.length; i++) {
             vertices[i].copy(pts[i]);
         }
-        this.mesh.geometry.computeFaceNormals();
         this.mesh.geometry.verticesNeedUpdate = true;
+        this.mesh.geometry.computeFaceNormals();
+        this.mesh.geometry.normalsNeedUpdate = true;
+        //geometry.computeVertexNormals();
     }
 
     addBall(texture) {
@@ -316,8 +262,7 @@ class MiuraNode extends Node3D
     }
 
     addMesh_(texture) {
-        this.miura = new Miura(10,10);
-        var a = 30;
+        var a = this.angle;
         var pts = this.miura.getPoints(a);
         //var indices = this.miura.getFrontTriangles();
         var indices = this.miura.getTriangles();
@@ -335,6 +280,17 @@ class MiuraNode extends Node3D
             var face = new THREE.Face3(indices[k], indices[k+1], indices[k+2]);
             geometry.faces.push(face);
         }
+        if (texture) {
+            var uvs = this.miura.getUV();
+            var fuvs = geometry.faceVertexUvs[0];
+            geometry.faces.forEach(face => {
+                var uv1 = uvs[face.a];
+                var uv2 = uvs[face.b];
+                var uv3 = uvs[face.c];
+                fuvs.push([uv1,uv2,uv3]);
+            });
+        }
+        geometry.uvsNeedUpdate = true;
         geometry.computeFaceNormals();
         //geometry.computeVertexNormals();
         this.vertices = pts;
