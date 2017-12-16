@@ -36,6 +36,7 @@ import './Samples/ExampleNode';
 import { Player0 } from './interfaces/PlayerInterface';
 import {Route} from './Route';
 import '../test/testNode';
+import './packages/Miura/Miura';
 
 let {degToRad} = THREE.Math;
 
