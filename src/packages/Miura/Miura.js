@@ -202,8 +202,10 @@ class MiuraNode extends Node3D
         this.angle = opts.angle || 30;
         this.nrows = opts.nrows || 20;
         this.ncols = opts.ncols || 20;
-        this.L = opts.L || 2.0;
-        this.E = opts.E || 1.0;
+        this.length = 20;
+        this.height = 10;
+        this.L = opts.L || this.length/this.ncols;
+        this.E = opts.E || this.height/this.nrows;
         this.alpha = opts.alpha || 20;
         this.miura = new Miura(this.nrows, this.ncols, this.L, this.E, this.alpha);
         this.group = new THREE.Group();
@@ -226,8 +228,27 @@ class MiuraNode extends Node3D
         var inst = this;
         this.gui = new dat.GUI({width:300});
         this.gui.add(this, 'angle', 0, 90).onChange(()=>inst.setAngle(this.angle));
-        this.gui.add(this, 'nrows', 1, 30);
-        this.gui.add(this, 'ncols', 1, 30);
+        this.gui.add(this, 'nrows', 1, 60).onChange(()=>inst.updateMesh());
+        this.gui.add(this, 'ncols', 1, 60).onChange(()=>inst.updateMesh());
+        this.gui.add(this, 'alpha', 0, 90).onChange(()=>inst.updateMesh());
+    }
+
+    updateMesh() {
+        console.log("update mesh");
+        var t0 = Util.getClockTime();
+        this.nrows = Math.floor(this.nrows+0.5);
+        this.ncols = Math.floor(this.ncols+0.5);
+        this.L = this.length/this.ncols;
+        this.E = this.height/this.nrows;
+        this.miura = new Miura(this.nrows, this.ncols, this.L, this.E, this.alpha);
+        if (this.mesh) {
+            this.mesh.parent.remove(this.mesh);
+            this.mesh = null;
+        }
+        this.addMesh();
+        var t1 = Util.getClockTime();
+        console.log(Util.sprintf("finished updating mesh %.3f", t1-t0));
+        //this.updateGeometry(this.geometry);
     }
 
     setAngle(a) {
@@ -244,7 +265,6 @@ class MiuraNode extends Node3D
         this.mesh.geometry.verticesNeedUpdate = true;
         this.mesh.geometry.computeFaceNormals();
         this.mesh.geometry.normalsNeedUpdate = true;
-        //geometry.computeVertexNormals();
     }
 
     addBall(texture) {
@@ -261,44 +281,61 @@ class MiuraNode extends Node3D
     }
 
     addMesh() {
-        if (this.texturePath) {
+        console.log("addMesh");
+        if (this.texturePath && !this.texture) {
+            console.log("getting texture "+this.texturePath);
             var loader = new THREE.TextureLoader();
             var inst = this;
             loader.load( this.texturePath, function ( texture ) {
                 inst.texture = texture;
                 console.log("Got texture for "+inst.texturePath, texture);
-                inst.addBall(texture);
+                //inst.addBall(texture);
                 inst.addMesh_();
             });
         }
         else {
+            console.log("not getting texture");
             this.addMesh_();
         }
     }
 
     addMesh_() {
-        var texture = this.texture;
-        var a = this.angle;
-        var pts = this.miura.getPoints(a);
-        //var indices = this.miura.getFrontTriangles();
-        var indices = this.miura.getTriangles();
-        if (texture) {
-            this.material = new THREE.MeshPhongMaterial( { map: texture, overdraw: 0.5} );
+        if (this.texture) {
+            this.material = new THREE.MeshPhongMaterial( { map: this.texture, overdraw: 0.5} );
         }
         else {
             this.material = new THREE.MeshPhongMaterial( { color: 0x331111} );
         }
-        var geometry = new THREE.Geometry();
+        this.geometry = new THREE.Geometry();
+        this.updateGeometry(this.geometry);
+        this.mesh = new THREE.Mesh(this.geometry, this.material);
+        var s = .1;
+        this.mesh.scale.set(s,s,s);
+        //this.mesh.scale.set(20,20,20);
+        this.group.add(this.mesh);
+    }
+
+    updateGeometry(geometry) {
+        var a = this.angle;
+        var pts = this.miura.getPoints(a);
+        //var indices = this.miura.getFrontTriangles();
+        var indices = this.miura.getTriangles();
+        console.log("pts:", pts);
+        console.log("indices:", indices);
         var vertices = geometry.vertices;
+        var faces = geometry.faces;
+        vertices.length = 0;
+        faces.length = 0;
         pts.forEach(pt => vertices.push(pt));
         for (var k=0; k<indices.length; k += 3) {
             //console.log(indices[k], indices[k+1], indices[k+2]);
             var face = new THREE.Face3(indices[k], indices[k+1], indices[k+2]);
-            geometry.faces.push(face);
+            faces.push(face);
         }
-        if (texture) {
+        if (this.texture) {
             var uvs = this.miura.getUV();
             var fuvs = geometry.faceVertexUvs[0];
+            fuvs.length = 0;
             geometry.faces.forEach(face => {
                 var uv1 = uvs[face.a];
                 var uv2 = uvs[face.b];
@@ -308,16 +345,10 @@ class MiuraNode extends Node3D
         }
         geometry.uvsNeedUpdate = true;
         geometry.computeFaceNormals();
-        //geometry.computeVertexNormals();
         this.vertices = pts;
         this.indices = indices;
-        this.mesh = new THREE.Mesh(geometry, this.material);
-        var s = .1;
-        this.mesh.scale.set(s,s,s);
-        //this.mesh.scale.set(20,20,20);
-        this.group.add(this.mesh);
-    }
 
+    }
     update() {
         if (!this.visible)
 	       return;

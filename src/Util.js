@@ -294,6 +294,7 @@ var Util =
     radialPosition,
     reportError,
     reportWarning,
+    sprintf,
     formatDatetime,
     values,
     isVideoURL,
