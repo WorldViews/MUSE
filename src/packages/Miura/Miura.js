@@ -1,5 +1,6 @@
 
 import * as THREE from 'three';
+import dat from 'dat-gui';
 import {Game} from '../../Game';
 import {MUSENode} from '../../Node';
 import {Node3D} from '../../Node3D';
@@ -208,6 +209,7 @@ class MiuraNode extends Node3D
         this.group = new THREE.Group();
         this.group.name = this.name;
         this.texturePath = "src/packages/Miura/textures/dollarBothSides.jpg";
+        this.texture = null;
         this.setObject3D(this.group);
         this.addMesh();
         game.setFromProps(this.group, opts);
@@ -215,6 +217,17 @@ class MiuraNode extends Node3D
 
         // This ensures we get update calls each frame
         game.registerController(this.options.name, this);
+        if (1) {
+            this.addGUI();
+        }
+    }
+
+    addGUI() {
+        var inst = this;
+        this.gui = new dat.GUI({width:300});
+        this.gui.add(this, 'angle', 0, 90).onChange(()=>inst.setAngle(this.angle));
+        this.gui.add(this, 'nrows', 1, 30);
+        this.gui.add(this, 'ncols', 1, 30);
     }
 
     setAngle(a) {
@@ -222,6 +235,7 @@ class MiuraNode extends Node3D
             console.log("No mesh");
             return;
         }
+        this.angle = a;
         var pts = this.miura.getPoints(a);
         var vertices = this.mesh.geometry.vertices;
         for (var i=0; i<pts.length; i++) {
@@ -251,9 +265,10 @@ class MiuraNode extends Node3D
             var loader = new THREE.TextureLoader();
             var inst = this;
             loader.load( this.texturePath, function ( texture ) {
+                inst.texture = texture;
                 console.log("Got texture for "+inst.texturePath, texture);
                 inst.addBall(texture);
-                inst.addMesh_(texture);
+                inst.addMesh_();
             });
         }
         else {
@@ -261,7 +276,8 @@ class MiuraNode extends Node3D
         }
     }
 
-    addMesh_(texture) {
+    addMesh_() {
+        var texture = this.texture;
         var a = this.angle;
         var pts = this.miura.getPoints(a);
         //var indices = this.miura.getFrontTriangles();
