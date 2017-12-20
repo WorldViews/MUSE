@@ -1,9 +1,9 @@
 
 //import * as THREE from 'three';
-import Util from './Util';
-//import {MUSENode} from './Node';
-//import {MUSE} from './MUSE';
-import {MUSENode} from './Node';
+import Util from 'core/Util';
+//import {MUSENode} from 'core/Node';
+//import {MUSE} from 'core/MUSE';
+import {MUSENode} from 'core/Node';
 
 var EVENT_TYPES = ["click", "doubleClick"];
 

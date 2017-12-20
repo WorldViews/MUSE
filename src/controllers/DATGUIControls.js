@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import {Game} from '../Game';
+import {Game} from 'core/Game';
 
 import {UIControls} from './UIControls';
 import datGUIVR from 'datguivr';
 import * as THREE from 'three';
-import * as Util from '../Util';
+import * as Util from 'core/Util';
 
 
 export default class DATGUIControls extends UIControls {

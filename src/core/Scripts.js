@@ -13,9 +13,9 @@
   time.
 
 */
-import {animTest, Anim} from './Anim';
-import {PanoPortal} from './lib/PanoPortal';
-import {Game} from './Game';
+import {animTest, Anim} from 'core/Anim';
+import {PanoPortal} from 'lib/PanoPortal';
+import {Game} from 'core/Game';
 
 class Scripts {
 

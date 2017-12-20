@@ -1,8 +1,8 @@
-import Sands from '../lib/cmp/Sands';
-import Chart from '../lib/cmp/Chart';
-import DataLoader from '../lib/cmp/DataLoader'
-import state from '../lib/cmp/State';
-import {Game} from '../Game';
+import Sands from 'lib/cmp/Sands';
+import Chart from 'lib/cmp/Chart';
+import DataLoader from 'lib/cmp/DataLoader'
+import state from 'lib/cmp/State';
+import {Game} from 'core/Game';
 
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 import MathBox from 'mathbox';

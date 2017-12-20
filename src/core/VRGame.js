@@ -1,12 +1,12 @@
-import {Game} from './Game';
+import {Game} from 'core/Game';
 import * as THREE from 'three';
-import PointerLockControls from './lib/controls/PointerLockControls';
-import VRInputController from './controllers/VRInputController';
-import VRHMD from './lib/controls/VRHMD';
-import VREffect from './lib/effects/VREffect';
-import WebVR from './lib/vr/WebVR';
+import PointerLockControls from 'lib/controls/PointerLockControls';
+import VRInputController from 'controllers/VRInputController';
+import VRHMD from 'lib/controls/VRHMD';
+import VREffect from 'lib/effects/VREffect';
+import WebVR from 'lib/vr/WebVR';
 
-import attachPointerLock from './attachPointerLock';
+import attachPointerLock from 'core/attachPointerLock';
 
 class VRGame extends Game {
 

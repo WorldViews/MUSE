@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import {Math} from 'three';
-import {Game} from './Game';
-import ImageSource from './lib/ImageSource';
+import {Game} from 'core/Game';
+import ImageSource from 'lib/ImageSource';
 import html2canvas from 'html2canvas';
-import {MUSENode} from './Node';
-import {Node3D} from './Node3D';
-import Util from './Util';
+import {MUSENode} from 'core/Node';
+import {Node3D} from 'core/Node3D';
+import Util from 'core/Util';
 
 /*
 val should be name of property of THREE.

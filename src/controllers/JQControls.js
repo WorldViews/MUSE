@@ -1,7 +1,7 @@
 
 import _ from 'lodash';
-import {Game} from '../Game';
-import Util from '../Util';
+import {Game} from 'core/Game';
+import Util from 'core/Util';
 
 import {UIControls} from './UIControls';
 

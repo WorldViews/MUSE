@@ -9,10 +9,10 @@
   the displays, which objects are on stage, etc.
 */
 import {sprintf} from "sprintf-js";
-import * as Util from './Util';
-import {Game} from './Game';
-import {MUSE} from './MUSE';
-import {MUSENode} from './Node';
+import * as Util from 'core/Util';
+import {Game} from 'core/Game';
+import {MUSE} from 'core/MUSE';
+import {MUSENode} from 'core/Node';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 

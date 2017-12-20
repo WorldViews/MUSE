@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
 import satellite from 'satellite.js';
-import * as Util from '../Util';
+import * as Util from 'core/Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 

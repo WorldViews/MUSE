@@ -1,8 +1,8 @@
 
 import * as THREE from 'three';
-import {Game} from '../Game';
-import {MUSENode} from '../Node';
-import {Node3D} from '../Node3D';
+import {Game} from 'core/Game';
+import {MUSENode} from 'core/Node';
+import {Node3D} from 'core/Node3D';
 
 class ExampleNode extends Node3D
 {

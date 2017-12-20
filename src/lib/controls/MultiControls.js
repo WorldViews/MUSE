@@ -3,10 +3,10 @@
 
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
-import { getCameraParams } from '../../Util';
+import { getCameraParams } from 'core/Util';
 //import {MUSE} from '../../MUSE';
-import {MUSENode} from '../../Node';
-import Util from '../../Util';
+import {MUSENode} from 'core/Node';
+import Util from 'core/Util';
 
 // The four arrow keys
 var KEYS = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40,

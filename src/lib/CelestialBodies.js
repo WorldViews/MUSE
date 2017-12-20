@@ -1,14 +1,14 @@
 
 import * as THREE from 'three'
-import {Game} from '../Game'
-import {MUSE} from '../MUSE'
-import {MUSENode} from '../Node'
-import {Node3D} from '../Node3D'
+import {Game} from 'core/Game'
+import {MUSE} from 'core/MUSE'
+import {MUSENode} from 'core/Node'
+import {Node3D} from 'core/Node3D'
 import {SatTracks} from '../SpaceObjects/SatTracks'
 import {Atmosphere} from './Atmosphere'
 import {CMPDataViz2} from './CMPDataViz2'
 import ImageSource from './ImageSource';
-import {Anim} from '../Anim';
+import {Anim} from 'core/Anim';
 
 // convert the positions from a lat, lon to a position on a sphere.
 // http://www.smartjava.org/content/render-open-data-3d-world-globe-threejs

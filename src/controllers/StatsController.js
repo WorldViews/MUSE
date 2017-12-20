@@ -1,5 +1,5 @@
 import Stats from 'stats.js';
-import {Game} from '../Game';
+import {Game} from 'core/Game';
 
 export default class StatsController {
     constructor(game, options) {

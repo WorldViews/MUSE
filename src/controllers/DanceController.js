@@ -2,9 +2,9 @@
 import * as THREE from 'three';
 
 import {BVHLoader} from '../BVHLoader';
-import {Game} from '../Game';
-import {MUSENode} from '../Node';
-import {Node3D} from '../Node3D';
+import {Game} from 'core/Game';
+import {MUSENode} from 'core/Node';
+import {Node3D} from 'core/Node3D';
 import {ParticleSys,Sparkler} from '../lib/ParticleSys';
 
 let BVH_PATH1 = './assets/models/bvh/MasterLiuPerformanceChar00.bvh';

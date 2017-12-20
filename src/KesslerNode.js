@@ -1,7 +1,7 @@
 
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
-import {Game} from './Game';
+import {Game} from 'core/Game';
 import {GPUComputationRenderer} from './lib/GPUComputationRenderer';
 import satellite from 'satellite.js';
 

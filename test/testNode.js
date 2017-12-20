@@ -1,8 +1,8 @@
 import assert from 'assert';
 import * as THREE from 'three';
 //import Promise from 'bluebird';
-import {MUSE} from '../src/MUSE';
-import {MUSENode} from '../src/Node';
+import {MUSE} from 'core/MUSE';
+import {MUSENode} from 'core/Node';
 
 class Thing extends Node {
     constructor (x, opts) {

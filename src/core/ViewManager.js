@@ -1,9 +1,9 @@
 
 import * as THREE from 'three';
 //import {Mathx} from 'three';
-import {getJSON} from './Util';
-import {Game} from './Game';
-import {MUSENode} from './Node';
+import {getJSON} from 'core/Util';
+import {Game} from 'core/Game';
+import {MUSENode} from 'core/Node';
 
 var toDeg = THREE.Math.radToDeg;
 var toRad = THREE.Math.degToRad;

@@ -1,6 +1,6 @@
 
 import * as THREE from 'three'
-import {Game} from '../../src/Game'
+import {Game} from 'core/Game'
 
 class SpiralNode {
     constructor(opts) {

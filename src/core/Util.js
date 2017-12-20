@@ -1,7 +1,7 @@
 
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
-import {MUSE} from './MUSE';
+import {MUSE} from 'core/MUSE';
 var toDeg = THREE.Math.radToDeg;
 import _ from 'lodash';
 

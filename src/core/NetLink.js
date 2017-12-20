@@ -1,9 +1,9 @@
 
 import io from 'socket.io-client';
-import {Avatar} from "./Avatar";
-import JanusClient from './lib/janus';
-import {Game} from './Game';
-import Util from './Util';
+import {Avatar} from "core/Avatar";
+import JanusClient from 'lib/janus';
+import {Game} from 'core/Game';
+import Util from 'core/Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 

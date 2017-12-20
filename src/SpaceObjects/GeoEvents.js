@@ -1,11 +1,11 @@
 
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
-import {Game} from '../Game';
+import {Game} from 'core/Game';
 import satellite from 'satellite.js';
-import {Loader} from '../Loader';
+import {Loader} from 'core/Loader';
 import {SatTrackDB} from './SatTrackDB';
-import * as Util from '../Util';
+import * as Util from 'core/Util';
 
 function getClockTime() { return new Date().getTime()/1000.0; }
 

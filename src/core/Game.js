@@ -1,14 +1,13 @@
 import * as THREE from 'three';
-import OrbitControls from './lib/controls/OrbitControls';
-import LookControls from './lib/controls/LookControls';
-import {MultiControls} from './lib/controls/MultiControls';
-import {Loader} from './Loader';
-//import { NetLink } from './NetLink'; // circular imports
-import Util from './Util';
-import {reportError} from './Util';
-import {Anim} from './Anim';
+import OrbitControls from 'lib/controls/OrbitControls';
+import LookControls from 'lib/controls/LookControls';
+import {MultiControls} from 'lib/controls/MultiControls';
+import {Loader} from 'core/Loader';
+import Util from 'core/Util';
+import {reportError} from 'core/Util';
+import {Anim} from 'core/Anim';
 
-import AppState from './AppState';
+import AppState from 'core/AppState';
 
 window.MUSE_TRANSPARENT = false;
 window.MUSE_USE_LOGARITHMIC_BUFFER = false;

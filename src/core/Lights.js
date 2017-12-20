@@ -1,7 +1,7 @@
 
 import * as THREE from 'three';
-import {Game} from "./Game";
-import ShadowMapViewer from './lib/ShadowMapViewer';
+import {Game} from 'core/Game';
+import ShadowMapViewer from 'lib/ShadowMapViewer';
 
 let sphere = null;
 

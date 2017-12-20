@@ -1,5 +1,5 @@
 
-import {Game} from '../Game';
+import {Game} from 'core/Game';
 
 const startYear = 1850
 const endYear = 2300

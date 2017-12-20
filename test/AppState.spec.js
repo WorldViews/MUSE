@@ -1,5 +1,5 @@
 import assert from 'assert';
-import AppState from '../src/AppState';
+import AppState from '../src/core/AppState';
 import * as THREE from 'three';
 import Promise from 'bluebird';
 

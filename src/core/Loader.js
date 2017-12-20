@@ -1,13 +1,13 @@
 
-import loadCollada from './loadCollada'
-import OBJLoader from './lib/loaders/OBJLoader';
-import MTLLoader from './lib/loaders/MTLLoader';
-import DDSLoader from './lib/loaders/DDSLoader';
-import {FBXLoader} from './lib/loaders/FBXLoader';
-import Util from './Util';
-import {MUSE} from './MUSE';
-import {Node3D} from './Node3D';
-import {reportError} from './Util';
+import loadCollada from 'core/loadCollada'
+import OBJLoader from 'lib/loaders/OBJLoader';
+import MTLLoader from 'lib/loaders/MTLLoader';
+import DDSLoader from 'lib/loaders/DDSLoader';
+import {FBXLoader} from 'lib/loaders/FBXLoader';
+import Util from 'core/Util';
+import {MUSE} from 'core/MUSE';
+import {Node3D} from 'core/Node3D';
+import {reportError} from 'core/Util';
 
 
 /*

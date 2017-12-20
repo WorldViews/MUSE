@@ -1,6 +1,6 @@
 
 import * as THREE from 'three';
-import {Game} from '../Game';
+import {Game} from 'core/Game';
 
 class Hurricane
 {

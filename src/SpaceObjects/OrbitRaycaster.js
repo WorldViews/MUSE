@@ -1,8 +1,8 @@
 
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
-import {Game} from '../Game';
-import * as Util from '../Util';
+import {Game} from 'core/Game';
+import * as Util from 'core/Util';
 
 
 class OrbitRaycaster {

@@ -1,6 +1,6 @@
 import {Animation, SkinnedMesh} from 'three';
 
-import ColladaLoader from './lib/loaders/ColladaLoader';
+import ColladaLoader from 'lib/loaders/ColladaLoader';
 
 export default (path, opts) => {
     return new Promise((resolve, reject) => {

@@ -1,7 +1,7 @@
 
 import * as THREE from 'three';
-import {MUSE} from './MUSE';
-import * as Util from './Util';
+import {MUSE} from 'core/MUSE';
+import * as Util from 'core/Util';
 //import {testNode} from '../test/testNode'
 //import '../test/testNode'
 

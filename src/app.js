@@ -1,42 +1,41 @@
 import * as THREE from 'three';
 
-import {MUSE} from './MUSE';
-import { CMPDataUpdater } from './controllers/CMPData';
-import { CMPDataVizController } from './controllers/CMPDataVizController';
-import { Scripts } from './Scripts';
-import { PanoPortal } from './lib/PanoPortal';
-import { Program } from './Program';
-import './Screens';
-import { Game } from './Game';
-import { NetLink } from './NetLink';
-import Util from './Util';
-import { Dancer } from './controllers/DanceController';
-import { KinectWatcher } from './controllers/KinectWatcher';
-import NavigationController from './controllers/NavigationController';
+import {MUSE} from 'core/MUSE';
+import { CMPDataUpdater } from 'controllers/CMPData';
+import { CMPDataVizController } from 'controllers/CMPDataVizController';
+import { Scripts } from 'core/Scripts';
+import { PanoPortal } from 'lib/PanoPortal';
+import { Program } from 'core/Program';
+import 'core/Screens';
+import { Game } from 'core/Game';
+import { NetLink } from 'core/NetLink';
+import Util from 'core/Util';
+import { Dancer } from 'controllers/DanceController';
+import { KinectWatcher } from 'controllers/KinectWatcher';
+import NavigationController from 'controllers/NavigationController';
 import './lib/CelestialBodies';
-//import StarsController from './controllers/StarsController';
-import StatsController from './controllers/StatsController';
-import {ReactControls} from './controllers/ReactControls';
-import {JQControls} from './controllers/JQControls';
-import DATGUIControls from './controllers/DATGUIControls';
-import VRGame from './VRGame';
-import WebVR from './lib/vr/WebVR';
+import StatsController from 'controllers/StatsController';
+import {ReactControls} from 'controllers/ReactControls';
+import {JQControls} from 'controllers/JQControls';
+import DATGUIControls from 'controllers/DATGUIControls';
+import VRGame from 'core/VRGame';
+import WebVR from 'lib/vr/WebVR';
 
-import { ViewManager } from './ViewManager';
-import { addLight, setupLights } from './Lights';
-import { DynamicObjectDB_test } from './lib/DynamicObjectDB';
-import { SlidePlayer } from './lib/MediaControl';
-import { Hurricane } from './lib/Hurricane';
-import { VirtualEarth } from './lib/VirtualEarth';
-import { Kessler } from './KesslerNode';
-import './Samples/OpenPerformer';
-import './Samples/ExampleNode';
+import { ViewManager } from 'core/ViewManager';
+import { addLight, setupLights } from 'core/Lights';
+import { DynamicObjectDB_test } from 'lib/DynamicObjectDB';
+import { SlidePlayer } from 'lib/MediaControl';
+import { Hurricane } from 'lib/Hurricane';
+import { VirtualEarth } from 'lib/VirtualEarth';
+import { Kessler } from 'KesslerNode';
+import 'Samples/OpenPerformer';
+import 'Samples/ExampleNode';
 
 
-import { Player0 } from './interfaces/PlayerInterface';
-import {Route} from './Route';
+import { Player0 } from 'interfaces/PlayerInterface';
+import {Route} from 'core/Route';
 import '../test/testNode';
-import './packages/Miura/Miura';
+import 'packages/Miura/Miura';
 
 let {degToRad} = THREE.Math;
 

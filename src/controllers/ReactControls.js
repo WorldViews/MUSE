@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import _ from 'lodash';
 
-import {Game} from '../Game';
+import {Game} from 'core/Game';
 import TweakUI from '../lib/components/TweakUI';
 import TimelineSlider from '../lib/components/TimelineSlider';
 import MenuButton from '../lib/components/MenuButton';

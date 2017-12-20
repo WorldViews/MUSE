@@ -1,9 +1,9 @@
 
 import * as THREE from 'three'
-import {Game} from '../Game'
-import {MUSE} from '../MUSE'
-import {MUSENode} from '../Node'
-import {Node3D} from '../Node3D'
+import {Game} from 'core/Game'
+import {MUSE} from 'core/MUSE'
+import {MUSENode} from 'core/Node'
+import {Node3D} from 'core/Node3D'
 import {Planet} from '../lib/CelestialBodies';
 
 class VirtualEarth extends Planet

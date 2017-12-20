@@ -6,7 +6,7 @@
 
 import * as THREE from 'three';
 import { sprintf } from "sprintf-js";
-import { getCameraParams } from '../../Util';
+import { getCameraParams } from 'core/Util';
 
 var toDeg = THREE.Math.radToDeg;
 

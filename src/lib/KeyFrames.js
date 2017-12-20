@@ -6,8 +6,8 @@
 
 import {DynamicObject} from './DynamicObject';
 import {DynamicObjectDB} from './DynamicObjectDB';
-import {Game} from '../Game';
-import * as Util from '../Util';
+import {Game} from 'core/Game';
+import * as Util from 'core/Util';
 import sorted from 'sorted-array-functions';
 window.sorted = sorted;
 

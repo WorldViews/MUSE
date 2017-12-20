@@ -1,10 +1,10 @@
 
 import * as THREE from 'three';
 import dat from 'dat-gui';
-import {Game} from '../../Game';
-import {MUSENode} from '../../Node';
-import {Node3D} from '../../Node3D';
-import Util from '../../Util';
+import {Game} from 'core/Game';
+import {MUSENode} from 'core/Node';
+import {Node3D} from 'core/Node3D';
+import Util from 'core/Util';
 
 
 function Vector2(x,y) { return new THREE.Vector2(x,y); };

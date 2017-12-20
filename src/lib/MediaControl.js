@@ -6,8 +6,8 @@
 
 //import {DynamicObject} from './DynamicObject';
 //import {DynamicObjectDB} from './DynamicObjectDB';
-import {Game} from '../Game';
-import * as Util from '../Util';
+import {Game} from 'core/Game';
+import * as Util from 'core/Util';
 import {KeyFrames} from './KeyFrames';
 
 function clone(obj) { return Object.assign({},obj); }

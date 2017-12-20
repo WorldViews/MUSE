@@ -5,7 +5,7 @@ import VRController from '../lib/vr/VRController';
 import datGUIVR from 'datguivr';
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
 import LaserBeam from '../objects/LaserBeam';
-import Util from '../Util';
+import Util from 'core/Util';
 
 const {degToRad} = THREE.Math;
 

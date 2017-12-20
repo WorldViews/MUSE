@@ -1,10 +1,10 @@
 
 import * as THREE from 'three';
 
-import {Game} from '../Game';
-import {MUSENode} from '../Node';
-import {Node3D} from '../Node3D';
-import Util from '../Util';
+import {Game} from 'core/Game';
+import {MUSENode} from 'core/Node';
+import {Node3D} from 'core/Node3D';
+import Util from 'core/Util';
 
 // A particle system attached to a given Object3D That
 // can generate a trail along the path of that object.
