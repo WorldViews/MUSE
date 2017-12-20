@@ -14,7 +14,7 @@
 
 */
 import {animTest, Anim} from 'core/Anim';
-import {PanoPortal} from 'lib/PanoPortal';
+import {PanoPortal} from 'packages/PanoPortal/PanoPortal';
 import {Game} from 'core/Game';
 
 class Scripts {

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import OrbitControls from 'lib/controls/OrbitControls';
-import LookControls from 'lib/controls/LookControls';
-import {MultiControls} from 'lib/controls/MultiControls';
+import OrbitControls from 'gui/controls/OrbitControls';
+import LookControls from 'gui/controls/LookControls';
+import {MultiControls} from 'gui/controls/MultiControls';
 import {Loader} from 'core/Loader';
 import Util from 'core/Util';
 import {reportError} from 'core/Util';

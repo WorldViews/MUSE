@@ -1,7 +1,7 @@
 import {Game} from 'core/Game';
 import * as THREE from 'three';
-import PointerLockControls from 'lib/controls/PointerLockControls';
-import VRInputController from 'controllers/VRInputController';
+import PointerLockControls from 'gui/controls/PointerLockControls';
+import VRInputController from 'gui/vr/VRInputController';
 import VRHMD from 'lib/controls/VRHMD';
 import VREffect from 'lib/effects/VREffect';
 import WebVR from 'lib/vr/WebVR';

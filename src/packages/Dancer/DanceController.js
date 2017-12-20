@@ -1,11 +1,11 @@
 
 import * as THREE from 'three';
 
-import {BVHLoader} from '../BVHLoader';
+import {BVHLoader} from 'lib/loaders/BVHLoader';
 import {Game} from 'core/Game';
 import {MUSENode} from 'core/Node';
 import {Node3D} from 'core/Node3D';
-import {ParticleSys,Sparkler} from '../lib/ParticleSys';
+import {ParticleSys,Sparkler} from 'lib/ParticleSys';
 
 let BVH_PATH1 = './assets/models/bvh/MasterLiuPerformanceChar00.bvh';
 let BVH_PATH2 = '/assets/motionCapture/lauren_duality_edit.bvh';

@@ -1,23 +1,21 @@
 import * as THREE from 'three';
 
 import {MUSE} from 'core/MUSE';
-import { CMPDataUpdater } from 'controllers/CMPData';
-import { CMPDataVizController } from 'controllers/CMPDataVizController';
+import { CMPDataUpdater } from 'packages/CMPViz/CMPData';
+import { CMPDataVizController } from 'packages/CMPViz/CMPDataVizController';
 import { Scripts } from 'core/Scripts';
-import { PanoPortal } from 'lib/PanoPortal';
+import { PanoPortal } from 'packages/PanoPortal/PanoPortal';
 import { Program } from 'core/Program';
 import 'core/Screens';
 import { Game } from 'core/Game';
 import { NetLink } from 'core/NetLink';
 import Util from 'core/Util';
-import { Dancer } from 'controllers/DanceController';
-import { KinectWatcher } from 'controllers/KinectWatcher';
-import NavigationController from 'controllers/NavigationController';
-import './lib/CelestialBodies';
-import StatsController from 'controllers/StatsController';
-import {ReactControls} from 'controllers/ReactControls';
-import {JQControls} from 'controllers/JQControls';
-import DATGUIControls from 'controllers/DATGUIControls';
+import { Dancer } from 'packages/Dancer/DanceController';
+import { KinectWatcher } from 'packages/Dancer/KinectWatcher';
+import 'packages/Astro/CelestialBodies';
+import StatsController from 'gui/StatsController';
+import {JQControls} from 'gui/JQControls';
+import DATGUIControls from 'gui/DATGUIControls';
 import VRGame from 'core/VRGame';
 import WebVR from 'lib/vr/WebVR';
 
@@ -26,11 +24,10 @@ import { addLight, setupLights } from 'core/Lights';
 import { DynamicObjectDB_test } from 'lib/DynamicObjectDB';
 import { SlidePlayer } from 'lib/MediaControl';
 import { Hurricane } from 'lib/Hurricane';
-import { VirtualEarth } from 'lib/VirtualEarth';
-import { Kessler } from 'KesslerNode';
-import 'Samples/OpenPerformer';
-import 'Samples/ExampleNode';
-
+import { VirtualEarth } from 'packages/Astro/VirtualEarth';
+import { Kessler } from 'packages/Kessler/KesslerNode';
+import 'packages/Samples/OpenPerformer';
+import 'packages/Samples/ExampleNode';
 
 import { Player0 } from 'interfaces/PlayerInterface';
 import {Route} from 'core/Route';

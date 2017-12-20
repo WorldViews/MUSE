@@ -4,10 +4,10 @@ import {Game} from 'core/Game'
 import {MUSE} from 'core/MUSE'
 import {MUSENode} from 'core/Node'
 import {Node3D} from 'core/Node3D'
-import {SatTracks} from '../SpaceObjects/SatTracks'
+import {SatTracks} from 'packages/Satellites/SatTracks'
 import {Atmosphere} from './Atmosphere'
-import {CMPDataViz2} from './CMPDataViz2'
-import ImageSource from './ImageSource';
+import {CMPDataViz2} from 'packages/CMPViz/CMPDataViz2'
+import ImageSource from 'lib/ImageSource';
 import {Anim} from 'core/Anim';
 
 // convert the positions from a lat, lon to a position on a sphere.

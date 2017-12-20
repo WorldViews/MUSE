@@ -4,7 +4,7 @@ import {Game} from 'core/Game'
 import {MUSE} from 'core/MUSE'
 import {MUSENode} from 'core/Node'
 import {Node3D} from 'core/Node3D'
-import {Planet} from '../lib/CelestialBodies';
+import {Planet} from './CelestialBodies';
 
 class VirtualEarth extends Planet
 {

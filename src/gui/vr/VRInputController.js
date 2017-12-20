@@ -1,10 +1,10 @@
-import OBJLoader from '../lib/loaders/OBJLoader';
+import OBJLoader from 'lib/loaders/OBJLoader';
 import * as THREE from 'three';
 import _ from 'lodash';
-import VRController from '../lib/vr/VRController';
+import VRController from 'lib/vr/VRController';
 import datGUIVR from 'datguivr';
 import 'yuki-createjs/lib/tweenjs-0.6.2.combined';
-import LaserBeam from '../objects/LaserBeam';
+import LaserBeam from './LaserBeam';
 import Util from 'core/Util';
 
 const {degToRad} = THREE.Math;

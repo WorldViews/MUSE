@@ -1,7 +1,7 @@
 
 import * as THREE from 'three';
 import {Math} from 'three';
-import ImageSource from './ImageSource';
+import ImageSource from 'lib/ImageSource';
 
 var pspec = {
     name: "bubbleScreen1",
