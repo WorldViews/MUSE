@@ -37,6 +37,11 @@ module.exports = (env) => {
     module: {
       rules: [
         {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        },
+        {
           test: /\.exec\.js$/,
           use: ['script-loader']
         },
@@ -95,7 +100,14 @@ module.exports = (env) => {
         name: 'vendor',
         minChuncks: Infinity
       })
-    ]
+    ],
+    resolve: {
+      modules: [
+        path.resolve(__dirname, "src"),
+        'node_modules'
+      ],
+      extensions: [ '.tsx', '.ts', '.js' ]
+    }
   };
 
   if (analyze) {
