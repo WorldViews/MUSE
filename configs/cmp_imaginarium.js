@@ -314,7 +314,7 @@ CONFIG = {
        nodes: [NET_LINK, SCRIPTS, POSTERS, BUBBLES, TOKENS, SPECS]
     },
     //venue: '/configs/venues/imaginarium.js',
-    venue: '/configs/venues/imaginariumSimple.js',
+    venue: 'configs/venues/imaginariumSimple.js',
     environment: SOLAR_SYSTEM
     //'specs': [SCRIPTS, POSTERS, BUBBLES]
 };
