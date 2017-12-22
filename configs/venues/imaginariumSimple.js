@@ -145,7 +145,7 @@ var SPECS = [
     LIGHTS,
     //{  type: 'Inline',     name: 'debugStuff', children: TEST },
     {  type: 'Dancer',
-        motionUrl: '/assets/motionCapture/lauren_duality_edit.bvh',
+        motionUrl: 'assets/motionCapture/lauren_duality_edit.bvh',
         name: 'dancer', visible: false },
 
 // Note that the SolarSystem and Stars are now part of the environment

@@ -2,7 +2,7 @@
 var SPECS = [
     {  type: 'PointLight', name: 'sun',    color: 0xffffff, position: [-1000, 0, 0], distance: 5000},
     {  type: 'PointLight',                 color: 0xffffff, position: [3000, 0, 0], distance: 5000},
-    {  type: 'Dancer', name: "dancer1", motionUrl: '/assets/motionCapture/lauren_duality_edit.bvh' }
+    {  type: 'Dancer', name: "dancer1", motionUrl: 'assets/motionCapture/lauren_duality_edit.bvh' }
 ];
 
 function setBVH(game, name, URL)

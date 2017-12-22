@@ -292,10 +292,12 @@ class PlayControls extends JQWidget {
         var $play = this.$play;
         var img = $play.find('img');
         if (playing) {
-            img.attr('src', '/textures/icons/lightPause.png')
+ //           img.attr('src', '/textures/icons/lightPause.png')
+            img.attr('src', 'textures/icons/lightPause.png')
         }
         else {
-            img.attr('src', '/textures/icons/lightPlay.png')
+ //           img.attr('src', '/textures/icons/lightPlay.png')
+            img.attr('src', 'textures/icons/lightPlay.png')
         }
     }
 
