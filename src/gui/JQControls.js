@@ -243,11 +243,15 @@ class PlayControls extends JQWidget {
     constructor(ui, $parent) {
         super(ui, $parent);
         var inst = this;
-        this.$back = append($parent, "<a class='button'><img src='/textures/icons/lightBack.png'></a>")
-        this.$play = append($parent, "<a class='button'><img src='/textures/icons/lightPause.png'></a>");
+        //this.$back = append($parent, "<a class='button'><img src='/textures/icons/lightBack.png'></a>")
+        //this.$play = append($parent, "<a class='button'><img src='/textures/icons/lightPause.png'></a>");
+        this.$back = append($parent, "<a class='button'><img src='textures/icons/lightBack.png'></a>")
+        this.$play = append($parent, "<a class='button'><img src='textures/icons/lightPause.png'></a>");
         this.$play.data('state', 'Play');
-        this.$prev = append($parent, "<a class='button'><img src='/textures/icons/prev.png'></a>");
-        this.$next = append($parent, "<a class='button'><img src='/textures/icons/next.png'></a>");
+       // this.$prev = append($parent, "<a class='button'><img src='/textures/icons/prev.png'></a>");
+        //this.$next = append($parent, "<a class='button'><img src='/textures/icons/next.png'></a>");
+        this.$prev = append($parent, "<a class='button'><img src='textures/icons/prev.png'></a>");
+        this.$next = append($parent, "<a class='button'><img src='textures/icons/next.png'></a>");
         this.$timeSlider = append($parent, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
         this.$timeSlider.on('change', e => inst.onSliderChange(e, false));
         this.$timeSlider.on('input',  e => inst.onSliderChange(e, true));
