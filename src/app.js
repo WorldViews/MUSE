@@ -33,6 +33,8 @@ import { Player0 } from 'interfaces/PlayerInterface';
 import {Route} from 'core/Route';
 import '../test/testNode';
 import 'packages/Miura/Miura';
+import 'packages/Midi/MidiPlayer';
+
 
 let {degToRad} = THREE.Math;
 
