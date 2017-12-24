@@ -36,16 +36,18 @@ class MidiPlayer extends Node3D
         // This is if we want to be a player
         game.registerPlayer(this);
         this.player.object3D = this.group;
-        this.player.loadMelody("wtc0", true);
+        var melody = opts.melody || "wtc0";
+        this.player.loadMelody(melody, opts.autoStart);
         //this.player.startPlaying();
     }
 
     addStuff() {
-        var radius = this.options.size || 0.01;
+        var radius = this.options.size || 0.1;
         this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
         this.geometry = new THREE.SphereGeometry( radius, 32, 32 );
         this.ball = new THREE.Mesh(this.geometry, this.material);
         this.group.add(this.ball);
+        this.group.add(new THREE.AxisHelper(10));
     }
 
     // These can be overridden
@@ -60,10 +62,9 @@ class MidiPlayer extends Node3D
     update() {
         if (this.player)
             this.player.update();
-        if (!this.visible)
+        if (!this.getVisible)
             return;
     }
-
 
     // Player Interface methods - only if we want to be seekable player
     getPlayTime() {
@@ -83,16 +84,22 @@ class MidiPlayer extends Node3D
         return this.playSpeed = s;
     }
 
-    play() {}
+    play() {
+        this.player.stopPlaying();
+    }
 
-    pause() {}
+    pause() 
+    {
+        this.player.startPlaying();
+    }
 
 }
 
 // could add fields there.  If checkOptions is used, it
 // complains about unexpected fields in options.
 MUSENode.defineFields(MidiPlayer, [
-    "size"
+    "melody",
+    "autoStart"
 ]);
 
 // note that this could return a promise instead.

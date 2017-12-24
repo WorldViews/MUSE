@@ -18,6 +18,8 @@ PLAYER.loadedInstruments = {};
 PLAYER.lastEventPlayTime = 0;
 PLAYER.lastEventClockTime = 0;
 PLAYER.seqNum = 0;
+//PLAYER.y0 = 4;
+PLAYER.y0 = -7;
 PLAYER.graphicsX0 = -8;
 PLAYER.graphicsSpiral = true;
 PLAYER.crankFactor = 0;
@@ -623,7 +625,7 @@ PLAYER.getTimeGraphicS = function () {
     var tDur = PLAYER.midiObj.duration;
     var c = tDur * PLAYER.distPerSec;
     var r = c / (2 * Math.PI);
-    var y0 = 4;
+    var y0 = PLAYER.y0;
     var x0 = 0;//PLAYER.graphicsX0;
     var z0 = 0;
     var w = 10;
@@ -645,7 +647,7 @@ PLAYER.getNoteGraphicS = function (t, dur, pitch, material) {
     var tDur = PLAYER.midiObj.duration;
     var c = tDur * PLAYER.distPerSec;
     var r = c / (2 * Math.PI);
-    var y0 = 4;
+    var y0 = PLAYER.y0;
     var x0 = 0;//PLAYER.graphicsX0;
     var z0 = 0;
     var gap = .2;
@@ -721,7 +723,7 @@ PLAYER.addNoteGraphics = function (scene, midiTrack) {
 PLAYER.prevPt = null;
 
 PLAYER.update = function () {
-    console.log("PLAYER.update "+PLAYER.isPlaying);
+    //console.log("PLAYER.update "+PLAYER.isPlaying);
     if (PLAYER.isPlaying && PLAYER.USE_NEW_METHOD)
         PLAYER.checkForEvent();
     if (!PLAYER.graphics)

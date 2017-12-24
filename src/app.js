@@ -163,6 +163,8 @@ function start_(config) {
             parts.push(game.loadSpecs(config.environment, "environment"));
         if (config.specs)
             parts.push(game.loadSpecs(config.specs, "specs"));
+        if (config.nodes)
+            parts.push(game.loadSpecs(config.nodes, "nodes"));
         Promise.all(parts).then(() => {
             console.log("****************** Starting game ******************");
             game.config = config;
