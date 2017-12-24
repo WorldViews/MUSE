@@ -6,7 +6,8 @@ import {Loader} from 'core/Loader';
 import Util from 'core/Util';
 import {reportError} from 'core/Util';
 import {Anim} from 'core/Anim';
-
+import {MUSENode} from 'core/Node';
+import {Node3D} from 'core/Node3D';
 import AppState from 'core/AppState';
 
 window.MUSE_TRANSPARENT = false;
@@ -487,9 +488,13 @@ class Game {
         this.attachCameraTo('station');
     }
 
-    getObject3D(nameOrObj) {
-        if (nameOrObj instanceof THREE.Object3D)
-            return nameOrObj;
+     // Try to coerce whatever it is given with the associated
+    // object.
+    getObject3D(n) {
+        if (n instanceof THREE.Object3D)
+            return n;
+        if (n instanceof Node3D)
+            return n.object3D;
         return game.models[nameOrObj];
     }
 
@@ -601,6 +606,61 @@ class Game {
             var sz = obj3d.scale.z*size[2]/dz;
             obj3d.scale.set(sx, sy, sz);
         }
+    }
+
+    removeByName(name, nodeOrObj) {
+        var obj;
+        if (nodeOrObj) {
+            obj = this.getObject3D(nodeOrObj);
+        }
+        if (!obj)
+            obj = game.scene;
+        var targetObj = obj.getChildByName(name);
+        if (targetObj) {
+            targetObj.parent.remove(targetObj);
+        }
+        else {
+            Util.reportWarning("removeNamedChild: Node not found: "+name);
+        }
+    }
+ 
+    applyToObjects(fun, pattern, nodeOrObj) {
+        console.log("applyToObjects:", fun, pattern, nodeOrObj);
+        var obj;
+        if (nodeOrObj) {
+            console.log("nodeOrObj.object3D", nodeOrObj.object3D);
+            obj = this.getObject3D(nodeOrObj);
+            console.log("obj: "+obj);
+        }
+        if (!obj) {
+            console.log("applyToObjects using whole scene");
+            obj = game.scene;
+        }
+        // note that if the function alters the graph, e.g.
+        // by removing nodes, it is not safe to make the calls
+        // within the traversal.  Instead we collect matches
+        // and then call them.
+        var matchingObjs = [];
+        obj.traverse(obj => {
+            if (pattern.name && obj.name != pattern.name)
+                return;
+            if (pattern.type && obj.type != pattern.type)
+                return;
+            matchingObjs.push(obj);
+         });
+         matchingObjs.forEach(obj => fun(obj));
+    }
+
+    removeObjects(pattern, nodeOrObj) {
+        this.applyToObjects(obj => obj.parent.remove(obj), pattern, nodeOrObj);
+    }
+
+    removeByName(name, nodeOrObj) {
+        this.removeObjects({name: name}, nodeOrObj);
+    }
+
+    removeByType(type, nodeOrObj) {
+        this.removeObjects({type: type}, nodeOrObj);
     }
 
     setStatus(str) {

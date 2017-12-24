@@ -249,7 +249,10 @@ class Loader
         if (spec && spec.receiveShadow) {
             obj.traverse(o => o.receiveShadow = spec.receiveShadow);
         }
-
+        if (spec && spec.onLoaded) {
+            var node = obj.userData.node;
+            spec.onLoaded(node);
+        }
         this.numPending--;
         //console.log("handleCompletion "+this.name+" "+this.numPending);
         if (this.numPending > 0)

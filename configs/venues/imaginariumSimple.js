@@ -49,11 +49,18 @@ SHIP_OLD_MODEL = {
 SHIP_MODEL_DAE = {
     type: 'Model', name: 'ShipDAE',
     parent: 'station',
-    path: 'assets/models/dae_ship/refined-ship.dae',
-    position: [9.4, 0, 200],
+    path: 'assets/models/imaginarium-ship-dae/refined-ship-no-stripe.dae',
+    position: [9.4, 0, 0],
     rot: [0, 0, 0],
     scale: 0.027,
-    ignoreCollision: true
+    receiveShadow: true,
+    ignoreCollision: true,
+    onLoaded: (node) => {
+        MUSE.game.removeByName("pivot1", node);
+        MUSE.game.removeByType("PointLight", node);
+        MUSE.game.removeByType("SpotLight", node);
+        MUSE.game.removeByType("DirectionalLight", node);
+    }
 }
 
 SHIP_MODEL = {
@@ -82,9 +89,10 @@ var SPECS = [
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     //{  type: 'Scripts' },
     {   type: 'Group', name: 'station'  },
+    //SHIP_MODEL,
+    SHIP_MODEL_DAE,
     // 'Floor' is a special name used for VR Controller raycast
-    SHIP_MODEL,
-    SHIP_MODEL_COLLISION,
+     SHIP_MODEL_COLLISION,
     /*
     {   type: 'Model', name: 'bmw',
         parent: 'station',

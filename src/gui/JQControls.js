@@ -349,9 +349,9 @@ class ViewControl  extends JQWidget {
     registerView(name, callback) {
         console.log("viewControl.registerView: "+name);
         var str = sprintf("<option value='%s'>%s</option>", name, name);
-        console.log("Adding: "+str);
+        //console.log("Adding: "+str);
         append(this.$views, str);
-        console.log("callback: ",callback);
+        //console.log("callback: ",callback);
         this.viewCallbacks[name] = { name, callback };
         this.$viewTool.show();
     }
