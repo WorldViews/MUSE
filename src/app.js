@@ -34,7 +34,7 @@ import {Route} from 'core/Route';
 import '../test/testNode';
 import 'packages/Miura/Miura';
 import 'packages/Midi/MidiPlayer';
-
+import 'packages/Spirals/Spirals';
 
 let {degToRad} = THREE.Math;
 
