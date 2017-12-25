@@ -1,11 +1,5 @@
 
-var P = {};
 
-P.v0 = 0.04;
-P.theta0 = 0;
-P.xbias = 0;
-P.lastTrackedTime = 0;
-P.pauseTime = 5;
 
 THREE.ImageUtils.crossOrigin = '';
 
@@ -78,6 +72,10 @@ function getBall(spiral) {
 }
 
 class Spiral {
+    constructor() {
+        this.xbias = 0;
+        this.theta0 = 0;        
+    }
 };
 
 class ImageSpiral extends Spiral {
@@ -140,14 +138,14 @@ class ImageSpiral extends Spiral {
         var N = spiral.imageObjs.length;
         var dx = xWid / N;
         var drift = t0 * 0.05;
-        var iLow = Math.floor(0 - drift / dx - P.xbias / dx);
+        var iLow = Math.floor(0 - drift / dx - this.xbias / dx);
         var iHigh = iLow + N;
         for (var j = iLow; j < iHigh; j++) {
             var i = (j + 100000 * N) % N;
             var x0 = xMin + dx * j;
             var x = x0 + drift;
-            var theta = x * omega + P.theta0;
-            x += P.xbias;
+            var theta = x * omega + this.theta0;
+            x += this.xbias;
             var dm = x - xMid;
             var s = (xMax * xMax - dm * dm) / (xMax * xMax);
             s = s * s * s * s + 0.001; // make sure not zero
@@ -234,14 +232,14 @@ class BallSpiral extends Spiral {
         var N = spiral.objs.length;
         var dx = xWid / N;
         var drift = t0 * 0.05;
-        var iLow = Math.floor(0 - drift / dx - P.xbias / dx);
+        var iLow = Math.floor(0 - drift / dx - this.xbias / dx);
         var iHigh = iLow + N;
         for (var j = iLow; j < iHigh; j++) {
             var i = (j + 100000 * N) % N;
             var x0 = xMin + dx * j;
             var x = x0 + drift;
-            var theta = x * omega + P.theta0;
-            x += P.xbias;
+            var theta = x * omega + this.theta0;
+            x += this.xbias;
             var dm = x - xMid;
             var s = (xMax * xMax - dm * dm) / (xMax * xMax);
             s = s * s * s * s + 0.001; // make sure not zero
