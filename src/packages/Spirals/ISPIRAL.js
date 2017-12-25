@@ -260,8 +260,4 @@ class BallSpiral extends Spiral {
     }
 }
 
-
- 
-
-
 export { ImageSpiral, BallSpiral };

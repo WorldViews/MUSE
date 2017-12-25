@@ -795,4 +795,6 @@ is used to pop back out of video bubbles.
     }
 }
 
+MUSE.registerNodeType = Game.registerNodeType;
+
 export {Game};

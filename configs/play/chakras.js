@@ -12,19 +12,8 @@ var CONFIG = {
     },
     //'venue': '/configs/venues/imaginarium.js',
     nodes: [
-        {'type': 'Spiral'},
-        {type: 'Chakras', onLoaded: node => node.addSpirals()}
+        {type: 'Chakras'}
     ]
 };
 
-/*
-MUSE.require(
-    "/dist/spirals.bundle.js",
-    () => {
-        console.log("testSpirals handler called....")
-        console.log("now calling MUSE.returnValue "+CONFIG);
-        MUSE.returnValue(CONFIG)
-    }
-);
-*/
 MUSE.returnValue(CONFIG);

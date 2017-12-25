@@ -1,10 +1,16 @@
 
+import {Node3D} from 'core/Node3D';
+import {BallSpiral} from './ISPIRAL';
+
 var CHAKRA = {};
 CHAKRA.hues = [0, 30, 60, 120, 240, 260, 320];
 
 // Requires ISPIRAL
 //
 CHAKRA.chakras = [];
+CHAKRA.y0 = 1;
+CHAKRA.spacing = 1;
+CHAKRA.ballSize = .5;
 
 class Chakra {
 	constructor(num, opts) {
@@ -18,13 +24,13 @@ class Chakra {
 		this.speed = 1;
 		if (opts.speed)
 			this.speed = opts.speed;
-		this.init();
+		this.init(opts);
 	}
 
-	init() {
+	init(opts) {
 		CHAKRA.chakras[this.num] = this;
-		this.y = 100 + this.num * 50;
-		var ballSize = 20;
+		this.y = CHAKRA.y0 + this.num * CHAKRA.spacing;
+		var ballSize = CHAKRA.ballSize;
 		var geo = new THREE.SphereGeometry(ballSize, 20, 20);
 		var material = new THREE.MeshPhongMaterial({ color: 0xffaaaa });
 		this.hue = CHAKRA.hues[this.num - 1] / 360;
@@ -52,8 +58,8 @@ class Chakra {
 			report("Chakra adding imageSpiral");
 			this.addImageSpiral(opts.imageSpiral);
 		}
-		if (opts.scene)
-			opts.scene.add(this.group);
+		//if (opts.scene)
+		//	opts.scene.add(this.group);
 	}
 
 	addSpiral(opts) {
@@ -112,5 +118,45 @@ CHAKRA.update = function (t) {
 
 CHAKRA.Chakra = Chakra;
 MUSE.CHAKRA = CHAKRA;
+
+class ChakrasNode extends Node3D {
+	constructor(game, opts) {
+		super(game,opts);
+		this.group = new THREE.Object3D();
+		var num = 7;
+		this.chakras = [];
+		for (var i=0; i<num; i++) {
+			var chakra = new Chakra(i+1);
+			this.chakras.push(chakra);
+			this.group.add(chakra.group);
+		}
+		this.setObject3D(this.group);
+		game.addToGame(this.group, this.name, opts.parent);
+		//game.registerController(this.name, this);
+	}
+
+	addSpirals() {
+		this.chakras.forEach(chakra => chakra.addSpiral());
+	}
+
+	hideSpirals() {
+		this.chakras.forEach(chakra => chakra.hideSpiral());
+	}
+	
+	update(t) {
+		this.chakras.forEach(chakra => chakra.update(t));
+	}
+}
+
+function addChakras(game, opts)
+{
+    var chakras = new ChakrasNode(game, opts);
+    //game.setFromProps(ve.group, opts);
+    //game.addToGame(ve.group, opts.name, opts.parent);
+    game.registerController(chakras.name, chakras);
+    return chakras;
+}
+
+MUSE.registerNodeType("Chakras", addChakras);
 
 export { CHAKRA, Chakra }
