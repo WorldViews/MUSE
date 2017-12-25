@@ -4,14 +4,7 @@ import {Game} from 'core/Game'
 import {MUSENode} from 'core/Node';
 import {Node3D} from 'core/Node3D';
 import {Chakra} from './Chakra';
-import {ISPIRAL} from './ISPIRAL';
-
-var imageList = [];
-ISPIRAL.imageList = imageList;
-
-for (var i=1; i<=178; i++) {
-    imageList[i] = "assets/images/Spirals/imagesRoundedPow2/image"+i+".png";
-}
+import {ImageSpiral,BallSpiral} from './ISPIRAL';
 
 
 class SpiralNode extends Node3D {
@@ -21,18 +14,26 @@ class SpiralNode extends Node3D {
         this.group = new THREE.Group();
         this.setObject3D(this.group);
         this.addImageSpiral();
+        this.addBallSpiral(60);
         game.addToGame(this.group, this.name, opts.parent);
         this.t0 = null;
     }
 
     addImageSpiral() {
-        console.log("imageList: ", imageList);
-        this.imageSpiral = new ISPIRAL.ImageSpiral(imageList);
+        this.imageList = [];
+        for (var i=1; i<=178; i++) {
+            this.imageList[i] = "assets/images/Spirals/imagesRoundedPow2/image"+i+".png";
+        }
+        console.log("imageList: ", this.imageList);
+        this.imageSpiral = new ImageSpiral(this.imageList);
         this.group.add(this.imageSpiral.images);
-        this.ballSpiral = new ISPIRAL.BallSpiral(30);
-        this.group.add(this.ballSpiral.group);
-
     }
+
+    addBallSpiral(numBalls) {
+        this.ballSpiral = new BallSpiral(numBalls);
+        this.group.add(this.ballSpiral.group);
+    }
+
 
     update(arg) {
         var t = MUSE.Util.getClockTime();
