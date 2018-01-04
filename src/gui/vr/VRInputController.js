@@ -45,6 +45,7 @@ export default class VRInputController {
         this.head = body.children[0];
         this.camera = camera;
         this.type = vrType;
+        this.rotation = 0;
         this.direction = new THREE.Vector3(0, 0, 1);
 
         this.controller0 = new VRController(0);
@@ -256,9 +257,12 @@ export default class VRInputController {
         let axisY = axes[1];
 
         //this.camera.getWorldDirection(this.direction);
+        // let direction = this.direction.clone();
+        // direction.applyMatrix4(this.head.matrix);
+        // // let direction = this.direction;
+        let rotMatrix = Matrix4.makeRotationFromEuler(new Vector3(0, 0, this.rotation));
         let direction = this.direction.clone();
-        direction.applyMatrix4(this.head.matrix);
-        // let direction = this.direction;
+        direction.applyMatrix(rotMatrix)
 
         if (axisY < -0.5) {
             this.body.translateX(-0.02 * direction.x);
@@ -286,11 +290,13 @@ export default class VRInputController {
         let oldRot = this.head.rotation.y;
         let rotMagnitude = (Math.PI/400);
         if (rotAxisX > 0.3) {
-            oldRot -= rotMagnitude*Math.abs(rotAxisX);
-            this.head.rotation.set(0, oldRot, 0)
+            //oldRot -= rotMagnitude*Math.abs(rotAxisX);
+            //this.head.rotation.set(0, oldRot, 0)
+            this.rotation += 3*Math.PI/180;
         } else if (rotAxisX < -0.3) {
-            oldRot += rotMagnitude*Math.abs(rotAxisX);
-            this.head.rotation.set(0, oldRot, 0)
+            // oldRot += rotMagnitude*Math.abs(rotAxisX);
+            // this.head.rotation.set(0, oldRot, 0)
+            this.rotation -= 3*Math.PI/180;
         }
     }
 
