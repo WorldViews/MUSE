@@ -257,8 +257,9 @@ export default class VRInputController {
         let axisY = axes[1];
 
         //this.camera.getWorldDirection(this.direction);
-        let direction = this.direction.clone();
-        direction.applyMatrix4(this.head.matrix);
+        //let direction = this.direction.clone();
+        //direction.applyMatrix4(this.head.matrix);
+        let direction = this.getCamForward();
         // let direction = this.direction;
         // let rotMatrix = new THREE.Matrix4()
         // rotMatrix.makeRotationFromEuler(new THREE.Vector3(0, this.rotation, 0));
@@ -301,6 +302,18 @@ export default class VRInputController {
             // this.rotation += 3*Math.PI/180;
             // //this.body.rotation.set(0, this.rotation, 0);
         }
+    }
+
+    getCamForward()
+    {
+        return this.camera.getWorldDirection();
+        /*
+          var cam = this.game.camera;
+          var vL = new THREE.Vector3(0,0,-1);
+          var vW = vL.applyMatrix4(cam.matrixWorld);
+          vW.sub(cam.position).normalize();
+          return vW;
+        */
     }
 
     update(timestamp) {
