@@ -257,19 +257,20 @@ export default class VRInputController {
         let axisY = axes[1];
 
         //this.camera.getWorldDirection(this.direction);
-        // let direction = this.direction.clone();
-        // direction.applyMatrix4(this.head.matrix);
-        // // let direction = this.direction;
-        let rotMatrix = Matrix4.makeRotationFromEuler(new Vector3(0, 0, this.rotation));
         let direction = this.direction.clone();
-        direction.applyMatrix(rotMatrix)
+        direction.applyMatrix4(this.head.matrix);
+        // let direction = this.direction;
+        // let rotMatrix = new THREE.Matrix4()
+        // rotMatrix.makeRotationFromEuler(new THREE.Vector3(0, this.rotation, 0));
+        // let direction = this.direction.clone();
+        // direction.applyMatrix4(rotMatrix)
 
         if (axisY < -0.5) {
-            this.body.translateX(-0.02 * direction.x);
-            this.body.translateZ(-0.02 * direction.z);
-        } else if (axisY > 0.5) {
             this.body.translateX(0.02 * direction.x);
             this.body.translateZ(0.02 * direction.z);
+        } else if (axisY > 0.5) {
+            this.body.translateX(-0.02 * direction.x);
+            this.body.translateZ(-0.02 * direction.z);
         }
 
         if (axisX > 0.5) {
@@ -290,13 +291,15 @@ export default class VRInputController {
         let oldRot = this.head.rotation.y;
         let rotMagnitude = (Math.PI/400);
         if (rotAxisX > 0.3) {
-            //oldRot -= rotMagnitude*Math.abs(rotAxisX);
-            //this.head.rotation.set(0, oldRot, 0)
-            this.rotation += 3*Math.PI/180;
+            oldRot -= rotMagnitude*Math.abs(rotAxisX);
+            this.head.rotation.set(0, oldRot, 0)
+            // this.rotation -= 3*Math.PI/180;
+            // //this.body.rotation.set(0, this.rotation, 0);
         } else if (rotAxisX < -0.3) {
-            // oldRot += rotMagnitude*Math.abs(rotAxisX);
-            // this.head.rotation.set(0, oldRot, 0)
-            this.rotation -= 3*Math.PI/180;
+            oldRot += rotMagnitude*Math.abs(rotAxisX);
+            this.head.rotation.set(0, oldRot, 0)
+            // this.rotation += 3*Math.PI/180;
+            // //this.body.rotation.set(0, this.rotation, 0);
         }
     }
 
