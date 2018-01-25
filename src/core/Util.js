@@ -114,6 +114,15 @@ export function formatDatetime(dt)
                     dt.getHours(), dt.getMinutes(), dt.getSeconds());
 }
 
+function formatDateMDY(dt)
+{
+    if (!(dt instanceof Date))
+        dt = new Date(dt*1000);
+    return sprintf("%s/%s/%s",
+                    dt.getMonth()+1, dt.getDate(), dt.getFullYear(),
+                    );
+}
+
 export function getClockTime() {
     return new Date().getTime()/1000.0;
 }
@@ -247,11 +256,12 @@ export function isPickable(obj) {
 
 // event is the mouse or key event that caused this.  May be null
 export function dispatchMuseEvent(evType, obj, event) {
+    var pickedObj = obj;
     while (obj) {
         var userData = obj.userData;
         if (userData && userData[evType]) {
             report("******** BINGO Click!!!! *******");
-            userData[evType](obj, event);
+            userData[evType](obj, event, pickedObj);
             break;
         }
         obj = obj.parent;
@@ -276,30 +286,31 @@ function radialPosition(angle, r, h) {
 var Util =
 {
     cloneObject,
+    dispatchMuseEvent,
+    formatDateMDY,
+    formatDatetime,
     getJSON,
     getJSONFromScript,
     getClockTime,
     getCameraParams,
     getParameterByName,
     getTypedObj,
+    isVideoURL,
+    isPickable,
+    radialPosition,
     randomIntFromInterval,
     randomFromInterval,
+    reportError,
+    reportWarning,
     scaleVec,
+    sprintf,
     toTime,
     toDate,
     toDeg,
     toRad,
     toHHMMSS,
     toVector3,
-    radialPosition,
-    reportError,
-    reportWarning,
-    sprintf,
-    formatDatetime,
-    values,
-    isVideoURL,
-    dispatchMuseEvent,
-    isPickable
+    values
 };
 
 Util._ = _;
