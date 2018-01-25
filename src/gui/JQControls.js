@@ -252,9 +252,11 @@ class PlayControls extends JQWidget {
         //this.$next = append($parent, "<a class='button'><img src='/textures/icons/next.png'></a>");
         this.$prev = append($parent, "<a class='button'><img src='textures/icons/prev.png'></a>");
         this.$next = append($parent, "<a class='button'><img src='textures/icons/next.png'></a>");
-        this.$timeSlider = append($parent, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
-        this.$timeSlider.on('change', e => inst.onSliderChange(e, false));
-        this.$timeSlider.on('input',  e => inst.onSliderChange(e, true));
+        if (ui.options.timeSlider != false) {
+            this.$timeSlider = append($parent, "<input id='uiTimeSlider' type='range' min='0' max='1.0' step='any'>");
+            this.$timeSlider.on('change', e => inst.onSliderChange(e, false));
+            this.$timeSlider.on('input',  e => inst.onSliderChange(e, true));
+        }
         this.$back.on('click', e => inst.goBack(e));
         this.$play.on('click', e => inst.togglePlayPause(e));
         this.$prev.on('click', e => inst.onPrev(e));

@@ -19,6 +19,7 @@ import * as THREE from 'three';
 var OrbitControls = function ( object, domElement ) {
 
     this.object = object;
+    this.game = game;
 
     this.domElement = ( domElement !== undefined ) ? domElement : document;
 
@@ -82,6 +83,9 @@ var OrbitControls = function ( object, domElement ) {
     this.target0 = this.target.clone();
     this.position0 = this.object.position.clone();
     this.zoom0 = this.object.zoom;
+
+    this.raycaster = new THREE.Raycaster();
+    this.raycastPt = new THREE.Vector2()
 
     //
     // public methods
@@ -669,6 +673,22 @@ var OrbitControls = function ( object, domElement ) {
 
         event.preventDefault();
 
+        var isect = scope.handleRaycast(event);
+        // var obj = this.pickedObj;
+        console.log(" pickedIsect: ", isect);
+        if (isect) {
+            var obj = isect.object;
+            console.log(" pickedObj: ", obj);
+            let selectedObj = Util.dispatchMuseEvent('click', obj, event);
+            /*
+            if (selectedObj) {
+                game.select(selectedObj);
+            } else {
+                game.select(null);
+            }
+            */
+        }
+
         switch ( event.button ) {
 
         case scope.mouseButtons.ORBIT:
@@ -897,6 +917,64 @@ var OrbitControls = function ( object, domElement ) {
 
         event.preventDefault();
 
+    }
+
+    scope.handleRaycast = function(event, verbosity) {
+        console.log("Handle Raycast");
+        verbosity = verbosity || 0;
+        var x = (event.pageX / window.innerWidth)*2 - 1;
+        var y = - (event.pageY / window.innerHeight)*2 + 1;
+        return scope.raycast(x,y, verbosity);
+    }
+    
+    scope.raycast = function(x,y, verbosity)
+    {
+        //console.log("raycast "+x+" "+y);
+        verbosity = verbosity || 1;
+        scope.raycastPt.x = x;
+        scope.raycastPt.y = y;
+        scope.raycaster.setFromCamera(this.raycastPt, this.game.camera);
+        var objs = game.collision;
+        var intersects = scope.raycaster.intersectObjects(objs, true);
+        //var i = 0;
+        if (intersects.length == 0)
+            return null;
+        scope.pickedName = "";
+        scope.pickedObj = null;
+        scope.pickedIsect = null;
+        var inst = this;
+        for (var i=0; i<intersects.length; i++) {
+            //intersects.forEach(isect => {
+            //i++;
+            var isect = intersects[i];
+            var obj = isect.object;
+            //console.log("isect "+i+" "+obj.name);
+            if (verbosity) {
+                console.log("isect "+i+" "+obj.name, obj);
+            }
+            if (!Util.isPickable(obj)) {
+                console.log("ignoring unpickable obj");
+                continue;
+            }
+            //if (obj.userData && obj.userData.museIgnorePicking)
+            //    continue;
+            //if (obj.name && obj.name.startsWith("sat"))
+            //    continue;
+            inst.pickedObj = obj;
+            inst.pickedName = obj.name;
+            inst.pickedIsect = isect;
+            break;
+            //console.log("isect "+i+" "+obj.name);
+        }
+        scope.game.setStatus(this.pickedName);
+        /*
+          if (intersects.length > 0) {
+          var isect = intersects[0];
+          if (isect.object.name != "Stars")
+          return isect;
+          }
+        */
+        return scope.pickedIsect;
     }
 
     //
