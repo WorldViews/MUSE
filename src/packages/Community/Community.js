@@ -115,7 +115,7 @@ class Person {
 
     handleAction(action) {
         var r = Math.random();
-        if (r > 0.001)
+        if (r > 0.01)
             return;
         if (action == "smile")
             this.state = "happy";
@@ -135,6 +135,14 @@ class Person {
         if (this.state == "angry") {
             this.friends.forEach(p => p.handleAction("frown"));
         }
+    }
+
+    takeAction(action, p) {
+
+    }
+
+    reset() {
+        this.state = "neutral";
     }
 
     dump() {
@@ -197,6 +205,12 @@ class Community {
         person.dump();
     }
 
+    reset() {
+        for (var id in this.people) {
+            this.people[id].reset();
+        }
+    }
+
     dump() {
         for (var id in this.people) {
             this.people[id].dump();
@@ -212,7 +226,7 @@ class CommunityNode extends Node3D
         var opts = this.options; // super may have filled in some things
         this.game = game;
         this.checkOptions(opts);
-        var n = 30;
+        var n = 40;
         this.nrows = opts.nrows || n;
         this.ncols = opts.ncols || n;
         this.length = 20;
@@ -240,11 +254,17 @@ class CommunityNode extends Node3D
         this.community.handleClick(pickedObj.name, evt);
     }
 
+    reset() {
+        console.log("Reset");
+        this.community.reset();
+    }
+
     addGUI() {
         var inst = this;
         this.gui = new dat.GUI({width:300});
         this.gui.add(this, 'nrows', 1, 60).onChange(()=>inst.updateParams());
         this.gui.add(this, 'ncols', 1, 60).onChange(()=>inst.updateParams());
+        this.gui.add(this, 'reset');
    }
 
     addNetwork()

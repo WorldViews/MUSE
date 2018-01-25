@@ -1,9 +1,10 @@
 
 var CONFIG = {
-    //'cameraControls': 'Orbit',
-    cameraControls: {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .02},
+    cameraControls: 'Orbit',
+    //cameraControls: {type: 'MultiControls', movementSpeed: .15, keyPanSpeed: .02},
     gameOptions: {ambientLightIntensity: 2, headlightIntensity: 3},
     webUI: {type: 'JQControls',
+            timeSlider: false,
              //screens: ["mainScreen"],
           },
     'program': {
