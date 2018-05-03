@@ -16,22 +16,6 @@ var VIDEO_BUBBLES = [
 ];
 
 
-function onStart(game)
-{
-    //game.program.formatTime = t =>game.Util.toDate(t);
-    var earth = game.controllers.vEarth;
-    var atm = earth.atmosphere;
-    var tStart = game.Util.toTime("10/4/1957");
-    var tEnd = game.Util.toTime("1/1/2020");
-    var dur = tEnd - tStart;
-    game.program.formatTime = t => {
-        f = (t - game.program.startTime)/game.program.duration;
-        var ft = tStart + f*dur;
-        return game.Util.formatDatetime(ft);
-    }
-    game.camera.position.z = 10;
-}
-
 function setVisibility(game, rsoType, val)
 {
     //game.program.formatTime = t =>game.Util.toDate(t);
@@ -41,7 +25,8 @@ function setVisibility(game, rsoType, val)
 function onUpdate(game)
 {
     var t = game.program.getPlayTime();
-    var earth = game.controllers.vEarth;
+    //var earth = game.controllers.vEarth;
+    var earth = game.nodes.vEarth;
     var atm = earth.atmosphere;
     //console.log("onUpdate t:" + t);
     f = (t - game.program.startTime)/game.program.duration;
@@ -49,7 +34,9 @@ function onUpdate(game)
     atm.setOpacity(0.9*f);
     var h = 0.6 + .4*f;
     atm.setHue(h);
-    return new Date(t*1000);
+    var date = new Date(t*1000);
+    game.state.set("date", "Date: "+Util.formatDateMDY(t));
+    return date;
 }
 
 function dumpSats(game)
@@ -91,10 +78,9 @@ function setVideoBubblesVisibility(game, visibility) {
 
 CONFIG = {
     //'cameraControls': {type: 'Orbit', distance: 4},
-    'cameraControls': {type: 'MultiControls', distance: 4},
-    //onStart: onStart,
+    cameraControls: {type: 'MultiControls', distance: 4},
     onUpdate: onUpdate,
-    'program': {
+    program: {
        //duration: 100000,
        duration: 65*365*24*60*60,
        //duration: 10*24*60*60,
@@ -104,7 +90,7 @@ CONFIG = {
        playTime: 'now',
        playSpeed: 100,
        //startTime: '6/1/2005 10:30'
-       channels: ['spaceStatus'],
+       channels: ['date', 'spaceStatus'],
        scripts: {
            'Dump Satellites': dumpSats,
            'Show Debris': (game) => setVisibility(game, 'DEBRIS', true),
@@ -115,7 +101,7 @@ CONFIG = {
            'Web Worker': useWebWorker,
        }
     },
-    'specs': [
+    nodes: [
         {  type: 'Stats', right: '-0px' },
         {  type: 'JQControls' },
         //{  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
@@ -123,10 +109,9 @@ CONFIG = {
         {  type: 'Stars' },
         {  type: 'PointLight', name: 'sun', position: [-1000, 0, 0], distance: 5000},
         {  type: 'PointLight', name: 'sun', position: [3000, 1000, 0], distance: 5000},
-        {  type: 'PointLight', name: 'sun', position: [3000, -1000, 0], distance: 5000},
+       // {  type: 'PointLight', name: 'sun', position: [3000, -1000, 0], distance: 5000},
         {  type: 'VirtualEarth', name: 'vEarth',
-           radius: 1.25, rot: [0,0,0],
-           //satTracks: {dataSet: 'historicalSats.json'},
+           radius: 1.25, rot: [0,0,0], position: [0,2,0],
            satTracks: {
                //dataSet: 'allSats.json',
                //dataSet: 'tle-9-1-2017.json',
@@ -136,7 +121,6 @@ CONFIG = {
                 //   'assets/models/satellites/ComSat/model.dae',
                 //   'assets/models/satellites/ComSat2/model.dae'],
            },
-           //satTracks: 1,
            dataViz: 0,
            atmosphere: {'name': 'CO2Viz', opacity: .8}
        },
