@@ -62,6 +62,20 @@ class SatTracks {
         this.setWorkerRate(0);
     }
 
+    clear() {
+        console.log("**** SatTracks clear!! ****");
+    }
+    
+    setOpts(opts) {
+        var inst = this;
+        this.opts = opts;
+        //this.initGraphics(opts);
+        this.db = new SatTrackDB(opts.dataSet, () => inst.onLoaded());
+        if (opts.models) {
+            this.loadModels(opts);
+        }
+    }
+
     setWorkerRate(rate) {
         this.workerUpdateRate = rate;
         if (!this.worker && rate > 0) {
