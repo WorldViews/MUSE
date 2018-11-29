@@ -23,6 +23,10 @@ var SPECS = [
        path: 'assets/video/BackgroundV1DanceHack.mp4',
        position: [3.1, 2.3, -.2]
     },
+    {  type: 'Cloth',
+       name: 'silkScreen1',
+       path: 'assets/video/BackgroundV1DanceHack.mp4'
+    },
     LIGHTS
 ];
 

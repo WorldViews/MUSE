@@ -36,6 +36,7 @@ import 'packages/Miura/Miura';
 import 'packages/Community/Community';
 import 'packages/Midi/MidiPlayer';
 import 'packages/Spirals/Spirals';
+import 'packages/Cloth/Cloth';
 
 let {degToRad} = THREE.Math;
 
