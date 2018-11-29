@@ -373,7 +373,7 @@ Cloth.prototype.toggleWind = function() {
     CLOTH.wind = !CLOTH.wind;
 }
 
-Cloth.prototype.setupCloth = function(scene, tex, clothMaterial)
+Cloth.prototype.setupCloth = function(group, tex, clothMaterial)
 {
     var clothTexture = tex;
     if (!tex)
@@ -408,7 +408,7 @@ Cloth.prototype.setupCloth = function(scene, tex, clothMaterial)
     object.position.set( 0, 0, 0 );
     object.castShadow = true;
     object.receiveShadow = true;
-    scene.add( object );
+    group.add( object );
     //object.customDepthMaterial = new THREE.ShaderMaterial( { uniforms: uniforms, vertexShader: vertexShader, fragmentShader: fragmentShader } );
     this.obj = object;
     return object;
@@ -446,12 +446,12 @@ Cloth.prototype.invertTex = function()
 
 var CLOTH_SCREEN_SPEC = {x: 2, y: 2.5, z: -0.1};
 
-function addClothScreen(scene, vidTex, vidMat)
+function addClothScreen(group, vidTex, vidMat)
 {
     var pos = CLOTH_SCREEN_SPEC;
     CLOTH.wind = 0.05;
     var cloth = new Cloth();
-    cloth.setupCloth(scene, vidTex, vidMat);
+    cloth.setupCloth(group, vidTex, vidMat);
     cloth.obj.scale.z=.02;
     cloth.obj.scale.x=.025;
     cloth.obj.scale.y=.015;
@@ -469,6 +469,7 @@ class ClothNode extends Node3D {
         console.log("ClothNode: ", opts);
         this.group = new THREE.Group();
         this.setObject3D(this.group);
+        game.setFromProps(this.group, opts);
         game.addToGame(this.group, this.name, opts.parent);
         var vidTex = null;
         if (opts.path) {
@@ -476,7 +477,7 @@ class ClothNode extends Node3D {
             this.imageSource = ImageSource.getImageSource(opts.path, opts);
             vidTex = this.imageSource.createTexture();
         }
-        this.cloth = addClothScreen(game.scene, vidTex, null);
+        this.cloth = addClothScreen(this.group, vidTex, null);
         this.t0 = null;
     }
 
