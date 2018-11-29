@@ -7,7 +7,6 @@ var LIGHTS = [
 ];
 
 var SPECS = [
-    {  type: 'ReactControls' },
     {  type: 'Stats' },
     {  type: 'ViewManager', bookmarksUrl: 'data/imaginarium_bookmarks.json' },
     //{  type: 'Scripts' },
@@ -48,8 +47,13 @@ var SPECS = [
     {  type: 'CMPDataViz', name: 'cmp',
        position: [0, 2, 0], rotation: [0, 0, 0], scale: [1.5, 1, 1.5],
        visible: false
-    },
-    {  type: 'SlidePlayer', name: 'slidePlayer', screenName: 'rightScreen' }
+    }
 ];
 
-CMP_NOH = SPECS;
+CONFIG = {
+    webUI: { type: 'JQControls'
+           },
+    specs: SPECS
+}
+
+MUSE.returnValue(CONFIG);

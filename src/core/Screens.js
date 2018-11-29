@@ -49,11 +49,34 @@ class Screen extends Node3D
         var path = spec.path;
         console.log('****** Loading screen... video: '+path);
         console.log("spec: "+JSON.stringify(spec));
-        this.geometry = new THREE.SphereGeometry(
-            spec.radius, 40, 40,
-            toRad(spec.thetaStart),  toRad(spec.thetaLength),
-            toRad(spec.phiStart),    toRad(spec.phiLength)
-        );
+        if (spec.radius) {
+            this.geometry = new THREE.SphereGeometry(
+                spec.radius, 40, 40,
+                toRad(spec.thetaStart),  toRad(spec.thetaLength),
+                toRad(spec.phiStart),    toRad(spec.phiLength)
+            );
+        }
+        else if (spec.width) {
+            let w = spec.width;
+            let h = spec.height || spec.width;
+            let d = .1;
+            /*
+            let geo = new THREE.Geometry();
+            geo.vertices.push(
+                new THREE.Vector3( -10,  10, 0 ),
+                new THREE.Vector3( -10, -10, 0 ),
+                new THREE.Vector3(  10, -10, 0 )
+            );
+            
+            geo.faces.push( new THREE.Face3( 0, 1, 2 ) );
+            geo.computeBoundingSphere();
+            this.geometry = geo;
+            */
+            this.geometry = new THREE.BoxGeometry(w, h, d)
+        }
+        else {
+             MUSE.error("Bad spec for screen");
+        }
         //let sourceSpec = getTypeFromURL(url);
         if (path) {
             this.imageSource = ImageSource.getImageSource(path, this.spec);
@@ -265,6 +288,8 @@ MUSENode.defineFields(Screen, [
   "phiLength",
   "thetaStart",
   "thetaLength",
+  "width",
+  "height",
   "path",
   "autoPlay",
   "side",
