@@ -39,14 +39,11 @@ CLOTH.TIMESTEP = 18 / 1000;
 CLOTH.TIMESTEP_SQ = CLOTH.TIMESTEP * CLOTH.TIMESTEP;
 
 CLOTH.wind = .2;
-CLOTH.windStrength = 2;
-CLOTH.windForce = new THREE.Vector3( 0, 0, 0 );
 CLOTH.ballPosition = new THREE.Vector3( 0, - 45, 0 );
 CLOTH.ballSize = 60; //40
 CLOTH.tmpForce = new THREE.Vector3();
 
 var CLOTH_MAT;
-//var clothGeometry;
 
 CLOTH.update = function(time)
 {
@@ -116,7 +113,7 @@ function satisifyConstrains( p1, p2, distance )
 }
 
 
-function Cloth( w, h )
+function Cloth( w, h, wind )
 {
     report("**** Cloth "+w+" "+h);
         this.gravity = new THREE.Vector3( 0, - CLOTH.GRAVITY, 0 ).multiplyScalar( CLOTH.MASS );
@@ -126,6 +123,8 @@ function Cloth( w, h )
 	h = h || CLOTH.ySegs;
 	this.w = w;
 	this.h = h;
+        this.windForce = new THREE.Vector3( 0, 0, 0 );
+        this.wind = wind || CLOTH.wind;
 
 	var particles = [];
 	var constrains = [];
@@ -250,10 +249,11 @@ Cloth.prototype.update = function( time )
     if (time == null)
 	time = Date.now();
 
-    CLOTH.windStrength = CLOTH.wind * (Math.cos( time / 7000 ) * 20 + 40);
-    CLOTH.windForce.set( Math.sin( time / 2000 ),
-			 Math.cos( time / 3000 ),
-			 Math.sin( time / 1000 ) ).normalize().multiplyScalar( CLOTH.windStrength );
+    var windStrength = this.wind * (Math.cos( time / 7000 ) * 20 + 40);
+    this.windForce.set( Math.sin( time / 2000 ) + Math.random(),
+			 Math.cos( time / 3000 ) + Math.random(),
+			 Math.sin( time / 1000 ) + Math.random())
+                    .normalize().multiplyScalar( windStrength );
     //arrow.setLength( windStrength );
     //arrow.setDirection( windForce );
     //console.log("windStrength: ", CLOTH.windStrength, " force ", CLOTH.windForce);
@@ -268,14 +268,14 @@ Cloth.prototype.update = function( time )
     var i, il, particles, particle, pt, constrains, constrain;
 
     // Aerodynamics forces
-    if ( CLOTH.wind ) {
+    if ( this.wind ) {
 	var face, faces = cloth.clothGeometry.faces, normal;
 	particles = cloth.particles;
 	var tmpForce = CLOTH.tmpForce;
 	for ( i = 0, il = faces.length; i < il; i ++ ) {
 	    face = faces[ i ];
 	    normal = face.normal;
-	    tmpForce.copy( normal ).normalize().multiplyScalar( normal.dot( CLOTH.windForce ) );
+	    tmpForce.copy( normal ).normalize().multiplyScalar( normal.dot( this.windForce ) );
 	    particles[ face.a ].addForce( tmpForce );
 	    particles[ face.b ].addForce( tmpForce );
 	    particles[ face.c ].addForce( tmpForce );
@@ -384,6 +384,7 @@ Cloth.prototype.setupCloth = function(group, tex, clothMaterial)
     //clothTexture.anisotropy = 16;
 
     if (!clothMaterial) {
+        console.log("Getting MeshPhongMaterial for cloth");
 	clothMaterial = new THREE.MeshPhongMaterial(
 	    { alphaTest: 0.5, color: 0xffffff, specular: 0x030303,
 	      emissive: 0x111111, shininess: 10, map: clothTexture,
@@ -448,9 +449,10 @@ var CLOTH_SCREEN_SPEC = {x: 2, y: 2.5, z: -0.1};
 
 function addClothScreen(group, vidTex, vidMat)
 {
+    console.log("addClothScreen ", vidTex);
     var pos = CLOTH_SCREEN_SPEC;
-    CLOTH.wind = 0.05;
-    var cloth = new Cloth();
+    CLOTH.wind = 0.2;
+    var cloth = new Cloth(CLOTH.xSegs, CLOTH.ySegs, CLOTH.wind);
     cloth.setupCloth(group, vidTex, vidMat);
     cloth.obj.scale.z=.02;
     cloth.obj.scale.x=.025;
@@ -471,14 +473,54 @@ class ClothNode extends Node3D {
         this.setObject3D(this.group);
         game.setFromProps(this.group, opts);
         game.addToGame(this.group, this.name, opts.parent);
-        var vidTex = null;
+        var opacity = 1;
+        if (opts.opacity != null)
+            opacity = opts.opacity;
+        var videoTexture = null;
+        var videoMaterial = null;
         if (opts.path) {
             console.log("ClothNode: image path ", opts.path);
             this.imageSource = ImageSource.getImageSource(opts.path, opts);
-            vidTex = this.imageSource.createTexture();
+            videoTexture = this.imageSource.createTexture();
+	    videoMaterial = new THREE.MeshBasicMaterial({
+	        map: videoTexture,
+	        transparent: true,
+	        //transparent: false,
+                alphaTest: 0.4,
+                opacity: opacity,
+	        side: THREE.DoubleSide,
+	    });
         }
-        this.cloth = addClothScreen(this.group, vidTex, null);
+        this.cloth = addClothScreen(this.group, videoTexture, videoMaterial);
         this.t0 = null;
+        if (opts.name) {
+            game.screens[opts.name] = this;
+            game.registerPlayer(this);
+        }
+    }
+
+    play() {
+        if (!this.imageSource) {
+            //console.log("No imageSource");
+            return;
+        }
+        this.imageSource.play();
+    }
+
+    pause() {
+        if (!this.imageSource) {
+            //console.log("No imageSource");
+            return;
+        }
+        this.imageSource.pause();
+    }
+
+    setPlayTime(t) {
+        if (!this.imageSource) {
+            //console.log("No imageSource");
+            return;
+        }
+        this.imageSource.setPlayTime(t);
     }
 
     update(arg) {
@@ -486,8 +528,9 @@ class ClothNode extends Node3D {
         if (this.t0 == null)
             this.t0 = t;
         var dt = t - this.t0;
-        this.cloth.update();
-        this.cloth.updateCloth();
+        CLOTH.update();
+        //this.cloth.update();
+        //this.cloth.updateCloth();
     }
 }
 

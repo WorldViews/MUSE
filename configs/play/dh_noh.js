@@ -21,7 +21,15 @@ var SPECS = [
     {  type: 'Cloth',
        name: 'silkScreen1',
        path: 'assets/video/BackgroundV1DanceHack.mp4',
+       opacity: .5,
        position: [3.0, 0, -2],
+       rotation: [0, 1.5708, 0],
+       scale: [.8,.8,.8]
+    },
+    {  type: 'Cloth',
+       name: 'silkScreen2',
+       path: 'textures/lace1.png',
+       position: [3.0, 0, -5],
        rotation: [0, 1.5708, 0],
        scale: [.8,.8,.8]
     },
