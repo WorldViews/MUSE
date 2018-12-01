@@ -6,7 +6,7 @@ var MEDIA_SPECS = [
              mainScreen:  {url: 'assets/video/BackgroundV1DanceHack.mp4'},
              silkScreen1: {url: 'textures/lace1.png'},
            },
-           { t: 120, silkScreen1: {url: 'assets/video/MG_Artwork.mp4'}}
+           { t: 45, silkScreen1: {url: 'assets/video/MG_Artwork.mp4'}}
        ]
    },
 ];
