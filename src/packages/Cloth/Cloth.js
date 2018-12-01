@@ -249,10 +249,11 @@ Cloth.prototype.update = function( time )
     if (time == null)
 	time = Date.now();
 
-    var windStrength = this.wind * (Math.cos( time / 7000 ) * 20 + 40);
+//    var windStrength = this.wind * (Math.cos( time / 7000 ) * 20 + 40);
+    var windStrength = this.wind * ((Math.cos( time / 7000 )+Math.random()) * 20 + 40);
     this.windForce.set( Math.sin( time / 2000 ) + Math.random(),
-			 Math.cos( time / 3000 ) + Math.random(),
-			 Math.sin( time / 1000 ) + Math.random())
+			Math.cos( time / 3000 ) + Math.random(),
+			Math.sin( time / 1000 ) + Math.random())
                     .normalize().multiplyScalar( windStrength );
     //arrow.setLength( windStrength );
     //arrow.setDirection( windForce );
