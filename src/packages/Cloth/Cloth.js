@@ -474,6 +474,7 @@ class ClothNode extends Node3D {
         this.setObject3D(this.group);
         game.setFromProps(this.group, opts);
         game.addToGame(this.group, this.name, opts.parent);
+        this.channel = opts.channel || this.name;
         var opacity = 1;
         if (opts.opacity != null)
             opacity = opts.opacity;
@@ -498,6 +499,14 @@ class ClothNode extends Node3D {
             game.screens[opts.name] = this;
             game.registerPlayer(this);
         }
+        if (opts.path) {
+            game.state.set(this.name+".url", opts.path);
+        }
+        // note that we do this last so we don't get callbacks from above
+        var inst = this;
+        console.log("******************** registerWatcher: "+this.name);
+        game.state.on(this.channel, (newProps) => inst.onChange(newProps));
+
     }
 
     play() {
@@ -524,6 +533,52 @@ class ClothNode extends Node3D {
         this.imageSource.setPlayTime(t);
     }
 
+    updateSource(url, options) {
+        options = options || {};
+        console.log("Getting ImageSource "+url);
+        if (this.imageSource) {
+            this.imageSource.dispose();
+        }
+        this.imageSource = ImageSource.getImageSource(url, options);
+        let texture = this.imageSource.createTexture();
+        //this.cloth.clothTexture = texture;
+        this.cloth.clothMaterial.map = texture;
+        //this.texture = texture;
+        this.play();
+    }
+
+    //watchProperties(evt) {
+    //    var props = evt.message;
+    onChange(props) {
+        console.log("Cloth.onChange "+this.name+" propts: "+JSON.stringify(props));
+        if (typeof props === 'object') {
+            if (props.url) {
+                this.updateSource(props.url, props);
+            }
+/*
+            if (props.text != null) // in case text == ""
+                this.updateText(props.text, props);
+            if (props.html)
+                this.updateHTML(props.html, props);
+*/
+            if (props.requestedPlayTime) {
+                var t = props.requestedPlayTime;
+                console.log("requestedPlayTime: "+t);
+                this.setPlayTime(t);
+            }
+            if (props.playState) {
+                if (props.playState == "play") {
+                    this.play();
+                }
+                else if (props.playState == "pause") {
+                    this.pause();
+                }
+            }
+        } else if (typeof props === 'string') {
+            this.updateText(props);
+        }
+    }
+    
     update(arg) {
         var t = MUSE.Util.getClockTime();
         if (this.t0 == null)

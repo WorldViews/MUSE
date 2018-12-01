@@ -151,7 +151,7 @@ class Sparkler {
 
     getPsys(tname) {
         if (!this.pSystems) {
-            console.log("No trails");
+            //console.log("No trails");
             return null;
         }
         var pSys = this.pSystems[tname];

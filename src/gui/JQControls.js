@@ -40,7 +40,7 @@ class JQControls extends UIControls {
         this.stageControl = null;
         if (this.program.stages.length > 0) {
             var stage = this.program.stages[0];
-            this.stageControl = new StageControl(this, stage.name, stage.models);
+            this.stageControl = new StageControl(this, stage.name, stage.models, stage.initialModel);
         }
         var inst = this;
         //$(document).ready( e => inst.setupElements());
@@ -431,10 +431,11 @@ class ScriptControl {
 
 //class StageControl  extends JQWidget {
 class StageControl {
-    constructor(ui, stageName, models) {
+    constructor(ui, stageName, models, initialModel) {
         this.name = stageName;
         this.ui = ui;
         this.selectedModel = null;
+        this.initialModel = initialModel || 'vEarth';
         if (!models) {
             models = {
                 'cmp': 'Data Visualization',
@@ -445,7 +446,7 @@ class StageControl {
         }
         this.models = models;
         this.$models = null;
-        this.selectModel('vEarth');
+        this.selectModel(this.initialModel);
     }
 
     setup($parent) {
