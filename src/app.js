@@ -12,6 +12,7 @@ import { NetLink } from 'core/NetLink';
 import Util from 'core/Util';
 import { Dancer } from 'packages/Dancer/DanceController';
 import { KinectWatcher } from 'packages/Dancer/KinectWatcher';
+import { KinSkelWatcher } from 'packages/Dancer/KinSkelWatcher';
 import 'packages/Astro/CelestialBodies';
 import StatsController from 'gui/StatsController';
 import {JQControls} from 'gui/JQControls';
